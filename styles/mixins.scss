@@ -1,0 +1,40 @@
+$min-breakpoints: (
+  s: $breakpoint-s,
+  m: $breakpoint-m,
+  l: $breakpoint-l,
+  xl: $breakpoint-xl,
+);
+
+$max-breakpoints: (
+  xs: $breakpoint-s - 1,
+  s: $breakpoint-m - 1,
+  m: $breakpoint-l - 1,
+  l: $breakpoint-xl - 1,
+);
+
+@mixin media($keys...) {
+  @each $key in $keys {
+    @if map-has-key($min-breakpoints, $key) and map-has-key($max-breakpoints, $key) {
+      @media only screen and (min-width: map-get($min-breakpoints, $key)) and (max-width: map-get($max-breakpoints, $key)) {
+        @content;
+      }
+    } @else if map-has-key($min-breakpoints, $key) {
+      @media only screen and (min-width: map-get($min-breakpoints, $key)) {
+        @content;
+      }
+    } @else if map-has-key($max-breakpoints, $key) {
+      @media only screen and (max-width: map-get($max-breakpoints, $key)) {
+        @content;
+      }
+    }
+  }
+}
+
+// Export variables to use in React code via CSS modules (see useMediaQuery from react-responsive)
+:export {
+  max_breakpoint_xs: map-get($max-breakpoints, xs);
+  max_breakpoint_s: map-get($max-breakpoints, s);
+  max_breakpoint_m: map-get($max-breakpoints, m);
+  max_breakpoint_l: map-get($max-breakpoints, l);
+  max_breakpoint_xl: map-get($max-breakpoints, xl);
+}

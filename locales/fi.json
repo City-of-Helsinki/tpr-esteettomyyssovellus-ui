@@ -1,0 +1,30 @@
+{
+  "common": {
+    "header": {
+      "title": "Kaupunkialusta",
+      "titleAlt": "Helsingin kaupunki: Kaupunkialusta",
+      "skipToContent": "Siirry sivun pääsisältöön",
+      "login": "Kirjaudu sisään",
+      "logout": "Kirjaudu ulos"
+    },
+    "footer": {
+      "title": "Kaupunkialusta",
+      "backToTop": "Takaisin ylös",
+      "contact": "Ota yhteyttä",
+      "copyright": "Copyright",
+      "rightsReserved": "Kaikki oikeudet pidätetään",
+      "terms": "Verkkopalvelun käyttöehdot",
+      "accessibility": "Saavutettavuusseloste"
+    },
+    "map": {
+      "osm": "OpenStreetMapin tekijät"
+    },
+    "inLanguage": {
+      "fi": "suomeksi",
+      "sv": "ruotsiksi",
+      "en": "englanniksi"
+    },
+    "opensInANewTab": "(aukeaa uuteen välilehteen)",
+    "todo": "TODO - TEXT HERE"
+  }
+}

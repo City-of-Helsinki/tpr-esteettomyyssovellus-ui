@@ -1,0 +1,19 @@
+@import "~hds-design-tokens/lib/all.scss";
+
+.dialog {
+  padding: $spacing-m;
+
+  div {
+    margin: $spacing-s;
+  }
+
+  .title {
+    font-size: $fontsize-heading-m;
+    font-weight: 700;
+  }
+
+  .buttons {
+    display: flex;
+    flex-direction: row;
+  }
+}

@@ -1,0 +1,64 @@
+@import "~hds-design-tokens/lib/all.scss";
+@import "../../styles/mixins";
+
+.notice {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-bottom: $spacing-layout-s;
+  border: solid $color-bus 0;
+  border-left-width: $spacing-2-xs;
+  background-color: $color-fog-light;
+
+  > div {
+    margin: $spacing-s;
+  }
+
+  .flexText {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+
+    .icon {
+      color: $color-bus;
+    }
+
+    .text {
+      margin-left: $spacing-xl;
+      @include media(xs) {
+        margin-left: $spacing-s;
+      }
+
+      // $spacing-4-xl = 4rem = 64px
+      max-width: 8 * $spacing-4-xl;
+      @include media(xl) {
+        max-width: 12 * $spacing-4-xl;
+      }
+
+      .title {
+        margin-bottom: $spacing-s;
+        font-size: $fontsize-heading-m;
+        font-weight: 700;
+        outline: none;
+
+        @include media(xs) {
+          font-size: $fontsize-heading-s;
+        }
+      }
+    }
+  }
+
+  .flexButtonContainer {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+
+    .flexButton {
+      button {
+        background-color: $color-white;
+        width: 4 * $spacing-4-xl - $spacing-2-xs;
+      }
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "env": {
+    "browser": true,
+    "commonjs": true,
+    "es6": true,
+    "node": true,
+    "jest": true
+  },
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2018,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "project": "./tsconfig.json"
+  },
+  "plugins": ["react", "react-hooks", "@typescript-eslint", "jest", "prettier"],
+  "extends": [
+    "airbnb-typescript",
+    "airbnb/hooks",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:jsx-a11y/recommended",
+    "plugin:jest/recommended",
+    "plugin:prettier/recommended",
+    "prettier"
+  ],
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "rules": {
+    "react/react-in-jsx-scope": "off", // Needed for next.js
+    "react/jsx-props-no-spreading": ["error", {"custom": "ignore"}],
+    "import/no-named-as-default": 0,
+    "no-console": 0,
+    "@typescript-eslint/naming-convention": ["error", {
+      "selector": "variable",
+      "format": ["camelCase", "PascalCase", "UPPER_CASE", "snake_case"]
+    }],
+    "@typescript-eslint/ban-ts-comment": ["error", {"ts-ignore": "allow-with-description"}],
+    "no-param-reassign": ["error", { "props": true, "ignorePropertyModificationsFor": ["state"] }]
+  }
+}

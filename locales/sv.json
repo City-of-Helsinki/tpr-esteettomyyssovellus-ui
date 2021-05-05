@@ -1,0 +1,30 @@
+{
+  "common": {
+    "header": {
+      "title": "Stadsplattform",
+      "titleAlt": "Helsingfors stad: Stadsplattform",
+      "skipToContent": "Till huvudinnehållet",
+      "login": "Logga in",
+      "logout": "Logga ut"
+    },
+    "footer": {
+      "title": "Stadsplattform",
+      "backToTop": "Tillbaka upp",
+      "contact": "Ta kontakt",
+      "copyright": "Copyright",
+      "rightsReserved": "Alla rättigheter förbehålles",
+      "terms": "Webbtjänstens bruksvillkor",
+      "accessibility": "Tillgänglighetsutlåtande"
+    },
+    "map": {
+      "osm": "OpenStreetMaps bidragsgivare"
+    },
+    "inLanguage": {
+      "fi": "på finska",
+      "sv": "på svenska",
+      "en": "på engelska"
+    },
+    "opensInANewTab": "(öppnar i ny flik)",
+    "todo": "TODO - TEXT HERE"
+  }
+}

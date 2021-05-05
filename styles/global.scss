@@ -1,0 +1,216 @@
+// No need to include the core css, since hds-react already imports what it needs
+// @import "~hds-core/lib/base.css";
+// @import "~hds-core/lib/components/all.css";
+// @import "~hds-core/lib/icons/all.css";
+@import "~hds-design-tokens/lib/all.scss";
+@import "mixins";
+@import "leaflet/dist/leaflet.css";
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: HelsinkiGrotesk, Arial, sans-serif;
+}
+
+@font-face {
+  font-family: HelsinkiGrotesk;
+  font-weight: 400;
+  font-style: normal;
+  src: url("../public/fonts/HelsinkiGrotesk-Regular.otf") format("opentype");
+}
+
+@font-face {
+  font-family: HelsinkiGrotesk;
+  font-weight: 400;
+  font-style: italic;
+  src: url("../public/fonts/HelsinkiGrotesk-RegularItalic.otf") format("opentype");
+}
+
+@font-face {
+  font-family: HelsinkiGrotesk;
+  font-weight: 500;
+  font-style: normal;
+  src: url("../public/fonts/HelsinkiGrotesk-Medium.otf") format("opentype");
+}
+
+@font-face {
+  font-family: HelsinkiGrotesk;
+  font-style: normal;
+  font-weight: 700;
+  src: url("../public/fonts/HelsinkiGrotesk-Bold.otf") format("opentype");
+}
+
+h1 {
+  font-size: $fontsize-heading-xl !important;
+
+  &.moderation {
+    font-size: $fontsize-heading-l !important;
+  }
+
+  @include media(xs) {
+    font-size: $fontsize-heading-l !important;
+  }
+}
+
+h2 {
+  font-size: $fontsize-heading-l !important;
+
+  &.moderation {
+    font-size: $fontsize-heading-m !important;
+  }
+
+  @include media(xs) {
+    font-size: $fontsize-heading-m !important;
+  }
+}
+
+h3 {
+  font-size: $fontsize-heading-m !important;
+
+  &.moderation {
+    font-size: $fontsize-heading-s !important;
+  }
+
+  @include media(xs) {
+    font-size: $fontsize-heading-s !important;
+  }
+}
+
+h4 {
+  font-size: $fontsize-heading-s !important;
+  margin: 0;
+
+  &.moderation {
+    font-size: $fontsize-heading-xs !important;
+  }
+
+  @include media(xs) {
+    font-size: $fontsize-heading-xs !important;
+  }
+}
+
+h5 {
+  font-size: $fontsize-heading-xs !important;
+  margin: 0;
+
+  &.moderation {
+    font-size: $fontsize-heading-xxs !important;
+  }
+
+  @include media(xs) {
+    font-size: $fontsize-heading-xxs !important;
+  }
+}
+
+textarea {
+  height: auto !important;
+}
+
+.disabledTextColor input[disabled],
+.disabledTextColor textarea[disabled],
+.disabledTextColor input[type="checkbox"][disabled] + label {
+  color: $color-black-70 !important;
+}
+
+.formSection {
+  margin-bottom: $spacing-layout-l;
+}
+
+.narrowSection {
+  @include media(xl) {
+    max-width: $container-width-l;
+    margin-left: $spacing-layout-l;
+  }
+}
+
+.formInput {
+  margin-bottom: $spacing-layout-s;
+}
+
+.formNotification {
+  z-index: auto !important;
+}
+
+.gridLayoutContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax($spacing-3-xl, 1fr));
+  margin-bottom: $spacing-layout-s;
+
+  &.moderation {
+    padding-left: $spacing-s;
+  }
+
+  @include media(xs) {
+    column-gap: $spacing-xs;
+    row-gap: $spacing-xs;
+  }
+
+  @include media(s) {
+    column-gap: $spacing-s;
+    row-gap: $spacing-s;
+  }
+
+  @include media(m, l, xl) {
+    column-gap: $spacing-m;
+    row-gap: $spacing-m;
+  }
+}
+
+.gridHeader {
+  background-color: $color-fog-light;
+  padding: $spacing-xs;
+}
+
+// Note: these column definitions are only used for moderation task components
+.gridColumn1 {
+  grid-column: 1 / span 2;
+}
+
+.gridColumn2 {
+  grid-column: 3 / span 2;
+}
+
+.gridColumn3 {
+  grid-column: 5 / 5;
+}
+
+.languageSection {
+  border: solid $color-copper-light 0;
+  border-left-width: $spacing-2-xs;
+  padding-left: $spacing-2-xs;
+
+  &.moderation {
+    padding-left: $spacing-2-xs;
+  }
+
+  h3 {
+    color: $color-bus;
+  }
+}
+
+.flexSpace {
+  flex-grow: 1;
+}
+
+.hidden {
+  display: none;
+}
+
+button:hover {
+  text-decoration: underline;
+}
+
+.screenReaderOnly,
+.visibleOnFocusOnly:not(:focus) {
+  border: 0;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  margin: 0 -1px -1px 0;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+  white-space: nowrap;
+}

@@ -1,0 +1,18 @@
+@import "~hds-design-tokens/lib/all.scss";
+
+.footer {
+  margin-top: $spacing-layout-l;
+
+  h2 {
+    color: initial;
+    font-size: initial !important;
+  }
+
+  div {
+    fill: $color-fog-light;
+  }
+
+  &:before {
+    background-color: $color-fog-light !important;
+  }
+}

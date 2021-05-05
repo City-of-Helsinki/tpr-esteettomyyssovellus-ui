@@ -1,0 +1,30 @@
+{
+  "common": {
+    "header": {
+      "title": "City Platform",
+      "titleAlt": "Helsinki City: City Platform",
+      "skipToContent": "Skip to main content",
+      "login": "Login",
+      "logout": "Logout"
+    },
+    "footer": {
+      "title": "City Platform",
+      "backToTop": "Back to top",
+      "contact": "Contact",
+      "copyright": "Copyright",
+      "rightsReserved": "All rights reserved",
+      "terms": "Terms & Conditions",
+      "accessibility": "Accessibility"
+    },
+    "map": {
+      "osm": "OpenStreetMap contributors"
+    },
+    "inLanguage": {
+      "fi": "in Finnish",
+      "sv": "in Swedish",
+      "en": "in English"
+    },
+    "opensInANewTab": "(Open in a new tab)",
+    "todo": "TODO - TEXT HERE"
+  }
+}
