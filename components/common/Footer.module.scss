@@ -1,15 +1,123 @@
 @import "~hds-design-tokens/lib/all.scss";
+@import "../../styles/mixins";
 
 .footer {
   margin-top: $spacing-layout-l;
+  color: $color-white !important;
+  background-color: $color-white;
+
+  hr {
+    width: 97%;
+  }
+
+  .tprlogoContainer {
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    justify-content: flex-start;
+    align-items: flex-end;
+
+    @include media(m) {
+      margin-left: 0 !important;
+    }
+
+    @include media(xs, s) {
+      margin-left: 0 !important;
+      padding-bottom: 2rem !important;
+    }
+
+    .tprlogo {
+      width: 65px;
+      height: 50px;
+      background-image: url(../../public/TPR-logo.png);
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      filter: brightness(0) invert(1);
+      margin: 0 auto !important;
+
+      h2 {
+        align-self: center;
+      }
+  
+        @include media(xs, s) {
+          margin: 0 !important;
+        }
+
+    }
+  }
+
+  section {
+    padding-top: $spacing-layout-l;
+
+    @include media(l, xl) {
+      padding-left: $spacing-layout-l;
+      padding-right: $spacing-layout-l;
+    }
+    div {
+      svg {
+        max-width: none !important;
+      }
+    }
+  }
+
+  // mozilla specific css for centering logo
+  @-moz-document url-prefix() {
+    nav {
+      @include media(m, l, xl) {
+        width: -moz-available;
+      }
+    }
+  }
+
+  nav {
+    @include media(m, l, xl) {
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: space-between !important;
+      flex-direction: row;
+      align-content: center;
+      align-items: center;
+      width: -webkit-fill-available;
+    }
+
+    svg {
+      height: 2rem;
+      margin-top: -0.5rem;
+    }
+  }
 
   h2 {
-    color: initial;
+    color: $color-white;
     font-size: initial !important;
   }
 
+  div > :nth-child(3) {
+    @include media(l, xl) {
+      padding-bottom: 5rem;
+    }
+  }
+
   div {
-    fill: $color-fog-light;
+    fill: $color-bus;
+
+    &:nth-child(2) {
+      background-color: $color-bus;
+
+      @include media(xs, s, m) {
+        padding-top: 1rem;
+      }
+
+      @include media(l, xl) {
+        padding: 1rem 2rem;
+      }
+    }
+    a {
+      flex-direction: row-reverse;
+      align-self: center !important;
+      line-height: 3rem;
+    }
   }
 
   &:before {
