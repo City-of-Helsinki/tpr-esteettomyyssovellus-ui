@@ -1,13 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
 import exampleSlice from "./reducers/exampleSlice";
-import { userSlice } from "./reducers/userSclice";
+import general from "./reducers/general";
 
 // delete example reducer & exampleSlice just an example for toolkit
 
 export const store = configureStore({
   reducer: {
     exampleReducer: exampleSlice,
-    //general: userSlice
+    general: general
   },
 });
 
