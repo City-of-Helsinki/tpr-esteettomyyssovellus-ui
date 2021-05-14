@@ -2,12 +2,12 @@
 @import "../../styles/mixins";
 
 .header {
-    border-bottom: 2px;
-    border-color: black;
+    border-bottom: 2px solid black;
+    line-height: 18px;
 }
 
 .choices {
-    margin-top: 18px;
+    margin-top: 20px;
 }
 
 .mobileLanguages {
@@ -19,7 +19,7 @@
     font-weight: bold;
     white-space: nowrap;
     font-size: small;
-    justify-content: space-evenly;
+    justify-content: space-evenly;  
 }
 
 .chosen {

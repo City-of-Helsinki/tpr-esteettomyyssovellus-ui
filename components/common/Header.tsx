@@ -66,7 +66,6 @@ const Header = ({ includeLanguageSelector, children }: HeaderProps): ReactElemen
 
 
   return (
-    <div className={styles.header}>
       <DynamicNavigation
         // @ts-ignore: The HDS Navigation component comes from a dynamic import, see above for details
         title={i18n.t("common.header.title")}
@@ -78,6 +77,7 @@ const Header = ({ includeLanguageSelector, children }: HeaderProps): ReactElemen
         theme={{
           '--header-background-color': 'var(--color-bus-medium-light)',
         }}
+        className={styles.header}
       >
         {children}
         <Navigation.Actions>
@@ -124,7 +124,6 @@ const Header = ({ includeLanguageSelector, children }: HeaderProps): ReactElemen
         </Navigation.Actions>
 
       </DynamicNavigation>
-    </div>
   );
 };
 
