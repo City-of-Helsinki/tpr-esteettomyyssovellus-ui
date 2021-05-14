@@ -1,11 +1,15 @@
 {
   "common": {
     "header": {
-      "title": "City Platform",
-      "titleAlt": "Helsinki City: City Platform",
+      "title": "Accessibility information",
+      "titleAlt": "Helsinki City: Accessibility information",
       "skipToContent": "Skip to main content",
       "login": "Login",
-      "logout": "Logout"
+      "logout": "Logout",
+      "homepage": "Homepage",
+      "agencies": "Agencies",
+      "information": "Information about the service",
+      "maintenance": "Maintenance"
     },
     "footer": {
       "title": "Accessibility information",

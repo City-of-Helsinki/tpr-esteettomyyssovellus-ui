@@ -1,11 +1,15 @@
 {
   "common": {
     "header": {
-      "title": "Kaupunkialusta",
-      "titleAlt": "Helsingin kaupunki: Kaupunkialusta",
+      "title": "Esteettömyystiedot",
+      "titleAlt": "Helsingin kaupunki: Esteettömyystiedot",
       "skipToContent": "Siirry sivun pääsisältöön",
       "login": "Kirjaudu sisään",
-      "logout": "Kirjaudu ulos"
+      "logout": "Kirjaudu ulos",
+      "homepage": "Etusivu",
+      "agencies": "Toimipisteet",
+      "information": "Tietoa palvelusta",
+      "maintenance": "Ylläpito"
     },
     "footer": {
       "title": "Esteettömyystiedot",
