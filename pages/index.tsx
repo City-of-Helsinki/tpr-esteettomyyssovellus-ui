@@ -38,7 +38,6 @@ const Main = (): ReactElement => {
       </Head>
       <Header />
       <main id="content" className={styles.content}>
-        <Koros className={styles.koros} type="basic" flipHorizontal />
 
         <div className={styles.infoLinkContainer}>
           <Button variant="supplementary" size="small" iconRight={<IconAngleRight aria-hidden />} onClick={openTermsOfUse}>

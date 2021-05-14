@@ -1,0 +1,33 @@
+@import "~hds-design-tokens/lib/all.scss";
+@import "../../styles/mixins";
+
+.header {
+    border-bottom: 2px solid black;
+    line-height: 18px;
+}
+
+.choices {
+    margin-top: 20px;
+}
+
+.mobileLanguages {
+    padding-top: 30px;
+    padding-bottom: 40px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-weight: bold;
+    white-space: nowrap;
+    font-size: small;
+    justify-content: space-evenly;  
+}
+
+.chosen {
+    color: black;
+    text-decoration: none;
+}
+
+.unchosen {
+    color: blue;
+    text-decoration: underline;
+}
