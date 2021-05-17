@@ -1,13 +1,5 @@
 import React, { useState } from "react";
-import {
-  useAccordion,
-  Button,
-  IconAngleUp,
-  IconAngleDown,
-  IconMinus,
-  IconPlus,
-  Card,
-} from "hds-react";
+import { useAccordion, Button, IconAngleUp, IconAngleDown, IconMinus, IconPlus, Card } from "hds-react";
 import { HeadlineQuestionContainerProps } from "../types/general";
 import styles from "./HeadlineQuestionContainer.module.scss";
 
@@ -28,22 +20,15 @@ const HeadlineQuestionContainer = ({ headline }: HeadlineQuestionContainerProps)
   return (
     // TODO: define unique id (?)
     <div className={styles.headline}>
-      <Button
-        id="headlineButton"
-        {...buttonProps}
-        iconRight={icon}
-        variant={buttonVariant}
-        fullWidth
-      >
+      <Button id="headlineButton" {...buttonProps} iconRight={icon} variant={buttonVariant} fullWidth>
         <p>{headline}</p>
       </Button>
       <Card aria-label="Advanced filters" {...contentProps} className={styles.card}>
         <div className={styles.mainInfo}>
           <p>
-            PH: Tähän päädropdown main info. Tähän päädropdown main info. Tähän päädropdown main
-            info. Tähän päädropdown main info. Tähän päädropdown main info. Tähän päädropdown main
-            info. Tähän päädropdown main info. Tähän päädropdown main info. Tähän päädropdown main
-            info. Tähän päädropdown main info. Tähän päädropdown main info.
+            PH: Tähän päädropdown main info. Tähän päädropdown main info. Tähän päädropdown main info. Tähän päädropdown main info. Tähän päädropdown
+            main info. Tähän päädropdown main info. Tähän päädropdown main info. Tähän päädropdown main info. Tähän päädropdown main info. Tähän
+            päädropdown main info. Tähän päädropdown main info.
           </p>
           <QuestionInfo
             questionInfo="PH: tähän LISÄpääinfot jostain  tähän LISÄpääinfot jostain  tähän"

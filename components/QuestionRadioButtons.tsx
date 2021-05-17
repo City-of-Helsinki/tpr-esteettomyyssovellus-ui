@@ -13,22 +13,8 @@ const QuestionRadioButtons = (): JSX.Element => {
   return (
     // TODO: id, name, value, label (?) for radiobuttons needs to be set programatically with data
     <SelectionGroup direction="horizontal">
-      <RadioButton
-        id="v-radio1"
-        name="v-radio"
-        value="1"
-        label="PH: kyllä"
-        checked={selectedRadioItem === "1"}
-        onChange={handleRadioClick}
-      />
-      <RadioButton
-        id="v-radio2"
-        name="v-radio"
-        value="2"
-        label="PH: ei"
-        checked={selectedRadioItem === "2"}
-        onChange={handleRadioClick}
-      />
+      <RadioButton id="v-radio1" name="v-radio" value="1" label="PH: kyllä" checked={selectedRadioItem === "1"} onChange={handleRadioClick} />
+      <RadioButton id="v-radio2" name="v-radio" value="2" label="PH: ei" checked={selectedRadioItem === "2"} onChange={handleRadioClick} />
     </SelectionGroup>
   );
 };

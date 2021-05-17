@@ -12,6 +12,7 @@ import styles from "./index.module.scss";
 import { checkUser } from "../utils/serverside";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
 import { decrement } from "../state/reducers/exampleSlice";
+import HeadlineQuestionContainer from "../components/HeadlineQuestionContainer";
 
 const Main = (): ReactElement => {
   const i18n = useI18n();
@@ -37,12 +38,7 @@ const Main = (): ReactElement => {
       </Head>
       <main id="content" className={styles.content}>
         <div className={styles.infoLinkContainer}>
-          <Button
-            variant="supplementary"
-            size="small"
-            iconRight={<IconAngleRight aria-hidden />}
-            onClick={openTermsOfUse}
-          >
+          <Button variant="supplementary" size="small" iconRight={<IconAngleRight aria-hidden />} onClick={openTermsOfUse}>
             {i18n.t("common.header.title")}
           </Button>
         </div>
@@ -64,6 +60,9 @@ const Main = (): ReactElement => {
             </Link>
           }
         />
+        {/* for demo purposes modify with data / delete later */}
+        <HeadlineQuestionContainer headline="1. ensimmäinen otsikko" />
+        <HeadlineQuestionContainer headline="2. toinen otsikko" />
       </main>
     </Layout>
   );
@@ -79,11 +78,11 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locales }) =
 
   const user = await checkUser(req);
   if (!user) {
-     // Invalid user but login is not required
-    }
+    // Invalid user but login is not required
+  }
   if (user && user.authenticated) {
-     initialReduxState.general.user = user;
-   }
+    initialReduxState.general.user = user;
+  }
 
   return {
     props: {
