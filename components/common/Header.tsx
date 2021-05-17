@@ -26,7 +26,6 @@ const Header = ({ includeLanguageSelector, children }: HeaderProps): ReactElemen
   const router = useRouter();
 
   const currentUser = useSelector((state: RootState) => state.general.user);
-  const [active, setActive] = useState<string>();
 
   const changeLanguage = (locale: string) => {
     // Use the shallow option to avoid a server-side render in order to preserve the state
@@ -87,25 +86,25 @@ const Header = ({ includeLanguageSelector, children }: HeaderProps): ReactElemen
           <div className={styles.choices}>
             <Navigation.Row >
               <Navigation.Item 
+                as="a"
                 label={i18n.t("common.header.homepage")} 
                 href={`${router.basePath}/${router.locale}`} 
-                onClick={() => setActive(i18n.t("common.header.homepage"))} 
-                active={active === `${i18n.t("common.header.homepage")}`} />
-              <Navigation.Item 
+                active={router.pathname === `/`} />
+              <Navigation.Item
+                as="a" 
                 label={i18n.t("common.header.agencies")} 
-                href="#" 
-                onClick={() => setActive(i18n.t("common.header.agencies"))} 
-                active={active === `${i18n.t("common.header.agencies")}`} />
+                href={`${router.basePath}/${router.locale}/agencies`} 
+                active={router.pathname === `/agencies`} />
               <Navigation.Item 
+                as="a"
                 label={i18n.t("common.header.information")} 
-                href="#" 
-                onClick={() => setActive(i18n.t("common.header.information"))} 
-                active={active === `${i18n.t("common.header.information")}`} />
+                href={`${router.basePath}/${router.locale}/about`}
+                active={router.pathname === `/about`} />
               <Navigation.Item 
+                as="a"
                 label={i18n.t("common.header.maintenance")} 
-                href="#" 
-                onClick={() => setActive(i18n.t("common.header.maintenance"))} 
-                active={active === `${i18n.t("common.header.maintenance")}`} />
+                href={`${router.basePath}/${router.locale}/maintenance`}  
+                active={router.pathname === `/maintenance`} />
             </Navigation.Row>
           </div>
 

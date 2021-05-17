@@ -7,7 +7,6 @@ import { Button, IconAngleRight, IconStar, Koros } from "hds-react";
 import { store } from "../state/store";
 import i18nLoader from "../utils/i18n";
 import Layout from "../components/common/Layout";
-import Header from "../components/common/Header";
 import Notice from "../components/common/Notice";
 import styles from "./index.module.scss";
 import { checkUser } from "../utils/serverside";
@@ -36,7 +35,6 @@ const Main = (): ReactElement => {
       <Head>
         <title>{i18n.t("common.header.title")}</title>
       </Head>
-      <Header />
       <main id="content" className={styles.content}>
         <div className={styles.infoLinkContainer}>
           <Button
