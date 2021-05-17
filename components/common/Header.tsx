@@ -35,32 +35,32 @@ const Header = ({ includeLanguageSelector, children }: HeaderProps): ReactElemen
 
   // this files code from marketing project: needs editing or deleting
   const signIn = () => {
-     const {
-       location: { pathname },
-     } = window;
+    const {
+      location: { pathname },
+    } = window;
 
    window.open(`${getOrigin(router)}/helauth/login/?next=${pathname}`, "_self");
-   
   };
 
-   const signOut = async () => {
-     // TODO: Improve logout: remove cookies?
-     await fetch(`${getOrigin(router)}/api/user/logout`);
-     window.open("https://api.hel.fi/sso/openid/end-session/", "_self");
-   };
+  const signOut = async () => {
+    // TODO: Improve logout: remove cookies?
+    await fetch(`${getOrigin(router)}/api/user/logout`);
+    window.open("https://api.hel.fi/sso/openid/end-session/", "_self");
+  };
 
 
-   if (typeof window !== "undefined") {
-      const [width, setWidth] = useState<number>(window.innerWidth);
-      useEffect(() => {
-          window.addEventListener('resize', () => setWidth(window.innerWidth));
-          return () => {
-              window.removeEventListener('resize', () => setWidth(window.innerWidth));
-          }
-      }, []);
+  // This checks whether the view has become so thin, i.e. mobile view, and updates the components accordingly.
+  if (typeof window !== "undefined") {
+    const [width, setWidth] = useState<number>(window.innerWidth);
+    useEffect(() => {
+      window.addEventListener('resize', () => setWidth(window.innerWidth));
+      return () => {
+          window.removeEventListener('resize', () => setWidth(window.innerWidth));
+      }
+    }, []);
 
-      let isMobile: boolean = (width <= 768);
-      includeLanguageSelector = isMobile ? false : true;
+    let isMobile: boolean = (width <= 768);
+    includeLanguageSelector = isMobile ? false : true;
   }
 
   const fi = router.locale == "fi" ? styles.chosen : styles.unchosen;
@@ -84,7 +84,6 @@ const Header = ({ includeLanguageSelector, children }: HeaderProps): ReactElemen
       >
         {children}
         <Navigation.Actions>
-          {/* this files code from marketing project: needs editing or deleting */}
           <div className={styles.choices}>
             <Navigation.Row >
               <Navigation.Item 
@@ -92,11 +91,13 @@ const Header = ({ includeLanguageSelector, children }: HeaderProps): ReactElemen
                 href={`${router.basePath}/${router.locale}`} 
                 onClick={() => setActive(i18n.t("common.header.homepage"))} 
                 active={active === `${i18n.t("common.header.homepage")}`} />
-              <Navigation.Item label={i18n.t("common.header.agencies")} 
+              <Navigation.Item 
+                label={i18n.t("common.header.agencies")} 
                 href="#" 
                 onClick={() => setActive(i18n.t("common.header.agencies"))} 
                 active={active === `${i18n.t("common.header.agencies")}`} />
-              <Navigation.Item label={i18n.t("common.header.information")} 
+              <Navigation.Item 
+                label={i18n.t("common.header.information")} 
                 href="#" 
                 onClick={() => setActive(i18n.t("common.header.information"))} 
                 active={active === `${i18n.t("common.header.information")}`} />
@@ -131,6 +132,8 @@ const Header = ({ includeLanguageSelector, children }: HeaderProps): ReactElemen
               <Navigation.Item label="In English" onClick={() => changeLanguage("en")} />
             </Navigation.LanguageSelector>
           )}
+          {/* Hide header language selector when view is mobile. 
+          Instead show a language selector in the dropdown menu of the mobile header */}
           {!includeLanguageSelector && (
           <div className={styles.mobileLanguages} >
               <Navigation.Item className={fi} label="Suomeksi (FI)" onClick={() => changeLanguage("fi")} />
@@ -139,7 +142,6 @@ const Header = ({ includeLanguageSelector, children }: HeaderProps): ReactElemen
           </div>
           )}
         </Navigation.Actions>
-
       </DynamicNavigation>
     </>
   );
