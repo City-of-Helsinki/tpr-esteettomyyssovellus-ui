@@ -25,6 +25,8 @@ export const redirectToLogin = (resolvedUrl: string): { redirect: Redirect } => 
  export const checkUser = async (req: IncomingMessage): Promise<User | undefined> => {
    // Check the current user
    // TODO: define how a moderator user is identified
+
+   // PLACEHOLDER **********
    const userResponse = await fetch(`https://www.hel.fi/api/user/?format=json`, { headers: { cookie: req.headers.cookie as string } });
 
    // UNCOMMENT THIS  

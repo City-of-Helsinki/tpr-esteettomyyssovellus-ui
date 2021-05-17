@@ -49,7 +49,7 @@ const Header = ({ includeLanguageSelector, children }: HeaderProps): ReactElemen
   };
 
 
-  // This checks whether the view has become so thin, i.e. mobile view, and updates the components accordingly.
+  // This checks whether the view has become so thin, i.e. mobile view, that the languageselector component should change place.
   if (typeof window !== "undefined") {
     const [width, setWidth] = useState<number>(window.innerWidth);
     useEffect(() => {

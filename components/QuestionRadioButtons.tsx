@@ -7,7 +7,7 @@ const QuestionRadioButtons = (): JSX.Element => {
   const i18n = useI18n();
   const [selectedRadioItem, setSelectedRadioItem] = useState("0");
 
-  const handleRadioClick = (e) => {
+  const handleRadioClick = (e: any) => {
     setSelectedRadioItem(e.target.value);
   };
   return (
