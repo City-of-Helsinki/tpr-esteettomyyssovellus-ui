@@ -1,0 +1,9 @@
+@import "~hds-design-tokens/lib/all.scss";
+@import "../styles/mixins.scss";
+
+.selectDropdown {
+    width: 15rem;
+    @include media(xs, s) {
+        padding: $spacing-s 0;
+    }
+}

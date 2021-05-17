@@ -1,0 +1,13 @@
+@import "~hds-design-tokens/lib/all.scss";
+
+.infobutton {
+    color: $color-bus;
+    cursor: pointer;
+    display: flex;
+    align-items: flex-start;
+    svg {
+        height: $spacing-s;
+        width: $spacing-s;
+        padding-right: $spacing-2-xs;
+    }
+}

@@ -38,9 +38,13 @@ const Main = (): ReactElement => {
       </Head>
       <Header />
       <main id="content" className={styles.content}>
-
         <div className={styles.infoLinkContainer}>
-          <Button variant="supplementary" size="small" iconRight={<IconAngleRight aria-hidden />} onClick={openTermsOfUse}>
+          <Button
+            variant="supplementary"
+            size="small"
+            iconRight={<IconAngleRight aria-hidden />}
+            onClick={openTermsOfUse}
+          >
             {i18n.t("common.header.title")}
           </Button>
         </div>
