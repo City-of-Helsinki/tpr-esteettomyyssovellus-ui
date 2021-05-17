@@ -7,10 +7,9 @@ import { Button, IconAngleRight, IconStar, Koros } from "hds-react";
 import { store } from "../state/store";
 import i18nLoader from "../utils/i18n";
 import Layout from "../components/common/Layout";
-import Header from "../components/common/Header";
 import Notice from "../components/common/Notice";
 import styles from "./index.module.scss";
-
+import { checkUser } from "../utils/serverside";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
 import { decrement } from "../state/reducers/exampleSlice";
 
@@ -36,7 +35,6 @@ const Main = (): ReactElement => {
       <Head>
         <title>{i18n.t("common.header.title")}</title>
       </Head>
-      <Header />
       <main id="content" className={styles.content}>
         <div className={styles.infoLinkContainer}>
           <Button
@@ -79,13 +77,13 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locales }) =
   // reduxStore.dispatch({ type: CLEAR_STATE });
   const initialReduxState = reduxStore.getState();
 
-  // const user = await checkUser(req);
-  // if (!user) {
-  //   // Invalid user but login is not required
-  // }
-  // if (user && user.authenticated) {
-  //   initialReduxState.general.user = user;
-  // }
+  const user = await checkUser(req);
+  if (!user) {
+     // Invalid user but login is not required
+    }
+  if (user && user.authenticated) {
+     initialReduxState.general.user = user;
+   }
 
   return {
     props: {

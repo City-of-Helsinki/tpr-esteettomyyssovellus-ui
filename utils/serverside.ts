@@ -3,6 +3,7 @@
 
 import { IncomingMessage } from "http";
 import { Redirect } from "next";
+import { User } from "../types/general";
 
 export const getOriginServerSide = (): string => {
   // The server-side calls should use the local backend directly
@@ -21,24 +22,29 @@ export const redirectToLogin = (resolvedUrl: string): { redirect: Redirect } => 
   };
 };
 
-// export const checkUser = async (req: IncomingMessage): Promise<User | undefined> => {
-//   // Check the current user
-//   // TODO: define how a moderator user is identified
-//   const userResponse = await fetch(`${getOriginServerSide()}/api/user/?format=json`, { headers: { cookie: req.headers.cookie as string } });
+ export const checkUser = async (req: IncomingMessage): Promise<User | undefined> => {
+   // Check the current user
+   // TODO: define how a moderator user is identified
 
-//   if (!userResponse.ok) {
-//     // Invalid user
-//     return undefined;
-//   }
+   // PLACEHOLDER **********
+   const userResponse = await fetch(`https://www.hel.fi/api/user/?format=json`, { headers: { cookie: req.headers.cookie as string } });
 
-//   // Check the user response
-//   const user = await userResponse.json();
+   // UNCOMMENT THIS  
+   //const userResponse = await fetch(`${getOriginServerSide()}/api/user/?format=json`, { headers: { cookie: req.headers.cookie as string } });
 
-//   if (!user.email || user.email.length === 0) {
-//     // Invalid user
-//     return undefined;
-//   }
+   if (!userResponse.ok) {
+     // Invalid user
+     return undefined;
+   }
 
-//   // Valid user
-//   return { authenticated: true, ...user };
-// };
+   // Check the user response
+   const user = await userResponse.json();
+
+   if (!user.email || user.email.length === 0) {
+     // Invalid user
+     return undefined;
+   }
+
+   // Valid user
+   return { authenticated: true, ...user };
+ };

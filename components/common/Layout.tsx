@@ -3,6 +3,7 @@
 import React, { ReactNode, ReactElement, useEffect, useRef } from "react";
 import Head from "next/head";
 import Footer from "./Footer";
+import Header from "./Header";
 import styles from "./Layout.module.scss";
 
 interface LayoutProps {
@@ -27,6 +28,7 @@ const Layout = ({ children }: LayoutProps): ReactElement => {
       </Head>
       <div className={styles.left} />
       <div className={styles.main}>
+        <Header />
         {children}
         <Footer />
       </div>

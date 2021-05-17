@@ -9,6 +9,7 @@ import { Navigation, IconSignout } from "hds-react";
 import { defaultLocale } from "../../utils/i18n";
 import getOrigin from "../../utils/request";
 import styles from "./Header.module.scss";
+import { RootState } from "../../state/store";
 
 interface HeaderProps {
   includeLanguageSelector?: boolean;
@@ -24,7 +25,7 @@ const Header = ({ includeLanguageSelector, children }: HeaderProps): ReactElemen
   const i18n = useI18n();
   const router = useRouter();
 
-  //const currentUser = useSelector((state: RootState) => state.general.user);
+  const currentUser = useSelector((state: RootState) => state.general.user);
 
   const changeLanguage = (locale: string) => {
     // Use the shallow option to avoid a server-side render in order to preserve the state
@@ -33,39 +34,40 @@ const Header = ({ includeLanguageSelector, children }: HeaderProps): ReactElemen
 
   // this files code from marketing project: needs editing or deleting
   const signIn = () => {
-     const {
-       location: { pathname },
-     } = window;
+    const {
+      location: { pathname },
+    } = window;
 
    window.open(`${getOrigin(router)}/helauth/login/?next=${pathname}`, "_self");
   };
 
-   const signOut = async () => {
-     // TODO: Improve logout: remove cookies?
-     await fetch(`${getOrigin(router)}/api/user/logout`);
-     window.open("https://api.hel.fi/sso/openid/end-session/", "_self");
-   };
+  const signOut = async () => {
+    // TODO: Improve logout: remove cookies?
+    await fetch(`${getOrigin(router)}/api/user/logout`);
+    window.open("https://api.hel.fi/sso/openid/end-session/", "_self");
+  };
 
 
-   if (typeof window !== "undefined") {
-      const [width, setWidth] = useState<number>(window.innerWidth);
-      useEffect(() => {
-          window.addEventListener('resize', () => setWidth(window.innerWidth));
-          return () => {
-              window.removeEventListener('resize', () => setWidth(window.innerWidth));
-          }
-      }, []);
+  // This checks whether the view has become so thin, i.e. mobile view, that the languageselector component should change place.
+  if (typeof window !== "undefined") {
+    const [width, setWidth] = useState<number>(window.innerWidth);
+    useEffect(() => {
+      window.addEventListener('resize', () => setWidth(window.innerWidth));
+      return () => {
+          window.removeEventListener('resize', () => setWidth(window.innerWidth));
+      }
+    }, []);
 
-      let isMobile: boolean = (width <= 768);
-      includeLanguageSelector = isMobile ? false : true;
+    let isMobile: boolean = (width <= 768);
+    includeLanguageSelector = isMobile ? false : true;
   }
 
   const fi = router.locale == "fi" ? styles.chosen : styles.unchosen;
   const sv = router.locale == "sv" ? styles.chosen : styles.unchosen;
   const en = router.locale == "en" ? styles.chosen : styles.unchosen;
 
-
   return (
+    <>
       <DynamicNavigation
         // @ts-ignore: The HDS Navigation component comes from a dynamic import, see above for details
         title={i18n.t("common.header.title")}
@@ -81,20 +83,35 @@ const Header = ({ includeLanguageSelector, children }: HeaderProps): ReactElemen
       >
         {children}
         <Navigation.Actions>
-          {/* this files code from marketing project: needs editing or deleting */}
           <div className={styles.choices}>
             <Navigation.Row >
-              <Navigation.Item label={i18n.t("common.header.homepage")} active />
-              <Navigation.Item label={i18n.t("common.header.agencies")} />
-              <Navigation.Item label={i18n.t("common.header.information")} />
-              <Navigation.Item label={i18n.t("common.header.maintenance")} />
+              <Navigation.Item 
+                as="a"
+                label={i18n.t("common.header.homepage")} 
+                href={`${router.basePath}/${router.locale}`} 
+                active={router.pathname === `/`} />
+              <Navigation.Item
+                as="a" 
+                label={i18n.t("common.header.agencies")} 
+                href={`${router.basePath}/${router.locale}/agencies`} 
+                active={router.pathname === `/agencies`} />
+              <Navigation.Item 
+                as="a"
+                label={i18n.t("common.header.information")} 
+                href={`${router.basePath}/${router.locale}/about`}
+                active={router.pathname === `/about`} />
+              <Navigation.Item 
+                as="a"
+                label={i18n.t("common.header.maintenance")} 
+                href={`${router.basePath}/${router.locale}/maintenance`}  
+                active={router.pathname === `/maintenance`} />
             </Navigation.Row>
           </div>
 
           { <Navigation.User
             label={i18n.t("common.header.login")}
-            authenticated={false}  //currentUser?.authenticated}
-            userName={"John"} //currentUser?.first_name || currentUser?.email}
+            authenticated={currentUser?.authenticated}
+            userName={currentUser?.first_name || currentUser?.email}
             onSignIn={signIn}
           >
             <Navigation.Item
@@ -114,6 +131,8 @@ const Header = ({ includeLanguageSelector, children }: HeaderProps): ReactElemen
               <Navigation.Item label="In English" onClick={() => changeLanguage("en")} />
             </Navigation.LanguageSelector>
           )}
+          {/* Hide header language selector when view is mobile. 
+          Instead show a language selector in the dropdown menu of the mobile header */}
           {!includeLanguageSelector && (
           <div className={styles.mobileLanguages} >
               <Navigation.Item className={fi} label="Suomeksi (FI)" onClick={() => changeLanguage("fi")} />
@@ -122,8 +141,8 @@ const Header = ({ includeLanguageSelector, children }: HeaderProps): ReactElemen
           </div>
           )}
         </Navigation.Actions>
-
       </DynamicNavigation>
+    </>
   );
 };
 
