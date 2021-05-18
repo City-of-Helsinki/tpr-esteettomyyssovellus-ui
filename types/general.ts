@@ -50,3 +50,11 @@ export interface QuestionDataProps {
   hasAdditionalInformation: boolean;
   data: Dictionary<string>[];
 }
+
+export interface QuestionTextInputProps {
+  id: string;
+  label?: string;
+  placeholder: string;
+  helperText?: string;
+  required?: boolean;
+}
