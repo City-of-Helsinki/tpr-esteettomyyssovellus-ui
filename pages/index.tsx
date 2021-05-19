@@ -13,6 +13,7 @@ import { checkUser } from "../utils/serverside";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
 import { decrement } from "../state/reducers/exampleSlice";
 import HeadlineQuestionContainer from "../components/HeadlineQuestionContainer";
+import QuestionFormCtrlButtons from "../components/QuestionFormCtrlButtons";
 
 const Main = (): ReactElement => {
   const i18n = useI18n();
@@ -63,6 +64,7 @@ const Main = (): ReactElement => {
         {/* for demo purposes modify with data / delete later */}
         <HeadlineQuestionContainer headline="1. ensimmäinen otsikko" />
         <HeadlineQuestionContainer headline="2. toinen otsikko" />
+        <QuestionFormCtrlButtons hasCancelButton hasValidateButton hasSaveDraftButton hasPreviewButton />
       </main>
     </Layout>
   );
