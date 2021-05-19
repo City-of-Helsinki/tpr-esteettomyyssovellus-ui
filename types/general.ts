@@ -39,7 +39,7 @@ export interface QuestionInfoProps {
   textOnBottom?: boolean;
   questionInfo: string;
   showInfoText: boolean;
-  clickHandler: any;
+  clickHandler: () => void;
 }
 
 export interface QuestionDataProps {
@@ -49,4 +49,20 @@ export interface QuestionDataProps {
   qInfo?: string | undefined;
   hasAdditionalInformation: boolean;
   data: Dictionary<string>[];
+}
+
+export interface QuestionButtonProps {
+  children: string;
+  variant: "primary" | "secondary" | "success" | "danger";
+  iconLeft?: JSX.Element | undefined;
+  iconRight?: JSX.Element | undefined;
+  disabled?: boolean;
+  onClickHandler?: () => void;
+}
+
+export interface QuestionFormCtrlButtonsProps {
+  hasCancelButton?: boolean;
+  hasValidateButton?: boolean;
+  hasSaveDraftButton?: boolean;
+  hasPreviewButton?: boolean;
 }
