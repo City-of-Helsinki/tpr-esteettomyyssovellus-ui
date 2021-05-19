@@ -3,6 +3,7 @@ import QuestionDropdown from "./QuestionDropdown";
 import QuestionRadioButtons from "./QuestionRadioButtons";
 import QuestionContainer from "./QuestionContainer";
 import { QuestionDataProps } from "../types/general";
+import QuestionTextInput from "./QuestionTextInput";
 
 // TODO: when data, get questions data as props and map to return
 // used to list multiple questions: <QContainer><QElement /></QC>
@@ -63,6 +64,10 @@ const QuestionsList = (): JSX.Element => {
           </QuestionContainer>
         );
       })}
+      {/* for testing textinput component */}
+      <QuestionContainer key={1.4} questionNumber={1.4} questionText="PH: Yhteyshenkilö" backgroundColor="white" hasAdditionalInfo={false}>
+        <QuestionTextInput id="1" placeholder="esim etunimi sukunimi" />
+      </QuestionContainer>
     </>
   );
 };

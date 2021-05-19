@@ -51,6 +51,14 @@ export interface QuestionDataProps {
   data: Dictionary<string>[];
 }
 
+
+export interface QuestionTextInputProps {
+  id: string;
+  label?: string;
+  placeholder: string;
+  helperText?: string;
+  required?: boolean;
+}
 export interface QuestionButtonProps {
   children: string;
   variant: "primary" | "secondary" | "success" | "danger";
