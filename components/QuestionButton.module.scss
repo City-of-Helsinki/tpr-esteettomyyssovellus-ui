@@ -1,0 +1,6 @@
+@import "~hds-design-tokens/lib/all.scss";
+@import "../styles/mixins.scss";
+
+.button {
+    margin: $spacing-3-xs $spacing-2-xs;
+}
