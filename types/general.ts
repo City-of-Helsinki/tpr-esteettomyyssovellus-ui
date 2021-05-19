@@ -29,6 +29,8 @@ export interface HeadlineQuestionContainerProps {
 
 export interface DropdownQuestionProps {
   options: Dictionary<string>[];
+  label?: string;
+  placeholder?: string;
 }
 
 export interface QuestionInfoProps {
@@ -50,7 +52,6 @@ export interface QuestionDataProps {
   hasAdditionalInformation: boolean;
   data: Dictionary<string>[];
 }
-
 
 export interface QuestionTextInputProps {
   id: string;

@@ -1,0 +1,15 @@
+@import "~hds-design-tokens/lib/all.scss";
+@import "../styles/mixins.scss";
+
+.mainContainer {
+    padding: $spacing-s;
+    .inputContainer {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+        @include media(m, l, xl) {
+            flex-direction: row;
+        }
+    }
+}
