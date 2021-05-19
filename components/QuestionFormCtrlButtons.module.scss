@@ -1,0 +1,27 @@
+@import "~hds-design-tokens/lib/all.scss";
+@import "../styles/mixins.scss";
+
+.container {
+    display: flex;
+    flex-direction: column;
+    width: 86%;
+    margin: auto;
+    justify-content: space-between;
+    align-items: center;
+    @include media(l, xl) {
+        flex-direction: row ;
+    }
+    .left {
+        justify-content: flex-start;
+    }
+    .right {
+        justify-content: flex-end;
+        display: flex;
+        margin: auto;
+        flex-direction: column;
+        @include media (xl) {
+            margin: 0;
+            display: block;
+        }
+    }
+}
