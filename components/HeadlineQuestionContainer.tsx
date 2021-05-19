@@ -5,6 +5,7 @@ import styles from "./HeadlineQuestionContainer.module.scss";
 
 import QuestionsList from "./QuestionsList";
 import QuestionInfo from "./QuestionInfo";
+import QuestionFormImportExistingData from "./QuestionFormImportExistingData";
 
 // used for mainlevel blue accordions
 const HeadlineQuestionContainer = ({ headline }: HeadlineQuestionContainerProps): JSX.Element => {
@@ -20,7 +21,7 @@ const HeadlineQuestionContainer = ({ headline }: HeadlineQuestionContainerProps)
   return (
     // TODO: define unique id (?)
     <div className={styles.headline}>
-      <Button id="headlineButton" {...buttonProps} iconRight={icon} variant={buttonVariant} fullWidth>
+      <Button id="headlineButton" {...buttonProps} iconRight={icon} variant={buttonVariant} fullWidth className={styles.headlineButton}>
         <p>{headline}</p>
       </Button>
       <Card aria-label="Advanced filters" {...contentProps} className={styles.card}>
@@ -39,6 +40,10 @@ const HeadlineQuestionContainer = ({ headline }: HeadlineQuestionContainerProps)
             closeText="PH: pienennä ohje"
             closeIcon={<IconAngleUp aria-hidden />}
           />
+        </div>
+        <div>
+          {/* TODO: maybe add checking if should exist on all headline accs */}
+          <QuestionFormImportExistingData />
         </div>
         {/* TODO: add questions as params to QuestionsList, from fetch data */}
         <QuestionsList />
