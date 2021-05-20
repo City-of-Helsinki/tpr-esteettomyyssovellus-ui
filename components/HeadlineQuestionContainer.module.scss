@@ -16,12 +16,14 @@
         width: 70%;
     }
 
-    button {
+    .headlineButton {
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
         justify-content: space-between;
         align-items: center;
+        --outline-gutter: 0px;
+        --outline-width: 0px;
         @include media(xs, s) {
             border: none;
             color: $color-black;
