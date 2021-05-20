@@ -57,8 +57,8 @@ const Header = ({ includeLanguageSelector, children }: HeaderProps): ReactElemen
           window.removeEventListener('resize', () => setWidth(window.innerWidth));
       }
     }, []);
-
-    let isMobile: boolean = (width <= 768);
+    console.log(width);
+    let isMobile: boolean = (width < 768);
     includeLanguageSelector = isMobile ? false : true;
   }
 
@@ -92,26 +92,22 @@ const Header = ({ includeLanguageSelector, children }: HeaderProps): ReactElemen
                 active={router.pathname === `/`} />
               <Navigation.Item
                 as="a" 
-                label={i18n.t("common.header.agencies")} 
-                href={`${router.basePath}/${router.locale}/agencies`} 
-                active={router.pathname === `/agencies`} />
+                label={i18n.t("common.header.servicepoints")} 
+                href={`${router.basePath}/${router.locale}/servicepoints`} 
+                active={router.pathname === `/servicepoints`} />
               <Navigation.Item 
                 as="a"
                 label={i18n.t("common.header.information")} 
                 href={`${router.basePath}/${router.locale}/about`}
                 active={router.pathname === `/about`} />
-              <Navigation.Item 
-                as="a"
-                label={i18n.t("common.header.maintenance")} 
-                href={`${router.basePath}/${router.locale}/maintenance`}  
-                active={router.pathname === `/maintenance`} />
             </Navigation.Row>
           </div>
 
-          { <Navigation.User
+          {/* Placeholders to authenticated and username */}
+          {<Navigation.User
             label={i18n.t("common.header.login")}
-            authenticated={currentUser?.authenticated}
-            userName={currentUser?.first_name || currentUser?.email}
+            authenticated={true}                        /* Change to: currentUser?.authenticated} */
+            userName={"Placeholder"}               /* Change to: currentUser?.first_name || currentUser?.email} */
             onSignIn={signIn}
           >
             <Navigation.Item
@@ -122,7 +118,7 @@ const Header = ({ includeLanguageSelector, children }: HeaderProps): ReactElemen
               label={i18n.t("common.header.logout")}
               onClick={signOut}
             />
-          </Navigation.User>}
+          </Navigation.User>} 
 
           {includeLanguageSelector && (
             <Navigation.LanguageSelector label={(router.locale || defaultLocale).toUpperCase()}>
