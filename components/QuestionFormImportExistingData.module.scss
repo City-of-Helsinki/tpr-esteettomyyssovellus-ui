@@ -11,5 +11,8 @@
         @include media(m, l, xl) {
             flex-direction: row;
         }
+        :focus::after {
+            margin-left: 0px;
+        }
     }
 }

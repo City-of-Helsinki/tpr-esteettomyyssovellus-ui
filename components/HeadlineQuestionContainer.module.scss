@@ -22,8 +22,7 @@
         flex-wrap: wrap;
         justify-content: space-between;
         align-items: center;
-        --outline-gutter: 0px;
-        --outline-width: 0px;
+        
         @include media(xs, s) {
             border: none;
             color: $color-black;
@@ -34,7 +33,10 @@
         }
     }
         :focus::after {
-            border-style: none;
+            --focus-outline-width: 3px;
+            --focus-outline-color: var(--color-coat-of-arms);
+            --focus-outline-border-radius: 2px;
+            margin-left: -15px;
         }
     .card {
         padding: 0;
