@@ -1,0 +1,13 @@
+@import "~hds-design-tokens/lib/all.scss";
+@import "../styles/mixins.scss";
+
+.container {
+    padding: $spacing-s $spacing-m $spacing-s $spacing-s;
+    Button {
+        margin: auto $spacing-2-xs;
+        @include media(xs, s, m, l) {
+            margin: 0;
+        }
+        
+    }
+}
