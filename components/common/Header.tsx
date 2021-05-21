@@ -47,6 +47,12 @@ const Header = ({ includeLanguageSelector, children }: HeaderProps): ReactElemen
     window.open("https://api.hel.fi/sso/openid/end-session/", "_self");
   };
 
+  const handleKeyPress = (e: Event, id: string) => {
+    var evt = e as KeyboardEvent;
+    if (evt.code == "Enter") {
+      document.getElementById(id)?.click();
+    }
+  }
 
   // This checks whether the view has become so thin, i.e. mobile view, that the languageselector component should change place.
   if (typeof window !== "undefined") {
@@ -57,7 +63,6 @@ const Header = ({ includeLanguageSelector, children }: HeaderProps): ReactElemen
           window.removeEventListener('resize', () => setWidth(window.innerWidth));
       }
     }, []);
-    console.log(width);
     let isMobile: boolean = (width < 768);
     includeLanguageSelector = isMobile ? false : true;
   }
@@ -83,19 +88,22 @@ const Header = ({ includeLanguageSelector, children }: HeaderProps): ReactElemen
       >
         {children}
         <Navigation.Actions>
-          <div className={styles.choices}>
+          <div className={styles.choices} role="region" aria-label="Pages">
             <Navigation.Row >
               <Navigation.Item 
+                role="button"
                 as="a"
                 label={i18n.t("common.header.homepage")} 
                 href={`${router.basePath}/${router.locale}`} 
                 active={router.pathname === `/`} />
               <Navigation.Item
+                role="button"
                 as="a" 
                 label={i18n.t("common.header.servicepoints")} 
                 href={`${router.basePath}/${router.locale}/servicepoints`} 
                 active={router.pathname === `/servicepoints`} />
               <Navigation.Item 
+                role="button"
                 as="a"
                 label={i18n.t("common.header.information")} 
                 href={`${router.basePath}/${router.locale}/about`}
@@ -122,20 +130,18 @@ const Header = ({ includeLanguageSelector, children }: HeaderProps): ReactElemen
 
           {includeLanguageSelector && (
             <Navigation.LanguageSelector label={(router.locale || defaultLocale).toUpperCase()}>
-              <Navigation.Item label="Suomeksi" onClick={() => changeLanguage("fi")} />
-              <Navigation.Item label="På svenska" onClick={() => changeLanguage("sv")} />
-              <Navigation.Item label="In English" onClick={() => changeLanguage("en")} />
-            </Navigation.LanguageSelector>
-          )}
+              <Navigation.Item role="button" id="fi" label="Suomeksi" tabIndex={0} onKeyPress={(e: any) => handleKeyPress(e, "fi")} onClick={() => changeLanguage("fi")} />
+              <Navigation.Item role="button" id="sv" label="På svenska" tabIndex={0} onKeyPress={(e: any) => handleKeyPress(e, "sv")} onClick={() => changeLanguage("sv")} />
+              <Navigation.Item role="button" id="en" label="In English" tabIndex={0} onKeyPress={(e: any) => handleKeyPress(e, "en")} onClick={() => changeLanguage("en")} />
+            </Navigation.LanguageSelector>)}
           {/* Hide header language selector when view is mobile. 
           Instead show a language selector in the dropdown menu of the mobile header */}
           {!includeLanguageSelector && (
-          <div className={styles.mobileLanguages} >
-              <Navigation.Item className={fi} label="Suomeksi (FI)" onClick={() => changeLanguage("fi")} />
-              <Navigation.Item className={sv} label="På svenska (SV)" onClick={() => changeLanguage("sv")} />
-              <Navigation.Item className={en} label="In English (EN)" onClick={() => changeLanguage("en")} />
-          </div>
-          )}
+          <div className={styles.mobileLanguages} role="region">
+              <Navigation.Item role="button" id="fim" tabIndex={0} className={fi} label="Suomeksi (FI)" onKeyPress={(e: any) => handleKeyPress(e, "fim")} onClick={() => changeLanguage("fi")} />
+              <Navigation.Item role="button" id="svm" tabIndex={0} className={sv} label="På svenska (SV)" onKeyPress={(e: any) => handleKeyPress(e, "svm")} onClick={() => changeLanguage("sv")} />
+              <Navigation.Item role="button" id="enm" tabIndex={0} className={en} label="In English (EN)" onKeyPress={(e: any) => handleKeyPress(e, "enm")} onClick={() => changeLanguage("en")} />
+          </div>)}
         </Navigation.Actions>
       </DynamicNavigation>
     </>
