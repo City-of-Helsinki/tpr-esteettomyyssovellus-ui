@@ -19,9 +19,16 @@
         display: flex;
         margin: auto;
         flex-direction: column;
+        @include media (xs, s, m) {
+            align-items: center;
+        }
+
+        @include media (l) {
+            margin: 0;
+        }
         @include media (xl) {
             margin: 0;
-            display: block;
+            flex-direction: row;
         }
     }
 }
