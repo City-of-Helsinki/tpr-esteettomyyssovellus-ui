@@ -16,6 +16,18 @@
         width: 70%;
     }
 
+    .importAddinfoContainer {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        @include media(l, xl) {
+            flex-direction: row;
+            align-items: flex-end;
+        }
+    }
+
     .headlineButton {
         display: flex;
         flex-direction: row;

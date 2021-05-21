@@ -6,6 +6,7 @@ import styles from "./HeadlineQuestionContainer.module.scss";
 import QuestionsList from "./QuestionsList";
 import QuestionInfo from "./QuestionInfo";
 import QuestionFormImportExistingData from "./QuestionFormImportExistingData";
+import QuestionAdditionalInfoCtrlButton from "./QuestionAdditionalInfoCtrlButton";
 
 // used for mainlevel blue accordions
 const HeadlineQuestionContainer = ({ headline }: HeadlineQuestionContainerProps): JSX.Element => {
@@ -15,8 +16,12 @@ const HeadlineQuestionContainer = ({ headline }: HeadlineQuestionContainerProps)
   const icon = isOpen ? <IconMinus aria-hidden /> : <IconPlus aria-hidden />;
   const buttonVariant = isOpen ? "primary" : "secondary";
   const [showMainInfo, setShotMainInfo] = useState(false);
+  const [showAdditionalInfo, setShowAdditionalInfo] = useState(false);
   const handleToggleMainInfo = () => {
     setShotMainInfo(!showMainInfo);
+  };
+  const handleAdditionalInfoToggle = () => {
+    setShowAdditionalInfo(!showAdditionalInfo);
   };
   return (
     // TODO: define unique id (?)
@@ -41,12 +46,13 @@ const HeadlineQuestionContainer = ({ headline }: HeadlineQuestionContainerProps)
             closeIcon={<IconAngleUp aria-hidden />}
           />
         </div>
-        <div>
+        <div className={styles.importAddinfoContainer}>
           {/* TODO: maybe add checking if should exist on all headline accs */}
           <QuestionFormImportExistingData />
+          <QuestionAdditionalInfoCtrlButton curState={showAdditionalInfo} onClick={handleAdditionalInfoToggle} />
         </div>
         {/* TODO: add questions as params to QuestionsList, from fetch data */}
-        <QuestionsList />
+        <QuestionsList additionalInfoVisible={showAdditionalInfo} />
       </Card>
     </div>
   );

@@ -49,7 +49,6 @@ export interface QuestionDataProps {
   qnumber: number;
   qText: string;
   qInfo?: string | undefined;
-  hasAdditionalInformation: boolean;
   data: Dictionary<string>[];
 }
 
@@ -74,4 +73,12 @@ export interface QuestionFormCtrlButtonsProps {
   hasValidateButton?: boolean;
   hasSaveDraftButton?: boolean;
   hasPreviewButton?: boolean;
+}
+
+export interface QuestionsListProps {
+  additionalInfoVisible: boolean;
+}
+
+export interface QuestionAdditionalInfoCtrlButtonProps {
+  onClick: () => void;
 }
