@@ -81,4 +81,5 @@ export interface QuestionsListProps {
 
 export interface QuestionAdditionalInfoCtrlButtonProps {
   onClick: () => void;
+  curState: boolean;
 }

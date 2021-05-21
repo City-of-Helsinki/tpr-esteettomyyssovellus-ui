@@ -7,9 +7,18 @@
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
-        align-items: center;
-        @include media(m, l, xl) {
+        @include media(l, xl) {
             flex-direction: row;
+        }
+        Button {
+            margin: auto $spacing-2-xs;
+            @include media(xs, s) {
+                margin: 0;
+            }
+            @include media(m) {
+                margin: $spacing-2-xs 0;
+            }
+            
         }
     }
 }
