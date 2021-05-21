@@ -6,16 +6,16 @@ import Head from "next/head";
 import i18nLoader from "../utils/i18n";
 import { GetServerSideProps } from "next";
 
-const Maintenance = (): ReactElement => {
+const Servicepoints = (): ReactElement => {
     const i18n = useI18n();
   
     return (
         <Layout>
           <Head>
-            <title>{i18n.t("common.header.title")}</title>
+            <title>{i18n.t("notification.title")}</title>
           </Head>   
           <main id="content">
-              <h1>Maintenance</h1>
+              <h1>Servicepoints</h1>
           </main>
         </Layout>
       );
@@ -45,4 +45,4 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locales }) =
     };
   };
     
-export default Maintenance;
+export default Servicepoints;
