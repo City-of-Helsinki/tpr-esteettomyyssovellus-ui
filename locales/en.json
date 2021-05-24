@@ -29,6 +29,9 @@
       "en": "in English"
     },
     "opensInANewTab": "(Open in a new tab)",
-    "todo": "TODO - TEXT HERE"
+    "todo": "TODO - TEXT HERE",
+    "landing": {
+      "title": "PH: Welcome to updating accessibity information"
+    }
   }
 }

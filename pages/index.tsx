@@ -52,8 +52,7 @@ const Main = (): ReactElement => {
     dispatch(decrement());
   };
 
-  // TODO: Add these variables to locales & update URL
-  let heroTitle = "PH: Tervetuloa päivittämään esteettömyys- tietoja";
+  let heroTitle = i18n.t("common.landing.title");
   let heroText = ""
   //let heroUrl = "https://i.stack.imgur.com/y9DpT.jpg";
 
