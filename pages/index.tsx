@@ -52,10 +52,13 @@ const Main = (): ReactElement => {
     dispatch(decrement());
   };
 
-  let heroTitle = "PL: Tervetuloa päivittämään esteettömyys- tietoja";
+  // TODO: Add these variables to locales & update URL
+  let heroTitle = "PH: Tervetuloa päivittämään esteettömyys- tietoja";
   let heroText = ""
   let heroUrl = "https://i.stack.imgur.com/y9DpT.jpg";
-  let isHero = true;
+
+  // TODO: isHero variable can be removed if the hero component is placed directly to index.tsx. If it is placed into a page templ
+  // let isHero = true;
   let heroShallow = false;
   const classes = useStyles(heroShallow);
 
@@ -65,7 +68,7 @@ const Main = (): ReactElement => {
         <title>{i18n.t("common.header.title")}</title>
       </Head>
       <main id="content" className={styles.content}>
-      {isHero ? (
+      {// isHero ? (
           <div className={classes.hero}>
             { heroShallow ? (
               <HeroShallow title={heroTitle} imageUrl={heroUrl} />
@@ -73,9 +76,9 @@ const Main = (): ReactElement => {
               <Hero title={heroTitle} text={heroText} imageUrl={heroUrl}/>
             )}
           </div>
-        ) : (
+        /*) : (
           <></>
-        )}
+        )*/}
 
         <div className={styles.infoLinkContainer}>
           <Button variant="supplementary" size="small" iconRight={<IconAngleRight aria-hidden />} onClick={openTermsOfUse}>

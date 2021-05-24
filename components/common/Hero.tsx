@@ -10,14 +10,13 @@ import {
     CardContent, 
     withStyles } 
 from '@material-ui/core';
-import { Koros } from "hds-react";
 import dynamic from "next/dynamic";
 
 const FiCard = withStyles({
     root: {
       position: "relative"
-    }
-  })(Card);
+}
+})(Card);
 
 const FiCardMedia = withStyles({
 root: {
@@ -33,16 +32,16 @@ const FiCardContent = withStyles({
 root: {
     position: "relative",
     backgroundColor: "transparent"
-}
+} 
 })(CardContent);
-
-const drupalUrl = process.env.REACT_APP_DRUPAL_URL;
-
 
 // @ts-ignore: A dynamic import must be used to force client-side rendering regardless of the typescript errors
 const DynamicKoros = dynamic(() => import("hds-react").then((hds) => hds.Koros), { ssr: false });
 //import { drupalUrl } from "../config";
 
+const drupalUrl = process.env.REACT_APP_DRUPAL_URL;
+
+// TODO: Move styles to Hero.module.scss
 const useStyles = makeStyles((theme) => ({
   container: {
     padding: 0,
