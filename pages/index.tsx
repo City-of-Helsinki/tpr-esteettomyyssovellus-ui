@@ -55,7 +55,9 @@ const Main = (): ReactElement => {
   // TODO: Add these variables to locales & update URL
   let heroTitle = "PH: Tervetuloa päivittämään esteettömyys- tietoja";
   let heroText = ""
-  let heroUrl = "https://i.stack.imgur.com/y9DpT.jpg";
+  //let heroUrl = "https://i.stack.imgur.com/y9DpT.jpg";
+
+  let heroUrl = "http://localhost:3000/homepagephoto.png";
 
   // TODO: isHero variable can be removed if the hero component is placed directly to index.tsx. If it is placed into a page templ
   // let isHero = true;
