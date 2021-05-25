@@ -14,6 +14,7 @@ import { useAppSelector, useAppDispatch } from "../state/hooks";
 import { decrement } from "../state/reducers/exampleSlice";
 import HeadlineQuestionContainer from "../components/HeadlineQuestionContainer";
 import QuestionFormCtrlButtons from "../components/QuestionFormCtrlButtons";
+import SearchBoxWithButtons from "../components/SearchBoxWithButtons";
 
 const Main = (): ReactElement => {
   const i18n = useI18n();
@@ -38,6 +39,10 @@ const Main = (): ReactElement => {
         <title>{i18n.t("common.header.title")}</title>
       </Head>
       <main id="content" className={styles.content}>
+        <div>
+          <SearchBoxWithButtons></SearchBoxWithButtons>
+        </div>
+
         <div className={styles.infoLinkContainer}>
           <Button variant="supplementary" size="small" iconRight={<IconAngleRight aria-hidden />} onClick={openTermsOfUse}>
             {i18n.t("common.header.title")}

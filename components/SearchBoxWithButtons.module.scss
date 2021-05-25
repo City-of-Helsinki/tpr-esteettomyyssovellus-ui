@@ -1,0 +1,40 @@
+@import "~hds-design-tokens/lib/all.scss";
+@import "../styles/mixins.scss";
+
+
+.container {
+    width: 76%;
+    height: 110px;
+    background-color: #ccf;
+    margin-top: 20px;
+    margin-left: 12%;
+    align-items: center;
+
+    .search {
+        padding-top: 5px;
+        flex: auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        position: relative;
+        .input {
+            width: 50%;
+            margin-top: 15px;
+            
+            .helpText {
+                padding-top: 2px;
+                display: flex;
+                align-items: center;
+            }
+        }
+
+        .button {
+            margin-top: -12px;
+        }
+        .searchText {
+            margin-left: 20px;
+            font-weight: bold;
+        }
+    }
+    
+}
