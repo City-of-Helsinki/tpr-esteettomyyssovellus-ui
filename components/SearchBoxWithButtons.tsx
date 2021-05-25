@@ -1,5 +1,5 @@
-import React from "react";
-import { IconSearch, IconAngleDown } from "hds-react";
+import React, { ChangeEvent} from "react";
+import { IconSearch, IconAngleDown, TextInput } from "hds-react";
 import styles from "./SearchBoxWithButtons.module.scss";
 import QuestionTextInput from "./QuestionTextInput";
 import Button from "./QuestionButton";
@@ -7,8 +7,15 @@ import Button from "./QuestionButton";
 
 const SearchBoxWithButtons = (): JSX.Element => {
 
-        
+    const submitSearch = () => {
+        // TODO: functionality
+        console.log("Search");
+    }
 
+    const emptySearch = () => { 
+        // TODO: Add functionality
+        console.log("Empty search")
+    }
 
     return (
         <>
@@ -17,18 +24,21 @@ const SearchBoxWithButtons = (): JSX.Element => {
                 <div className={styles.search}>
                     <p className={styles.searchText}> Hae toimipistettä</p>
                     <div className={styles.input}>
-                        <QuestionTextInput id="1" placeholder="Anna toimipisteen nimi tai joku muu hakusana" />
+                        <QuestionTextInput  
+                            id="search" placeholder="Anna toimipisteen nimi tai joku muu hakusana"/>
                         <div>
-                            <a className={styles.helpText}> näytä hakuohje <IconAngleDown style={{marginLeft: "1px"}} /></a>
+                            <a 
+                                // TODO: Add functionality
+                                className={styles.helpText}> näytä hakuohje <IconAngleDown style={{marginLeft: "1px"}} /></a>
                         </div>
                     </div>
                     <div className={styles.button}>
-                        <Button variant="primary" iconLeft={<IconSearch />}>
+                        <Button variant="primary" iconLeft={<IconSearch />} onClickHandler={() => submitSearch()}>
                             Hae
                         </Button>
                     </div>
-                    <div className={styles.button}>
-                        <Button variant="secondary">
+                    <div id="empty" className={styles.button}>
+                        <Button variant="secondary" onClickHandler={() => emptySearch()}>
                             Tyhjennä
                         </Button>
                     </div>
