@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
     height: 550
   },
   fiCardContent: {
-      height: 550,
+      height: 510,
       color: 'white',
       width: '30%',
     [theme.breakpoints.only("xs")]: {
