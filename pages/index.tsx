@@ -14,6 +14,26 @@ import { useAppSelector, useAppDispatch } from "../state/hooks";
 import { decrement } from "../state/reducers/exampleSlice";
 import HeadlineQuestionContainer from "../components/HeadlineQuestionContainer";
 import QuestionFormCtrlButtons from "../components/QuestionFormCtrlButtons";
+import { makeStyles } from '@material-ui/core/styles';
+import {Hero, HeroShallow} from "../components/common/Hero";
+
+const useStyles = makeStyles((theme) => ({
+  navi: {
+    zIndex: 10000,
+    fontFamily: "HelsinkiGrotesk",
+    fontSize: 16,
+  },
+  mainGrid: {
+    marginTop: theme.spacing(3),
+  },
+  hero: (heroShallow: Boolean) => ({
+    height: heroShallow ? 360 : 550,
+  }),
+  main: {},
+  paragraphs: {
+    marginTop: 56,
+  },
+}));
 
 const Main = (): ReactElement => {
   const i18n = useI18n();
@@ -32,12 +52,35 @@ const Main = (): ReactElement => {
     dispatch(decrement());
   };
 
+  let heroTitle = i18n.t("common.landing.title");
+  let heroText = ""
+  //let heroUrl = "https://i.stack.imgur.com/y9DpT.jpg";
+
+  let heroUrl = "http://localhost:3000/homepagephoto.png";
+
+  // TODO: isHero variable can be removed if the hero component is placed directly to index.tsx. If it is placed into a page templ
+  // let isHero = true;
+  let heroShallow = false;
+  const classes = useStyles(heroShallow);
+
   return (
     <Layout>
       <Head>
         <title>{i18n.t("common.header.title")}</title>
       </Head>
       <main id="content" className={styles.content}>
+      {// isHero ? (
+          <div className={classes.hero}>
+            { heroShallow ? (
+              <HeroShallow title={heroTitle} imageUrl={heroUrl} />
+            ) : (
+              <Hero title={heroTitle} text={heroText} imageUrl={heroUrl}/>
+            )}
+          </div>
+        /*) : (
+          <></>
+        )*/}
+
         <div className={styles.infoLinkContainer}>
           <Button variant="supplementary" size="small" iconRight={<IconAngleRight aria-hidden />} onClick={openTermsOfUse}>
             {i18n.t("common.header.title")}

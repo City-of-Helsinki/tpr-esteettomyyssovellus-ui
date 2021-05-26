@@ -29,6 +29,9 @@
       "en": "på engelska"
     },
     "opensInANewTab": "(öppnar i ny flik)",
-    "todo": "TODO - TEXT HERE"
+    "todo": "TODO - TEXT HERE",
+    "landing": {
+      "title": "PH: Välkommen till uppdatering av tillgänglighetsinformation"
+    }
   }
 }
