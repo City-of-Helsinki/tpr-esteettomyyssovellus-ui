@@ -13,7 +13,8 @@
   .main {
     display: flex;
     flex-direction: column;
-    flex-grow: 0;
+    // TODO: figure out which flex-grow e.g. are best 
+    flex-grow: 2;
 
     @include media(xs) {
       width: $container-width-xs;

@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useState, useEffect } from "react";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import Link from "next/link";
@@ -14,6 +14,8 @@ import { useAppSelector, useAppDispatch } from "../state/hooks";
 import { decrement } from "../state/reducers/exampleSlice";
 import HeadlineQuestionContainer from "../components/HeadlineQuestionContainer";
 import QuestionFormCtrlButtons from "../components/QuestionFormCtrlButtons";
+import SearchBoxWithButtons from "../components/SearchBoxWithButtons";
+import SearchBoxWithButtonsMobile from "../components/SearchBoxWithButtonsMobile";
 import { makeStyles } from '@material-ui/core/styles';
 import {Hero, HeroShallow} from "../components/common/Hero";
 
@@ -35,7 +37,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Main = (): ReactElement => {
+
+interface MainProps {
+  isMobile?: boolean
+}
+
+const Main = ({isMobile}: MainProps): ReactElement => {
   const i18n = useI18n();
 
   const openTermsOfUse = () => {
@@ -51,6 +58,18 @@ const Main = (): ReactElement => {
     console.log(curCount);
     dispatch(decrement());
   };
+
+  // This checks whether the view has become so thin, i.e. mobile view, that the languageselector component should change place.
+  if (typeof window !== "undefined") {
+    const [width, setWidth] = useState<number>(window.innerWidth);
+    useEffect(() => {
+      window.addEventListener('resize', () => setWidth(window.innerWidth));
+      return () => {
+          window.removeEventListener('resize', () => setWidth(window.innerWidth));
+      }
+    }, []);
+    isMobile = (width < 768);
+  }
 
   let heroTitle = i18n.t("common.landing.title");
   let heroText = ""
@@ -69,6 +88,7 @@ const Main = (): ReactElement => {
         <title>{i18n.t("common.header.title")}</title>
       </Head>
       <main id="content" className={styles.content}>
+        
       {// isHero ? (
           <div className={classes.hero}>
             { heroShallow ? (
@@ -80,14 +100,20 @@ const Main = (): ReactElement => {
         /*) : (
           <></>
         )*/}
+        <div>
+          { isMobile ? 
+          (<SearchBoxWithButtonsMobile/>) : 
+          (<SearchBoxWithButtons/>)}
+        </div>
 
+        {/*
         <div className={styles.infoLinkContainer}>
           <Button variant="supplementary" size="small" iconRight={<IconAngleRight aria-hidden />} onClick={openTermsOfUse}>
             {i18n.t("common.header.title")}
           </Button>
         </div>
 
-        {/* for redux-toolkit example -> delete */}
+        for redux-toolkit example -> delete 
         <h2>{`count is: ${curCount}`}</h2>
 
         <Notice
@@ -104,6 +130,7 @@ const Main = (): ReactElement => {
             </Link>
           }
         />
+        */}
         {/* for demo purposes modify with data / delete later */}
         <HeadlineQuestionContainer headline="1. ensimmäinen otsikko" />
         <HeadlineQuestionContainer headline="2. toinen otsikko" />
@@ -132,9 +159,14 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locales }) =
   return {
     props: {
       initialReduxState,
-      lngDict,
+      lngDict
     },
   };
 };
+
+Main.defaultProps = {
+  isMobile: false
+};
+
 
 export default Main;
