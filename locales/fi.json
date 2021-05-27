@@ -29,6 +29,9 @@
       "en": "englanniksi"
     },
     "opensInANewTab": "(aukeaa uuteen välilehteen)",
-    "todo": "TODO - TEXT HERE"
+    "todo": "TODO - TEXT HERE",
+    "landing": {
+      "title": "PH: Tervetuloa päivittämään esteettömyystietoja"
+    }
   }
 }

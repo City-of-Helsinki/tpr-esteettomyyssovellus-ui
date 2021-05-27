@@ -13,22 +13,14 @@
 
 }
 
-
 .choices {
     margin-top: 20px;
     position: relative;
-    .chosen {
-        color: black;
-        text-decoration: none;
-    }
-    
-    .unchosen {
-        color: blue;
-        text-decoration: underline;
-    }
-    
 }
 
+.logout {
+    margin-left: 0;
+}
 
 
 .mobileLanguages {
@@ -40,7 +32,18 @@
     font-weight: bold;
     white-space: nowrap;
     font-size: small;
-    justify-content: space-evenly;  
+    justify-content: space-evenly; 
+    .chosen {
+        color: black;
+        text-decoration: none;
+    }
+    
+    .unchosen {
+        color: #0000bf !important;
+        text-decoration: underline !important;
+    }
+    
+
 }
 
 
