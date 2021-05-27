@@ -4,6 +4,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { useI18n } from "next-localization";
 import { Button, IconAngleRight, IconStar, Koros } from "hds-react";
+import { makeStyles } from "@material-ui/core/styles";
 import { store } from "../state/store";
 import i18nLoader from "../utils/i18n";
 import Layout from "../components/common/Layout";
@@ -14,10 +15,14 @@ import { useAppSelector, useAppDispatch } from "../state/hooks";
 import { decrement } from "../state/reducers/exampleSlice";
 import HeadlineQuestionContainer from "../components/HeadlineQuestionContainer";
 import QuestionFormCtrlButtons from "../components/QuestionFormCtrlButtons";
+<<<<<<< Updated upstream
 import SearchBoxWithButtons from "../components/SearchBoxWithButtons";
 import SearchBoxWithButtonsMobile from "../components/SearchBoxWithButtonsMobile";
 import { makeStyles } from '@material-ui/core/styles';
 import {Hero, HeroShallow} from "../components/common/Hero";
+=======
+import { Hero, HeroShallow } from "../components/common/Hero";
+>>>>>>> Stashed changes
 
 const useStyles = makeStyles((theme) => ({
   navi: {
@@ -28,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
   mainGrid: {
     marginTop: theme.spacing(3),
   },
-  hero: (heroShallow: Boolean) => ({
+  hero: (heroShallow: boolean) => ({
     height: heroShallow ? 360 : 550,
   }),
   main: {},
@@ -59,6 +64,7 @@ const Main = ({isMobile}: MainProps): ReactElement => {
     dispatch(decrement());
   };
 
+<<<<<<< Updated upstream
   // This checks whether the view has become so thin, i.e. mobile view, that the languageselector component should change place.
   if (typeof window !== "undefined") {
     const [width, setWidth] = useState<number>(window.innerWidth);
@@ -74,12 +80,17 @@ const Main = ({isMobile}: MainProps): ReactElement => {
   let heroTitle = i18n.t("common.landing.title");
   let heroText = ""
   //let heroUrl = "https://i.stack.imgur.com/y9DpT.jpg";
+=======
+  const heroTitle = i18n.t("common.landing.title");
+  const heroText = "";
+  // let heroUrl = "https://i.stack.imgur.com/y9DpT.jpg";
+>>>>>>> Stashed changes
 
-  let heroUrl = "http://localhost:3000/homepagephoto.png";
+  const heroUrl = "http://localhost:3000/homepagephoto.png";
 
   // TODO: isHero variable can be removed if the hero component is placed directly to index.tsx. If it is placed into a page templ
   // let isHero = true;
-  let heroShallow = false;
+  const heroShallow = false;
   const classes = useStyles(heroShallow);
 
   return (
@@ -88,23 +99,29 @@ const Main = ({isMobile}: MainProps): ReactElement => {
         <title>{i18n.t("common.header.title")}</title>
       </Head>
       <main id="content" className={styles.content}>
+<<<<<<< Updated upstream
         
       {// isHero ? (
+=======
+        {
+          // isHero ? (
+>>>>>>> Stashed changes
           <div className={classes.hero}>
-            { heroShallow ? (
-              <HeroShallow title={heroTitle} imageUrl={heroUrl} />
-            ) : (
-              <Hero title={heroTitle} text={heroText} imageUrl={heroUrl}/>
-            )}
+            {heroShallow ? <HeroShallow title={heroTitle} imageUrl={heroUrl} /> : <Hero title={heroTitle} text={heroText} imageUrl={heroUrl} />}
           </div>
-        /*) : (
+          /* ) : (
           <></>
+<<<<<<< Updated upstream
         )*/}
         <div>
           { isMobile ? 
           (<SearchBoxWithButtonsMobile/>) : 
           (<SearchBoxWithButtons/>)}
         </div>
+=======
+        ) */
+        }
+>>>>>>> Stashed changes
 
         {/*
         <div className={styles.infoLinkContainer}>

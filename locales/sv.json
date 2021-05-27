@@ -32,6 +32,13 @@
     "todo": "TODO - TEXT HERE",
     "landing": {
       "title": "PH: Välkommen till uppdatering av tillgänglighetsinformation"
-    }
+    },
+    "generalMainInfoIsOpen": "Nära hjälp",
+    "generalMainInfoIsClose": "Instruktioner för tillhandahållande av tillgänglighetsinformation"
+  }, "question": {
+
+  }, "servicepoint": {
+    "createServicepointButtonText": "Fyll i tillgänglighetsformuläret",
+    "editServicepointButtonText": "Ändra tillgänglighetsinformation"
   }
 }

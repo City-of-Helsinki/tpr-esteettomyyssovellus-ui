@@ -32,6 +32,13 @@
     "todo": "TODO - TEXT HERE",
     "landing": {
       "title": "PH: Welcome to updating accessibity information"
-    }
+    },
+    "generalMainInfoIsOpen": "Close instructions",
+    "generalMainInfoIsClose": "Instructions for filling accessibility information"
+  }, "question": {
+
+  }, "servicepoint": {
+    "createServicepointButtonText": "Fill accessibility information",
+    "editServicepointButtonText": "Edit accessibility information"
   }
 }

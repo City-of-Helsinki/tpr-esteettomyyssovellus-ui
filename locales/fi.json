@@ -32,6 +32,17 @@
     "todo": "TODO - TEXT HERE",
     "landing": {
       "title": "PH: Tervetuloa päivittämään esteettömyystietoja"
-    }
+    },
+    "generalMainInfoIsOpen": "Sulje ohje",
+    "generalMainInfoIsClose": "Ohje esteettömyystietojen antamiseen"
+
+  },
+  "question": {
+
+  },
+  "servicepoint": {
+    "createServicepointButtonText": "Täytä esteettömyyslomake",
+    "editServicepointButtonText": "Muuta esteettömyystietoja"
+    
   }
 }
