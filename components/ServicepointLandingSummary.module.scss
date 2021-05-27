@@ -1,0 +1,33 @@
+@import "~hds-design-tokens/lib/all.scss";
+@import "../styles/mixins.scss";
+
+.maincontainer {
+    margin-top: $spacing-l;
+    .headercontainer {
+        display: flex;
+        flex-direction: row;
+        align-content: center;
+        align-items: center;
+        justify-content: space-between;
+        @include media(xs, s, m) {
+            flex-direction: column;
+            align-content: flex-start;
+            align-items: flex-start;
+        }
+        h2 {
+            width: 70%;
+            color: $color-bus;
+            font-size: $fontsize-heading-l !important;
+        }
+    }
+    .nodatacontainer {
+        span {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            svg {
+                margin-right: $spacing-s;
+            }
+        }
+    }
+}
