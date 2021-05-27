@@ -36,9 +36,17 @@
     "generalMainInfoIsOpen": "Nära hjälp",
     "generalMainInfoIsClose": "Instruktioner för tillhandahållande av tillgänglighetsinformation"
   }, "question": {
-
-  }, "servicepoint": {
-    "createServicepointButtonText": "Fyll i tillgänglighetsformuläret",
-    "editServicepointButtonText": "Ändra tillgänglighetsinformation"
+      "something": "something"
+  }, 
+  "servicepoint": {
+    "buttons": {
+      "createServicepoint": "Fyll i tillgänglighetsformuläret",
+      "editServicepoint": "Ändra tillgänglighetsinformation",
+      "mainCtrlReturn": "Återgå till sökningen",
+      "mainCtrlDelete": "Ta bort tillgänglighetsinformation"
+    },
+    "contactInfoHeader": "Kontaktinformation för tillgänglighet på kontoret",
+    "contactFormSummaryHeader": "Servicepoint tillgänglighetsinformation",
+    "noDataContactinfo": "Inga kontaktuppgifter för tillgänglighetsfrågor har lämnats till kontoret"
   }
 }

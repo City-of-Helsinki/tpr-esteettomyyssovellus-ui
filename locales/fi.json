@@ -38,11 +38,17 @@
 
   },
   "question": {
-
+    "something": "something"
   },
   "servicepoint": {
-    "createServicepointButtonText": "Täytä esteettömyyslomake",
-    "editServicepointButtonText": "Muuta esteettömyystietoja"
-    
+    "buttons": {
+      "createServicepoint": "Täytä esteettömyyslomake",
+      "editServicepoint": "Muuta esteettömyystietoja",
+      "mainCtrlReturn": "Palaa hakuun",
+      "mainCtrlDelete": "Poista esteettömyystieto"
+    },
+    "contactInfoHeader": "Toimipisteen esteettömyyden yhteystiedot",
+    "contactFormSummaryHeader": "Toimipisteen esteettömyystiedot",
+    "noDataContactinfo": "Toimipisteelle ei ole annettu esteettömyysasioiden yhteystietoja"
   }
 }
