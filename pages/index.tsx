@@ -15,14 +15,10 @@ import { useAppSelector, useAppDispatch } from "../state/hooks";
 import { decrement } from "../state/reducers/exampleSlice";
 import HeadlineQuestionContainer from "../components/HeadlineQuestionContainer";
 import QuestionFormCtrlButtons from "../components/QuestionFormCtrlButtons";
-<<<<<<< Updated upstream
 import SearchBoxWithButtons from "../components/SearchBoxWithButtons";
 import SearchBoxWithButtonsMobile from "../components/SearchBoxWithButtonsMobile";
 import { makeStyles } from '@material-ui/core/styles';
 import {Hero, HeroShallow} from "../components/common/Hero";
-=======
-import { Hero, HeroShallow } from "../components/common/Hero";
->>>>>>> Stashed changes
 
 const useStyles = makeStyles((theme) => ({
   navi: {
@@ -64,7 +60,6 @@ const Main = ({isMobile}: MainProps): ReactElement => {
     dispatch(decrement());
   };
 
-<<<<<<< Updated upstream
   // This checks whether the view has become so thin, i.e. mobile view, that the languageselector component should change place.
   if (typeof window !== "undefined") {
     const [width, setWidth] = useState<number>(window.innerWidth);
