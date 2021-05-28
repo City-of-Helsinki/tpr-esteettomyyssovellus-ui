@@ -80,11 +80,9 @@ const Main = ({isMobile}: MainProps): ReactElement => {
   let heroTitle = i18n.t("common.landing.title");
   let heroText = ""
   //let heroUrl = "https://i.stack.imgur.com/y9DpT.jpg";
-=======
   const heroTitle = i18n.t("common.landing.title");
   const heroText = "";
   // let heroUrl = "https://i.stack.imgur.com/y9DpT.jpg";
->>>>>>> Stashed changes
 
   const heroUrl = "http://localhost:3000/homepagephoto.png";
 
@@ -99,29 +97,23 @@ const Main = ({isMobile}: MainProps): ReactElement => {
         <title>{i18n.t("common.header.title")}</title>
       </Head>
       <main id="content" className={styles.content}>
-<<<<<<< Updated upstream
         
       {// isHero ? (
-=======
         {
           // isHero ? (
->>>>>>> Stashed changes
           <div className={classes.hero}>
             {heroShallow ? <HeroShallow title={heroTitle} imageUrl={heroUrl} /> : <Hero title={heroTitle} text={heroText} imageUrl={heroUrl} />}
           </div>
           /* ) : (
           <></>
-<<<<<<< Updated upstream
         )*/}
         <div>
           { isMobile ? 
           (<SearchBoxWithButtonsMobile/>) : 
           (<SearchBoxWithButtons/>)}
         </div>
-=======
         ) */
         }
->>>>>>> Stashed changes
 
         {/*
         <div className={styles.infoLinkContainer}>
