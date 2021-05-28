@@ -39,9 +39,7 @@ export interface QuestionInfoProps {
   closeText: string;
   closeIcon: JSX.Element;
   textOnBottom?: boolean;
-  questionInfo: string;
-  showInfoText: boolean;
-  clickHandler: () => void;
+  children: string | JSX.Element;
 }
 
 export interface QuestionDataProps {
@@ -82,4 +80,20 @@ export interface QuestionsListProps {
 export interface QuestionAdditionalInfoCtrlButtonProps {
   onClick: () => void;
   curState: boolean;
+}
+
+export interface ServicepointLandingSummaryProps {
+  header: string;
+  // TODO: change any type when knowledge of the type getting
+  data?: any;
+}
+
+export interface ServicepointLandingSummaryContentProps {
+  contentHeader?: string;
+  // TODO: change any type when knowledge of the type getting
+  children?: any;
+}
+
+export interface ServicepointLandingSummaryCtrlButtonsProps {
+  hasData: boolean;
 }

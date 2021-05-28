@@ -1,27 +1,25 @@
 import { useI18n } from "next-localization";
+import { useState } from "react";
 import styles from "./QuestionInfo.module.scss";
 import { QuestionInfoProps } from "../types/general";
 
 // used to display info for each question respectively
-const QuestionInfo = ({
-  openText,
-  openIcon,
-  closeText,
-  closeIcon,
-  textOnBottom = false,
-  questionInfo,
-  showInfoText,
-  clickHandler,
-}: QuestionInfoProps): JSX.Element => {
+const QuestionInfo = ({ openText, openIcon, closeText, closeIcon, textOnBottom = false, children }: QuestionInfoProps): JSX.Element => {
   const i18n = useI18n();
+
+  const [showContent, setShowContent] = useState(false);
+  const handleToggleContent = () => {
+    setShowContent(!showContent);
+  };
+
   return (
     <>
-      {questionInfo && !showInfoText ? (
+      {children && !showContent ? (
         <>
           <span
             className={styles.infobutton}
-            onClick={clickHandler}
-            onKeyPress={clickHandler}
+            onClick={handleToggleContent}
+            onKeyPress={handleToggleContent}
             role="button"
             tabIndex={0}
             title="PH: näytä mikä tämä on"
@@ -35,13 +33,13 @@ const QuestionInfo = ({
         <>
           {textOnBottom ? null : (
             <div>
-              <p>{questionInfo}</p>
+              <p>{children}</p>
             </div>
           )}
           <span
             className={styles.infobutton}
-            onClick={clickHandler}
-            onKeyPress={clickHandler}
+            onClick={handleToggleContent}
+            onKeyPress={handleToggleContent}
             role="button"
             tabIndex={0}
             title="PH: sulje mikä tämä on"
@@ -52,7 +50,7 @@ const QuestionInfo = ({
           </span>
           {textOnBottom ? (
             <div>
-              <p>{questionInfo}</p>
+              <p>{children}</p>
             </div>
           ) : null}
         </>

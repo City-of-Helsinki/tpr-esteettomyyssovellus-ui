@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { IconInfoCircle, IconCrossCircle } from "hds-react";
 import styles from "./QuestionContainer.module.scss";
 import { QuestionContainerProps } from "../types/general";
@@ -14,11 +14,6 @@ const QuestionContainer = ({
   hasAdditionalInfo,
   backgroundColor,
 }: QuestionContainerProps): JSX.Element => {
-  const [showInfoText, setInfoTextVisibility] = useState(false);
-  const handleToggleInfo = () => {
-    setInfoTextVisibility(!showInfoText);
-  };
-
   return (
     <div className={styles.maincontainer} style={{ backgroundColor }}>
       <div className={styles.questioncontainer}>
@@ -28,15 +23,14 @@ const QuestionContainer = ({
           </p>
           {questionInfo ? (
             <QuestionInfo
-              questionInfo={questionInfo}
-              showInfoText={showInfoText}
-              clickHandler={handleToggleInfo}
               openText="PH: mitä tämä tarkoittaa?"
               openIcon={<IconInfoCircle aria-hidden />}
               closeText="PH: sulje ohje"
               closeIcon={<IconCrossCircle aria-hidden />}
               textOnBottom
-            />
+            >
+              {questionInfo}
+            </QuestionInfo>
           ) : null}
         </div>
         <div className={styles.children}>{children}</div>

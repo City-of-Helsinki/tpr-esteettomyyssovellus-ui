@@ -15,11 +15,7 @@ const HeadlineQuestionContainer = ({ headline }: HeadlineQuestionContainerProps)
   // Change icon based on accordion open state
   const icon = isOpen ? <IconMinus aria-hidden /> : <IconPlus aria-hidden />;
   const buttonVariant = isOpen ? "primary" : "secondary";
-  const [showMainInfo, setShotMainInfo] = useState(false);
   const [showAdditionalInfo, setShowAdditionalInfo] = useState(false);
-  const handleToggleMainInfo = () => {
-    setShotMainInfo(!showMainInfo);
-  };
   const handleAdditionalInfoToggle = () => {
     setShowAdditionalInfo(!showAdditionalInfo);
   };
@@ -37,14 +33,13 @@ const HeadlineQuestionContainer = ({ headline }: HeadlineQuestionContainerProps)
             päädropdown main info. Tähän päädropdown main info.
           </p>
           <QuestionInfo
-            questionInfo="PH: tähän LISÄpääinfot jostain  tähän LISÄpääinfot jostain  tähän"
-            showInfoText={showMainInfo}
-            clickHandler={handleToggleMainInfo}
             openText="PH: näytä lisää pääsisäänkäynnin kulkureiteistä?"
             openIcon={<IconAngleDown aria-hidden />}
             closeText="PH: pienennä ohje"
             closeIcon={<IconAngleUp aria-hidden />}
-          />
+          >
+            PH: tähän LISÄpääinfot jostain tähän LISÄpääinfot jostain tähän
+          </QuestionInfo>
         </div>
         <div className={styles.importAddinfoContainer}>
           {/* TODO: maybe add checking if should exist on all headline accs */}

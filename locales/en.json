@@ -32,6 +32,21 @@
     "todo": "TODO - TEXT HERE",
     "landing": {
       "title": "PH: Welcome to updating accessibity information"
-    }
+    },
+    "generalMainInfoIsOpen": "Close instructions",
+    "generalMainInfoIsClose": "Instructions for filling accessibility information"
+  }, "question": {
+    "something": "something"
+  }, 
+  "servicepoint": {
+    "buttons": {
+      "createServicepoint": "Fill accessibility form",
+      "editServicepoint": "Edit accessibility form",
+      "mainCtrlReturn": "Return to search",
+      "mainCtrlDelete": "Delete accessibility data"
+    },
+    "contactInfoHeader": "Servicepoint contact information",
+    "contactFormSummaryHeader": "Servicepoint accessibility information",
+    "noDataContactinfo": "No contact details for accessibility issues have been provided to the office"
   }
 }

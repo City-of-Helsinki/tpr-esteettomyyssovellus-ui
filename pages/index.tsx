@@ -4,6 +4,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { useI18n } from "next-localization";
 import { Button, IconAngleRight, IconStar, Koros } from "hds-react";
+import { makeStyles } from "@material-ui/core/styles";
 import { store } from "../state/store";
 import i18nLoader from "../utils/i18n";
 import Layout from "../components/common/Layout";
@@ -28,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
   mainGrid: {
     marginTop: theme.spacing(3),
   },
-  hero: (heroShallow: Boolean) => ({
+  hero: (heroShallow: boolean) => ({
     height: heroShallow ? 360 : 550,
   }),
   main: {},
@@ -74,12 +75,15 @@ const Main = ({isMobile}: MainProps): ReactElement => {
   let heroTitle = i18n.t("common.landing.title");
   let heroText = ""
   //let heroUrl = "https://i.stack.imgur.com/y9DpT.jpg";
+  const heroTitle = i18n.t("common.landing.title");
+  const heroText = "";
+  // let heroUrl = "https://i.stack.imgur.com/y9DpT.jpg";
 
-  let heroUrl = "http://localhost:3000/homepagephoto.png";
+  const heroUrl = "http://localhost:3000/homepagephoto.png";
 
   // TODO: isHero variable can be removed if the hero component is placed directly to index.tsx. If it is placed into a page templ
   // let isHero = true;
-  let heroShallow = false;
+  const heroShallow = false;
   const classes = useStyles(heroShallow);
 
   return (
@@ -90,14 +94,12 @@ const Main = ({isMobile}: MainProps): ReactElement => {
       <main id="content" className={styles.content}>
         
       {// isHero ? (
+        {
+          // isHero ? (
           <div className={classes.hero}>
-            { heroShallow ? (
-              <HeroShallow title={heroTitle} imageUrl={heroUrl} />
-            ) : (
-              <Hero title={heroTitle} text={heroText} imageUrl={heroUrl}/>
-            )}
+            {heroShallow ? <HeroShallow title={heroTitle} imageUrl={heroUrl} /> : <Hero title={heroTitle} text={heroText} imageUrl={heroUrl} />}
           </div>
-        /*) : (
+          /* ) : (
           <></>
         )*/}
         <div>
@@ -105,6 +107,8 @@ const Main = ({isMobile}: MainProps): ReactElement => {
           (<SearchBoxWithButtonsMobile/>) : 
           (<SearchBoxWithButtons/>)}
         </div>
+        ) */
+        }
 
         {/*
         <div className={styles.infoLinkContainer}>

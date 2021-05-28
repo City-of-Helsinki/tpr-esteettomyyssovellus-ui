@@ -32,6 +32,23 @@
     "todo": "TODO - TEXT HERE",
     "landing": {
       "title": "PH: Tervetuloa päivittämään esteettömyystietoja"
-    }
+    },
+    "generalMainInfoIsOpen": "Sulje ohje",
+    "generalMainInfoIsClose": "Ohje esteettömyystietojen antamiseen"
+
+  },
+  "question": {
+    "something": "something"
+  },
+  "servicepoint": {
+    "buttons": {
+      "createServicepoint": "Täytä esteettömyyslomake",
+      "editServicepoint": "Muuta esteettömyystietoja",
+      "mainCtrlReturn": "Palaa hakuun",
+      "mainCtrlDelete": "Poista esteettömyystieto"
+    },
+    "contactInfoHeader": "Toimipisteen esteettömyyden yhteystiedot",
+    "contactFormSummaryHeader": "Toimipisteen esteettömyystiedot",
+    "noDataContactinfo": "Toimipisteelle ei ole annettu esteettömyysasioiden yhteystietoja"
   }
 }
