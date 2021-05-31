@@ -17,7 +17,6 @@ import HeadlineQuestionContainer from "../components/HeadlineQuestionContainer";
 import QuestionFormCtrlButtons from "../components/QuestionFormCtrlButtons";
 import SearchBoxWithButtons from "../components/SearchBoxWithButtons";
 import SearchBoxWithButtonsMobile from "../components/SearchBoxWithButtonsMobile";
-import { makeStyles } from '@material-ui/core/styles';
 import {Hero, HeroShallow} from "../components/common/Hero";
 
 const useStyles = makeStyles((theme) => ({
@@ -29,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   mainGrid: {
     marginTop: theme.spacing(3),
   },
-  hero: (heroShallow: boolean) => ({
+  hero: (heroShallow: Boolean) => ({
     height: heroShallow ? 360 : 550,
   }),
   main: {},
@@ -37,7 +36,6 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 56,
   },
 }));
-
 
 interface MainProps {
   isMobile?: boolean
@@ -75,8 +73,6 @@ const Main = ({isMobile}: MainProps): ReactElement => {
   let heroTitle = i18n.t("common.landing.title");
   let heroText = ""
   //let heroUrl = "https://i.stack.imgur.com/y9DpT.jpg";
-  const heroTitle = i18n.t("common.landing.title");
-  const heroText = "";
   // let heroUrl = "https://i.stack.imgur.com/y9DpT.jpg";
 
   const heroUrl = "http://localhost:3000/homepagephoto.png";
@@ -93,8 +89,7 @@ const Main = ({isMobile}: MainProps): ReactElement => {
       </Head>
       <main id="content" className={styles.content}>
         
-      {// isHero ? (
-        {
+      {// isHero ? ()
           // isHero ? (
           <div className={classes.hero}>
             {heroShallow ? <HeroShallow title={heroTitle} imageUrl={heroUrl} /> : <Hero title={heroTitle} text={heroText} imageUrl={heroUrl} />}
@@ -107,8 +102,6 @@ const Main = ({isMobile}: MainProps): ReactElement => {
           (<SearchBoxWithButtonsMobile/>) : 
           (<SearchBoxWithButtons/>)}
         </div>
-        ) */
-        }
 
         {/*
         <div className={styles.infoLinkContainer}>
