@@ -34,8 +34,15 @@
       "title": "PH: Welcome to updating accessibity information"
     },
     "generalMainInfoIsOpen": "Close instructions",
-    "generalMainInfoIsClose": "Instructions for filling accessibility information"
-  }, "question": {
+    "generalMainInfoIsClose": "Instructions for filling accessibility information",
+    "buttons": {
+      "saveAndReturn": "Save and return",
+      "returnNoSave": "Exit without saving",
+      "addPictureFromDevice":"Upload picture from device",
+      "addPictureLink": "Add link to picture"
+    }
+  },
+  "question": {
     "something": "something"
   }, 
   "servicepoint": {
@@ -48,5 +55,13 @@
     "contactInfoHeader": "Servicepoint contact information",
     "contactFormSummaryHeader": "Servicepoint accessibility information",
     "noDataContactinfo": "No contact details for accessibility issues have been provided to the office"
+  },
+  "additionalInfo": {
+    "addLocation": "Add location",
+    "addPictures": "Add pictures",
+    "addComment": "Add comment",
+    "locationInstructions": "Instructions for creating LOCATION",
+    "picturesInstructions": "Instructions for adding PICTURES",
+    "commentInstructions": "Instructions for adding COMMENT"
   }
 }
