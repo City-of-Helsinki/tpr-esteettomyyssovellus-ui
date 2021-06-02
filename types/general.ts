@@ -25,6 +25,8 @@ export interface QuestionContainerProps {
 
 export interface HeadlineQuestionContainerProps {
   headline: string;
+  initOpen?: boolean;
+  children: any;
 }
 
 export interface DropdownQuestionProps {

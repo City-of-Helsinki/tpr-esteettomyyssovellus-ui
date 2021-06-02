@@ -34,7 +34,13 @@
       "title": "PH: Tervetuloa päivittämään esteettömyystietoja"
     },
     "generalMainInfoIsOpen": "Sulje ohje",
-    "generalMainInfoIsClose": "Ohje esteettömyystietojen antamiseen"
+    "generalMainInfoIsClose": "Ohje esteettömyystietojen antamiseen",
+    "buttons": {
+      "saveAndReturn": "Tallenna ja palaa",
+      "returnNoSave": "Poistu tallentamatta",
+      "addPictureFromDevice":"Lisää kuva laitteelta",
+      "addPictureLink": "Lisää kuvalinkki"
+    }
 
   },
   "question": {
@@ -50,5 +56,13 @@
     "contactInfoHeader": "Toimipisteen esteettömyyden yhteystiedot",
     "contactFormSummaryHeader": "Toimipisteen esteettömyystiedot",
     "noDataContactinfo": "Toimipisteelle ei ole annettu esteettömyysasioiden yhteystietoja"
+  },
+  "additionalInfo": {
+    "addLocation": "Lisää sijainti",
+    "addPictures": "Lisää kuvia",
+    "addComment": "Lisää kommentti",
+    "locationInstructions": "Lisää tähän ohjeita LOKAATION lisäämiseen",
+    "picturesInstructions": "Lisää tähän ohjeita KUVIEN lisäämiseen",
+    "commentInstructions": "Lisää tähän 'ohjeita' KOMMENTIN lisäämiseen"
   }
 }

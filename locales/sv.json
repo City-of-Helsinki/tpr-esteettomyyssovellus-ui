@@ -35,7 +35,14 @@
     },
     "generalMainInfoIsOpen": "Nära hjälp",
     "generalMainInfoIsClose": "Instruktioner för tillhandahållande av tillgänglighetsinformation"
-  }, "question": {
+  },
+    "buttons": {
+      "saveAndReturn": "spara och returnera",
+      "returnNoSave": "avsluta utan att spara",
+      "addPictureFromDevice": "ladda upp bild  från enhet",
+      "addPictureLink": "lägg till länk till bild"
+    },
+    "question": {
       "something": "something"
   }, 
   "servicepoint": {
@@ -48,5 +55,13 @@
     "contactInfoHeader": "Kontaktinformation för tillgänglighet på kontoret",
     "contactFormSummaryHeader": "Servicepoint tillgänglighetsinformation",
     "noDataContactinfo": "Inga kontaktuppgifter för tillgänglighetsfrågor har lämnats till kontoret"
+  },
+  "additionalInfo": {
+    "addLocation": "Lägg till plats",
+    "addPictures": "Lägg till bilder",
+    "addComment": "lägg till kommentar",
+    "locationInstructions": "Instructions for creating LOCATION på svenska",
+    "picturesInstructions": "Instructions for adding PICTURES på svenska",
+    "commentInstructions": "Instructions for adding COMMENT på svenska"
   }
 }
