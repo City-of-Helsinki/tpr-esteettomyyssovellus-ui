@@ -1,6 +1,8 @@
 @import "~hds-design-tokens/lib/all.scss";
 
 .content {
+  margin: auto;
+  width: 85%;
   .korosTextBox {
     text-align: center;
     background-color: $color-copper-light;

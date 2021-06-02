@@ -14,6 +14,7 @@ import { checkUser } from "../utils/serverside";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
 import { decrement } from "../state/reducers/exampleSlice";
 import HeadlineQuestionContainer from "../components/HeadlineQuestionContainer";
+import QuestionBlock from "../components/QuestionBlock"
 import QuestionFormCtrlButtons from "../components/QuestionFormCtrlButtons";
 import SearchBoxWithButtons from "../components/SearchBoxWithButtons";
 import SearchBoxWithButtonsMobile from "../components/SearchBoxWithButtonsMobile";
@@ -129,8 +130,8 @@ const Main = ({isMobile}: MainProps): ReactElement => {
         />
         */}
         {/* for demo purposes modify with data / delete later */}
-        <HeadlineQuestionContainer headline="1. ensimmäinen otsikko" />
-        <HeadlineQuestionContainer headline="2. toinen otsikko" />
+        <HeadlineQuestionContainer headline="1. ensimmäinen otsikko"> <QuestionBlock /></HeadlineQuestionContainer>
+        <HeadlineQuestionContainer headline="2. toinen otsikko"> <QuestionBlock /> </HeadlineQuestionContainer>
         <QuestionFormCtrlButtons hasCancelButton hasValidateButton hasSaveDraftButton hasPreviewButton />
       </main>
     </Layout>
