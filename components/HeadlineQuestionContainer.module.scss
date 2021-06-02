@@ -3,7 +3,6 @@
 
 .headline {
     padding: $spacing-s $spacing-s;
-    width: 85%;
     margin: auto;
 
     @include media(xs, s) {
@@ -17,7 +16,7 @@
     }
 
     .importAddinfoContainer {
-        display: flex;
+        display: flex;  
         flex-direction: column;
         align-items: flex-start;
         justify-content: space-between;

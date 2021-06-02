@@ -1,24 +1,15 @@
-import React, { useState } from "react";
-import { useAccordion, Button, IconAngleUp, IconAngleDown, IconMinus, IconPlus, Card } from "hds-react";
+import React from "react";
+import { useAccordion, Button, IconMinus, IconPlus, Card } from "hds-react";
 import { HeadlineQuestionContainerProps } from "../types/general";
 import styles from "./HeadlineQuestionContainer.module.scss";
 
-import QuestionsList from "./QuestionsList";
-import QuestionInfo from "./QuestionInfo";
-import QuestionFormImportExistingData from "./QuestionFormImportExistingData";
-import QuestionAdditionalInfoCtrlButton from "./QuestionAdditionalInfoCtrlButton";
-
 // used for mainlevel blue accordions
-const HeadlineQuestionContainer = ({ headline }: HeadlineQuestionContainerProps): JSX.Element => {
+const HeadlineQuestionContainer = ({ headline, initOpen = false, children }: HeadlineQuestionContainerProps): JSX.Element => {
   // Handle accordion state with useAccordion hook
-  const { isOpen, buttonProps, contentProps } = useAccordion({ initiallyOpen: false });
+  const { isOpen, buttonProps, contentProps } = useAccordion({ initiallyOpen: initOpen });
   // Change icon based on accordion open state
   const icon = isOpen ? <IconMinus aria-hidden /> : <IconPlus aria-hidden />;
   const buttonVariant = isOpen ? "primary" : "secondary";
-  const [showAdditionalInfo, setShowAdditionalInfo] = useState(false);
-  const handleAdditionalInfoToggle = () => {
-    setShowAdditionalInfo(!showAdditionalInfo);
-  };
   return (
     // TODO: define unique id (?)
     <div className={styles.headline}>
@@ -26,28 +17,7 @@ const HeadlineQuestionContainer = ({ headline }: HeadlineQuestionContainerProps)
         <p>{headline}</p>
       </Button>
       <Card aria-label="Advanced filters" {...contentProps} className={styles.card}>
-        <div className={styles.mainInfo}>
-          <p>
-            PH: Tähän päädropdown main info. Tähän päädropdown main info. Tähän päädropdown main info. Tähän päädropdown main info. Tähän päädropdown
-            main info. Tähän päädropdown main info. Tähän päädropdown main info. Tähän päädropdown main info. Tähän päädropdown main info. Tähän
-            päädropdown main info. Tähän päädropdown main info.
-          </p>
-          <QuestionInfo
-            openText="PH: näytä lisää pääsisäänkäynnin kulkureiteistä?"
-            openIcon={<IconAngleDown aria-hidden />}
-            closeText="PH: pienennä ohje"
-            closeIcon={<IconAngleUp aria-hidden />}
-          >
-            PH: tähän LISÄpääinfot jostain tähän LISÄpääinfot jostain tähän
-          </QuestionInfo>
-        </div>
-        <div className={styles.importAddinfoContainer}>
-          {/* TODO: maybe add checking if should exist on all headline accs */}
-          <QuestionFormImportExistingData />
-          <QuestionAdditionalInfoCtrlButton curState={showAdditionalInfo} onClick={handleAdditionalInfoToggle} />
-        </div>
-        {/* TODO: add questions as params to QuestionsList, from fetch data */}
-        <QuestionsList additionalInfoVisible={showAdditionalInfo} />
+      { children }
       </Card>
     </div>
   );
