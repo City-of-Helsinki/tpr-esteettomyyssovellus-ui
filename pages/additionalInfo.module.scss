@@ -1,0 +1,38 @@
+@import "~hds-design-tokens/lib/all.scss";
+@import "../styles/mixins.scss";
+
+.maincontainer {
+    width: 85%;
+    padding: $spacing-m;
+    .infocontainer {
+        margin: $spacing-m 0;
+    }
+    .mainheader {
+        color: $color-white;
+        background-color: $color-bus;
+        padding: $spacing-xs $spacing-l;
+        margin: $spacing-m 0;
+        font-size: $fontsize-heading-m;
+        font-weight: bold;
+    }
+    .maininfoctrl, .maininfocontent {
+        display: flex;
+        @include media(xs, s, m) {
+            flex-direction: column;
+        }
+    }
+    .overrideheadlinestyles {
+        div button {
+            color: $color-bus ;
+            background-color: $color-bus-medium-light;
+            border: 0;
+        }
+    }
+    .maininfocontent {
+        // width: 40%;
+        margin: 0 $spacing-m;
+        @include media(xs, s, m) {
+            width: 100%;
+        }
+    }
+}
