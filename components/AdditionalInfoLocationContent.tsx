@@ -12,23 +12,14 @@ import QuestionTextInput from "./QuestionTextInput"
 const AdditionalInfoLocationContent = ({ questionNumber }: AdditionalContentProps): JSX.Element => {
     const i18n = useI18n();
     const dispatch = useAppDispatch();
-    // const [qnumber, setQnumber] = useState()
-    // useEffect(() => {
-    //     setQnumber(questionNumber)
-    // }, [])
-    // const getQNumber = () => {return questionNumber}
     const locations = useAppSelector((state) => state.additionalInfoReducer)
     const handleUpdateLocation = (location: LatLngExpression): void => {
-        console.log("newLocation");
         // const qNumber = getQNumber()
         dispatch(addLocation({
             questionNumber: questionNumber,
             description: "test",
             coordinates: location
         }));
-        console.log("asdf");
-        
-        console.log(locations)
       };
     return(
         <div className={styles.maincontainer}>
