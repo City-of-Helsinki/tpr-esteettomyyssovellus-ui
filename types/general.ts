@@ -1,6 +1,8 @@
 // place for custom typescript interfaces/"models"
 
 import { Dictionary } from "@reduxjs/toolkit";
+import { LatLngExpression } from "leaflet";
+import { string } from "yup";
 
 export interface User {
   authenticated: boolean;
@@ -53,11 +55,14 @@ export interface QuestionDataProps {
 }
 
 export interface QuestionTextInputProps {
-  id: string;
+  id?: string;
   label?: string;
-  placeholder: string;
+  placeholder?: string;
   helperText?: string;
   required?: boolean;
+  disabled?: boolean;
+  stateGetter?: string;
+  stateSetter?: any;
 }
 export interface QuestionButtonProps {
   children: string;
@@ -66,6 +71,12 @@ export interface QuestionButtonProps {
   iconRight?: JSX.Element | undefined;
   disabled?: boolean;
   onClickHandler?: () => void;
+}
+
+export interface QuestionRadioButtonsProps {
+  mainLabel?: string;
+  firstButtonLabel?: string;
+  secondButtonLabel?: string;
 }
 
 export interface QuestionFormCtrlButtonsProps {
@@ -98,4 +109,49 @@ export interface ServicepointLandingSummaryContentProps {
 
 export interface ServicepointLandingSummaryCtrlButtonsProps {
   hasData: boolean;
+}
+
+export interface MapProps {
+  initCenter: [number, number];
+  initZoom: number;
+  initLocation: [number, number];
+  draggableMarker?: boolean;
+  updateLocationHandler?: (location: LatLngExpression) => void;
+}
+
+// general for qnumber
+export interface AdditionalContentProps {
+  questionNumber: string;
+}
+
+export interface Location {
+  description?: string;
+  coordinates?: [number, number] | null;
+}
+
+export interface AdditionalInfos {
+  locations?: Location[];
+  comments?:  Languages[];
+  pictures?:  PictureProps[];
+}
+
+export interface PictureProps {
+  qNumber: string;
+  id: string;
+  base64? : string;
+  url?: string;
+  name?: string;
+  altTextLocales: Languages
+}
+
+export interface AdditionalInfoProps {
+  [questionNumbers: string]: AdditionalInfos;
+}
+
+// Common interfaces
+
+export interface Languages {
+    fi: string;
+    en?: string;
+    sv?: string;
 }
