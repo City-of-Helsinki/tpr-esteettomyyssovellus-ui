@@ -21,7 +21,9 @@
       "accessibility": "Tillgänglighetsutlåtande"
     },
     "map": {
-      "osm": "OpenStreetMaps bidragsgivare"
+      "osm": "OpenStreetMaps bidragsgivare",
+      "point": "punkt",
+      "line": "linje"
     },
     "inLanguage": {
       "fi": "på finska",
@@ -34,7 +36,9 @@
       "title": "PH: Välkommen till uppdatering av tillgänglighetsinformation"
     },
     "generalMainInfoIsOpen": "Nära hjälp",
-    "generalMainInfoIsClose": "Instruktioner för tillhandahållande av tillgänglighetsinformation"
+    "generalMainInfoIsClose": "Instruktioner för tillhandahållande av tillgänglighetsinformation",
+    "generalChoose": "Välja",
+    "generalExplanation": "Förklaring"
   },
     "buttons": {
       "saveAndReturn": "spara och returnera",
