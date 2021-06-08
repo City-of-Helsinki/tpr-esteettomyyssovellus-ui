@@ -1,0 +1,26 @@
+@import "~hds-design-tokens/lib/all.scss";
+@import "../styles/mixins.scss";
+
+.maincontainer {
+    width: 90%;
+    margin: $spacing-m;
+    .controlscontainer {
+        display: flex;
+        margin: $spacing-m 0;
+        @include media(xs, s) {
+            flex-direction: column;
+            span {
+                width: 100%;
+                margin: $spacing-xs 0;
+            }
+        }
+        span {
+            width: 50%;
+        }
+    }    
+    .mapcontainer {
+        width: 100%;
+        height: 100%;
+    }
+}
+
