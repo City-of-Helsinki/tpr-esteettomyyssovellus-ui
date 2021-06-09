@@ -13,7 +13,7 @@ const AdditionalInfoPicturesContent = ({ questionNumber }: AdditionalContentProp
     // also use filename for conditionally displaying buttons and alt-text & preview picture
   const dispatch = useAppDispatch();
   const [filename, setFilename] = useState("");
-  const [currentId, setCurrentId] = useState("")
+  const [currentId, setCurrentId] = useState("");
 
   const hiddenFileInput = useRef<HTMLInputElement>(null);
   const i18n = useI18n();
