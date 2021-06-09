@@ -21,7 +21,9 @@
       "accessibility": "Saavutettavuusseloste"
     },
     "map": {
-      "osm": "OpenStreetMapin tekijät"
+      "osm": "OpenStreetMapin tekijät",
+      "point": "piste",
+      "line": "viiva"
     },
     "inLanguage": {
       "fi": "suomeksi",
@@ -35,6 +37,8 @@
     },
     "generalMainInfoIsOpen": "Sulje ohje",
     "generalMainInfoIsClose": "Ohje esteettömyystietojen antamiseen",
+    "generalChoose": "Valitse",
+    "generalExplanation": "Selite",
     "buttons": {
       "saveAndReturn": "Tallenna ja palaa",
       "returnNoSave": "Poistu tallentamatta",

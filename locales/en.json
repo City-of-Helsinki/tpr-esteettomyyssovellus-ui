@@ -21,7 +21,9 @@
       "accessibility": "Accessibility"
     },
     "map": {
-      "osm": "OpenStreetMap contributors"
+      "osm": "OpenStreetMap contributors",
+      "point": "point",
+      "line": "line"
     },
     "inLanguage": {
       "fi": "in Finnish",
@@ -35,6 +37,8 @@
     },
     "generalMainInfoIsOpen": "Close instructions",
     "generalMainInfoIsClose": "Instructions for filling accessibility information",
+    "generalChoose": "Choose",
+    "generalExplanation": "Explanation",
     "buttons": {
       "saveAndReturn": "Save and return",
       "returnNoSave": "Exit without saving",

@@ -14,7 +14,6 @@ const AdditionalInfoCtrlButtons = (): JSX.Element => {
             </span>
         </div>
     )
-
 }
 
 export default AdditionalInfoCtrlButtons;

@@ -14,6 +14,9 @@ import ServicepointMainInfoContent from "../components/ServicepointMainInfoConte
 import AdditionalInfoCtrlButtons from "../components/AdditionalInfoCtrlButtons";
 import HeadlineQuestionContainer from "../components/HeadlineQuestionContainer";
 import QuestionButton from "../components/QuestionButton";
+import AdditionalInfoLocationContent from "../components/AdditionalInfoLocationContent";
+import AdditionalInfoPicturesContent from "../components/AdditionalInfoPicturesContent";
+import AdditionalInfoCommentContent from "../components/AdditionalInfoCommentContent";
 
 
 // TODO: need to know what page is e.g. picture, comment or location
@@ -32,6 +35,7 @@ const AdditionalInfo = (): ReactElement => {
     infoButton = (<QuestionButton variant="secondary" iconRight={<IconLocation/>}>{i18n.t("additionalInfo.addLocation")}</QuestionButton>);
     infoText= i18n.t("additionalInfo.locationInstructions");
     headerPrefix = i18n.t("additionalInfo.addLocation")
+
   }
   // if (placeholderCurrent === 'picture') {
   //   infoButton = (  <>
@@ -80,9 +84,12 @@ const AdditionalInfo = (): ReactElement => {
             </div>
           </div>
           <div className={styles.overrideheadlinestyles}>
-          <HeadlineQuestionContainer headline="PH: Kuva 1" initOpen> kuva 1 sisältö </HeadlineQuestionContainer>
-          <HeadlineQuestionContainer headline="PH: Kuva 1" initOpen> kuva 2 sisältö </HeadlineQuestionContainer>
-          <HeadlineQuestionContainer headline="PH: Kuva 1" initOpen> kuva 3 sisältö</HeadlineQuestionContainer> 
+            {/* test */}
+          <HeadlineQuestionContainer headline="PH: Lokaatio 1" initOpen> <AdditionalInfoLocationContent questionNumber="1" /></HeadlineQuestionContainer>
+          {/* <HeadlineQuestionContainer headline="PH: Kuva 1" initOpen> <AdditionalInfoLocationContent questionNumber="2" /></HeadlineQuestionContainer> */}
+          <HeadlineQuestionContainer headline="PH: Kuva 1" initOpen> <AdditionalInfoPicturesContent questionNumber="2" /> </HeadlineQuestionContainer>
+          <HeadlineQuestionContainer headline="PH: Kuva 2" initOpen> <AdditionalInfoPicturesContent questionNumber="2" /> </HeadlineQuestionContainer>
+          <HeadlineQuestionContainer headline="PH: Kommentti 1" initOpen> <AdditionalInfoCommentContent questionNumber="4" /> </HeadlineQuestionContainer>
           </div>
           <AdditionalInfoCtrlButtons />            
           </div>

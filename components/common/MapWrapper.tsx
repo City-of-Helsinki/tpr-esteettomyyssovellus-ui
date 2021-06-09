@@ -6,9 +6,9 @@ import { useI18n } from "next-localization";
 import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from "react-leaflet";
 import { Marker as LeafletMarker, Icon, LatLngExpression } from "leaflet";
 import getOrigin from "../../utils/request";
+import styles from "./MapWrapper.module.scss"
 
 interface MapWrapperProps {
-  className?: string;
   initialCenter: [number, number];
   initialZoom: number;
   location: [number, number];
@@ -19,7 +19,6 @@ interface MapWrapperProps {
 }
 
 const MapWrapper = ({
-  className,
   initialCenter,
   initialZoom,
   location,
@@ -48,6 +47,7 @@ const MapWrapper = ({
     dragend: () => {
       const marker = markerRef.current;
       if (marker && setLocation) {
+        console.log(marker)
         setLocation([marker.getLatLng().lat, marker.getLatLng().lng]);
       }
     },
@@ -104,7 +104,7 @@ const MapWrapper = ({
   };
 
   return (
-    <MapContainer className={className} center={center} zoom={initialZoom} minZoom={5} maxZoom={18} whenReady={whenReady}>
+    <MapContainer className={styles.mapwrapper} center={center} zoom={initialZoom} minZoom={5} maxZoom={18} whenReady={whenReady}>
       <CustomMapHandler />
       <TileLayer
         url="http://tiles.hel.ninja/styles/hel-osm-bright/{z}/{x}/{y}@2x@fi.png"
@@ -118,7 +118,6 @@ const MapWrapper = ({
 };
 
 MapWrapper.defaultProps = {
-  className: "",
   setLocation: undefined,
   setMapView: undefined,
   setMapReady: undefined,

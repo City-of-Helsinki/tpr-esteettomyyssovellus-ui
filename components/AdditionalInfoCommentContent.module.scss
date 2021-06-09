@@ -1,0 +1,20 @@
+@import "~hds-design-tokens/lib/all.scss";
+@import "../styles/mixins.scss";
+
+.maincontainer {
+    padding: 0 $spacing-m;
+    .contentcontainer {
+        display: flex;
+        flex-direction: column;
+        margin: $spacing-xl 0;
+        .commentscontainer {
+            width: 60%;
+            textArea {
+                min-height: $spacing-5-xl * 3;
+            }
+            span {
+                margin: $spacing-m 0; 
+            }
+        }
+    }
+}
