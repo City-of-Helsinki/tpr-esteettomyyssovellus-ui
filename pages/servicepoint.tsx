@@ -15,7 +15,7 @@ import ServicepointMainInfoContent from "../components/ServicepointMainInfoConte
 const Servicepoint = ({servicepointData}: any): ReactElement => {
   const i18n = useI18n();
 
-  // TODO: Modify the format of the values displayed on the website.
+  // TODO: Modify the format of the values displayed on the website. 
   return (
     <Layout>
       <Head>
@@ -65,9 +65,14 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locales }) =
   // reduxStore.dispatch({ type: CLEAR_STATE });
   const initialReduxState = reduxStore.getState();
 
-
-  const res = await fetch('http://localhost:8000/api/ArServicepoints/69/?format=json')
-  const servicepointData = await res.json();
+  // Try except to stop software crashes when developing without backend running
+  try {
+    const res = await fetch('http://localhost:8000/api/ArServicepoints/7/?format=json')
+    var servicepointData = await res.json();
+  } 
+  catch(err) {
+    servicepointData = {}
+  }
   // const user = await checkUser(req);
   // if (!user) {
   //   // Invalid user but login is not required
