@@ -3,18 +3,18 @@ import { useI18n } from "next-localization";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
 import { StatusLabel, IconCrossCircle, IconQuestionCircle } from "hds-react";
-import Layout from "../components/common/Layout";
-import { store } from "../state/store";
-import i18nLoader from "../utils/i18n";
-import ServicepointLandingSummary from "../components/ServicepointLandingSummary";
+import Layout from "../../components/common/Layout";
+import { store } from "../../state/store";
+import i18nLoader from "../../utils/i18n";
+import ServicepointLandingSummary from "../../components/ServicepointLandingSummary";
 import styles from "./servicepoint.module.scss";
-import ServicepointLandingSummaryCtrlButtons from "../components/ServicepointLandingSummaryCtrlButtons";
-import QuestionInfo from "../components/QuestionInfo";
-import ServicepointMainInfoContent from "../components/ServicepointMainInfoContent";
+import ServicepointLandingSummaryCtrlButtons from "../../components/ServicepointLandingSummaryCtrlButtons";
+import QuestionInfo from "../../components/QuestionInfo";
+import ServicepointMainInfoContent from "../../components/ServicepointMainInfoContent";
+import { useRouter } from "next/router";
 
 const Servicepoint = ({servicepointData}: any): ReactElement => {
   const i18n = useI18n();
-
   // TODO: Modify the format of the values displayed on the website. 
   return (
     <Layout>
@@ -58,16 +58,20 @@ const Servicepoint = ({servicepointData}: any): ReactElement => {
 
 // Server-side rendering
 // Todo: edit, get servicepoint data
-export const getServerSideProps: GetServerSideProps = async ({ req, locales }) => {
+export const getServerSideProps: GetServerSideProps = async ({ params, req, locales }) => {
   const lngDict = await i18nLoader(locales);
 
   const reduxStore = store;
   // reduxStore.dispatch({ type: CLEAR_STATE });
   const initialReduxState = reduxStore.getState();
 
+  //const router = useRouter();
+  //const { servicepointId } = router.query;
+  //const url = 'http://localhost:8000/api/ArServicepoints/'+ ${params.servicepointId} +'/?format=json';
   // Try except to stop software crashes when developing without backend running
   try {
-    const res = await fetch('http://localhost:8000/api/ArServicepoints/7/?format=json')
+    // @ts-ignore: params gives an error
+    const res = await fetch(`http://localhost:8000/api/ArServicepoints/${params.servicepointId}/?format=json`);
     var servicepointData = await res.json();
   } 
   catch(err) {
