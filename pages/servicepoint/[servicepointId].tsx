@@ -11,11 +11,24 @@ import styles from "./servicepoint.module.scss";
 import ServicepointLandingSummaryCtrlButtons from "../../components/ServicepointLandingSummaryCtrlButtons";
 import QuestionInfo from "../../components/QuestionInfo";
 import ServicepointMainInfoContent from "../../components/ServicepointMainInfoContent";
-import { useRouter } from "next/router";
+
+export const getFinnishDate = (jsonTimeStamp: Date) => {
+  const date = new Date(jsonTimeStamp);
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+  const year = date.getFullYear();
+  const finnish_date = day + "." + month + "." + year;
+  return finnish_date;
+}
+
+
 
 const Servicepoint = ({servicepointData}: any): ReactElement => {
   const i18n = useI18n();
   // TODO: Modify the format of the values displayed on the website. 
+  const finnishDate = getFinnishDate(servicepointData.modified);
+
+
   return (
     <Layout>
       <Head>
@@ -41,7 +54,7 @@ const Servicepoint = ({servicepointData}: any): ReactElement => {
               {/* TODO: change statuslabel with data respectively */}
               <StatusLabel type="success"> PH: Valmis </StatusLabel>
               {/* TODO: modify to format:  31.01.1780 */}
-              <p>päivitetty {servicepointData.modified}</p>
+              <p>päivitetty {finnishDate}</p>
             </span>
           </div>
           <div>
