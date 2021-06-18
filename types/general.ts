@@ -54,23 +54,14 @@ export interface QuestionDataProps {
   data: Dictionary<string>[];
 }
 
-export interface QuestionTextInputProps {
-  id?: string;
-  label?: string;
-  placeholder?: string;
-  helperText?: string;
-  required?: boolean;
-  disabled?: boolean;
-  stateGetter?: string;
-  stateSetter?: any;
-}
 export interface QuestionButtonProps {
   children: string;
   variant: "primary" | "secondary" | "success" | "danger";
   iconLeft?: JSX.Element | undefined;
   iconRight?: JSX.Element | undefined;
   disabled?: boolean;
-  onClickHandler?: () => void;
+  onClickHandler?: (param?: any) => void;
+  onChange?: (param?: any) => void;
 }
 
 export interface QuestionRadioButtonsProps {
@@ -121,7 +112,10 @@ export interface MapProps {
 
 // general for qnumber
 export interface AdditionalContentProps {
+  onlyLink?: boolean;
   questionNumber: string;
+  compId: number;
+  onDelete?: (id?: number, type?: string) => void;
 }
 
 export interface Location {
@@ -131,27 +125,36 @@ export interface Location {
 
 export interface AdditionalInfos {
   locations?: Location[];
-  comments?:  Languages[];
-  pictures?:  PictureProps[];
+  comments?: Languages;
+  pictures?: PictureProps[];
+  components?: AdditionalComponentProps[];
+}
+
+export interface AdditionalComponentProps {
+  id: number;
+  type: string;
 }
 
 export interface PictureProps {
   qNumber: string;
-  id: string;
-  base64? : string;
+  id: number;
+  base?: string;
   url?: string;
   name?: string;
-  altTextLocales: Languages
+  source: string;
+  alt_fi: string;
+  alt_en?: string;
+  alt_sv?: string;
 }
 
 export interface AdditionalInfoProps {
-  [questionNumbers: string]: AdditionalInfos;
+  [key: string]: AdditionalInfos;
 }
 
 // Common interfaces
 
 export interface Languages {
-    fi: string;
-    en?: string;
-    sv?: string;
+  fi?: string;
+  en?: string;
+  sv?: string;
 }

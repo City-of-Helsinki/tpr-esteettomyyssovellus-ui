@@ -41,9 +41,7 @@
     "generalExplanation": "Explanation",
     "buttons": {
       "saveAndReturn": "Save and return",
-      "returnNoSave": "Exit without saving",
-      "addPictureFromDevice":"Upload picture from device",
-      "addPictureLink": "Add link to picture"
+      "returnNoSave": "Exit without saving"
     }
   },
   "question": {
@@ -61,11 +59,40 @@
     "noDataContactinfo": "No contact details for accessibility issues have been provided to the office"
   },
   "additionalInfo": {
+    "elementsCtrlButtonsHeader": "Add information",
     "addLocation": "Add location",
     "addPictures": "Add pictures",
     "addComment": "Add comment",
+    "changePicture": "Change picture",
+    "chooseFromDevice": "Choose from device",
+    "cancelPicture": "Cancel picture",
+    "pictureInput": "Picture from device",
+    "pictureInputLink": "Picture URL",
     "locationInstructions": "Instructions for creating LOCATION",
     "picturesInstructions": "Instructions for adding PICTURES",
-    "commentInstructions": "Instructions for adding COMMENT"
+    "commentInstructions": "Instructions for adding COMMENT",
+    "pictureLabel": "Picture caption",
+    "pictureHelperText": "Describe what is in the picture",
+    "generalTooptipButtonLabel": "Help",
+    "generalTooptipLabel": "Help",
+    "altToolTipContent": "Help text here",
+    "altHeaderButtonSwe": "Add picture caption in swedish",
+    "altHeaderButtonClose": "Close picture caption",
+    "pictureLabelSwe": "Picture caption in swedish",
+    "pictureHelperTextSwe": "Describe what is in the picture in swedish",
+    "altHeaderButtonEng": "Add picture caption in english",
+    "pictureLabelEng": "Picture caption in english",
+    "pictureHelperTextEng": "Describe the picture in english",
+    "sharePictureLicenseLabel": "Picture permission",
+    "sharePictureLicenseText": "Yes, I allow sharing the picture under the",
+    "sharePictureLicense": "Creative Commons VY 4.0. -license",
+    "sourceTooltipText": "Insert here instructions for picture source",
+    "sourceTooltipMainLabel": "Picture source",
+    "ctrlButtons": {
+      "addNewComment": "Add description",
+      "addUploadImageFromDevice": "Upload picture from device",
+      "addPictureLink": "Add picturelink",
+      "addNewLocation": "Add location"
+    }
   }
 }
