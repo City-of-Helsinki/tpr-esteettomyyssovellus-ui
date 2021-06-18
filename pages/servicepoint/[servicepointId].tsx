@@ -40,7 +40,6 @@ const Servicepoint = ({servicepointData, accessibilityData, entranceData}: any):
     accessibilityData[key] = filterByLanguage(accessibilityData[key]);
   });
 
-
   return (
     <Layout>
       <Head>
@@ -102,14 +101,21 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, loca
     var entranceData = await res.json();
     //console.log(entranceData.results[0].entrance_id)
     var i = 0;
+    var j = 1;
     var accessibilityData: any = {}
+
+    // Use while, because map function does not work with await
     while (i < entranceData.results.length) {
       const res2 = await fetch(`http://localhost:8000/api/ArXStoredSentenceLangs/?entrance_id=${entranceData.results[i].entrance_id}&format=json`);
       const data2 = await res2.json();
-      accessibilityData[entranceData.results[i].entrance_id] = (data2);
+      if (entranceData.results[i].is_main_entrance == 'Y') {
+        accessibilityData["main"] = (data2);
+      } else {
+        accessibilityData["side"+j] = (data2);
+        j++;
+      }
       i++;
     }
-    //console.log(accessibilityData)
   } 
   catch(err) {
     servicepointData = {}

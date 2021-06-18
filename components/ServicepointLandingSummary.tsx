@@ -18,10 +18,12 @@ const ServicepointLandingSummary = ({ header, data }: ServicepointLandingSummary
     }
   };
 
+  // Add React components to these arrays.
   let contents: any = [];
-  let index = 0;
+  let mainEntrance: any = [];
 
-  if (data != undefined) {
+  
+  if (data) {
     let keys = Object.keys(data);
     keys.map((key) => { 
       let itemList: any = [];
@@ -30,23 +32,40 @@ const ServicepointLandingSummary = ({ header, data }: ServicepointLandingSummary
         data[key].map((x:any) => {
           if (x.sentence_group_name != currentTitle) {
             currentTitle = x.sentence_group_name;
+            // Add h3 titles in the container
             itemList.push(<h3 className={styles.sentenceGroupName}>{currentTitle}</h3>)
           }
           itemList.push(<li>{x.sentence}</li>);
         })
       }
-      contents.push(
-        // TODO: Add to locales Pääsisäänkäynti jne.
-        <ServicepointLandingSummaryContent contentHeader={index == 0 ? "PH: Pääsisäänkäynti" : "PH: Lisäsisäänkäynti"}>
-          <ul>
-            {itemList}
-          </ul>
-        </ServicepointLandingSummaryContent>
-      )
-      index++;
-    }
+
+      // Check if main entrance.
+      if (key == "main") {
+        mainEntrance.push(
+          // TODO: Add to locales Pääsisäänkäynti jne.
+          <ServicepointLandingSummaryContent contentHeader={"PH: Pääsisäänkäynti" }>
+            <ul>
+              {itemList}
+            </ul>
+          </ServicepointLandingSummaryContent>
+        )
+      } else {
+        contents.push(
+          // TODO: Add to locales Lisäsisäänkäynti jne.
+          <ServicepointLandingSummaryContent contentHeader={"PH: Lisäsisäänkäynti"}>
+            <ul>
+              {itemList}
+            </ul>
+          </ServicepointLandingSummaryContent>
+        )
+      }
+      }
     )
   }
+
+  // Make sure that the main entrance is listed before the side entrances.
+  contents = mainEntrance.concat(contents)
+
 
   const buttonText = data ? i18n.t("servicepoint.buttons.editServicepoint") : i18n.t("servicepoint.buttons.createServicepoint");
   return (
