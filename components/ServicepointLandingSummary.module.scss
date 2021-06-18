@@ -20,6 +20,9 @@
             font-size: $fontsize-heading-l !important;
         }
     }
+    h3 {
+        margin-left: -$spacing-m;
+    }
     .nodatacontainer {
         span {
             display: flex;

@@ -6,6 +6,7 @@ import ServicepointLandingSummaryContent from "./ServicepointLandingSummaryConte
 import { ServicepointLandingSummaryProps } from "../types/general";
 import styles from "./ServicepointLandingSummary.module.scss";
 import router from "next/router";
+import { current } from "@reduxjs/toolkit";
 
 const ServicepointLandingSummary = ({ header, data }: ServicepointLandingSummaryProps): JSX.Element => {
   const i18n = useI18n();
@@ -16,30 +17,35 @@ const ServicepointLandingSummary = ({ header, data }: ServicepointLandingSummary
       console.log("create servicepoint data clicked, todo create logic");
     }
   };
-  var contents = [];
-  if (data) {
-    var currentQuestionBlockName = data[0].question_block_name;
-    var i = 0;
-    var landingContentHeader = data[0].sentence_group_name;
-    var itemList = [];
-    while (i < data.length) {
-      if (data[i].question_block_name == currentQuestionBlockName) {
-        itemList.push(<li key={data[i].sentence_id}>{data[i].sentence}</li>)
-      } else {
-        contents.push(
-          <ServicepointLandingSummaryContent contentHeader={landingContentHeader}>
-            <ul>
-              {itemList}
-            </ul>
-          </ServicepointLandingSummaryContent>
-        )
-        itemList = [];
-        currentQuestionBlockName = data[i].question_block_name;
-        landingContentHeader = data[i].sentence_group_name;
-        itemList.push(<li>{data[i].sentence}</li>)
+
+  let contents: any = [];
+  let index = 0;
+
+  if (data != undefined) {
+    let keys = Object.keys(data);
+    keys.map((key) => { 
+      let itemList: any = [];
+      let currentTitle = ""
+      if (data[key]) {
+        data[key].map((x:any) => {
+          if (x.sentence_group_name != currentTitle) {
+            currentTitle = x.sentence_group_name;
+            itemList.push(<h3 className={styles.sentenceGroupName}>{currentTitle}</h3>)
+          }
+          itemList.push(<li>{x.sentence}</li>);
+        })
       }
-      i++;
+      contents.push(
+        // TODO: Add to locales Pääsisäänkäynti jne.
+        <ServicepointLandingSummaryContent contentHeader={index == 0 ? "PH: Pääsisäänkäynti" : "PH: Lisäsisäänkäynti"}>
+          <ul>
+            {itemList}
+          </ul>
+        </ServicepointLandingSummaryContent>
+      )
+      index++;
     }
+    )
   }
 
   const buttonText = data ? i18n.t("servicepoint.buttons.editServicepoint") : i18n.t("servicepoint.buttons.createServicepoint");
@@ -52,54 +58,9 @@ const ServicepointLandingSummary = ({ header, data }: ServicepointLandingSummary
         </Button>
       </div>
       <div>
-        {/* TODO: Get header and children from data */}
         {data ? (
           <>
             {contents}
-            {/*<ServicepointLandingSummaryContent contentHeader="testi on dataa 1">
-              {" "}
-              <ul>
-                <li>
-                  <p>data 1</p>
-                </li>
-                <li>
-                  <p>data 2</p>
-                </li>
-              </ul>{" "}
-            </ServicepointLandingSummaryContent>
-            <ServicepointLandingSummaryContent contentHeader="PH: Pääsisäänkäynnin sijainti">
-              {" "}
-              <ul>
-                <li>
-                  <p>data 1</p>
-                </li>
-                <li>
-                  <p>data 2</p>
-                </li>
-              </ul>{" "}
-            </ServicepointLandingSummaryContent>
-            <ServicepointLandingSummaryContent contentHeader="PH: Pääsisäänkäynti">
-              {" "}
-              <ul>
-                <li>
-                  <p>data 1</p>
-                </li>
-                <li>
-                  <p>data 2</p>
-                </li>
-              </ul>{" "}
-            </ServicepointLandingSummaryContent>
-            <ServicepointLandingSummaryContent contentHeader="PH: Sisätilat">
-              {" "}
-              <ul>
-                <li>
-                  <p>data 1</p>
-                </li>
-                <li>
-                  <p>data 2</p>
-                </li>
-              </ul>{" "}
-          </ServicepointLandingSummaryContent>*/}
           </>
         ) : (
           <div className={styles.nodatacontainer}>
