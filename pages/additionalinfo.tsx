@@ -1,10 +1,10 @@
 // TODO: file might need to be renamed eg. like additionalinfo/[id] where id is the question (?)
 
-import React, { ReactElement } from "react";
+import React, { ReactElement, SetStateAction, useState } from "react";
 import { useI18n } from "next-localization";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
-import { IconCrossCircle, IconLink, IconLocation, IconQuestionCircle, IconUpload } from "hds-react";
+import { IconCrossCircle, IconLink, IconLocation, IconQuestionCircle, IconSpeechbubbleText, IconUpload } from "hds-react";
 import Layout from "../components/common/Layout";
 import { store } from "../state/store";
 import i18nLoader from "../utils/i18n";
@@ -17,38 +17,37 @@ import QuestionButton from "../components/QuestionButton";
 import AdditionalInfoLocationContent from "../components/AdditionalInfoLocationContent";
 import AdditionalInfoPicturesContent from "../components/AdditionalInfoPicturesContent";
 import AdditionalInfoCommentContent from "../components/AdditionalInfoCommentContent";
-
+import { addComponent, removeComponent } from "../state/reducers/additionalInfoSlice";
+import { useAppSelector, useAppDispatch } from "../state/hooks";
+import { AdditionalComponentProps, AdditionalInfoProps } from "../types/general";
 
 // TODO: need to know what page is e.g. picture, comment or location
 const AdditionalInfo = (): ReactElement => {
+  // placeholder for pagenumber
+  const pageNumberPH: string = "1";
+  // todo: figure out better way to id
+  const [increasingId, setIncreasingId] = useState(0);
+  const dispatch = useAppDispatch();
+  let curAdditionalInfo: any = useAppSelector((state) => state.additionalInfoReducer[pageNumberPH] as AdditionalInfoProps);
+
   const i18n = useI18n();
+  const [elementCounts, setElementCounts]: any = useState({
+    comment: 0,
+    upload: 0,
+    link: 0,
+    location: 0,
+  });
 
-  // TODO: not sure if this or different components better but for now here
-  // TODO: this just placeholder
-  const placeholderCurrent = 'location'
-  let infoButton: JSX.Element | null = null;
-  let infoText: string = '';
-  let headerPrefix: string = ''
+  const handleAddElement = (type: string) => {
+    setElementCounts((prevCounts: any) => ({ ...prevCounts, [type]: elementCounts[type] + 1 }));
+    dispatch(addComponent({ questionNumber: pageNumberPH, type: type, id: increasingId }));
+    setIncreasingId(increasingId + 1);
+  };
 
-  // TODO: change logic and make come from the button clicked
-  if (placeholderCurrent === 'location') {
-    infoButton = (<QuestionButton variant="secondary" iconRight={<IconLocation/>}>{i18n.t("additionalInfo.addLocation")}</QuestionButton>);
-    infoText= i18n.t("additionalInfo.locationInstructions");
-    headerPrefix = i18n.t("additionalInfo.addLocation")
-
-  }
-  // if (placeholderCurrent === 'picture') {
-  //   infoButton = (  <>
-  //                     <QuestionButton variant="secondary" iconRight={<IconUpload/>}>{i18n.t("common.buttons.addPictureFromDevice")}</QuestionButton>
-  //                     <QuestionButton variant="secondary" iconRight={<IconLink/>}>{i18n.t("common.buttons.addPictureLink")}</QuestionButton>
-  //                   </>);
-  //   infoText= i18n.t("additionalInfo.picturesInstructions");
-  //   headerPrefix = i18n.t("additionalInfo.addPictures")
-  // }
-  // if (placeholderCurrent === 'comment') {
-  //   infoText=i18n.t("additionalInfo.commentInstructions");
-  //   headerPrefix = i18n.t("additionalInfo.addComment")
-  // }
+  const handleDelete = (deleteId: number, type: string) => {
+    setElementCounts((prevCounts: any) => ({ ...prevCounts, [type]: elementCounts[type] - 1 }));
+    dispatch(removeComponent({ questionNumber: pageNumberPH, delId: deleteId }));
+  };
 
   return (
     <Layout>
@@ -73,27 +72,94 @@ const AdditionalInfo = (): ReactElement => {
             <h2>PH: Pääsisäänkäynti: Katukatu 12, 00100 Helsinki</h2>
           </div>
           <div>
-          <AdditionalInfoCtrlButtons />
-          <div>
-            <div className={styles.mainheader}>
-              <p>{i18n.t("additionalInfo.addLocation")} {'>'} 1.4 Onko kulkureittiä</p>
+            <AdditionalInfoCtrlButtons />
+            <div>
+              <div className={styles.mainheader}>
+                <p>
+                  {i18n.t("additionalInfo.addLocation")} {">"} 1.4 Onko kulkureittiä
+                </p>
+              </div>
+              <div className={styles.maininfoctrl}>
+                {/* { infoButton ? <div className={styles.maininfocontent}>{infoButton}</div> : null}
+              <div className={styles.maininfocontent}>{infoText}</div> */}
+                tähä infoa
+              </div>
             </div>
-            <div className={styles.maininfoctrl}>
-              { infoButton ? <div className={styles.maininfocontent}>{infoButton}</div> : null}
-              <div className={styles.maininfocontent}>{infoText}</div>
+            <div className={styles.overrideheadlinestyles}>
+              {curAdditionalInfo?.components?.map((component: AdditionalComponentProps) => {
+                const id = component.id;
+                const type = component.type;
+                if (type === "upload") {
+                  return (
+                    <div className={styles.componentcontainer}>
+                      <AdditionalInfoPicturesContent key={`key_${id}`} questionNumber="1" compId={id} onDelete={() => handleDelete(id, "upload")} />
+                    </div>
+                  );
+                } else if (type === "link") {
+                  return (
+                    <div className={styles.componentcontainer}>
+                      <AdditionalInfoPicturesContent
+                        onlyLink
+                        key={`key_${id}`}
+                        questionNumber="1"
+                        compId={id}
+                        onDelete={() => handleDelete(id, "link")}
+                      />
+                    </div>
+                  );
+                } else if (type === "comment") {
+                  return (
+                    <div className={styles.componentcontainer}>
+                      <AdditionalInfoCommentContent key={`key_${id}`} questionNumber="1" compId={id} onDelete={() => handleDelete(id, "comment")} />
+                    </div>
+                  );
+                } else if (type === "location") {
+                  return (
+                    <div className={styles.componentcontainer}>
+                      <AdditionalInfoLocationContent key={`key_${id}`} questionNumber="1" compId={id} onDelete={() => handleDelete(id, "location")} />
+                    </div>
+                  );
+                }
+              })}
+            </div>
+            <div className={styles.editedelementsctrl}>
+              <h3>{i18n.t("additionalInfo.elementsCtrlButtonsHeader")}</h3>
+              <div className={styles.editedelementsctrlbuttons}>
+                <QuestionButton
+                  variant="secondary"
+                  iconRight={<IconSpeechbubbleText />}
+                  onClickHandler={() => handleAddElement("comment")}
+                  disabled={elementCounts["comment"] > 0 ? true : false}
+                >
+                  {i18n.t("additionalInfo.ctrlButtons.addNewComment")}
+                </QuestionButton>
+                <QuestionButton
+                  variant="secondary"
+                  iconRight={<IconUpload />}
+                  onClickHandler={() => handleAddElement("upload")}
+                  disabled={elementCounts["upload"] + elementCounts["link"] > 1 ? true : false}
+                >
+                  {i18n.t("additionalInfo.ctrlButtons.addUploadImageFromDevice")}
+                </QuestionButton>
+                <QuestionButton
+                  variant="secondary"
+                  iconRight={<IconLink />}
+                  onClickHandler={() => handleAddElement("link")}
+                  disabled={elementCounts["upload"] + elementCounts["link"] > 1 ? true : false}
+                >
+                  {i18n.t("additionalInfo.ctrlButtons.addPictureLink")}
+                </QuestionButton>
+                <QuestionButton
+                  variant="secondary"
+                  iconRight={<IconLocation />}
+                  onClickHandler={() => handleAddElement("location")}
+                  disabled={elementCounts["location"] > 0 ? true : false}
+                >
+                  {i18n.t("additionalInfo.ctrlButtons.addNewLocation")}
+                </QuestionButton>
+              </div>
             </div>
           </div>
-          <div className={styles.overrideheadlinestyles}>
-            {/* test */}
-          <HeadlineQuestionContainer headline="PH: Lokaatio 1" initOpen> <AdditionalInfoLocationContent questionNumber="1" /></HeadlineQuestionContainer>
-          {/* <HeadlineQuestionContainer headline="PH: Kuva 1" initOpen> <AdditionalInfoLocationContent questionNumber="2" /></HeadlineQuestionContainer> */}
-          <HeadlineQuestionContainer headline="PH: Kuva 1" initOpen> <AdditionalInfoPicturesContent questionNumber="2" /> </HeadlineQuestionContainer>
-          <HeadlineQuestionContainer headline="PH: Kuva 2" initOpen> <AdditionalInfoPicturesContent questionNumber="2" /> </HeadlineQuestionContainer>
-          <HeadlineQuestionContainer headline="PH: Kommentti 1" initOpen> <AdditionalInfoCommentContent questionNumber="4" /> </HeadlineQuestionContainer>
-          </div>
-          <AdditionalInfoCtrlButtons />            
-          </div>
-          
         </div>
       </main>
     </Layout>

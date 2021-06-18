@@ -41,9 +41,7 @@
     "generalExplanation": "Selite",
     "buttons": {
       "saveAndReturn": "Tallenna ja palaa",
-      "returnNoSave": "Poistu tallentamatta",
-      "addPictureFromDevice":"Lisää kuva laitteelta",
-      "addPictureLink": "Lisää kuvalinkki"
+      "returnNoSave": "Poistu tallentamatta"
     }
 
   },
@@ -62,11 +60,40 @@
     "noDataContactinfo": "Toimipisteelle ei ole annettu esteettömyysasioiden yhteystietoja"
   },
   "additionalInfo": {
+    "elementsCtrlButtonsHeader": "Lisää tietoja",
     "addLocation": "Lisää sijainti",
     "addPictures": "Lisää kuvia",
     "addComment": "Lisää kommentti",
+    "changePicture": "Vaihda kuva",
+    "chooseFromDevice": "Valitse laitteelta",
+    "cancelPicture": "Peru kuva",
+    "pictureInput": "Kuva laitteelta",
+    "pictureInputLink": "Kuva linkki ",
     "locationInstructions": "Lisää tähän ohjeita LOKAATION lisäämiseen",
     "picturesInstructions": "Lisää tähän ohjeita KUVIEN lisäämiseen",
-    "commentInstructions": "Lisää tähän 'ohjeita' KOMMENTIN lisäämiseen"
+    "commentInstructions": "Lisää tähän 'ohjeita' KOMMENTIN lisäämiseen",
+    "pictureLabel": "Kuvateksti",
+    "pictureHelperText": "Kuvaile, mitä kuva esittää",
+    "generalTooptipButtonLabel": "Apua",
+    "generalTooptipLabel": "Apua",
+    "altToolTipContent": "Apustusteksti",
+    "altHeaderButtonSwe": "Lisää kuvailu ruotsiksi",
+    "altHeaderButtonClose": "Sulje kuvailu",
+    "pictureLabelSwe": "Kuvateksti ruotsiksi",
+    "pictureHelperTextSwe": "Kerro kuvasta niille jotka eivät näe kuvaa ruotsiksi",
+    "altHeaderButtonEng": "Lisää kuvailu englanniksi",
+    "pictureLabelEng": "Kuvateksti englanniksi",
+    "pictureHelperTextEng": "Kuvaile mitä kuva esittää englanniksi",
+    "sharePictureLicenseLabel": "Kuvan käyttöoikeudet",
+    "sharePictureLicenseText": "Kyllä, kuvan saa jakaa",
+    "sharePictureLicense": "Creative Commons VY 4.0. -lisenssilä",
+    "sourceTooltipText": "Täytä tähän ohjeet kuvalähde fin",
+    "sourceTooltipMainLabel": "Kuvalähde",
+    "ctrlButtons": {
+      "addNewComment": "Lisää tarkennusteksti",
+      "addUploadImageFromDevice": "Lataa kuva laitteelta",
+      "addPictureLink": "Lisää kuvalinkki",
+      "addNewLocation": "Lisää sijainti"
+    } 
   }
 }

@@ -42,9 +42,7 @@
   },
     "buttons": {
       "saveAndReturn": "spara och returnera",
-      "returnNoSave": "avsluta utan att spara",
-      "addPictureFromDevice": "ladda upp bild  från enhet",
-      "addPictureLink": "lägg till länk till bild"
+      "returnNoSave": "avsluta utan att spara"
     },
     "question": {
       "something": "something"
@@ -61,11 +59,40 @@
     "noDataContactinfo": "Inga kontaktuppgifter för tillgänglighetsfrågor har lämnats till kontoret"
   },
   "additionalInfo": {
+    "elementsCtrlButtonsHeader": "Lägg information",
     "addLocation": "Lägg till plats",
     "addPictures": "Lägg till bilder",
     "addComment": "lägg till kommentar",
+    "changePicture": "Byt bild",
+    "chooseFromDevice": "Välj från enhet",
+    "cancelPicture": "Avbryta bilden",
+    "pictureInput": "Bild fron enhet",
+    "pictureInputLink": "Bild URL",
     "locationInstructions": "Instructions for creating LOCATION på svenska",
     "picturesInstructions": "Instructions for adding PICTURES på svenska",
-    "commentInstructions": "Instructions for adding COMMENT på svenska"
+    "commentInstructions": "Instructions for adding COMMENT på svenska",
+    "pictureLabel": "Bildtext",
+    "pictureHelperText": "Beskriv bilden",
+    "generalTooptipButtonLabel": "Hjälp",
+    "generalTooptipLabel": "Hjälp",
+    "altToolTipContent": "Hjälp text",
+    "altHeaderButtonSwe": "Lägg till beskrivning på svenska",
+    "altHeaderButtonClose": "Nära beskribning",
+    "pictureLabelSwe": "Bildtext på svenska",
+    "pictureHelperTextSwe": "Berätta bilden för dem som inte kan se bilden på svenska",
+    "altHeaderButtonEng": "Mer beskrivning på engelska",
+    "pictureLabelEng": "Bildtext på engelska",
+    "pictureHelperTextEng": "Beskriv vad bilden representerar på engelska",
+    "sharePictureLicenseLabel": "bildehörigheter",
+    "sharePictureLicenseText": "Ja, bilden kan köras med",
+    "sharePictureLicense": "Creative Commons VY 4.0. -licens",
+    "sourceTooltipText": "Fyll i instruktionerna för den här bildkällan",
+    "sourceTooltipMainLabel": "BildKälla",
+    "ctrlButtons": {
+      "addNewComment": "Lägg kommentar",
+      "addUploadImageFromDevice": "Ladda new bild från enhet",
+      "addPictureLink": "Lägg bildlänk",
+      "addNewLocation": "Lägg plats"
+    }
   }
 }
