@@ -97,7 +97,7 @@ const Header = ({ includeLanguageSelector, children }: HeaderProps): ReactElemen
                 as="a" 
                 label={i18n.t("common.header.servicepoints")} 
                 href={`${router.basePath}/${router.locale}/servicepoints`} 
-                active={router.pathname === `/servicepoints`} />
+                active={router.pathname.includes('servicepoint')} />
               <Navigation.Item 
                 role="button"
                 as="a"

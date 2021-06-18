@@ -11,6 +11,7 @@ import styles from "./servicepoint.module.scss";
 import ServicepointLandingSummaryCtrlButtons from "../../components/ServicepointLandingSummaryCtrlButtons";
 import QuestionInfo from "../../components/QuestionInfo";
 import ServicepointMainInfoContent from "../../components/ServicepointMainInfoContent";
+import router from "next/router";
 
 export const getFinnishDate = (jsonTimeStamp: Date) => {
   const date = new Date(jsonTimeStamp);
@@ -23,11 +24,13 @@ export const getFinnishDate = (jsonTimeStamp: Date) => {
 
 
 
-const Servicepoint = ({servicepointData}: any): ReactElement => {
+const Servicepoint = ({servicepointData, accessibilityData, entranceData}: any): ReactElement => {
   const i18n = useI18n();
   // TODO: Modify the format of the values displayed on the website. 
   const finnishDate = getFinnishDate(servicepointData.modified);
-
+  var filteredData = accessibilityData.filter((entry: any) => {
+    return entry.language_code == i18n.locale();
+  })
 
   return (
     <Layout>
@@ -59,8 +62,8 @@ const Servicepoint = ({servicepointData}: any): ReactElement => {
           </div>
           <div>
             {/* TODO: get proper data from SSR */}
-            <ServicepointLandingSummary header={i18n.t("servicepoint.contactInfoHeader")} />
-            <ServicepointLandingSummary header={i18n.t("servicepoint.contactFormSummaryHeader")} data />
+            <ServicepointLandingSummary header={i18n.t("servicepoint.contactInfoHeader")}/>
+            <ServicepointLandingSummary header={i18n.t("servicepoint.contactFormSummaryHeader")} data={filteredData} />
           </div>
           <ServicepointLandingSummaryCtrlButtons hasData />
         </div>
@@ -78,17 +81,25 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, loca
   // reduxStore.dispatch({ type: CLEAR_STATE });
   const initialReduxState = reduxStore.getState();
 
-  //const router = useRouter();
-  //const { servicepointId } = router.query;
-  //const url = 'http://localhost:8000/api/ArServicepoints/'+ ${params.servicepointId} +'/?format=json';
   // Try except to stop software crashes when developing without backend running
+  // TODO: Make this more reliable 
   try {
     // @ts-ignore: params gives an error
-    const res = await fetch(`http://localhost:8000/api/ArServicepoints/${params.servicepointId}/?format=json`);
-    var servicepointData = await res.json();
+    const res1 = await fetch(`http://localhost:8000/api/ArServicepoints/${params.servicepointId}/?format=json`);
+    var servicepointData = await res1.json();
+
+    // @ts-ignore: params gives an error
+    const res = await fetch(`http://localhost:8000/api/ArEntrances/?servicepoint=${servicepointData.servicepoint_id}&format=json`);
+    var entranceData = await res.json();
+
+    // @ts-ignore: params gives an error
+    const res2 = await fetch(`http://localhost:8000/api/ArXStoredSentenceLangs/?entrance_id=${entranceData.results[0].entrance_id}&format=json`);
+    var accessibilityData = await res2.json();
   } 
   catch(err) {
     servicepointData = {}
+    accessibilityData = {}
+    entranceData = {}
   }
   // const user = await checkUser(req);
   // if (!user) {
@@ -102,7 +113,9 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, loca
     props: {
       initialReduxState,
       lngDict,
-      servicepointData
+      servicepointData,
+      accessibilityData,
+      entranceData
     },
   };
 };
