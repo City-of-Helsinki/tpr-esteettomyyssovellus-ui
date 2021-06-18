@@ -2,19 +2,49 @@
 @import "../styles/mixins.scss";
 
 .maincontainer {
-    padding: 0 $spacing-m;
-    .contentcontainer {
-        display: flex;
-        flex-direction: column;
-        margin: $spacing-xl 0;
-        .commentscontainer {
-            width: 60%;
-            textArea {
-                min-height: $spacing-5-xl * 3;
-            }
-            span {
-                margin: $spacing-m 0; 
-            }
-        }
+  padding: 0 $spacing-m;
+  .contentcontainer {
+    display: flex;
+    flex-direction: column;
+    margin: $spacing-xl 0;
+    .flexcontainer {
+      display: flex;
+      @include media(xs, s, m) {
+        flex-direction: column-reverse;
+      }
     }
+    .commentscontainer {
+      width: 65%;
+      textArea {
+        min-height: $spacing-5-xl * 2.5;
+      }
+      label {
+        margin: $spacing-m 0;
+      }
+      button {
+        color: $color-black;
+        background-color: $color-white;
+      }
+      .optionalaltscontainer span {
+        padding: $spacing-l 0;
+      }
+      @include media(xs, s, m) {
+        flex-direction: column;
+      }
+    }
+    .buttonscontainer {
+      display: flex;
+      align-items: flex-start;
+      margin-top: 4rem;
+      padding-left: $spacing-s;
+      button {
+        color: $color-bus !important;
+        background-color: $color-white !important;
+        border: 2px solid $color-bus;
+      }
+      @include media(xs, s, m) {
+        margin-top: 0;
+      }
+    }
+  }
 }
