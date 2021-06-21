@@ -70,7 +70,7 @@ const Servicepoint = ({servicepointData, accessibilityData, entranceData}: any):
           </div>
           <div>
             {/* TODO: get proper data from SSR */}
-            <ServicepointLandingSummary header={i18n.t("servicepoint.contactInfoHeader")}/>
+            <ServicepointLandingSummary header={i18n.t("servicepoint.contactInfoHeader")} data={servicepointData}/>
             <ServicepointLandingSummary header={i18n.t("servicepoint.contactFormSummaryHeader")} data={accessibilityData} />
           </div>
           <ServicepointLandingSummaryCtrlButtons hasData />

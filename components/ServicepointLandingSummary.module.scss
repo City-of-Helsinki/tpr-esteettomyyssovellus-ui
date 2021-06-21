@@ -23,6 +23,10 @@
     h3 {
         margin-left: -$spacing-m;
     }
+    .contactInformation {
+        display: flex;
+        justify-content: space-evenly;
+    }
     .nodatacontainer {
         span {
             display: flex;

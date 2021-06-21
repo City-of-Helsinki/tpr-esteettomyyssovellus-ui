@@ -7,6 +7,7 @@ import { ServicepointLandingSummaryProps } from "../types/general";
 import styles from "./ServicepointLandingSummary.module.scss";
 import router from "next/router";
 import { current } from "@reduxjs/toolkit";
+import { array } from "yup/lib/locale";
 
 const ServicepointLandingSummary = ({ header, data }: ServicepointLandingSummaryProps): JSX.Element => {
   const i18n = useI18n();
@@ -22,8 +23,27 @@ const ServicepointLandingSummary = ({ header, data }: ServicepointLandingSummary
   let contents: any = [];
   let mainEntrance: any = [];
 
-  
-  if (data) {
+  // If the data is of type servicePointData
+  if (data && 'servicepoint_id' in data) {
+    const keysToDisplay = ['accessibility_phone', 'accessibility_email']
+    let itemList: any = [];
+    keysToDisplay.map((key) => {
+      let title = "";
+      switch (key) {
+        case 'accessibility_phone':
+          title = "PH: puhelinnumero";
+          break;
+        case 'accessibility_email':
+          title = "PH: sähköpostiosoite";
+          break;
+        default:
+          console.log("Incorrect key")
+      }
+      itemList.push(<div className={styles.infocontainer}><h4>{title}</h4><p>{data[key] ? data[key] : "PH: (ei tietoa)"}</p></div>)
+    })
+    contents.push(<ServicepointLandingSummaryContent><div className={styles.contactInformation}>{itemList}</div></ServicepointLandingSummaryContent>)
+  // Else if the data is of type accessibilityData
+  } else if (data) {
     let keys = Object.keys(data);
     keys.map((key) => { 
       let itemList: any = [];
