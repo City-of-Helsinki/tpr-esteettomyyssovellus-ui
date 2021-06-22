@@ -93,11 +93,11 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, loca
   // TODO: Make this more reliable 
   try {
     // @ts-ignore: params gives an error
-    const res1 = await fetch(`http://localhost:8000/api/ArServicepoints/${params.servicepointId}/?format=json`);
+    const res1 = await fetch(`http://0.0.0.0:8000/api/ArServicepoints/${params.servicepointId}/?format=json`);
     var servicepointData = await res1.json();
     //console.log(servicepointData.servicepoint_id)
     // @ts-ignore: params gives an error
-    const res = await fetch(`http://localhost:8000/api/ArEntrances/?servicepoint=${servicepointData.servicepoint_id}&format=json`);
+    const res = await fetch(`http://0.0.0.0:8000/api/ArEntrances/?servicepoint=${servicepointData.servicepoint_id}&format=json`);
     var entranceData = await res.json();
     //console.log(entranceData.results[0].entrance_id)
     var i = 0;
@@ -106,7 +106,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, loca
 
     // Use while, because map function does not work with await
     while (i < entranceData.results.length) {
-      const res2 = await fetch(`http://localhost:8000/api/ArXStoredSentenceLangs/?entrance_id=${entranceData.results[i].entrance_id}&format=json`);
+      const res2 = await fetch(`http://0.0.0.0:8000/api/ArXStoredSentenceLangs/?entrance_id=${entranceData.results[i].entrance_id}&format=json`);
       const data2 = await res2.json();
       if (entranceData.results[i].is_main_entrance == 'Y') {
         accessibilityData["main"] = (data2);
