@@ -8,7 +8,7 @@ import { User } from "../types/general";
 export const getOriginServerSide = (): string => {
   // The server-side calls should use the local backend directly
   // Note: the client-side calls use the full path, which is handled by getOrigin in request.ts
-  return "http://localhost:8008";
+  return "http://0.0.0.0:8000";
 };
 
 export const redirectToLogin = (resolvedUrl: string): { redirect: Redirect } => {
