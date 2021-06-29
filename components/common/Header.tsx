@@ -26,7 +26,7 @@ const Header = ({ includeLanguageSelector, children }: HeaderProps): ReactElemen
   const router = useRouter();
 
   const currentUser = useSelector((state: RootState) => state.general.user);
-  console.log(currentUser);
+  // console.log(currentUser);
   const changeLanguage = (locale: string) => {
     // Use the shallow option to avoid a server-side render in order to preserve the state
     router.push(router.pathname, router.asPath, { locale, shallow: true });

@@ -149,7 +149,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locales }) =
 
   const user = await checkUser(req);
 
-  console.log(user)
+  // console.log(user)
   if (!user) {
     // Invalid user but login is not required
   }
