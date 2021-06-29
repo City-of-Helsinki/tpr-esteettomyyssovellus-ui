@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import exampleSlice from "./reducers/exampleSlice";
 import additionalInfoSlice from "./reducers/additionalInfoSlice";
+import formSlice from "./reducers/formSlice";
 import general from "./reducers/general";
 
 // delete example reducer & exampleSlice just an example for toolkit
@@ -8,8 +9,9 @@ import general from "./reducers/general";
 export const store = configureStore({
   reducer: {
     exampleReducer: exampleSlice,
+    formReducer: formSlice,
     additionalInfoReducer: additionalInfoSlice,
-    general: general
+    general: general,
   },
 });
 

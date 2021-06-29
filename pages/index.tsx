@@ -14,11 +14,16 @@ import { checkUser } from "../utils/serverside";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
 import { decrement } from "../state/reducers/exampleSlice";
 import HeadlineQuestionContainer from "../components/HeadlineQuestionContainer";
-import QuestionBlock from "../components/QuestionBlock"
+import QuestionBlock from "../components/QuestionBlock";
 import QuestionFormCtrlButtons from "../components/QuestionFormCtrlButtons";
 import SearchBoxWithButtons from "../components/SearchBoxWithButtons";
 import SearchBoxWithButtonsMobile from "../components/SearchBoxWithButtonsMobile";
-import {Hero, HeroShallow} from "../components/common/Hero";
+import { Hero, HeroShallow } from "../components/common/Hero";
+import { MainEntranceFormProps, QuestionBlockProps } from "../types/general";
+import { LANGUAGE_LOCALES } from "../types/constants";
+
+import { setAnsweredChoice } from "../state/reducers/formSlice";
+import { API_FETCH_QUESTIONBLOCK_URL, API_FETCH_QUESTIONCHOICES, API_FETCH_QUESTION_URL } from "../types/constants";
 
 const useStyles = makeStyles((theme) => ({
   navi: {
@@ -38,41 +43,36 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface MainProps {
-  isMobile?: boolean
-}
-
-const Main = ({isMobile}: MainProps): ReactElement => {
+const Main = ({ isMobile, QuestionsData, QuestionChoicesData, QuestionBlocksData }: MainEntranceFormProps): ReactElement => {
   const i18n = useI18n();
+  const curLocale: string = i18n.locale();
+  const curLocaleId: number = LANGUAGE_LOCALES[curLocale];
+  const dispatch = useAppDispatch();
+
+  console.log(QuestionsData);
+  console.log(QuestionChoicesData);
+  console.log(QuestionBlocksData);
 
   const openTermsOfUse = () => {
     window.open("www.google.com", "_blank");
   };
 
-  // TODO: delete this just example
-  const curCount = useAppSelector((state) => state.exampleReducer.value);
-  const dispatch = useAppDispatch();
-
-  // TODO: delete this just example
-  const handleTestButton = (): void => {
-    console.log(curCount);
-    dispatch(decrement());
-  };
+  const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
 
   // This checks whether the view has become so thin, i.e. mobile view, that the languageselector component should change place.
   if (typeof window !== "undefined") {
     const [width, setWidth] = useState<number>(window.innerWidth);
     useEffect(() => {
-      window.addEventListener('resize', () => setWidth(window.innerWidth));
+      window.addEventListener("resize", () => setWidth(window.innerWidth));
       return () => {
-          window.removeEventListener('resize', () => setWidth(window.innerWidth));
-      }
+        window.removeEventListener("resize", () => setWidth(window.innerWidth));
+      };
     }, []);
-    isMobile = (width < 768);
+    isMobile = width < 768;
   }
 
   let heroTitle = i18n.t("common.landing.title");
-  let heroText = ""
+  let heroText = "";
   //let heroUrl = "https://i.stack.imgur.com/y9DpT.jpg";
   // let heroUrl = "https://i.stack.imgur.com/y9DpT.jpg";
 
@@ -89,21 +89,17 @@ const Main = ({isMobile}: MainProps): ReactElement => {
         <title>{i18n.t("common.header.title")}</title>
       </Head>
       <main id="content" className={styles.content}>
-        
-      {// isHero ? ()
+        {
+          // isHero ? ()
           // isHero ? (
           <div className={classes.hero}>
             {heroShallow ? <HeroShallow title={heroTitle} imageUrl={heroUrl} /> : <Hero title={heroTitle} text={heroText} imageUrl={heroUrl} />}
           </div>
           /* ) : (
           <></>
-        )*/}
-        <div>
-          { isMobile ? 
-          (<SearchBoxWithButtonsMobile/>) : 
-          (<SearchBoxWithButtons/>)}
-        </div>
-
+        )*/
+        }
+        <div>{isMobile ? <SearchBoxWithButtonsMobile /> : <SearchBoxWithButtons />}</div>
         {/*
         <div className={styles.infoLinkContainer}>
           <Button variant="supplementary" size="small" iconRight={<IconAngleRight aria-hidden />} onClick={openTermsOfUse}>
@@ -130,8 +126,40 @@ const Main = ({isMobile}: MainProps): ReactElement => {
         />
         */}
         {/* for demo purposes modify with data / delete later */}
-        <HeadlineQuestionContainer headline="1. ensimmäinen otsikko"> <QuestionBlock /></HeadlineQuestionContainer>
-        <HeadlineQuestionContainer headline="2. toinen otsikko"> <QuestionBlock /> </HeadlineQuestionContainer>
+        {/* QuestionsData, QuestionChoicesData, QuestionBlocksData */}
+
+        {QuestionBlocksData && QuestionsData && QuestionChoicesData
+          ? QuestionBlocksData.map((block: QuestionBlockProps) => {
+              const isVisible =
+                (block.visible_if_question_choice == null && block.language_id == curLocaleId) ||
+                (curAnsweredChoices.includes(block.visible_if_question_choice ? block.visible_if_question_choice : "") &&
+                  block.language_id == curLocaleId);
+
+              const blockQuestions = isVisible
+                ? QuestionsData.filter((question) => question.question_block_id === block.question_block_id && question.language_id == curLocaleId)
+                : null;
+
+              const answerChoices = isVisible
+                ? QuestionChoicesData.filter((choice) => choice.question_block_id === block.question_block_id && choice.language_id == curLocaleId)
+                : null;
+              {
+                return isVisible && blockQuestions && answerChoices ? (
+                  <HeadlineQuestionContainer key={block.question_block_id} text={block.text}>
+                    <QuestionBlock description={block.description ?? null} questions={blockQuestions} answers={answerChoices} />
+                  </HeadlineQuestionContainer>
+                ) : null;
+              }
+            })
+          : null}
+
+        {/* <HeadlineQuestionContainer headline="1. ensimmäinen otsikko">
+          {" "}
+          <QuestionBlock />
+        </HeadlineQuestionContainer>
+        <HeadlineQuestionContainer headline="2. toinen otsikko">
+          {" "}
+          <QuestionBlock />{" "}
+        </HeadlineQuestionContainer> */}
         <QuestionFormCtrlButtons hasCancelButton hasValidateButton hasSaveDraftButton hasPreviewButton />
       </main>
     </Layout>
@@ -139,8 +167,9 @@ const Main = ({isMobile}: MainProps): ReactElement => {
 };
 
 // Server-side rendering
-export const getServerSideProps: GetServerSideProps = async ({ req, locales }) => {
+export const getServerSideProps: GetServerSideProps = async ({ params, req, locales }) => {
   const lngDict = await i18nLoader(locales);
+  console.log("KIELIÄÄÄ ", lngDict);
 
   const reduxStore = store;
   // reduxStore.dispatch({ type: CLEAR_STATE });
@@ -154,17 +183,37 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locales }) =
     initialReduxState.general.user = user;
   }
 
+  let QuestionsData;
+  let QuestionChoicesData;
+  let QuestionBlocksData;
+  try {
+    // todo: put urls in types/constants and get form_id from props
+    const QuestionsResp = await fetch(API_FETCH_QUESTION_URL);
+    const QuestionChoicesResp = await fetch(API_FETCH_QUESTIONCHOICES);
+    const QuestionBlocksResp = await fetch(API_FETCH_QUESTIONBLOCK_URL);
+
+    QuestionsData = await QuestionsResp.json();
+    QuestionChoicesData = await QuestionChoicesResp.json();
+    QuestionBlocksData = await QuestionBlocksResp.json();
+  } catch (e) {
+    QuestionsData = {};
+    QuestionChoicesData = {};
+    QuestionBlocksData = {};
+  }
+
   return {
     props: {
       initialReduxState,
-      lngDict
+      QuestionsData: QuestionsData,
+      QuestionChoicesData: QuestionChoicesData,
+      QuestionBlocksData: QuestionBlocksData,
+      lngDict,
     },
   };
 };
 
 Main.defaultProps = {
-  isMobile: false
+  isMobile: false,
 };
-
 
 export default Main;
