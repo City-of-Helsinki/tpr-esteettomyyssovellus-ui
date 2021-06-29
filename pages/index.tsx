@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useI18n } from "next-localization";
 import { Button, IconAngleRight, IconStar, Koros } from "hds-react";
 import { makeStyles } from "@material-ui/core/styles";
-import { store } from "../state/store";
 import i18nLoader from "../utils/i18n";
 import Layout from "../components/common/Layout";
 import Notice from "../components/common/Notice";
@@ -19,6 +18,8 @@ import QuestionFormCtrlButtons from "../components/QuestionFormCtrlButtons";
 import SearchBoxWithButtons from "../components/SearchBoxWithButtons";
 import SearchBoxWithButtonsMobile from "../components/SearchBoxWithButtonsMobile";
 import {Hero, HeroShallow} from "../components/common/Hero";
+import { initStore } from "../state/store";
+import { CLEAR_STATE } from "../types/constants";
 
 const useStyles = makeStyles((theme) => ({
   navi: {
@@ -50,14 +51,14 @@ const Main = ({isMobile}: MainProps): ReactElement => {
   };
 
   // TODO: delete this just example
-  const curCount = useAppSelector((state) => state.exampleReducer.value);
-  const dispatch = useAppDispatch();
+  // const curCount = useAppSelector((state) => state.exampleReducer.value);
+  // const dispatch = useAppDispatch();
 
-  // TODO: delete this just example
-  const handleTestButton = (): void => {
-    console.log(curCount);
-    dispatch(decrement());
-  };
+  // // TODO: delete this just example
+  // const handleTestButton = (): void => {
+  //   console.log(curCount);
+  //   dispatch(decrement());
+  // };
 
   // This checks whether the view has become so thin, i.e. mobile view, that the languageselector component should change place.
   if (typeof window !== "undefined") {
@@ -142,11 +143,13 @@ const Main = ({isMobile}: MainProps): ReactElement => {
 export const getServerSideProps: GetServerSideProps = async ({ req, locales }) => {
   const lngDict = await i18nLoader(locales);
 
-  const reduxStore = store;
-  // reduxStore.dispatch({ type: CLEAR_STATE });
+  const reduxStore = initStore();
+  reduxStore.dispatch({ type: CLEAR_STATE });
   const initialReduxState = reduxStore.getState();
 
   const user = await checkUser(req);
+
+  console.log(user)
   if (!user) {
     // Invalid user but login is not required
   }

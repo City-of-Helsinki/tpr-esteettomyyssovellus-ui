@@ -14,7 +14,7 @@ const AdditionalInfoPicturesContent = ({ questionNumber, compId, onlyLink = fals
   const dispatch = useAppDispatch();
 
   const currentId = compId;
-  const curAddInfo = useAppSelector((state) => state.additionalInfoReducer[questionNumber]);
+  const curAddInfo = useAppSelector((state) => state.additionalInfoSlice[questionNumber]);
   const curImage = curAddInfo.pictures?.filter((pic) => pic.id === currentId)[0];
   const [linkText, setLinkText] = useState("");
 

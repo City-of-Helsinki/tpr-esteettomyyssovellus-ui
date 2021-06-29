@@ -27,10 +27,10 @@ export const redirectToLogin = (resolvedUrl: string): { redirect: Redirect } => 
    // TODO: define how a moderator user is identified
 
    // PLACEHOLDER **********
-   const userResponse = await fetch(`https://www.hel.fi/api/user/?format=json`, { headers: { cookie: req.headers.cookie as string } });
+   //const userResponse = await fetch(`https://www.hel.fi/api/user/?format=json`, { headers: { cookie: req.headers.cookie as string } });
 
    // UNCOMMENT THIS  
-   //const userResponse = await fetch(`${getOriginServerSide()}/api/user/?format=json`, { headers: { cookie: req.headers.cookie as string } });
+   const userResponse = await fetch(`${getOriginServerSide()}/api/user/?format=json`, { headers: { cookie: req.headers.cookie as string } });
 
    if (!userResponse.ok) {
      // Invalid user

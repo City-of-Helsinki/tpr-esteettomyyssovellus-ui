@@ -6,3 +6,6 @@ export const ACCESSIBILITY_URL = "https://myhelsinki.fi/fi/saavutettavuusseloste
 export const CREATIVECOMMONS_URL = "creativecommons.org/licences/by/4.0";
 
 export default null;
+
+
+export const CLEAR_STATE = "CLEAR_STATE";

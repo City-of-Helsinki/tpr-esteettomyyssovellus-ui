@@ -9,7 +9,7 @@ import { Navigation, IconSignout } from "hds-react";
 import { defaultLocale } from "../../utils/i18n";
 import getOrigin from "../../utils/request";
 import styles from "./Header.module.scss";
-import { RootState } from "../../state/store";
+import { RootState } from "../../state/reducers";
 
 interface HeaderProps {
   includeLanguageSelector?: boolean;
@@ -26,7 +26,7 @@ const Header = ({ includeLanguageSelector, children }: HeaderProps): ReactElemen
   const router = useRouter();
 
   const currentUser = useSelector((state: RootState) => state.general.user);
-
+  console.log(currentUser);
   const changeLanguage = (locale: string) => {
     // Use the shallow option to avoid a server-side render in order to preserve the state
     router.push(router.pathname, router.asPath, { locale, shallow: true });
@@ -110,8 +110,8 @@ const Header = ({ includeLanguageSelector, children }: HeaderProps): ReactElemen
           {/* Placeholders to authenticated and username */}
           {<Navigation.User
             label={i18n.t("common.header.login")}
-            authenticated={true}                        /* Change to: currentUser?.authenticated} */
-            userName={"Placeholder"}               /* Change to: currentUser?.first_name || currentUser?.email} */
+            authenticated={currentUser?.authenticated}                        /* Change to: currentUser?.authenticated} */
+            userName={currentUser?.first_name || currentUser?.email}               /* Change to: currentUser?.first_name || currentUser?.email} */
             onSignIn={signIn}
           >
             <Navigation.Item

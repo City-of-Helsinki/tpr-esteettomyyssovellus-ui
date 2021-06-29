@@ -6,7 +6,9 @@ import Head from "next/head";
 import { GetServerSideProps } from "next";
 import { IconCrossCircle, IconLink, IconLocation, IconQuestionCircle, IconSpeechbubbleText, IconUpload } from "hds-react";
 import Layout from "../components/common/Layout";
-import { store } from "../state/store";
+import { initStore } from "../state/store";
+import { CLEAR_STATE } from "../types/constants";
+
 import i18nLoader from "../utils/i18n";
 import styles from "./additionalInfo.module.scss";
 import QuestionInfo from "../components/QuestionInfo";
@@ -20,6 +22,7 @@ import AdditionalInfoCommentContent from "../components/AdditionalInfoCommentCon
 import { addComponent, removeComponent } from "../state/reducers/additionalInfoSlice";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
 import { AdditionalComponentProps, AdditionalInfoProps } from "../types/general";
+import { checkUser } from "../utils/serverside";
 
 // TODO: need to know what page is e.g. picture, comment or location
 const AdditionalInfo = (): ReactElement => {
@@ -28,7 +31,7 @@ const AdditionalInfo = (): ReactElement => {
   // todo: figure out better way to id
   const [increasingId, setIncreasingId] = useState(0);
   const dispatch = useAppDispatch();
-  let curAdditionalInfo: any = useAppSelector((state) => state.additionalInfoReducer[pageNumberPH] as AdditionalInfoProps);
+  let curAdditionalInfo: any = useAppSelector((state) => state.additionalInfoSlice[pageNumberPH] as AdditionalInfoProps);
 
   const i18n = useI18n();
   const [elementCounts, setElementCounts]: any = useState({
@@ -171,17 +174,17 @@ const AdditionalInfo = (): ReactElement => {
 export const getServerSideProps: GetServerSideProps = async ({ req, locales }) => {
   const lngDict = await i18nLoader(locales);
 
-  const reduxStore = store;
-  // reduxStore.dispatch({ type: CLEAR_STATE });
+  const reduxStore = initStore();
+  reduxStore.dispatch({ type: CLEAR_STATE });
   const initialReduxState = reduxStore.getState();
 
-  // const user = await checkUser(req);
-  // if (!user) {
-  //   // Invalid user but login is not required
-  // }
-  // if (user && user.authenticated) {
-  //   initialReduxState.general.user = user;
-  // }
+  const user = await checkUser(req);
+  if (!user) {
+    // Invalid user but login is not required
+  }
+  if (user && user.authenticated) {
+    initialReduxState.general.user = user;
+  }
 
   return {
     props: {

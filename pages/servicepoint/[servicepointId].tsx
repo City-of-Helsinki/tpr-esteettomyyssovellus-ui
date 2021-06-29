@@ -4,7 +4,9 @@ import Head from "next/head";
 import { GetServerSideProps } from "next";
 import { StatusLabel, IconCrossCircle, IconQuestionCircle } from "hds-react";
 import Layout from "../../components/common/Layout";
-import { store } from "../../state/store";
+import { initStore } from "../../state/store";
+import { CLEAR_STATE } from "../../types/constants";
+
 import i18nLoader from "../../utils/i18n";
 import ServicepointLandingSummary from "../../components/ServicepointLandingSummary";
 import styles from "./servicepoint.module.scss";
@@ -13,6 +15,7 @@ import QuestionInfo from "../../components/QuestionInfo";
 import ServicepointMainInfoContent from "../../components/ServicepointMainInfoContent";
 import router from "next/router";
 import { Dictionary } from "@reduxjs/toolkit";
+import { checkUser } from "../../utils/serverside";
 
 export const getFinnishDate = (jsonTimeStamp: Date) => {
   const date = new Date(jsonTimeStamp);
@@ -85,8 +88,8 @@ const Servicepoint = ({servicepointData, accessibilityData, entranceData}: any):
 export const getServerSideProps: GetServerSideProps = async ({ params, req, locales }) => {
   const lngDict = await i18nLoader(locales);
 
-  const reduxStore = store;
-  // reduxStore.dispatch({ type: CLEAR_STATE });
+  const reduxStore = initStore();
+  reduxStore.dispatch({ type: CLEAR_STATE });
   const initialReduxState = reduxStore.getState();
 
   // Try except to stop software crashes when developing without backend running
@@ -122,13 +125,13 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, loca
     accessibilityData = {}
     entranceData = {}
   }
-  // const user = await checkUser(req);
-  // if (!user) {
-  //   // Invalid user but login is not required
-  // }
-  // if (user && user.authenticated) {
-  //   initialReduxState.general.user = user;
-  // }
+  const user = await checkUser(req);
+  if (!user) {
+    // Invalid user but login is not required
+  }
+  if (user && user.authenticated) {
+    initialReduxState.general.user = user;
+  }
 
   return {
     props: {
