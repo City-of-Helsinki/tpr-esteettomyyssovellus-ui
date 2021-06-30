@@ -26,9 +26,9 @@ export interface QuestionContainerProps {
 }
 
 export interface HeadlineQuestionContainerProps {
-  headline: string;
+  text?: string;
   initOpen?: boolean;
-  children: any;
+  children?: any;
 }
 
 export interface DropdownQuestionProps {
@@ -77,8 +77,11 @@ export interface QuestionFormCtrlButtonsProps {
   hasPreviewButton?: boolean;
 }
 
+// todo: add type for questionlist
 export interface QuestionsListProps {
   additionalInfoVisible: boolean;
+  questions?: QuestionProps[] | null;
+  answers?: QuestionChoicesProps[] | null;
 }
 
 export interface QuestionAdditionalInfoCtrlButtonProps {
@@ -157,4 +160,81 @@ export interface Languages {
   fi?: string;
   en?: string;
   sv?: string;
+}
+
+// FORMS related stuff
+
+export interface MainEntranceFormProps {
+  isMobile?: boolean;
+  QuestionsData?: QuestionProps[];
+  QuestionChoicesData?: QuestionChoicesProps[];
+  QuestionBlocksData?: QuestionBlockProps[];
+}
+
+// todo: added ? optional questionmark to all, remove where mandatory
+export interface QuestionProps {
+  can_add_comment?: string;
+  can_add_location?: string;
+  can_add_photo_max_count?: number;
+  description?: string;
+  form_id?: number;
+  language_id: number;
+  photo_text?: string;
+  photo_url?: string;
+  question_block_id?: number;
+  question_code?: string;
+  question_id?: number;
+  question_level?: number;
+  question_order_text?: string;
+  technical_id?: string;
+  text?: string;
+  visible_if_question_choice?: string;
+  yes_no_question?: string;
+}
+
+export interface QuestionBlockProps {
+  questions?: QuestionProps[] | null;
+  answers?: QuestionChoicesProps[] | null;
+  description?: string | null;
+  form_id?: number;
+  language_id?: number;
+  photo_text?: string | null;
+  photo_url?: string | null;
+  question_block_code?: string;
+  question_block_id?: number;
+  question_block_order_text?: string;
+  technical_id?: string;
+  text?: string;
+  visible_if_question_choice?: string | null;
+}
+
+export interface QuestionChoicesProps {
+  choice_order_text?: string;
+  form_id?: number;
+  language_id?: number;
+  question_block_id?: number;
+  question_choice_id?: number;
+  question_id?: number;
+  technical_id?: string;
+  text?: string;
+}
+
+export interface QuestionBlocksProps {
+  description?: string;
+  form_id: number;
+  language_id: number;
+  photo_text?: string;
+  photo_url?: string;
+  question_block_code: string;
+  question_block_id: number;
+  question_block_order_text: string;
+  technical_id: string;
+  text: string;
+  visible_if_question_choice: string;
+}
+
+//TODO: add type for questionlist and question
+export interface QuestionBlockProps {
+  mainInfoText?: string;
+  questionList: any;
 }
