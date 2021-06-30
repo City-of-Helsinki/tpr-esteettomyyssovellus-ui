@@ -12,7 +12,7 @@ const QuestionFormImportExistingData = (): JSX.Element => {
       {/* {i18n.t("questions.infos" as string)} */}
       <p>ph: kopioi samassa osoitteessa olevan toimipisteen tiedot</p>
       <div className={styles.inputContainer}>
-        <QuestionDropdown options={mockOptions} placeholder="PH: Valitse toimipiste" />
+        <QuestionDropdown options={mockOptions} placeholder="PH: Valitse toimipiste" questionNumber={-1}/>
         <Button variant="secondary">PH: Tuo tiedot</Button>
       </div>
     </div>

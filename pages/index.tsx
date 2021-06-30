@@ -49,16 +49,17 @@ const Main = ({ isMobile, QuestionsData, QuestionChoicesData, QuestionBlocksData
   const curLocaleId: number = LANGUAGE_LOCALES[curLocale];
   const dispatch = useAppDispatch();
 
-  console.log(QuestionsData);
-  console.log(QuestionChoicesData);
-  console.log(QuestionBlocksData);
+  //console.log(QuestionsData);
+  //console.log(QuestionChoicesData);
+  //console.log(QuestionBlocksData);
 
   const openTermsOfUse = () => {
     window.open("www.google.com", "_blank");
   };
 
   const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
-
+  const curAnswers = useAppSelector((state) => state.formReducer);
+  console.log(curAnswers)
   // This checks whether the view has become so thin, i.e. mobile view, that the languageselector component should change place.
   if (typeof window !== "undefined") {
     const [width, setWidth] = useState<number>(window.innerWidth);
@@ -73,7 +74,7 @@ const Main = ({ isMobile, QuestionsData, QuestionChoicesData, QuestionBlocksData
 
   let heroTitle = i18n.t("common.landing.title");
   let heroText = "";
-  //let heroUrl = "https://i.stack.imgur.com/y9DpT.jpg";
+  // let heroUrl = "https://i.stack.imgur.com/y9DpT.jpg";
   // let heroUrl = "https://i.stack.imgur.com/y9DpT.jpg";
 
   const heroUrl = "http://localhost:3000/homepagephoto.png";
@@ -169,7 +170,7 @@ const Main = ({ isMobile, QuestionsData, QuestionChoicesData, QuestionBlocksData
 // Server-side rendering
 export const getServerSideProps: GetServerSideProps = async ({ params, req, locales }) => {
   const lngDict = await i18nLoader(locales);
-  console.log("KIELIÄÄÄ ", lngDict);
+  //console.log("KIELIÄÄÄ ", lngDict);
 
   const reduxStore = store;
   // reduxStore.dispatch({ type: CLEAR_STATE });

@@ -45,6 +45,7 @@ const QuestionsList = ({ additionalInfoVisible, questions, answers }: QuestionsL
           .map((choice) => {
             return {
               label: choice.text,
+              value: choice.question_choice_id
             };
           });
 
@@ -67,7 +68,7 @@ const QuestionsList = ({ additionalInfoVisible, questions, answers }: QuestionsL
               </>
             ) : (
               <>
-                <QuestionDropdown key={question.question_code} options={answerChoices} />
+                <QuestionDropdown key={question.question_id} options={answerChoices} questionNumber={question.question_id} />
               </>
             )}
           </QuestionContainer>
