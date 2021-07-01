@@ -18,7 +18,7 @@ const QuestionBlock = ({ description, questions, answers }: QuestionBlockProps):
   const onClick = () => {
     console.log("Continue clicked")
     // TODO: route to main form 
-    //router.push("www.google.com")
+    // window.location.reload(false)
   }
   const hasInfoAndButtons = questions != null ? questions[0].question_block_id != 0 : true;
   let curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);

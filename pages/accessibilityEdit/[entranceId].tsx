@@ -21,8 +21,35 @@ const AccessibilityEdit = ({QuestionsData, QuestionChoicesData, QuestionBlocksDa
     const i18n = useI18n();
     const curLocale: string = i18n.locale();
     const curLocaleId: number = LANGUAGE_LOCALES[curLocale]
-
     let curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
+    //console.log(curAnsweredChoices)
+    let visibleBlocks = (QuestionBlocksData && QuestionsData && QuestionChoicesData)
+        ? QuestionBlocksData.map((block: QuestionBlockProps) => {
+            const isVisible =
+                (block.visible_if_question_choice == null && block.language_id == curLocaleId) ||
+                // @ts-ignore: For some reason curAnsweredChoices type string[] contains numbers O_o
+                (curAnsweredChoices.includes(block.visible_if_question_choice ? Number(block.visible_if_question_choice) : "") &&
+                block.language_id == curLocaleId);
+
+            const blockQuestions = isVisible
+                ? QuestionsData.filter((question) => question.question_block_id === block.question_block_id && question.language_id == curLocaleId)
+                : null;
+
+            const answerChoices = isVisible
+                ? QuestionChoicesData.filter((choice) => choice.question_block_id === block.question_block_id && choice.language_id == curLocaleId)
+                : null;
+            {
+                return isVisible && blockQuestions && answerChoices ? (
+                <HeadlineQuestionContainer key={block.question_block_id} text={block.text}>
+                    <QuestionBlock description={block.description ?? null} questions={blockQuestions} answers={answerChoices} />
+                </HeadlineQuestionContainer>
+                ) : null;
+            }
+            })
+        : null;
+
+
+        //console.log(QuestionBlocksData)
     return (
         <Layout>
             <Head>
@@ -46,29 +73,7 @@ const AccessibilityEdit = ({QuestionsData, QuestionChoicesData, QuestionBlocksDa
                         <h2>PH: Pääsisäänkäynti:</h2>
                     </div>
                     <div>
-                        {QuestionBlocksData && QuestionsData && QuestionChoicesData
-                        ? QuestionBlocksData.map((block: QuestionBlockProps) => {
-                            const isVisible =
-                                (block.visible_if_question_choice == null && block.language_id == curLocaleId) ||
-                                (curAnsweredChoices.includes(block.visible_if_question_choice ? block.visible_if_question_choice : "") &&
-                                block.language_id == curLocaleId);
-
-                            const blockQuestions = isVisible
-                                ? QuestionsData.filter((question) => question.question_block_id === block.question_block_id && question.language_id == curLocaleId)
-                                : null;
-
-                            const answerChoices = isVisible
-                                ? QuestionChoicesData.filter((choice) => choice.question_block_id === block.question_block_id && choice.language_id == curLocaleId)
-                                : null;
-                            {
-                                return isVisible && blockQuestions && answerChoices ? (
-                                <HeadlineQuestionContainer key={block.question_block_id} text={block.text}>
-                                    <QuestionBlock description={block.description ?? null} questions={blockQuestions} answers={answerChoices} />
-                                </HeadlineQuestionContainer>
-                                ) : null;
-                            }
-                            })
-                        : null}
+                        {visibleBlocks}
                         <QuestionFormCtrlButtons hasCancelButton hasValidateButton hasSaveDraftButton hasPreviewButton />
                     </div>
                 </div>

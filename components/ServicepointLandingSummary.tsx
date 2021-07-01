@@ -14,7 +14,7 @@ const ServicepointLandingSummary = ({ header, data }: ServicepointLandingSummary
   const handleEditorAddPointData = () => {
     if (data) {
       console.log("edit data clicked, todo create logic");
-      console.log(data)
+      //console.log(data)
       const url = "http://localhost:3000/accessibilityEdit/" + data.main[0].entrance_id;
       router.push(url)
     } else {

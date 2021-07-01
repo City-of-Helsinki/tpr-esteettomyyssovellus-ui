@@ -3,6 +3,7 @@ import { IconArrowRight, IconArrowLeft, Card } from "hds-react";
 import Button from "./QuestionButton";
 import { QuestionFormCtrlButtonsProps } from "../types/general";
 import styles from "./QuestionFormCtrlButtons.module.scss";
+import { useAppSelector, useAppDispatch } from "../state/hooks";
 
 const QuestionFormCtrlButtons = ({
   hasCancelButton,
@@ -18,7 +19,9 @@ const QuestionFormCtrlButtons = ({
   const handleCancel = (): void => {
     console.log("cancel clicked");
   };
-
+  let curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
+  const isPreviewActive = curAnsweredChoices.length > 1;
+  
   return (
     <Card className={styles.container}>
       <div className={styles.left}>
@@ -36,7 +39,7 @@ const QuestionFormCtrlButtons = ({
           </Button>
         ) : null}
         {hasPreviewButton ? (
-          <Button variant="primary" iconRight={<IconArrowRight />}>
+          <Button variant="primary" iconRight={<IconArrowRight />} disabled={!isPreviewActive}>
             {" PH: Esikatsele "}
           </Button>
         ) : null}
