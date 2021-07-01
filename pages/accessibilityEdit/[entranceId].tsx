@@ -22,10 +22,8 @@ const AccessibilityEdit = ({QuestionsData, QuestionChoicesData, QuestionBlocksDa
     const curLocale: string = i18n.locale();
     const curLocaleId: number = LANGUAGE_LOCALES[curLocale]
     let curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
-
     
-
-    console.log(curAnsweredChoices)
+    //console.log(curAnsweredChoices)
     let visibleBlocks = (QuestionBlocksData && QuestionsData && QuestionChoicesData)
         ? QuestionBlocksData.map((block: QuestionBlockProps) => {
             // The visible_if_question_choice is sometimes of form "1231+1231+12313+etc"
@@ -41,7 +39,7 @@ const AccessibilityEdit = ({QuestionsData, QuestionChoicesData, QuestionBlocksDa
             const blockQuestions = isVisible
                 ? QuestionsData.filter((question) => question.question_block_id === block.question_block_id && question.language_id == curLocaleId)
                 : null;
-
+            console.log(blockQuestions)
             const answerChoices = isVisible
                 ? QuestionChoicesData.filter((choice) => choice.question_block_id === block.question_block_id && choice.language_id == curLocaleId)
                 : null;

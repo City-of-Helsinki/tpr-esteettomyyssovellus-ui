@@ -35,7 +35,7 @@ export interface DropdownQuestionProps {
   options: Dictionary<string>[];
   label?: string;
   placeholder?: string;
-  questionNumber: number;
+  questionNumber?: number;
 }
 
 export interface QuestionInfoProps {

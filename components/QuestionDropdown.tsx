@@ -31,7 +31,7 @@ const QuestionDropdown = ({ options, placeholder = "--Valitse--", label="", ques
   const currentValues = useAppSelector((state) => state.formReducer);
   const questionNumString = questionNumber != undefined ? questionNumber.toString() : "";
 
-  const x = currentValues.answers[questionNumber] != undefined ?  currentValues.answers[questionNumber] : "";
+  const x = questionNumber != undefined && currentValues.answers[questionNumber] != undefined ?  currentValues.answers[questionNumber] : "";
   let currentLabel = options.find((element) => {return element["value"] === x});
 
   const currentValue: Dictionary<string> = {"label": currentLabel != undefined ? currentLabel["label"] : "", "value": x.toString()};

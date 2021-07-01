@@ -23,6 +23,9 @@ const QuestionBlock = ({ description, questions, answers }: QuestionBlockProps):
   const hasInfoAndButtons = questions != null ? questions[0].question_block_id != 0 : true;
   let curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
   const continueActive = curAnsweredChoices.length != 0;
+
+  const filteredQuestions = questions != null ? questions.filter((question) => question.visible_if_question_choice == null || question.visible_if_question_choice?.split('+').every((elem) => curAnsweredChoices.includes(Number(elem)))) : null;
+  console.log("".split('+'))
   return (
     <>
       { hasInfoAndButtons ? 
@@ -49,7 +52,7 @@ const QuestionBlock = ({ description, questions, answers }: QuestionBlockProps):
                    pariatur. Excepteur sint occaecat cupi </p>
       }
       {/* TODO: add questions as params to QuestionsList, from fetch data */}
-      <QuestionsList additionalInfoVisible={showAdditionalInfo} questions={questions} answers={answers} />
+      <QuestionsList additionalInfoVisible={showAdditionalInfo} questions={filteredQuestions} answers={answers} />
       {hasInfoAndButtons ? null : (
         <Button variant="primary" iconRight={<IconArrowRight />} onClick={onClick} disabled={!continueActive}>
           {"PH: Jatka "}
