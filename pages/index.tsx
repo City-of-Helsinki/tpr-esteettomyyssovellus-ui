@@ -21,6 +21,7 @@ import SearchBoxWithButtonsMobile from "../components/SearchBoxWithButtonsMobile
 import { Hero, HeroShallow } from "../components/common/Hero";
 import { MainEntranceFormProps, QuestionBlockProps } from "../types/general";
 import { LANGUAGE_LOCALES } from "../types/constants";
+import { connect } from 'react-redux';
 
 import { setAnsweredChoice } from "../state/reducers/formSlice";
 import { API_FETCH_QUESTIONBLOCK_URL, API_FETCH_QUESTIONCHOICES, API_FETCH_QUESTION_URL } from "../types/constants";
@@ -57,9 +58,10 @@ const Main = ({ isMobile, QuestionsData, QuestionChoicesData, QuestionBlocksData
     window.open("www.google.com", "_blank");
   };
 
-  const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
-  const curAnswers = useAppSelector((state) => state.formReducer);
-  console.log(curAnswers)
+  let curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
+  //window.addEventListener("change", () => console.log(curAnsweredChoices))
+  // const curAnswers = useAppSelector((state) => state.formReducer);
+  //console.log(curAnsweredChoices)
   // This checks whether the view has become so thin, i.e. mobile view, that the languageselector component should change place.
   if (typeof window !== "undefined") {
     const [width, setWidth] = useState<number>(window.innerWidth);
