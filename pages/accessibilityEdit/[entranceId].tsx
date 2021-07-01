@@ -29,7 +29,7 @@ const AccessibilityEdit = ({QuestionsData, QuestionChoicesData, QuestionBlocksDa
             // The visible_if_question_choice is sometimes of form "1231+1231+12313+etc"
             const visibleQuestions = block.visible_if_question_choice?.split('+');
             // @ts-ignore: For some reason curAnsweredChoices type string[] contains numbers O_o
-            const answersIncludeAllVisibleQuestions = visibleQuestions ?  visibleQuestions.every(elem => curAnsweredChoices.includes(Number(elem))) : false;
+            const answersIncludeAllVisibleQuestions = visibleQuestions ?  visibleQuestions.some(elem => curAnsweredChoices.includes(Number(elem))) : false;
             //console.log(visibleQuestions)
             const isVisible =
                 (block.visible_if_question_choice == null && block.language_id == curLocaleId) ||
@@ -39,7 +39,7 @@ const AccessibilityEdit = ({QuestionsData, QuestionChoicesData, QuestionBlocksDa
             const blockQuestions = isVisible
                 ? QuestionsData.filter((question) => question.question_block_id === block.question_block_id && question.language_id == curLocaleId)
                 : null;
-            console.log(blockQuestions)
+            //console.log(blockQuestions)
             const answerChoices = isVisible
                 ? QuestionChoicesData.filter((choice) => choice.question_block_id === block.question_block_id && choice.language_id == curLocaleId)
                 : null;

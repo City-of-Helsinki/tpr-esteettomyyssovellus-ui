@@ -14,8 +14,11 @@ const QuestionContainer = ({
   hasAdditionalInfo,
   backgroundColor,
 }: QuestionContainerProps): JSX.Element => {
+
+  const questionDepth = (questionNumber.toString().split('.') || []).length;
+  const paddingLeft: string = (questionDepth - 2) * 30 + 'px';
   return (
-    <div className={styles.maincontainer} style={{ backgroundColor }}>
+    <div className={styles.maincontainer} style={{ paddingLeft, backgroundColor }}>
       <div className={styles.questioncontainer}>
         <div className={styles.maintext}>
           <p>

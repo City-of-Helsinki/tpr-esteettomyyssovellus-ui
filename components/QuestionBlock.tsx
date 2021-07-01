@@ -24,8 +24,8 @@ const QuestionBlock = ({ description, questions, answers }: QuestionBlockProps):
   let curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
   const continueActive = curAnsweredChoices.length != 0;
 
-  const filteredQuestions = questions != null ? questions.filter((question) => question.visible_if_question_choice == null || question.visible_if_question_choice?.split('+').every((elem) => curAnsweredChoices.includes(Number(elem)))) : null;
-  console.log("".split('+'))
+  const filteredQuestions = questions != null ? questions.filter((question) => question.visible_if_question_choice == null || question.visible_if_question_choice?.split('+').some((elem) => curAnsweredChoices.includes(Number(elem)))) : null;
+  //console.log(curAnsweredChoices)
   return (
     <>
       { hasInfoAndButtons ? 
