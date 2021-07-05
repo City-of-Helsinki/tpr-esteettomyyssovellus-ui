@@ -29,6 +29,7 @@ export interface HeadlineQuestionContainerProps {
   text?: string;
   initOpen?: boolean;
   children?: any;
+  number?: number;
 }
 
 export interface DropdownQuestionProps {
@@ -237,5 +238,5 @@ export interface QuestionBlocksProps {
 //TODO: add type for questionlist and question
 export interface QuestionBlockProps {
   mainInfoText?: string;
-  questionList: any;
+  // questionList: any;
 }

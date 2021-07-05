@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useState } from "react";
 import { useI18n } from "next-localization";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
@@ -20,9 +20,12 @@ import QuestionFormCtrlButtons from "../../components/QuestionFormCtrlButtons";
 const AccessibilityEdit = ({QuestionsData, QuestionChoicesData, QuestionBlocksData}: MainEntranceFormProps): ReactElement => {
     const i18n = useI18n();
     const curLocale: string = i18n.locale();
+    // @ts-ignore: TODO:
     const curLocaleId: number = LANGUAGE_LOCALES[curLocale]
     let curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
-    
+    let isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
+    //let curFinishedBlocks = useAppSelector((state) => state.formReducer.finishedBlocks);
+
     //console.log(curAnsweredChoices)
     let visibleBlocks = (QuestionBlocksData && QuestionsData && QuestionChoicesData)
         ? QuestionBlocksData.map((block: QuestionBlockProps) => {
@@ -34,7 +37,8 @@ const AccessibilityEdit = ({QuestionsData, QuestionChoicesData, QuestionBlocksDa
             const isVisible =
                 (block.visible_if_question_choice == null && block.language_id == curLocaleId) ||
                 (answersIncludeAllVisibleQuestions) &&
-                (block.language_id == curLocaleId);
+                (block.language_id == curLocaleId) &&
+                (isContinueClicked);
 
             const blockQuestions = isVisible
                 ? QuestionsData.filter((question) => question.question_block_id === block.question_block_id && question.language_id == curLocaleId)
@@ -45,14 +49,13 @@ const AccessibilityEdit = ({QuestionsData, QuestionChoicesData, QuestionBlocksDa
                 : null;
             {
                 return isVisible && blockQuestions && answerChoices ? (
-                <HeadlineQuestionContainer key={block.question_block_id} text={block.text}>
-                    <QuestionBlock description={block.description ?? null} questions={blockQuestions} answers={answerChoices} />
+                <HeadlineQuestionContainer key={block.question_block_id} number={block.question_block_id} text={block.question_block_code + " " + block.text} initOpen={false}>
+                    <QuestionBlock description={block.description ?? null} questions={blockQuestions} answers={answerChoices}/>
                 </HeadlineQuestionContainer>
                 ) : null;
             }
             })
         : null;
-
 
         //console.log(QuestionBlocksData)
     return (
@@ -89,11 +92,11 @@ const AccessibilityEdit = ({QuestionsData, QuestionChoicesData, QuestionBlocksDa
 
 export const getServerSideProps: GetServerSideProps = async ({ req, locales }) => {
     const lngDict = await i18nLoader(locales);
-  
+
     const reduxStore = store;
     // reduxStore.dispatch({ type: CLEAR_STATE });
     const initialReduxState = reduxStore.getState();
-  
+
     // const user = await checkUser(req);
     // if (!user) {
     //   // Invalid user but login is not required
@@ -131,6 +134,5 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locales }) =
     };
 };
 
-  
 
 export default AccessibilityEdit;

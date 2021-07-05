@@ -8,27 +8,53 @@ import QuestionsList from "./QuestionsList";
 import { QuestionBlockProps } from "../types/general";
 import router from "next/router";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
+import { setContinue, setFinished, unsetFinished } from "../state/reducers/formSlice";
 
-
-const QuestionBlock = ({ description, questions, answers }: QuestionBlockProps): JSX.Element => {
+const QuestionBlock = ({ description, questions, answers}: QuestionBlockProps): JSX.Element => {
   const [showAdditionalInfo, setShowAdditionalInfo] = useState(false);
+  const [showContinue, setShowContinue] = useState(true);
   const handleAdditionalInfoToggle = () => {
     setShowAdditionalInfo(!showAdditionalInfo);
   };
+  const dispatch = useAppDispatch();
   const onClick = () => {
     console.log("Continue clicked")
-    // TODO: route to main form 
+    dispatch(setContinue());
+    setShowContinue(false);
+    // TODO: route to main form
     // window.location.reload(false)
   }
-  const hasInfoAndButtons = questions != null ? questions[0].question_block_id != 0 : true;
+  const blockId: number = questions != null && questions[0].question_block_id != undefined ? questions[0].question_block_id : -1;
+  const hasInfoAndButtons = questions != null ? blockId != 0 : true;
   let curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
   const continueActive = curAnsweredChoices.length != 0;
 
-  const filteredQuestions = questions != null ? questions.filter((question) => question.visible_if_question_choice == null || question.visible_if_question_choice?.split('+').some((elem) => curAnsweredChoices.includes(Number(elem)))) : null;
-  //console.log(curAnsweredChoices)
+  const filteredQuestions = questions != null ?
+    questions.filter((question) => question.visible_if_question_choice == null ||
+    // @ts-ignore
+    question.visible_if_question_choice?.split('+').some((elem) => curAnsweredChoices.includes(Number(elem))))
+    : null;
+
+
+  let curAnswers = useAppSelector((state) => state.formReducer.answers);
+  let keys = Object.keys(curAnswers);
+
+  //console.log(curAnswers);
+  //console.log(filteredQuestions)
+  const blockFinished = filteredQuestions?.every((element) => {
+    return element.question_id ? keys.includes(element.question_id.toString()) : false;
+  })
+
+  if (blockFinished) {
+    console.log("BLOCK NUMBER " + blockId + " FINISHED")
+    dispatch(setFinished(blockId));
+  } else {
+    dispatch(unsetFinished(blockId));
+  }
+
   return (
     <>
-      { hasInfoAndButtons ? 
+      { hasInfoAndButtons ?
       (<div className={styles.mainInfo}>
         <p>{description ?? null}</p>
         <QuestionInfo
@@ -40,24 +66,27 @@ const QuestionBlock = ({ description, questions, answers }: QuestionBlockProps):
           PH: tähän LISÄpääinfot jostain tähän LISÄpääinfot jostain tähän
         </QuestionInfo>
       </div>) : null}
-      { hasInfoAndButtons ? 
+      { hasInfoAndButtons ?
       (<div className={styles.importAddinfoContainer}>
         <QuestionFormImportExistingData />
         <QuestionAdditionalInfoCtrlButton curState={showAdditionalInfo} onClick={handleAdditionalInfoToggle} />
-      </div>) : <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
-                  sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                  Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris 
+      </div>) : <p> Lorem ipsum dolor sit amet, consectetur adipiscing elit,
+                  sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
                   nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                   in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla 
+                   in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
                    pariatur. Excepteur sint occaecat cupi </p>
       }
       {/* TODO: add questions as params to QuestionsList, from fetch data */}
       <QuestionsList additionalInfoVisible={showAdditionalInfo} questions={filteredQuestions} answers={answers} />
-      {hasInfoAndButtons ? null : (
-        <Button variant="primary" iconRight={<IconArrowRight />} onClick={onClick} disabled={!continueActive}>
-          {"PH: Jatka "}
-        </Button>)}
-    
+      {hasInfoAndButtons || !showContinue ? null : (
+        <div className={styles.continueButton}>
+          <Button variant="primary" iconRight={<IconArrowRight />} onClick={onClick} disabled={!continueActive}>
+            {"PH: Jatka "}
+          </Button>
+        </div>)
+        }
+
     </>
   );
 };

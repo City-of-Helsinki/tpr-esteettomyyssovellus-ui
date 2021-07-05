@@ -5,12 +5,16 @@ import type { RootState } from "../store";
 
 interface formState {
   answeredChoices: string[];
-  answers:{ [key: number]: number; }
+  answers:{ [key: number]: number; };
+  isContinueClicked: boolean,
+  finishedBlocks: number[]
 }
 
 const initialState: formState = {
   answeredChoices: [],
-  answers: {}
+  answers: {},
+  isContinueClicked: false,
+  finishedBlocks: []
 };
 
 export const formSlice = createSlice({
@@ -36,10 +40,34 @@ export const formSlice = createSlice({
         ...state,
         answers: {...state.answers, [qNumber]: a}
       }
-    }
+    },
+    setContinue: (state) => {
+      return {
+        ...state,
+        isContinueClicked: true
+      }
+    },
+    unsetContinue: (state) => {
+      return {
+        ...state,
+        isContinueClicked: false
+      }
+    },
+    setFinished: (state, action: PayloadAction<number>) => {
+      return {
+        ...state,
+        finishedBlocks: [...state.finishedBlocks, action.payload]
+      }
+    },
+    unsetFinished: (state, action: PayloadAction<number>) => {
+      return {
+        ...state,
+        finishedBlocks: [...state.finishedBlocks?.filter((elem) => elem != action.payload) ?? []],
+      }
+    },
   },
 });
 
-export const { setAnsweredChoice, removeAnsweredChoice, setAnswer } = formSlice.actions;
+export const { setAnsweredChoice, removeAnsweredChoice, setAnswer, setContinue, unsetContinue, setFinished, unsetFinished } = formSlice.actions;
 
 export default formSlice.reducer;
