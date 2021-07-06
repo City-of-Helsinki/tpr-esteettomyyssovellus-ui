@@ -4,6 +4,7 @@ import Button from "./QuestionButton";
 import { QuestionFormCtrlButtonsProps } from "../types/general";
 import styles from "./QuestionFormCtrlButtons.module.scss";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
+import router from "next/router";
 
 const QuestionFormCtrlButtons = ({
   hasCancelButton,
@@ -16,10 +17,15 @@ const QuestionFormCtrlButtons = ({
 
   // testing click handle, edit with real logic later
   // also add handlers for all buttons respectively
+
+  let curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
+  let curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
   const handleCancel = (): void => {
     console.log("cancel clicked");
+    // TODO: Add errorpage
+    const url = curServicepointId == "" ? "http://localhost:3000/" : "http://localhost:3000/servicepoint/" + curServicepointId;
+    router.push(url);
   };
-  let curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
   const isPreviewActive = curAnsweredChoices.length > 1;
 
   return (

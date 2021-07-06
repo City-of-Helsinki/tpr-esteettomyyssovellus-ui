@@ -3,6 +3,8 @@ import { string } from "yup/lib/locale";
 import type { RootState } from "../store";
 
 interface formState {
+  currentServicepointId: any;
+  currentEntranceId: any;
   answeredChoices: string[];
   answers: { [key: number]: number };
   isContinueClicked: boolean;
@@ -10,6 +12,8 @@ interface formState {
 }
 
 const initialState: formState = {
+  currentServicepointId: "",
+  currentEntranceId: "",
   answeredChoices: [],
   answers: {},
   isContinueClicked: false,
@@ -20,6 +24,18 @@ export const formSlice = createSlice({
   name: "mainForm",
   initialState,
   reducers: {
+    setServicepointId: (state, action: PayloadAction<string>) => {
+      return {
+        ...state,
+        currentServicepointId: action.payload
+      };
+    },
+    setEntranceId: (state, action: PayloadAction<string>) => {
+      return {
+        ...state,
+        currentEntranceId: action.payload
+      };
+    },
     setAnsweredChoice: (state, action: PayloadAction<string>) => {
       return {
         ...state,
@@ -67,6 +83,16 @@ export const formSlice = createSlice({
   }
 });
 
-export const { setAnsweredChoice, removeAnsweredChoice, setAnswer, setContinue, unsetContinue, setFinished, unsetFinished } = formSlice.actions;
+export const {
+  setServicepointId,
+  setEntranceId,
+  setAnsweredChoice,
+  removeAnsweredChoice,
+  setAnswer,
+  setContinue,
+  unsetContinue,
+  setFinished,
+  unsetFinished
+} = formSlice.actions;
 
 export default formSlice.reducer;

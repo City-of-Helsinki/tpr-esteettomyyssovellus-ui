@@ -14,6 +14,8 @@ import ServicepointMainInfoContent from "../../components/ServicepointMainInfoCo
 import router from "next/router";
 import { Dictionary } from "@reduxjs/toolkit";
 import PathTreeComponent from "../../components/PathTreeComponent";
+import { useAppDispatch } from "../../state/hooks";
+import { setServicepointId, setEntranceId } from "../../state/reducers/formSlice";
 
 export const getFinnishDate = (jsonTimeStamp: Date) => {
   const date = new Date(jsonTimeStamp);
@@ -35,11 +37,15 @@ const Servicepoint = ({ servicepointData, accessibilityData, entranceData }: any
   const i18n = useI18n();
   // TODO: Modify the format of the values displayed on the website.
   const finnishDate = getFinnishDate(servicepointData.modified);
-
+  const dispatch = useAppDispatch();
   Object.keys(accessibilityData).map(function (key, index) {
     accessibilityData[key] = filterByLanguage(accessibilityData[key]);
   });
-
+  console.log(entranceData.results.entrance_id);
+  if (servicepointData && entranceData.results) {
+    dispatch(setServicepointId(servicepointData.servicepoint_id));
+    dispatch(setEntranceId(entranceData.results[0].entrance_id));
+  }
   const treeItems = [servicepointData.servicepoint_name];
   return (
     <Layout>

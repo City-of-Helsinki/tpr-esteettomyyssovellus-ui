@@ -8,14 +8,17 @@ import styles from "./ServicepointLandingSummary.module.scss";
 import router from "next/router";
 import { current } from "@reduxjs/toolkit";
 import { array } from "yup/lib/locale";
+import { useAppSelector } from "../state/hooks";
 
 const ServicepointLandingSummary = ({ header, data }: ServicepointLandingSummaryProps): JSX.Element => {
   const i18n = useI18n();
+  const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
+
   const handleEditorAddPointData = () => {
     if (data) {
       console.log("edit data clicked, todo create logic");
-      //console.log(data)
-      const url = "http://localhost:3000/accessibilityEdit/" + data.main[0].entrance_id;
+      const url = "http://localhost:3000/accessibilityEdit/" + curEntranceId;
+      // TODO: This preserves the state. Not necessary.
       router.push(url);
     } else {
       console.log("create servicepoint data clicked, todo create logic");

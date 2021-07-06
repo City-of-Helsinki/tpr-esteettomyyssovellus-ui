@@ -171,6 +171,7 @@ export interface MainEntranceFormProps {
   QuestionsData?: QuestionProps[];
   QuestionChoicesData?: QuestionChoicesProps[];
   QuestionBlocksData?: QuestionBlockProps[];
+  ServicePointData?: any;
 }
 
 // todo: added ? optional questionmark to all, remove where mandatory

@@ -50,18 +50,12 @@ const Main = ({ isMobile, QuestionsData, QuestionChoicesData, QuestionBlocksData
   const curLocaleId: number = LANGUAGE_LOCALES[curLocale];
   const dispatch = useAppDispatch();
 
-  //console.log(QuestionsData);
-  //console.log(QuestionChoicesData);
-  //console.log(QuestionBlocksData);
-
   const openTermsOfUse = () => {
     window.open("www.google.com", "_blank");
   };
 
   let curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
-  //window.addEventListener("change", () => console.log(curAnsweredChoices))
-  // const curAnswers = useAppSelector((state) => state.formReducer);
-  //console.log(curAnsweredChoices)
+
   // This checks whether the view has become so thin, i.e. mobile view, that the languageselector component should change place.
   if (typeof window !== "undefined") {
     const [width, setWidth] = useState<number>(window.innerWidth);
