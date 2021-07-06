@@ -16,6 +16,7 @@ import { MainEntranceFormProps, QuestionBlockProps } from "../../types/general";
 import HeadlineQuestionContainer from "../../components/HeadlineQuestionContainer";
 import { LANGUAGE_LOCALES } from "../../types/constants";
 import QuestionFormCtrlButtons from "../../components/QuestionFormCtrlButtons";
+import PathTreeComponent from "../../components/PathTreeComponent";
 
 const AccessibilityEdit = ({QuestionsData, QuestionChoicesData, QuestionBlocksData}: MainEntranceFormProps): ReactElement => {
     const i18n = useI18n();
@@ -56,8 +57,8 @@ const AccessibilityEdit = ({QuestionsData, QuestionChoicesData, QuestionBlocksDa
             }
             })
         : null;
+    const treeItems = ["PH: Päiväkoti apila", "Esteettömyystiedot"];
 
-        //console.log(QuestionBlocksData)
     return (
         <Layout>
             <Head>
@@ -65,6 +66,9 @@ const AccessibilityEdit = ({QuestionsData, QuestionChoicesData, QuestionBlocksDa
             </Head>
             <main id="content">
                 <div className={styles.maincontainer}>
+                    <div className={styles.treecontainer}>
+                        <PathTreeComponent treeItems={treeItems}/>
+                    </div>
                     <div className={styles.infocontainer}>
                         <QuestionInfo
                         openText={i18n.t("common.generalMainInfoIsClose")}

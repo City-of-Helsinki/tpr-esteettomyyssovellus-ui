@@ -4,6 +4,10 @@
 .maincontainer {
     width: 85%;
     padding: $spacing-m;
+    .treecontainer {
+        display: flex;
+        align-items: center;
+    }
     .infocontainer {
         margin: $spacing-m 0;
     }
@@ -35,6 +39,6 @@
                 margin-right: $spacing-s;
             }
         }
-        
+
     }
 }

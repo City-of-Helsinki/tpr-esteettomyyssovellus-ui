@@ -13,6 +13,7 @@ import QuestionInfo from "../../components/QuestionInfo";
 import ServicepointMainInfoContent from "../../components/ServicepointMainInfoContent";
 import router from "next/router";
 import { Dictionary } from "@reduxjs/toolkit";
+import PathTreeComponent from "../../components/PathTreeComponent";
 
 export const getFinnishDate = (jsonTimeStamp: Date) => {
   const date = new Date(jsonTimeStamp);
@@ -33,13 +34,14 @@ export const filterByLanguage = (dict: Dictionary<any>) => {
 
 const Servicepoint = ({servicepointData, accessibilityData, entranceData}: any): ReactElement => {
   const i18n = useI18n();
-  // TODO: Modify the format of the values displayed on the website. 
+  // TODO: Modify the format of the values displayed on the website.
   const finnishDate = getFinnishDate(servicepointData.modified);
 
   Object.keys(accessibilityData).map(function(key, index) {
     accessibilityData[key] = filterByLanguage(accessibilityData[key]);
   });
 
+  const treeItems = [servicepointData.servicepoint_name]
   return (
     <Layout>
       <Head>
@@ -47,6 +49,9 @@ const Servicepoint = ({servicepointData, accessibilityData, entranceData}: any):
       </Head>
       <main id="content">
         <div className={styles.maincontainer}>
+          <div className={styles.treecontainer}>
+            <PathTreeComponent treeItems={treeItems}/>
+          </div>
           <div className={styles.infocontainer}>
             <QuestionInfo
               openText={i18n.t("common.generalMainInfoIsClose")}
@@ -90,7 +95,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, loca
   const initialReduxState = reduxStore.getState();
 
   // Try except to stop software crashes when developing without backend running
-  // TODO: Make this more reliable 
+  // TODO: Make this more reliable
   try {
     // @ts-ignore: params gives an error
     const res1 = await fetch(`http://0.0.0.0:8000/api/ArServicepoints/${params.servicepointId}/?format=json`);
@@ -116,7 +121,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, loca
       }
       i++;
     }
-  } 
+  }
   catch(err) {
     servicepointData = {}
     accessibilityData = {}

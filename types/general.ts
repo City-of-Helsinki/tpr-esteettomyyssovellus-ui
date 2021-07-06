@@ -240,3 +240,7 @@ export interface QuestionBlockProps {
   mainInfoText?: string;
   // questionList: any;
 }
+
+export interface PathTreeProps {
+  treeItems: any[];
+}

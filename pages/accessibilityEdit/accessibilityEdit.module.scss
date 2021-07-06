@@ -7,6 +7,10 @@
     .infocontainer {
         margin: $spacing-m 0;
     }
+    .treecontainer {
+        display: flex;
+        align-items: center;
+    }
     .headingcontainer {
         h1 {
             font-size: $fontsize-heading-xl !important;
@@ -35,6 +39,6 @@
                 margin-right: $spacing-s;
             }
         }
-        
+
     }
 }
