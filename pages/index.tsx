@@ -21,7 +21,7 @@ import SearchBoxWithButtonsMobile from "../components/SearchBoxWithButtonsMobile
 import { Hero, HeroShallow } from "../components/common/Hero";
 import { MainEntranceFormProps, QuestionBlockProps } from "../types/general";
 import { LANGUAGE_LOCALES } from "../types/constants";
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 
 import { setAnsweredChoice } from "../state/reducers/formSlice";
 import { API_FETCH_QUESTIONBLOCK_URL, API_FETCH_QUESTIONCHOICES, API_FETCH_QUESTION_URL } from "../types/constants";
@@ -30,18 +30,18 @@ const useStyles = makeStyles((theme) => ({
   navi: {
     zIndex: 10000,
     fontFamily: "HelsinkiGrotesk",
-    fontSize: 16,
+    fontSize: 16
   },
   mainGrid: {
-    marginTop: theme.spacing(3),
+    marginTop: theme.spacing(3)
   },
   hero: (heroShallow: Boolean) => ({
-    height: heroShallow ? 360 : 550,
+    height: heroShallow ? 360 : 550
   }),
   main: {},
   paragraphs: {
-    marginTop: 56,
-  },
+    marginTop: 56
+  }
 }));
 
 const Main = ({ isMobile, QuestionsData, QuestionChoicesData, QuestionBlocksData }: MainEntranceFormProps): ReactElement => {
@@ -110,7 +110,7 @@ const Main = ({ isMobile, QuestionsData, QuestionChoicesData, QuestionBlocksData
           </Button>
         </div>
 
-        for redux-toolkit example -> delete 
+        for redux-toolkit example -> delete
         <h2>{`count is: ${curCount}`}</h2>
 
         <Notice
@@ -210,13 +210,13 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, loca
       QuestionsData: QuestionsData,
       QuestionChoicesData: QuestionChoicesData,
       QuestionBlocksData: QuestionBlocksData,
-      lngDict,
-    },
+      lngDict
+    }
   };
 };
 
 Main.defaultProps = {
-  isMobile: false,
+  isMobile: false
 };
 
 export default Main;

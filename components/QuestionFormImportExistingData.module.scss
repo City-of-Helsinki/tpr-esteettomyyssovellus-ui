@@ -2,27 +2,27 @@
 @import "../styles/mixins.scss";
 
 .mainContainer {
-    padding: $spacing-s;
-    .inputContainer {
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-start;
-        @include media(l, xl) {
-            flex-direction: row;
-        }
-      
-        :focus::after {
-            margin-left: 0px;
-        }
-
-        Button {
-            margin: auto $spacing-2-xs;
-            @include media(xs, s) {
-                margin: 0;
-            }
-            @include media(m) {
-                margin: $spacing-2-xs 0;
-            }
-        }
+  padding: $spacing-s;
+  .inputContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    @include media(l, xl) {
+      flex-direction: row;
     }
+
+    :focus::after {
+      margin-left: 0px;
+    }
+
+    Button {
+      margin: auto $spacing-2-xs;
+      @include media(xs, s) {
+        margin: 0;
+      }
+      @include media(m) {
+        margin: $spacing-2-xs 0;
+      }
+    }
+  }
 }

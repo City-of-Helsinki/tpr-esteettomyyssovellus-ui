@@ -44,7 +44,7 @@ const AdditionalInfoPicturesContent = ({ questionNumber, compId, onlyLink = fals
         alt_fi: "",
         alt_sv: "",
         alt_en: "",
-        source: "",
+        source: ""
       };
       dispatch(addPicture(payload));
     } else {
@@ -59,7 +59,7 @@ const AdditionalInfoPicturesContent = ({ questionNumber, compId, onlyLink = fals
           alt_fi: "",
           alt_sv: "",
           alt_en: "",
-          source: "",
+          source: ""
         };
         dispatch(addPicture(payload));
       }

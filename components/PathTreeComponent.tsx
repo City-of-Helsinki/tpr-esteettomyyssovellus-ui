@@ -4,24 +4,36 @@ import { HeadlineQuestionContainerProps, PathTreeProps } from "../types/general"
 import styles from "./PathTreeComponent.module.scss";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
 
-const PathTreeComponent = ({treeItems}: PathTreeProps): JSX.Element => {
+const PathTreeComponent = ({ treeItems }: PathTreeProps): JSX.Element => {
+  const pathTree = treeItems.map((elem) => {
+    const treeItem =
+      treeItems.indexOf(elem) != 0 ? (
+        <>
+          <a>
+            {" > "}
+            {elem}
+          </a>
+        </>
+      ) : (
+        <>
+          <p>{" > "}</p>
+          <a className={styles.link} href={"#"}>
+            {elem}
+          </a>
+        </>
+      );
 
-    const pathTree = treeItems.map((elem) => {
+    return treeItem;
+  });
 
-        const treeItem = treeItems.indexOf(elem) != 0 ?
-                        <><a>{" > "}{elem}</a></> :
-                        <><p>{" > "}</p><a className={styles.link} href={"#"}>{elem}</a></>;
+  return (
+    <>
+      <a href={"http://localhost:3000/"} className={styles.link}>
+        {"PH: Haku"}
+      </a>{" "}
+      {pathTree}
+    </>
+  );
+};
 
-        return (
-            treeItem
-        )
-    })
-
-    return (
-      <>
-        <a href={"http://localhost:3000/"} className={styles.link}>{"PH: Haku"}</a> {pathTree}
-      </>
-    );
-  };
-
-  export default PathTreeComponent;
+export default PathTreeComponent;

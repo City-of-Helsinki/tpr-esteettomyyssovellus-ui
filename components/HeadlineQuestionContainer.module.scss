@@ -2,54 +2,54 @@
 @import "../styles/mixins.scss";
 
 .headline {
-    padding: $spacing-s $spacing-s;
-    margin: auto;
+  padding: $spacing-s $spacing-s;
+  margin: auto;
+
+  @include media(xs, s) {
+    width: 100%;
+    border-bottom: 1px solid $color-black-20;
+  }
+
+  .mainInfo {
+    padding: $spacing-s;
+    width: 70%;
+  }
+
+  .importAddinfoContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    @include media(l, xl) {
+      flex-direction: row;
+      align-items: flex-end;
+    }
+  }
+
+  .headlineButton {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
 
     @include media(xs, s) {
-        width: 100%;
-        border-bottom: 1px solid $color-black-20;
+      border: none;
+      color: $color-black;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      justify-content: space-between;
     }
-
-    .mainInfo {
-        padding: $spacing-s;
-        width: 70%;
-    }
-
-    .importAddinfoContainer {
-        display: flex;  
-        flex-direction: column;
-        align-items: flex-start;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        @include media(l, xl) {
-            flex-direction: row;
-            align-items: flex-end;
-        }
-    }
-
-    .headlineButton {
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        align-items: center;
-        
-        @include media(xs, s) {
-            border: none;
-            color: $color-black;
-            display: flex;
-            flex-direction: row;
-            flex-wrap: nowrap;
-            justify-content: space-between;
-        }
-    }
-        :focus::after {
-            --focus-outline-width: 3px;
-            --focus-outline-color: var(--color-coat-of-arms);
-            --focus-outline-border-radius: 2px;
-            margin-left: -15px;
-        }
-    .card {
-        padding: 0;
-    }
+  }
+  :focus::after {
+    --focus-outline-width: 3px;
+    --focus-outline-color: var(--color-coat-of-arms);
+    --focus-outline-border-radius: 2px;
+    margin-left: -15px;
+  }
+  .card {
+    padding: 0;
+  }
 }

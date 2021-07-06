@@ -46,7 +46,7 @@ Notice.defaultProps = {
   className: undefined,
   titleKey: "",
   button: undefined,
-  focusOnTitle: false,
+  focusOnTitle: false
 };
 
 export default Notice;

@@ -2,31 +2,31 @@
 @import "../styles/mixins.scss";
 
 .maincontainer {
-    .questioncontainer {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        flex-flow: row wrap;
-        padding: $spacing-l $spacing-s;
-        @include media(xs, s) {
-            flex-direction: column;
-            padding: $spacing-m 0;
-        }
+  .questioncontainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-flow: row wrap;
+    padding: $spacing-l $spacing-s;
+    @include media(xs, s) {
+      flex-direction: column;
+      padding: $spacing-m 0;
     }
-    .maintext {
-        width: "70%";
-    }
-    .children {
-        flex: auto;
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        padding-right: $spacing-s;
-    }
-    .openAdditioinalInfo {
-        border: 1px solid blue;
-    }
-    .borderTopIfOpen {
-        border-top: 1px solid blue;
-    }
+  }
+  .maintext {
+    width: "70%";
+  }
+  .children {
+    flex: auto;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: $spacing-s;
+  }
+  .openAdditioinalInfo {
+    border: 1px solid blue;
+  }
+  .borderTopIfOpen {
+    border-top: 1px solid blue;
+  }
 }

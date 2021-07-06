@@ -35,7 +35,7 @@ const AdditionalInfo = (): ReactElement => {
     comment: 0,
     upload: 0,
     link: 0,
-    location: 0,
+    location: 0
   });
 
   const handleAddElement = (type: string) => {
@@ -186,8 +186,8 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locales }) =
   return {
     props: {
       initialReduxState,
-      lngDict,
-    },
+      lngDict
+    }
   };
 };
 

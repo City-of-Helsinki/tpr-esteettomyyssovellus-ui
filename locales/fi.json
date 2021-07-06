@@ -43,7 +43,6 @@
       "saveAndReturn": "Tallenna ja palaa",
       "returnNoSave": "Poistu tallentamatta"
     }
-
   },
   "question": {
     "something": "something"
@@ -94,6 +93,6 @@
       "addUploadImageFromDevice": "Lataa kuva laitteelta",
       "addPictureLink": "Lisää kuvalinkki",
       "addNewLocation": "Lisää sijainti"
-    } 
+    }
   }
 }

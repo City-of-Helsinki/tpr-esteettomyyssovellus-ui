@@ -2,48 +2,42 @@
 @import "../../styles/mixins";
 
 .header {
-    border-bottom: 2px solid black;
-    line-height: 18px;  
+  border-bottom: 2px solid black;
+  line-height: 18px;
 }
 
 .actions {
-    display: flex !important;
-    justify-content: flex-start !important;
-    padding-right: 0 !important;
-
+  display: flex !important;
+  justify-content: flex-start !important;
+  padding-right: 0 !important;
 }
 
 .choices {
-    margin-top: 20px;
-    position: relative;
+  margin-top: 20px;
+  position: relative;
 }
 
 .logout {
-    margin-left: 0;
+  margin-left: 0;
 }
-
 
 .mobileLanguages {
-    padding-top: 30px;
-    padding-bottom: 40px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    font-weight: bold;
-    white-space: nowrap;
-    font-size: small;
-    justify-content: space-evenly; 
-    .chosen {
-        color: black;
-        text-decoration: none;
-    }
-    
-    .unchosen {
-        color: #0000bf !important;
-        text-decoration: underline !important;
-    }
-    
+  padding-top: 30px;
+  padding-bottom: 40px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-weight: bold;
+  white-space: nowrap;
+  font-size: small;
+  justify-content: space-evenly;
+  .chosen {
+    color: black;
+    text-decoration: none;
+  }
 
+  .unchosen {
+    color: #0000bf !important;
+    text-decoration: underline !important;
+  }
 }
-
-

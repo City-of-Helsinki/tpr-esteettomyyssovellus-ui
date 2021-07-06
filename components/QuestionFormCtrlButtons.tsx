@@ -9,7 +9,7 @@ const QuestionFormCtrlButtons = ({
   hasCancelButton,
   hasValidateButton,
   hasSaveDraftButton,
-  hasPreviewButton,
+  hasPreviewButton
 }: QuestionFormCtrlButtonsProps): JSX.Element => {
   // TODO: save button might need own component of Button
   // also preview view should probably also have own component/buttons
@@ -21,7 +21,7 @@ const QuestionFormCtrlButtons = ({
   };
   let curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
   const isPreviewActive = curAnsweredChoices.length > 1;
-  
+
   return (
     <Card className={styles.container}>
       <div className={styles.left}>

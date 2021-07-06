@@ -9,13 +9,13 @@ const initialState = {
     locations: [
       {
         description: "",
-        coordinates: null,
-      },
+        coordinates: null
+      }
     ],
     comments: {
       comment_fi: "",
       comment_en: "",
-      comment_sv: "",
+      comment_sv: ""
     },
     pictures: [
       {
@@ -24,11 +24,11 @@ const initialState = {
         url: "",
         alt_fi: "",
         alt_en: "",
-        alt_sv: "",
-      },
+        alt_sv: ""
+      }
     ],
-    components: [],
-  },
+    components: []
+  }
 };
 
 export const additionalInfoSlice = createSlice({
@@ -50,8 +50,8 @@ export const additionalInfoSlice = createSlice({
       return {
         [qNumber]: {
           ...state[qNumber],
-          pictures: [...(state[qNumber]?.pictures ?? []), action.payload],
-        },
+          pictures: [...(state[qNumber]?.pictures ?? []), action.payload]
+        }
       };
     },
     removeComment: (state, action: PayloadAction<{ questionNumber: string }>) => {
@@ -59,8 +59,8 @@ export const additionalInfoSlice = createSlice({
       return {
         [qNumber]: {
           ...state[qNumber],
-          comments: {},
-        },
+          comments: {}
+        }
       };
     },
     removePicture: (state, action: PayloadAction<{ questionNumber: string; currentId: number }>) => {
@@ -69,8 +69,8 @@ export const additionalInfoSlice = createSlice({
       return {
         [qNumber]: {
           ...state[qNumber],
-          pictures: [...(state[qNumber].pictures?.filter((picture) => picture.id !== id) ?? [])],
-        },
+          pictures: [...(state[qNumber].pictures?.filter((picture) => picture.id !== id) ?? [])]
+        }
       };
     },
     // Use the PayloadAction type to declare the contents of `action.payload`
@@ -83,8 +83,8 @@ export const additionalInfoSlice = createSlice({
         ...state,
         [qNumber]: {
           ...state[qNumber],
-          comments: { ...state[qNumber].comments, [lang]: value },
-        },
+          comments: { ...state[qNumber].comments, [lang]: value }
+        }
       };
     },
     addComponent: (state, action: PayloadAction<{ questionNumber: string; type: string; id: number }>) => {
@@ -94,8 +94,8 @@ export const additionalInfoSlice = createSlice({
       return {
         [qNumber]: {
           ...state[qNumber],
-          components: [...(state[qNumber]?.components ?? []), { id: id, type: type }],
-        },
+          components: [...(state[qNumber]?.components ?? []), { id: id, type: type }]
+        }
       };
     },
     removeComponent: (state, action: PayloadAction<{ questionNumber: string; delId: number }>) => {
@@ -105,8 +105,8 @@ export const additionalInfoSlice = createSlice({
         ...state,
         [qNumber]: {
           ...state[qNumber],
-          components: [...(state[qNumber]?.components?.filter((elem) => elem.id !== id) ?? [])],
-        },
+          components: [...(state[qNumber]?.components?.filter((elem) => elem.id !== id) ?? [])]
+        }
       };
     },
     setAlt: (state, action: PayloadAction<{ questionNumber: string; language: string; value: string; compId: number }>) => {
@@ -127,8 +127,8 @@ export const additionalInfoSlice = createSlice({
         ...state,
         [qNumber]: {
           ...state[qNumber],
-          pictures: [...(state[qNumber].pictures?.filter((pic) => pic.id !== id) || []), targetPic],
-        },
+          pictures: [...(state[qNumber].pictures?.filter((pic) => pic.id !== id) || []), targetPic]
+        }
       };
     },
     setPictureSource: (state, action: PayloadAction<{ questionNumber: string; compId: number; source: string }>) => {
@@ -148,24 +148,15 @@ export const additionalInfoSlice = createSlice({
         ...state,
         [qNumber]: {
           ...state[qNumber],
-          pictures: [...(state[qNumber].pictures?.filter((pic) => pic.id !== id) || []), targetPic],
-        },
+          pictures: [...(state[qNumber].pictures?.filter((pic) => pic.id !== id) || []), targetPic]
+        }
       };
-    },
-  },
+    }
+  }
 });
 
-export const {
-  addLocation,
-  addPicture,
-  removePicture,
-  addComment,
-  addComponent,
-  removeComponent,
-  setAlt,
-  setPictureSource,
-  removeComment,
-} = additionalInfoSlice.actions;
+export const { addLocation, addPicture, removePicture, addComment, addComponent, removeComponent, setAlt, setPictureSource, removeComment } =
+  additionalInfoSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectCount = (state: RootState): number => state.exampleReducer.value;

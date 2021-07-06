@@ -11,8 +11,8 @@ export const store = configureStore({
     exampleReducer: exampleSlice,
     formReducer: formSlice,
     additionalInfoReducer: additionalInfoSlice,
-    general: general,
-  },
+    general: general
+  }
 });
 
 export type RootState = ReturnType<typeof store.getState>;

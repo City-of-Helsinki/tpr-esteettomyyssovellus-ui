@@ -19,7 +19,7 @@ const AdditionalInfoLocationContent = ({ questionNumber, onDelete }: AdditionalC
       addLocation({
         questionNumber: questionNumber,
         description: "test",
-        coordinates: location,
+        coordinates: location
       })
     );
   };

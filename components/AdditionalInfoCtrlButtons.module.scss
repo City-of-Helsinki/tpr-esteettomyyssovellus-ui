@@ -2,9 +2,9 @@
 @import "../styles/mixins.scss";
 
 .maincontainer {
-    display: flex;
-    color: $color-bus;
-    .noborderbutton button {
-        border: 0;
-    }
+  display: flex;
+  color: $color-bus;
+  .noborderbutton button {
+    border: 0;
+  }
 }

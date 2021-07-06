@@ -40,13 +40,13 @@
     "generalChoose": "Välja",
     "generalExplanation": "Förklaring"
   },
-    "buttons": {
-      "saveAndReturn": "spara och returnera",
-      "returnNoSave": "avsluta utan att spara"
-    },
-    "question": {
-      "something": "something"
-  }, 
+  "buttons": {
+    "saveAndReturn": "spara och returnera",
+    "returnNoSave": "avsluta utan att spara"
+  },
+  "question": {
+    "something": "something"
+  },
   "servicepoint": {
     "buttons": {
       "createServicepoint": "Fyll i tillgänglighetsformuläret",

@@ -2,8 +2,8 @@
 @import "../styles/mixins.scss";
 
 .selectDropdown {
-    width: 15rem;
-    @include media(xs, s) {
-        padding: $spacing-s 0;
-    }
+  width: 15rem;
+  @include media(xs, s) {
+    padding: $spacing-s 0;
+  }
 }

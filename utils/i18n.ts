@@ -5,7 +5,9 @@ export const defaultLocale = "fi";
 const i18nLoader = async (locale: string, isModeration?: boolean): Promise<{ [locale: string]: { [key: string]: unknown } }> => {
   const { default: lngDict = {} } = await import(`../locales/${locale || defaultLocale}.json`);
 
-  return { [locale]: { common: lngDict.common, question: lngDict.question, servicepoint: lngDict.servicepoint, additionalInfo: lngDict.additionalInfo } };
+  return {
+    [locale]: { common: lngDict.common, question: lngDict.question, servicepoint: lngDict.servicepoint, additionalInfo: lngDict.additionalInfo }
+  };
 };
 
 export const i18nLoaderMultiple = async (locales?: string[], isModeration?: boolean): Promise<{ [locale: string]: { [key: string]: unknown } }> => {

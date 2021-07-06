@@ -22,26 +22,25 @@ export const getFinnishDate = (jsonTimeStamp: Date) => {
   const year = date.getFullYear();
   const finnish_date = day + "." + month + "." + year;
   return finnish_date;
-}
+};
 
 export const filterByLanguage = (dict: Dictionary<any>) => {
   const i18n = useI18n();
   return dict.filter((entry: any) => {
     return entry.language_code == i18n.locale();
-  })
-}
+  });
+};
 
-
-const Servicepoint = ({servicepointData, accessibilityData, entranceData}: any): ReactElement => {
+const Servicepoint = ({ servicepointData, accessibilityData, entranceData }: any): ReactElement => {
   const i18n = useI18n();
   // TODO: Modify the format of the values displayed on the website.
   const finnishDate = getFinnishDate(servicepointData.modified);
 
-  Object.keys(accessibilityData).map(function(key, index) {
+  Object.keys(accessibilityData).map(function (key, index) {
     accessibilityData[key] = filterByLanguage(accessibilityData[key]);
   });
 
-  const treeItems = [servicepointData.servicepoint_name]
+  const treeItems = [servicepointData.servicepoint_name];
   return (
     <Layout>
       <Head>
@@ -50,7 +49,7 @@ const Servicepoint = ({servicepointData, accessibilityData, entranceData}: any):
       <main id="content">
         <div className={styles.maincontainer}>
           <div className={styles.treecontainer}>
-            <PathTreeComponent treeItems={treeItems}/>
+            <PathTreeComponent treeItems={treeItems} />
           </div>
           <div className={styles.infocontainer}>
             <QuestionInfo
@@ -65,7 +64,9 @@ const Servicepoint = ({servicepointData, accessibilityData, entranceData}: any):
           </div>
           <div className={styles.headingcontainer}>
             <h1>{servicepointData.servicepoint_name}</h1>
-            <h2>PH: Pääsisäänkäynti: {servicepointData.address_street_name} {servicepointData.address_no}, {servicepointData.address_city}</h2>
+            <h2>
+              PH: Pääsisäänkäynti: {servicepointData.address_street_name} {servicepointData.address_no}, {servicepointData.address_city}
+            </h2>
             <span className={styles.statuslabel}>
               {/* TODO: change statuslabel with data respectively */}
               <StatusLabel type="success"> PH: Valmis </StatusLabel>
@@ -75,7 +76,7 @@ const Servicepoint = ({servicepointData, accessibilityData, entranceData}: any):
           </div>
           <div>
             {/* TODO: get proper data from SSR */}
-            <ServicepointLandingSummary header={i18n.t("servicepoint.contactInfoHeader")} data={servicepointData}/>
+            <ServicepointLandingSummary header={i18n.t("servicepoint.contactInfoHeader")} data={servicepointData} />
             <ServicepointLandingSummary header={i18n.t("servicepoint.contactFormSummaryHeader")} data={accessibilityData} />
           </div>
           <ServicepointLandingSummaryCtrlButtons hasData />
@@ -107,25 +108,24 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, loca
     //console.log(entranceData.results[0].entrance_id)
     var i = 0;
     var j = 1;
-    var accessibilityData: any = {}
+    var accessibilityData: any = {};
 
     // Use while, because map function does not work with await
     while (i < entranceData.results.length) {
       const res2 = await fetch(`http://0.0.0.0:8000/api/ArXStoredSentenceLangs/?entrance_id=${entranceData.results[i].entrance_id}&format=json`);
       const data2 = await res2.json();
-      if (entranceData.results[i].is_main_entrance == 'Y') {
-        accessibilityData["main"] = (data2);
+      if (entranceData.results[i].is_main_entrance == "Y") {
+        accessibilityData["main"] = data2;
       } else {
-        accessibilityData["side"+j] = (data2);
+        accessibilityData["side" + j] = data2;
         j++;
       }
       i++;
     }
-  }
-  catch(err) {
-    servicepointData = {}
-    accessibilityData = {}
-    entranceData = {}
+  } catch (err) {
+    servicepointData = {};
+    accessibilityData = {};
+    entranceData = {};
   }
   // const user = await checkUser(req);
   // if (!user) {
@@ -142,7 +142,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, loca
       servicepointData,
       accessibilityData,
       entranceData
-    },
+    }
   };
 };
 

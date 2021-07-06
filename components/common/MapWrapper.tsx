@@ -6,7 +6,7 @@ import { useI18n } from "next-localization";
 import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from "react-leaflet";
 import { Marker as LeafletMarker, Icon, LatLngExpression } from "leaflet";
 import getOrigin from "../../utils/request";
-import styles from "./MapWrapper.module.scss"
+import styles from "./MapWrapper.module.scss";
 
 interface MapWrapperProps {
   initialCenter: [number, number];
@@ -25,7 +25,7 @@ const MapWrapper = ({
   setLocation,
   setMapView,
   setMapReady,
-  draggableMarker,
+  draggableMarker
 }: MapWrapperProps): ReactElement => {
   const i18n = useI18n();
   const router = useRouter();
@@ -47,10 +47,10 @@ const MapWrapper = ({
     dragend: () => {
       const marker = markerRef.current;
       if (marker && setLocation) {
-        console.log(marker)
+        console.log(marker);
         setLocation([marker.getLatLng().lat, marker.getLatLng().lng]);
       }
-    },
+    }
   };
 
   // Use a ref to store the previous location, as described in the React hooks docs
@@ -90,7 +90,7 @@ const MapWrapper = ({
         if (!isLocationValid() && setLocation) {
           setLocation([evt.latlng.lat, evt.latlng.lng]);
         }
-      },
+      }
     });
 
     // Nothing to render for this
@@ -120,7 +120,7 @@ const MapWrapper = ({
 MapWrapper.defaultProps = {
   setLocation: undefined,
   setMapView: undefined,
-  setMapReady: undefined,
+  setMapReady: undefined
 };
 
 export default MapWrapper;
