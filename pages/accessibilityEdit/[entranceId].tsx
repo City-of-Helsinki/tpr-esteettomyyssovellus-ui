@@ -25,6 +25,8 @@ const AccessibilityEdit = ({ QuestionsData, QuestionChoicesData, QuestionBlocksD
   const curLocaleId: number = LANGUAGE_LOCALES[curLocale];
   let curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
   let isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
+  // let curFinishedBlocks = useAppSelector((state) => state.formReducer.finishedBlocks);
+  let nextBlock = 0;
 
   let visibleBlocks =
     QuestionBlocksData && QuestionsData && QuestionChoicesData
@@ -54,7 +56,7 @@ const AccessibilityEdit = ({ QuestionsData, QuestionChoicesData, QuestionBlocksD
                 key={block.question_block_id}
                 number={block.question_block_id}
                 text={block.question_block_code + " " + block.text}
-                initOpen={false}
+                initOpen={block.question_block_id == nextBlock}
               >
                 <QuestionBlock description={block.description ?? null} questions={blockQuestions} answers={answerChoices} />
               </HeadlineQuestionContainer>

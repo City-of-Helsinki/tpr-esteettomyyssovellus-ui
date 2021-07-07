@@ -58,6 +58,12 @@
     "contactFormSummaryHeader": "Servicepoint accessibility information",
     "noDataContactinfo": "No contact details for accessibility issues have been provided to the office"
   },
+  "questionFormControlButtons": {
+    "quit": "Quit",
+    "verifyInformation": "Verify information",
+    "saveAsIncomplete": "Save as incomplete",
+    "preview": "Preview"
+  },
   "additionalInfo": {
     "elementsCtrlButtonsHeader": "Add information",
     "addLocation": "Add location",
@@ -94,5 +100,8 @@
       "addPictureLink": "Add picturelink",
       "addNewLocation": "Add location"
     }
+  },
+  "accessibilityForm": {
+    "choose": "--Choose--"
   }
 }

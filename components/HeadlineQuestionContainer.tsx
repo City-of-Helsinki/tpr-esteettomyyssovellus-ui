@@ -9,10 +9,13 @@ const HeadlineQuestionContainer = ({ text, number, initOpen = false, children }:
   // Handle accordion state with useAccordion hook
   let { isOpen, buttonProps, contentProps } = useAccordion({ initiallyOpen: initOpen });
   let curFinishedBlocks = useAppSelector((state) => state.formReducer.finishedBlocks);
+  let isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
+  //let isFinished = curFinishedBlocks.includes(number);
   // Change icon based on accordion open state
   const icon = isOpen ? <IconMinus aria-hidden /> : <IconPlus aria-hidden />;
   let iconLeft = curFinishedBlocks.includes(Number(number)) ? <IconCheckCircleFill aria-hidden /> : null;
-  const buttonVariant = isOpen ? "primary" : "secondary";
+  const buttonVariant = isOpen && !(isContinueClicked && number == 0) ? "primary" : "secondary";
+
   return (
     // TODO: define unique id (?)
     <div className={styles.headline}>
@@ -24,12 +27,15 @@ const HeadlineQuestionContainer = ({ text, number, initOpen = false, children }:
         variant={buttonVariant}
         fullWidth
         className={styles.headlineButton}
+        //onClick={() => handleOnClick()}
       >
         <p>{text}</p>
       </Button>
-      <Card aria-label="Advanced filters" {...contentProps} className={styles.card}>
-        {children}
-      </Card>
+      {isContinueClicked && number == 0 ? null : (
+        <Card aria-label="Advanced filters" {...contentProps} className={styles.card}>
+          {children}
+        </Card>
+      )}
     </div>
   );
 };

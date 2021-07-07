@@ -5,6 +5,7 @@ import { QuestionFormCtrlButtonsProps } from "../types/general";
 import styles from "./QuestionFormCtrlButtons.module.scss";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
 import router from "next/router";
+import { useI18n } from "next-localization";
 
 const QuestionFormCtrlButtons = ({
   hasCancelButton,
@@ -17,13 +18,21 @@ const QuestionFormCtrlButtons = ({
 
   // testing click handle, edit with real logic later
   // also add handlers for all buttons respectively
+  const i18n = useI18n();
 
-  let curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
-  let curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
+  let curAnsweredChoices = useAppSelector(
+    (state) => state.formReducer.answeredChoices
+  );
+  let curServicepointId = useAppSelector(
+    (state) => state.formReducer.currentServicepointId
+  );
   const handleCancel = (): void => {
     console.log("cancel clicked");
     // TODO: Add errorpage
-    const url = curServicepointId == "" ? "http://localhost:3000/" : "http://localhost:3000/servicepoint/" + curServicepointId;
+    const url =
+      curServicepointId == ""
+        ? "http://localhost:3000/"
+        : "http://localhost:3000/servicepoint/" + curServicepointId;
     router.push(url);
   };
   const isPreviewActive = curAnsweredChoices.length > 1;
@@ -32,21 +41,33 @@ const QuestionFormCtrlButtons = ({
     <Card className={styles.container}>
       <div className={styles.left}>
         {hasCancelButton ? (
-          <Button variant="secondary" iconLeft={<IconArrowLeft />} onClickHandler={handleCancel}>
-            {" PH: Keskeytä "}
+          <Button
+            variant="secondary"
+            iconLeft={<IconArrowLeft />}
+            onClickHandler={handleCancel}
+          >
+            {i18n.t("questionFormControlButtons.quit")}
           </Button>
         ) : null}
       </div>
       <div className={styles.right}>
-        {hasValidateButton ? <Button variant="secondary"> PH: Tarkista tiedot </Button> : null}
+        {hasValidateButton ? (
+          <Button variant="secondary">
+            {i18n.t("questionFormControlButtons.verifyInformation")}
+          </Button>
+        ) : null}
         {hasSaveDraftButton ? (
           <Button variant="secondary" disabled>
-            PH: Tallenna Keskeneräisenä
+            {i18n.t("questionFormControlButtons.saveAsIncomplete")}
           </Button>
         ) : null}
         {hasPreviewButton ? (
-          <Button variant="primary" iconRight={<IconArrowRight />} disabled={!isPreviewActive}>
-            {" PH: Esikatsele "}
+          <Button
+            variant="primary"
+            iconRight={<IconArrowRight />}
+            disabled={!isPreviewActive}
+          >
+            {i18n.t("questionFormControlButtons.preview")}
           </Button>
         ) : null}
       </div>
