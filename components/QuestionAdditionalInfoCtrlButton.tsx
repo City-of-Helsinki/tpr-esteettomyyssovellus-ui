@@ -30,7 +30,7 @@ const QuestionAdditionalInfoCtrlButton = ({
             iconRight={<IconCrossCircle />}
             onClickHandler={onClick}
           >
-            ph: piilota lisää- painikkeet
+            {i18n.t("QuestionFormImportExistingData.hideAddButtons")}
           </Button>
         </div>
       )}

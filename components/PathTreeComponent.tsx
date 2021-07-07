@@ -1,13 +1,27 @@
 import React from "react";
-import { useAccordion, Button, IconMinus, IconPlus, IconCheckCircleFill, Card } from "hds-react";
-import { HeadlineQuestionContainerProps, PathTreeProps } from "../types/general";
+import {
+  useAccordion,
+  Button,
+  IconMinus,
+  IconPlus,
+  IconCheckCircleFill,
+  Card
+} from "hds-react";
+import {
+  HeadlineQuestionContainerProps,
+  PathTreeProps
+} from "../types/general";
 import styles from "./PathTreeComponent.module.scss";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
 
 const PathTreeComponent = ({ treeItems }: PathTreeProps): JSX.Element => {
+  const length = treeItems.length;
+  const curServicepointId = useAppSelector(
+    (state) => state.formReducer.currentServicepointId
+  );
   const pathTree = treeItems.map((elem) => {
     const treeItem =
-      treeItems.indexOf(elem) != 0 ? (
+      treeItems.indexOf(elem) == length - 1 ? (
         <>
           <a>
             {" > "}
@@ -17,7 +31,10 @@ const PathTreeComponent = ({ treeItems }: PathTreeProps): JSX.Element => {
       ) : (
         <>
           <p>{" > "}</p>
-          <a className={styles.link} href={"#"}>
+          <a
+            className={styles.link}
+            href={"http://localhost:3000/servicepoint/" + curServicepointId}
+          >
             {elem}
           </a>
         </>

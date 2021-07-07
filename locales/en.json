@@ -107,6 +107,7 @@
   "QuestionFormImportExistingData": {
     "chooseServicepoint": "Choose servicepoint",
     "bringInformation": "Import information",
-    "addAdditionalInfo": "Add picture, location or additional text"
+    "addAdditionalInfo": "Add picture, location or additional text",
+    "hideAddButtons": "Hide add info -buttons"
   }
 }
