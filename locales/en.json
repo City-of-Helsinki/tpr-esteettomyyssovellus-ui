@@ -103,5 +103,10 @@
   },
   "accessibilityForm": {
     "choose": "--Choose--"
+  },
+  "QuestionFormImportExistingData": {
+    "chooseServicepoint": "Choose servicepoint",
+    "bringInformation": "Import information",
+    "addAdditionalInfo": "Add picture, location or additional text"
   }
 }

@@ -103,5 +103,10 @@
   },
   "accessibilityForm": {
     "choose": "--Valitse--"
+  },
+  "QuestionFormImportExistingData": {
+    "chooseServicepoint": "Valitse toimipiste",
+    "bringInformation": "Tuo tiedot",
+    "addAdditionalInfo": "Lisää kuva, sijainti tai lisäteksti"
   }
 }

@@ -103,5 +103,10 @@
   },
   "accessibilityForm": {
     "choose": "--Välja--"
+  },
+  "QuestionFormImportExistingData": {
+    "chooseServicepoint": "Välj ett kontor",
+    "bringInformation": "Importera informationen",
+    "addAdditionalInfo": "Lägg till en bild, plats eller ytterligare text"
   }
 }
