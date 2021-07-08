@@ -53,7 +53,7 @@ const ServicepointLandingSummary = ({
       itemList.push(
         <div className={styles.infocontainer}>
           <h4>{title}</h4>
-          <p>{data[key] ? data[key] : "PH: (ei tietoa)"}</p>
+          <p>{data[key] ? data[key] : i18n.t("servicepoint.noInfo")}</p>
         </div>
       );
     });

@@ -61,7 +61,8 @@
     "contactFormSummaryHeader": "Toimipisteen esteettömyystiedot",
     "noDataContactinfo": "Toimipisteelle ei ole annettu esteettömyysasioiden yhteystietoja",
     "phoneNumber": "Puhelinnumero",
-    "email": "Sähköpostiosoite"
+    "email": "Sähköpostiosoite",
+    "noInfo": "(ei tietoa)"
   },
   "questionFormControlButtons": {
     "quit": "Keskeytä",

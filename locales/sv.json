@@ -61,7 +61,8 @@
     "contactFormSummaryHeader": "Servicepoint tillgänglighetsinformation",
     "noDataContactinfo": "Inga kontaktuppgifter för tillgänglighetsfrågor har lämnats till kontoret",
     "phoneNumber": "Telefonnummer",
-    "email": "E-postadress"
+    "email": "E-postadress",
+    "noInfo": "(ingen information)"
   },
   "questionFormControlButtons": {
     "quit": "Avbryta",

@@ -61,7 +61,8 @@
     "contactFormSummaryHeader": "Servicepoint accessibility information",
     "noDataContactinfo": "No contact details for accessibility issues have been provided to the office",
     "phoneNumber": "Phone number",
-    "email": "Email address"
+    "email": "Email address",
+    "noInfo": "(no information)"
   },
   "questionFormControlButtons": {
     "quit": "Quit",
