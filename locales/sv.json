@@ -38,7 +38,10 @@
     "generalMainInfoIsOpen": "Nära hjälp",
     "generalMainInfoIsClose": "Instruktioner för tillhandahållande av tillgänglighetsinformation",
     "generalChoose": "Välja",
-    "generalExplanation": "Förklaring"
+    "generalExplanation": "Förklaring",
+    "mainEntrance": "Huvudingången",
+    "additionalEntrance": "Alternativ ingång",
+    "updated": "Uppdaterad"
   },
   "buttons": {
     "saveAndReturn": "spara och returnera",
@@ -56,7 +59,9 @@
     },
     "contactInfoHeader": "Kontaktinformation för tillgänglighet på kontoret",
     "contactFormSummaryHeader": "Servicepoint tillgänglighetsinformation",
-    "noDataContactinfo": "Inga kontaktuppgifter för tillgänglighetsfrågor har lämnats till kontoret"
+    "noDataContactinfo": "Inga kontaktuppgifter för tillgänglighetsfrågor har lämnats till kontoret",
+    "phoneNumber": "Telefonnummer",
+    "email": "E-postadress"
   },
   "questionFormControlButtons": {
     "quit": "Avbryta",
@@ -102,7 +107,8 @@
     }
   },
   "accessibilityForm": {
-    "choose": "--Välja--"
+    "choose": "--Välja--",
+    "continue": "Fortsätta"
   },
   "QuestionFormImportExistingData": {
     "chooseServicepoint": "Välj ett kontor",

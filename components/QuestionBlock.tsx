@@ -8,9 +8,19 @@ import QuestionsList from "./QuestionsList";
 import { QuestionBlockProps } from "../types/general";
 import router from "next/router";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
-import { setContinue, setFinished, unsetFinished } from "../state/reducers/formSlice";
+import {
+  setContinue,
+  setFinished,
+  unsetFinished
+} from "../state/reducers/formSlice";
+import { useI18n } from "next-localization";
 
-const QuestionBlock = ({ description, questions, answers }: QuestionBlockProps): JSX.Element => {
+const QuestionBlock = ({
+  description,
+  questions,
+  answers
+}: QuestionBlockProps): JSX.Element => {
+  const i18n = useI18n();
   const [showAdditionalInfo, setShowAdditionalInfo] = useState(false);
   const [showContinue, setShowContinue] = useState(true);
   const handleAdditionalInfoToggle = () => {
@@ -24,9 +34,14 @@ const QuestionBlock = ({ description, questions, answers }: QuestionBlockProps):
     // TODO: route to main form
     // window.location.reload(false)
   };
-  const blockId: number = questions != null && questions[0].question_block_id != undefined ? questions[0].question_block_id : -1;
+  const blockId: number =
+    questions != null && questions[0].question_block_id != undefined
+      ? questions[0].question_block_id
+      : -1;
   const hasInfoAndButtons = questions != null ? blockId != 0 : true;
-  let curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
+  let curAnsweredChoices = useAppSelector(
+    (state) => state.formReducer.answeredChoices
+  );
   const continueActive = curAnsweredChoices.length != 0;
 
   const filteredQuestions =
@@ -35,17 +50,19 @@ const QuestionBlock = ({ description, questions, answers }: QuestionBlockProps):
           (question) =>
             question.visible_if_question_choice == null ||
             // @ts-ignore
-            question.visible_if_question_choice?.split("+").some((elem) => curAnsweredChoices.includes(Number(elem)))
+            question.visible_if_question_choice
+              ?.split("+")
+              .some((elem) => curAnsweredChoices.includes(Number(elem)))
         )
       : null;
 
   let curAnswers = useAppSelector((state) => state.formReducer.answers);
   let keys = Object.keys(curAnswers);
 
-  //console.log(curAnswers);
-  //console.log(filteredQuestions)
   const blockFinished = filteredQuestions?.every((element) => {
-    return element.question_id ? keys.includes(element.question_id.toString()) : false;
+    return element.question_id
+      ? keys.includes(element.question_id.toString())
+      : false;
   });
 
   if (blockFinished) {
@@ -55,11 +72,16 @@ const QuestionBlock = ({ description, questions, answers }: QuestionBlockProps):
     dispatch(unsetFinished(blockId));
   }
 
+  // Turn "<BR>" to linebreaks
+  const desc = description?.split("<BR>").map((elem) => {
+    return <p>{elem}</p>;
+  });
+
   return (
     <>
       {hasInfoAndButtons ? (
         <div className={styles.mainInfo}>
-          <p>{description ?? null}</p>
+          <p>{desc ?? null}</p>
           <QuestionInfo
             openText="PH: näytä lisää pääsisäänkäynnin kulkureiteistä?"
             openIcon={<IconAngleDown aria-hidden />}
@@ -73,22 +95,37 @@ const QuestionBlock = ({ description, questions, answers }: QuestionBlockProps):
       {hasInfoAndButtons ? (
         <div className={styles.importAddinfoContainer}>
           <QuestionFormImportExistingData />
-          <QuestionAdditionalInfoCtrlButton curState={showAdditionalInfo} onClick={handleAdditionalInfoToggle} />
+          <QuestionAdditionalInfoCtrlButton
+            curState={showAdditionalInfo}
+            onClick={handleAdditionalInfoToggle}
+          />
         </div>
       ) : (
         <p>
           {" "}
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-          veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-          voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupi{" "}
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+          aliquip ex ea commodo consequat. Duis aute irure dolor in
+          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+          pariatur. Excepteur sint occaecat cupi{" "}
         </p>
       )}
       {/* TODO: add questions as params to QuestionsList, from fetch data */}
-      <QuestionsList additionalInfoVisible={showAdditionalInfo} questions={filteredQuestions} answers={answers} />
+      <QuestionsList
+        additionalInfoVisible={showAdditionalInfo}
+        questions={filteredQuestions}
+        answers={answers}
+      />
       {hasInfoAndButtons || !showContinue ? null : (
         <div className={styles.continueButton}>
-          <Button variant="primary" iconRight={<IconArrowRight />} onClick={onClick} disabled={!continueActive}>
-            {"PH: Jatka "}
+          <Button
+            variant="primary"
+            iconRight={<IconArrowRight />}
+            onClick={onClick}
+            disabled={!continueActive}
+          >
+            {i18n.t("accessibilityForm.continue")}
           </Button>
         </div>
       )}

@@ -42,7 +42,10 @@
     "buttons": {
       "saveAndReturn": "Tallenna ja palaa",
       "returnNoSave": "Poistu tallentamatta"
-    }
+    },
+    "mainEntrance": "Pääsisäänkäynti",
+    "additionalEntrance": "Lisäsisäänkäynti",
+    "updated": "Päivitetty"
   },
   "question": {
     "something": "something"
@@ -56,7 +59,9 @@
     },
     "contactInfoHeader": "Toimipisteen esteettömyyden yhteystiedot",
     "contactFormSummaryHeader": "Toimipisteen esteettömyystiedot",
-    "noDataContactinfo": "Toimipisteelle ei ole annettu esteettömyysasioiden yhteystietoja"
+    "noDataContactinfo": "Toimipisteelle ei ole annettu esteettömyysasioiden yhteystietoja",
+    "phoneNumber": "Puhelinnumero",
+    "email": "Sähköpostiosoite"
   },
   "questionFormControlButtons": {
     "quit": "Keskeytä",
@@ -102,7 +107,8 @@
     }
   },
   "accessibilityForm": {
-    "choose": "--Valitse--"
+    "choose": "--Valitse--",
+    "continue": "Jatka"
   },
   "QuestionFormImportExistingData": {
     "chooseServicepoint": "Valitse toimipiste",

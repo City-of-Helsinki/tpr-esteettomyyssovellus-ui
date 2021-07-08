@@ -9,7 +9,11 @@ import QuestionInfo from "../../components/QuestionInfo";
 import styles from "./accessibilityEdit.module.scss";
 import { StatusLabel, IconCrossCircle, IconQuestionCircle } from "hds-react";
 import ServicepointMainInfoContent from "../../components/ServicepointMainInfoContent";
-import { API_FETCH_QUESTIONBLOCK_URL, API_FETCH_QUESTIONCHOICES, API_FETCH_QUESTION_URL } from "../../types/constants";
+import {
+  API_FETCH_QUESTIONBLOCK_URL,
+  API_FETCH_QUESTIONCHOICES,
+  API_FETCH_QUESTION_URL
+} from "../../types/constants";
 import { useAppSelector, useAppDispatch } from "../../state/hooks";
 import QuestionBlock from "../../components/QuestionBlock";
 import { MainEntranceFormProps, QuestionBlockProps } from "../../types/general";
@@ -18,13 +22,21 @@ import { LANGUAGE_LOCALES } from "../../types/constants";
 import QuestionFormCtrlButtons from "../../components/QuestionFormCtrlButtons";
 import PathTreeComponent from "../../components/PathTreeComponent";
 
-const AccessibilityEdit = ({ QuestionsData, QuestionChoicesData, QuestionBlocksData }: MainEntranceFormProps): ReactElement => {
+const AccessibilityEdit = ({
+  QuestionsData,
+  QuestionChoicesData,
+  QuestionBlocksData
+}: MainEntranceFormProps): ReactElement => {
   const i18n = useI18n();
   const curLocale: string = i18n.locale();
   // @ts-ignore: TODO:
   const curLocaleId: number = LANGUAGE_LOCALES[curLocale];
-  let curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
-  let isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
+  let curAnsweredChoices = useAppSelector(
+    (state) => state.formReducer.answeredChoices
+  );
+  let isContinueClicked = useAppSelector(
+    (state) => state.formReducer.isContinueClicked
+  );
   // let curFinishedBlocks = useAppSelector((state) => state.formReducer.finishedBlocks);
   let nextBlock = 0;
 
@@ -35,20 +47,33 @@ const AccessibilityEdit = ({ QuestionsData, QuestionChoicesData, QuestionBlocksD
           const visibleQuestions = block.visible_if_question_choice?.split("+");
 
           const answersIncludeAllVisibleQuestions = visibleQuestions
-            ? // @ts-ignore: For some reason curAnsweredChoices type string[] contains numbers O_o
-              visibleQuestions.some((elem) => curAnsweredChoices.includes(Number(elem)))
+            ? visibleQuestions.some((elem) =>
+                // @ts-ignore: For some reason curAnsweredChoices type string[] contains numbers O_o
+                curAnsweredChoices.includes(Number(elem))
+              )
             : false;
 
           const isVisible =
-            (block.visible_if_question_choice == null && block.language_id == curLocaleId) ||
-            (answersIncludeAllVisibleQuestions && block.language_id == curLocaleId && isContinueClicked);
+            (block.visible_if_question_choice == null &&
+              block.language_id == curLocaleId) ||
+            (answersIncludeAllVisibleQuestions &&
+              block.language_id == curLocaleId &&
+              isContinueClicked);
 
           const blockQuestions = isVisible
-            ? QuestionsData.filter((question) => question.question_block_id === block.question_block_id && question.language_id == curLocaleId)
+            ? QuestionsData.filter(
+                (question) =>
+                  question.question_block_id === block.question_block_id &&
+                  question.language_id == curLocaleId
+              )
             : null;
 
           const answerChoices = isVisible
-            ? QuestionChoicesData.filter((choice) => choice.question_block_id === block.question_block_id && choice.language_id == curLocaleId)
+            ? QuestionChoicesData.filter(
+                (choice) =>
+                  choice.question_block_id === block.question_block_id &&
+                  choice.language_id == curLocaleId
+              )
             : null;
           {
             return isVisible && blockQuestions && answerChoices ? (
@@ -58,7 +83,11 @@ const AccessibilityEdit = ({ QuestionsData, QuestionChoicesData, QuestionBlocksD
                 text={block.question_block_code + " " + block.text}
                 initOpen={block.question_block_id == nextBlock}
               >
-                <QuestionBlock description={block.description ?? null} questions={blockQuestions} answers={answerChoices} />
+                <QuestionBlock
+                  description={block.description ?? null}
+                  questions={blockQuestions}
+                  answers={answerChoices}
+                />
               </HeadlineQuestionContainer>
             ) : null;
           }
@@ -89,11 +118,16 @@ const AccessibilityEdit = ({ QuestionsData, QuestionChoicesData, QuestionBlocksD
           </div>
           <div className={styles.headingcontainer}>
             <h1>PH: Päiväkoti apila</h1>
-            <h2>PH: Pääsisäänkäynti:</h2>
+            <h2>{i18n.t("common.mainEntrance")}</h2>
           </div>
           <div>
             {visibleBlocks}
-            <QuestionFormCtrlButtons hasCancelButton hasValidateButton hasSaveDraftButton hasPreviewButton />
+            <QuestionFormCtrlButtons
+              hasCancelButton
+              hasValidateButton
+              hasSaveDraftButton
+              hasPreviewButton
+            />
           </div>
         </div>
       </main>
@@ -101,7 +135,10 @@ const AccessibilityEdit = ({ QuestionsData, QuestionChoicesData, QuestionBlocksD
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({ req, locales }) => {
+export const getServerSideProps: GetServerSideProps = async ({
+  req,
+  locales
+}) => {
   const lngDict = await i18nLoader(locales);
 
   const reduxStore = store;

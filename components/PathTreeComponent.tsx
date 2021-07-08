@@ -13,8 +13,10 @@ import {
 } from "../types/general";
 import styles from "./PathTreeComponent.module.scss";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
+import { useI18n } from "next-localization";
 
 const PathTreeComponent = ({ treeItems }: PathTreeProps): JSX.Element => {
+  const i18n = useI18n();
   const length = treeItems.length;
   const curServicepointId = useAppSelector(
     (state) => state.formReducer.currentServicepointId

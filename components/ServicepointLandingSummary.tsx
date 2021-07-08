@@ -10,9 +10,14 @@ import { current } from "@reduxjs/toolkit";
 import { array } from "yup/lib/locale";
 import { useAppSelector } from "../state/hooks";
 
-const ServicepointLandingSummary = ({ header, data }: ServicepointLandingSummaryProps): JSX.Element => {
+const ServicepointLandingSummary = ({
+  header,
+  data
+}: ServicepointLandingSummaryProps): JSX.Element => {
   const i18n = useI18n();
-  const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
+  const curEntranceId = useAppSelector(
+    (state) => state.formReducer.currentEntranceId
+  );
 
   const handleEditorAddPointData = () => {
     if (data) {
@@ -37,10 +42,10 @@ const ServicepointLandingSummary = ({ header, data }: ServicepointLandingSummary
       let title = "";
       switch (key) {
         case "accessibility_phone":
-          title = "PH: puhelinnumero";
+          title = i18n.t("servicepoint.phoneNumber");
           break;
         case "accessibility_email":
-          title = "PH: sähköpostiosoite";
+          title = i18n.t("servicepoint.email");
           break;
         default:
           console.log("Incorrect key");
@@ -68,7 +73,9 @@ const ServicepointLandingSummary = ({ header, data }: ServicepointLandingSummary
           if (x.sentence_group_name != currentTitle) {
             currentTitle = x.sentence_group_name;
             // Add h3 titles in the container
-            itemList.push(<h3 className={styles.sentenceGroupName}>{currentTitle}</h3>);
+            itemList.push(
+              <h3 className={styles.sentenceGroupName}>{currentTitle}</h3>
+            );
           }
           itemList.push(<li>{x.sentence}</li>);
         });
@@ -78,14 +85,18 @@ const ServicepointLandingSummary = ({ header, data }: ServicepointLandingSummary
       if (key == "main") {
         mainEntrance.push(
           // TODO: Add to locales Pääsisäänkäynti jne.
-          <ServicepointLandingSummaryContent contentHeader={"PH: Pääsisäänkäynti"}>
+          <ServicepointLandingSummaryContent
+            contentHeader={i18n.t("common.mainEntrance")}
+          >
             <ul>{itemList}</ul>
           </ServicepointLandingSummaryContent>
         );
       } else {
         contents.push(
           // TODO: Add to locales Lisäsisäänkäynti jne.
-          <ServicepointLandingSummaryContent contentHeader={"PH: Lisäsisäänkäynti"}>
+          <ServicepointLandingSummaryContent
+            contentHeader={i18n.t("common.additionalEntrance")}
+          >
             <ul>{itemList}</ul>
           </ServicepointLandingSummaryContent>
         );
@@ -96,7 +107,9 @@ const ServicepointLandingSummary = ({ header, data }: ServicepointLandingSummary
   // Make sure that the main entrance is listed before the side entrances.
   contents = mainEntrance.concat(contents);
 
-  const buttonText = data ? i18n.t("servicepoint.buttons.editServicepoint") : i18n.t("servicepoint.buttons.createServicepoint");
+  const buttonText = data
+    ? i18n.t("servicepoint.buttons.editServicepoint")
+    : i18n.t("servicepoint.buttons.createServicepoint");
   return (
     <div className={styles.maincontainer}>
       <div className={styles.headercontainer}>
