@@ -109,7 +109,9 @@
   },
   "accessibilityForm": {
     "choose": "--Valitse--",
-    "continue": "Jatka"
+    "continue": "Jatka",
+    "whatDoesThisMean": "Mitä tämä tarkoittaa?",
+    "closeGuidance": "Sulje ohje "
   },
   "QuestionFormImportExistingData": {
     "chooseServicepoint": "Valitse toimipiste",

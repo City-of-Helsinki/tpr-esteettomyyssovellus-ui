@@ -70,6 +70,8 @@ export interface QuestionRadioButtonsProps {
   mainLabel?: string;
   firstButtonLabel?: string;
   secondButtonLabel?: string;
+  options?: Dictionary<string>[];
+  value?: number;
 }
 
 export interface QuestionFormCtrlButtonsProps {

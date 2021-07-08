@@ -39,7 +39,6 @@ const AccessibilityEdit = ({
   );
   // let curFinishedBlocks = useAppSelector((state) => state.formReducer.finishedBlocks);
   let nextBlock = 0;
-
   let visibleBlocks =
     QuestionBlocksData && QuestionsData && QuestionChoicesData
       ? QuestionBlocksData.map((block: QuestionBlockProps) => {

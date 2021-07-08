@@ -45,10 +45,16 @@ export const formSlice = createSlice({
     removeAnsweredChoice: (state, action: PayloadAction<string>) => {
       return {
         ...state,
-        answeredChoices: [...(state.answeredChoices?.filter((elem) => elem != action.payload) ?? [])]
+        answeredChoices: [
+          ...(state.answeredChoices?.filter((elem) => elem != action.payload) ??
+            [])
+        ]
       };
     },
-    setAnswer: (state, action: PayloadAction<{ questionNumber: number; answer: number }>) => {
+    setAnswer: (
+      state,
+      action: PayloadAction<{ questionNumber: number; answer: number }>
+    ) => {
       const qNumber = action.payload.questionNumber;
       const a = action.payload.answer;
       return {
@@ -77,7 +83,10 @@ export const formSlice = createSlice({
     unsetFinished: (state, action: PayloadAction<number>) => {
       return {
         ...state,
-        finishedBlocks: [...(state.finishedBlocks?.filter((elem) => elem != action.payload) ?? [])]
+        finishedBlocks: [
+          ...(state.finishedBlocks?.filter((elem) => elem != action.payload) ??
+            [])
+        ]
       };
     }
   }

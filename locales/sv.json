@@ -109,7 +109,9 @@
   },
   "accessibilityForm": {
     "choose": "--Välja--",
-    "continue": "Fortsätta"
+    "continue": "Fortsätta",
+    "whatDoesThisMean": "Vad betyder det här?",
+    "closeGuidance": "Nära hjälp"
   },
   "QuestionFormImportExistingData": {
     "chooseServicepoint": "Välj ett kontor",

@@ -109,7 +109,9 @@
   },
   "accessibilityForm": {
     "choose": "--Choose--",
-    "continue": "Continue"
+    "continue": "Continue",
+    "whatDoesThisMean": "What does this mean?",
+    "closeGuidance": "Close help"
   },
   "QuestionFormImportExistingData": {
     "chooseServicepoint": "Choose servicepoint",
