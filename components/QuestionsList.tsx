@@ -63,8 +63,16 @@ const QuestionsList = ({
             questionNumber={question.question_code}
             questionText={question.text}
             questionInfo={question.description ?? null}
-            hasAdditionalInfo={additionalInfoVisible}
+            hasAdditionalInfo={
+              additionalInfoVisible &&
+              (question.can_add_location == "Y" ||
+                question.can_add_comment == "Y" ||
+                question.can_add_photo_max_count != 0)
+            }
             backgroundColor={backgroundColor}
+            canAddLocation={question.can_add_location == "Y"}
+            canAddComment={question.can_add_comment}
+            canAddPhotoMaxCount={question.can_add_photo_max_count}
           >
             {/* {dataComponent} */}
             {/* For checking if the component is yes_or_no question -> data from db */}

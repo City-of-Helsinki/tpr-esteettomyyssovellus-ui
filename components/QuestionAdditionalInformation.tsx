@@ -2,11 +2,17 @@ import React, { useState } from "react";
 import { IconPlusCircle, IconCrossCircleFill } from "hds-react";
 import { useI18n } from "next-localization";
 import styles from "./QuestionAdditionalInformation.module.scss";
+import { QuestionAdditionalInfoProps } from "../types/general";
 
 // used to display additional dropdown to add possible picture, location or comment
-const QuestionAdditionalInformation = (): JSX.Element => {
+const QuestionAdditionalInformation = ({
+  canAddLocation,
+  canAddPhotoMaxCount,
+  canAddComment
+}: QuestionAdditionalInfoProps): JSX.Element => {
   const i18n = useI18n();
-  const [showAdditionalInformation, setAdditionalInformationVisibility] = useState(false);
+  const [showAdditionalInformation, setAdditionalInformationVisibility] =
+    useState(false);
 
   const handleToggleAdditionalInfo = () => {
     setAdditionalInformationVisibility(!showAdditionalInformation);
@@ -38,16 +44,23 @@ const QuestionAdditionalInformation = (): JSX.Element => {
           >
             <IconCrossCircleFill aria-hidden />
           </span>
+
           <div className={styles.lineBreak}>
-            <div>
-              PH: Lisää kuva <IconPlusCircle aria-hidden />
-            </div>
-            <div>
-              PH: Lisää sijainti <IconPlusCircle aria-hidden />
-            </div>
-            <div>
-              PH: Lisää kommentti <IconPlusCircle aria-hidden />
-            </div>
+            {canAddPhotoMaxCount != 0 ? (
+              <div>
+                PH: Lisää kuva <IconPlusCircle aria-hidden />
+              </div>
+            ) : null}
+            {canAddLocation ? (
+              <div>
+                PH: Lisää sijainti <IconPlusCircle aria-hidden />
+              </div>
+            ) : null}
+            {canAddComment ? (
+              <div>
+                PH: Lisää kommentti <IconPlusCircle aria-hidden />
+              </div>
+            ) : null}
           </div>
         </>
       )}

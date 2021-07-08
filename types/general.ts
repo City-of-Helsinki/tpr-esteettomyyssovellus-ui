@@ -23,6 +23,9 @@ export interface QuestionContainerProps {
   children: JSX.Element;
   hasAdditionalInfo: boolean;
   backgroundColor: string;
+  canAddLocation?: boolean;
+  canAddPhotoMaxCount?: number;
+  canAddComment?: boolean;
 }
 
 export interface HeadlineQuestionContainerProps {
@@ -246,4 +249,10 @@ export interface QuestionBlockProps {
 
 export interface PathTreeProps {
   treeItems: any[];
+}
+
+export interface QuestionAdditionalInfoProps {
+  canAddLocation?: boolean;
+  canAddPhotoMaxCount?: number;
+  canAddComment?: boolean;
 }

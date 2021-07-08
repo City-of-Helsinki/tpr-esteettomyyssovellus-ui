@@ -29,7 +29,7 @@ const HeadlineQuestionContainer = ({
   let isContinueClicked = useAppSelector(
     (state) => state.formReducer.isContinueClicked
   );
-  let isFinished = curFinishedBlocks.includes(number);
+  //let isFinished = curFinishedBlocks.includes(number);
   // Change icon based on accordion open state
   const icon = isOpen ? <IconMinus aria-hidden /> : <IconPlus aria-hidden />;
   let iconLeft = curFinishedBlocks.includes(Number(number)) ? (
