@@ -12,6 +12,8 @@ const QuestionContainer = ({
   questionNumber,
   questionText,
   questionInfo,
+  photoUrl,
+  photoText,
   children,
   hasAdditionalInfo,
   backgroundColor,
@@ -22,6 +24,8 @@ const QuestionContainer = ({
   const i18n = useI18n();
   const questionDepth = (questionNumber.toString().split(".") || []).length;
   const paddingLeft: string = (questionDepth - 2) * 30 + "px";
+  const photoTexts = photoText?.split("<BR>");
+  const questionInfos = questionInfo?.split("<BR><BR>");
   return (
     <div
       className={styles.maincontainer}
@@ -40,7 +44,15 @@ const QuestionContainer = ({
               closeIcon={<IconCrossCircle aria-hidden />}
               textOnBottom
             >
-              {questionInfo}
+              <div className={styles.infoContainer}>
+                {questionInfos?.map((e) => {
+                  return <p>{e}</p>;
+                })}
+                {photoUrl != null ? (
+                  <img src={photoUrl} className={styles.infoPicture}></img>
+                ) : null}
+                <p>{photoTexts}</p>
+              </div>
             </QuestionInfo>
           ) : null}
         </div>

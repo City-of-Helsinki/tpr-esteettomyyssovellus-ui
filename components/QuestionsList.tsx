@@ -73,6 +73,8 @@ const QuestionsList = ({
             canAddLocation={question.can_add_location == "Y"}
             canAddComment={question.can_add_comment}
             canAddPhotoMaxCount={question.can_add_photo_max_count}
+            photoText={question.photo_text}
+            photoUrl={question.photo_url}
           >
             {/* {dataComponent} */}
             {/* For checking if the component is yes_or_no question -> data from db */}

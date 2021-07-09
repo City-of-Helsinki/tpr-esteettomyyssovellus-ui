@@ -12,6 +12,14 @@
       flex-direction: column;
       padding: $spacing-m 0;
     }
+    .infoContainer {
+      display: flex;
+      flex-direction: column;
+      .infoPicture {
+        width: 200px;
+        height: 200px;
+      }
+    }
   }
   .maintext {
     width: "70%";

@@ -26,6 +26,8 @@ export interface QuestionContainerProps {
   canAddLocation?: boolean;
   canAddPhotoMaxCount?: number;
   canAddComment?: boolean;
+  photoUrl?: string | null;
+  photoText?: string | null;
 }
 
 export interface HeadlineQuestionContainerProps {
