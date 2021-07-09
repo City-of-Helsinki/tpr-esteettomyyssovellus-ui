@@ -42,6 +42,13 @@
       flex-wrap: nowrap;
       justify-content: space-between;
     }
+    .blockHeadline {
+      display: flex;
+      align-items: center;
+      .heading {
+        padding-right: 10px;
+      }
+    }
   }
   :focus::after {
     --focus-outline-width: 3px;

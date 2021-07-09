@@ -52,26 +52,29 @@ const HeadlineQuestionContainer = ({
           id="headlineButton"
           {...buttonProps}
           iconRight={icon}
-          iconLeft={iconLeft}
           variant={buttonVariant}
           fullWidth
           className={styles.headlineButton}
           onClick={() => handleOnClick()}
         >
-          <p>{text}</p>
+          <div className={styles.blockHeadline}>
+            <p className={styles.heading}>{text}</p> {iconLeft}
+          </div>
         </Button>
       ) : (
         <Button
           id="headlineButton"
           {...buttonProps}
           iconRight={icon}
-          iconLeft={iconLeft}
           variant={buttonVariant}
           fullWidth
           className={styles.headlineButton}
           //onClick={() => handleOnClick()}
         >
-          <p>{text}</p>
+          <div className={styles.blockHeadline}>
+            <p className={styles.heading}>{text}</p>
+            {iconLeft}
+          </div>
         </Button>
       )}
       {isContinueClicked && number == 0 ? null : (
