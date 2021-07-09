@@ -18,7 +18,9 @@ import { useI18n } from "next-localization";
 const QuestionBlock = ({
   description,
   questions,
-  answers
+  answers,
+  photoUrl,
+  photoText
 }: QuestionBlockProps): JSX.Element => {
   const i18n = useI18n();
   const [showAdditionalInfo, setShowAdditionalInfo] = useState(false);
@@ -82,14 +84,25 @@ const QuestionBlock = ({
       {hasInfoAndButtons ? (
         <div className={styles.mainInfo}>
           <p>{desc ?? null}</p>
-          <QuestionInfo
-            openText="PH: näytä lisää pääsisäänkäynnin kulkureiteistä?"
-            openIcon={<IconAngleDown aria-hidden />}
-            closeText="PH: pienennä ohje"
-            closeIcon={<IconAngleUp aria-hidden />}
-          >
-            PH: tähän LISÄpääinfot jostain tähän LISÄpääinfot jostain tähän
-          </QuestionInfo>
+          {photoText == null && photoUrl == null ? null : (
+            <QuestionInfo
+              openText="PH: näytä lisää pääsisäänkäynnin kulkureiteistä?"
+              openIcon={<IconAngleDown aria-hidden />}
+              closeText="PH: pienennä ohje"
+              closeIcon={<IconAngleUp aria-hidden />}
+            >
+              <div className={styles.infoContainer}>
+                {photoText != null ? photoText : null}
+                {photoUrl != null ? (
+                  <img
+                    alt="wheelchair parking"
+                    src={photoUrl}
+                    className={styles.infoPicture}
+                  ></img>
+                ) : null}
+              </div>
+            </QuestionInfo>
+          )}
         </div>
       ) : null}
       {hasInfoAndButtons ? (

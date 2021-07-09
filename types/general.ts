@@ -214,6 +214,8 @@ export interface QuestionBlockProps {
   technical_id?: string;
   text?: string;
   visible_if_question_choice?: string | null;
+  photoUrl?: string | null;
+  photoText?: string | null;
 }
 
 export interface QuestionChoicesProps {

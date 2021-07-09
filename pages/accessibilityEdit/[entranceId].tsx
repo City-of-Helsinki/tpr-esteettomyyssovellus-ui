@@ -86,6 +86,8 @@ const AccessibilityEdit = ({
                   description={block.description ?? null}
                   questions={blockQuestions}
                   answers={answerChoices}
+                  photoUrl={block.photo_url}
+                  photoText={block.photo_text}
                 />
               </HeadlineQuestionContainer>
             ) : null;

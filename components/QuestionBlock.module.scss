@@ -7,3 +7,11 @@
     margin-right: -15px;
   }
 }
+.infoContainer {
+  display: flex;
+  flex-direction: column;
+  .infoPicture {
+    height: 250px;
+    width: 300px;
+  }
+}
