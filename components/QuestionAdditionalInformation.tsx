@@ -29,7 +29,7 @@ const QuestionAdditionalInformation = ({
             tabIndex={0}
             title="PH: avaa lisää lisätietoja"
           >
-            <IconPlusCircle aria-hidden />
+            <IconPlusCircle className={styles.infoButton} aria-hidden />
           </span>
         </>
       ) : (
@@ -42,26 +42,29 @@ const QuestionAdditionalInformation = ({
             tabIndex={0}
             title="PH: sulje lisää lisätietoja"
           >
-            <IconCrossCircleFill aria-hidden />
+            <IconCrossCircleFill className={styles.infoButton} aria-hidden />
           </span>
-
-          <div className={styles.lineBreak}>
-            {canAddPhotoMaxCount != 0 ? (
-              <div>
-                PH: Lisää kuva <IconPlusCircle aria-hidden />
-              </div>
-            ) : null}
-            {canAddLocation ? (
-              <div>
-                PH: Lisää sijainti <IconPlusCircle aria-hidden />
-              </div>
-            ) : null}
-            {canAddComment ? (
-              <div>
-                PH: Lisää kommentti <IconPlusCircle aria-hidden />
-              </div>
-            ) : null}
-          </div>
+          {
+            // TODO: Link to the http://localhost:3000/additionalinfo/ page
+            // THIS IS NOT NEEDED
+            // <div className={styles.lineBreak}>
+            //   {canAddPhotoMaxCount != 0 ? (
+            //     <div>
+            //       PH: Lisää kuva <IconPlusCircle aria-hidden />
+            //     </div>
+            //   ) : null}
+            //   {canAddLocation ? (
+            //     <div>
+            //       PH: Lisää sijainti <IconPlusCircle aria-hidden />
+            //     </div>
+            //   ) : null}
+            //   {canAddComment ? (
+            //     <div>
+            //       PH: Lisää kommentti <IconPlusCircle aria-hidden />
+            //     </div>
+            //   ) : null}
+            // </div>
+          }
         </>
       )}
     </>

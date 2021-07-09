@@ -5,6 +5,9 @@
   justify-content: space-around;
   flex-direction: column;
   color: $color-bus !important;
+  .infoButton {
+    padding-top: 12px;
+  }
   svg {
     fill: $color-bus !important;
   }
