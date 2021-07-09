@@ -55,7 +55,7 @@ const QuestionsList = ({
               value: choice.question_choice_id
             };
           });
-
+        console.log(answerChoices);
         const backgroundColor: string = ind % 2 === 0 ? "#f2f2fc" : "#ffffff";
         return (
           <QuestionContainer
@@ -85,6 +85,8 @@ const QuestionsList = ({
                   key={question.question_code}
                   options={answerChoices}
                   value={question.question_id}
+                  firstButtonLabel={answerChoices[0].label}
+                  secondButtonLabel={answerChoices[1].label}
                 />
               </>
             ) : (
