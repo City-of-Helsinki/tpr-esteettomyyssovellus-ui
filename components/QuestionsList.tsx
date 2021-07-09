@@ -55,7 +55,7 @@ const QuestionsList = ({
               value: choice.question_choice_id
             };
           });
-        console.log(answerChoices);
+
         const backgroundColor: string = ind % 2 === 0 ? "#f2f2fc" : "#ffffff";
         return (
           <QuestionContainer
