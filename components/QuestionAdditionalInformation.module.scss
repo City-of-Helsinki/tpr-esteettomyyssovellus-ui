@@ -1,29 +1,32 @@
 @import "~hds-design-tokens/lib/all.scss";
 
 .addInfoButton {
-    display: flex;
-    justify-content: space-around;
-    flex-direction: column;
-    color: $color-bus !important;
-    svg {
-        fill: $color-bus !important;;
-    }
+  display: flex;
+  justify-content: space-around;
+  flex-direction: column;
+  color: $color-bus !important;
+  .infoButton {
+    padding-top: 12px;
+  }
+  svg {
+    fill: $color-bus !important;
+  }
 }
 
 .lineBreak {
-    width: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  line-height: 0;
+  color: $color-bus;
+  div {
     display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    flex-wrap: wrap;
-    line-height: 0;
-    color: $color-bus;
-    div {
-        display: flex;
-        align-items: center;
-        padding: $spacing-xs 0;
-        svg {
-            padding-left: $spacing-s;
-        }
+    align-items: center;
+    padding: $spacing-xs 0;
+    svg {
+      padding-left: $spacing-s;
     }
+  }
 }

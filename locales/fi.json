@@ -42,8 +42,10 @@
     "buttons": {
       "saveAndReturn": "Tallenna ja palaa",
       "returnNoSave": "Poistu tallentamatta"
-    }
-
+    },
+    "mainEntrance": "Pääsisäänkäynti",
+    "additionalEntrance": "Lisäsisäänkäynti",
+    "updated": "Päivitetty"
   },
   "question": {
     "something": "something"
@@ -57,7 +59,16 @@
     },
     "contactInfoHeader": "Toimipisteen esteettömyyden yhteystiedot",
     "contactFormSummaryHeader": "Toimipisteen esteettömyystiedot",
-    "noDataContactinfo": "Toimipisteelle ei ole annettu esteettömyysasioiden yhteystietoja"
+    "noDataContactinfo": "Toimipisteelle ei ole annettu esteettömyysasioiden yhteystietoja",
+    "phoneNumber": "Puhelinnumero",
+    "email": "Sähköpostiosoite",
+    "noInfo": "(ei tietoa)"
+  },
+  "questionFormControlButtons": {
+    "quit": "Keskeytä",
+    "verifyInformation": "Tarkista tiedot",
+    "saveAsIncomplete": "Tallenna keskeneräisenä",
+    "preview": "Esikatsele"
   },
   "additionalInfo": {
     "elementsCtrlButtonsHeader": "Lisää tietoja",
@@ -94,6 +105,18 @@
       "addUploadImageFromDevice": "Lataa kuva laitteelta",
       "addPictureLink": "Lisää kuvalinkki",
       "addNewLocation": "Lisää sijainti"
-    } 
+    }
+  },
+  "accessibilityForm": {
+    "choose": "--Valitse--",
+    "continue": "Jatka",
+    "whatDoesThisMean": "Mitä tämä tarkoittaa?",
+    "closeGuidance": "Sulje ohje "
+  },
+  "QuestionFormImportExistingData": {
+    "chooseServicepoint": "Valitse toimipiste",
+    "bringInformation": "Tuo tiedot",
+    "addAdditionalInfo": "Lisää kuva, sijainti tai lisäteksti",
+    "hideAddButtons": "Piilota lisää -painikkeet"
   }
 }

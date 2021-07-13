@@ -2,10 +2,10 @@
 @import "../styles/mixins.scss";
 
 .maincontainer {
-    display: flex;
-    flex-direction: row;
-    margin-top: $spacing-l;
-    @include media(xs, s, m) {
-        flex-direction: column;
-    }
+  display: flex;
+  flex-direction: row;
+  margin-top: $spacing-l;
+  @include media(xs, s, m) {
+    flex-direction: column;
+  }
 }

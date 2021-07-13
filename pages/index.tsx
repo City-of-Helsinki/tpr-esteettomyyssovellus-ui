@@ -21,43 +21,51 @@ import SearchBoxWithButtonsMobile from "../components/SearchBoxWithButtonsMobile
 import { Hero, HeroShallow } from "../components/common/Hero";
 import { MainEntranceFormProps, QuestionBlockProps } from "../types/general";
 import { LANGUAGE_LOCALES } from "../types/constants";
+import { connect } from "react-redux";
 
 import { setAnsweredChoice } from "../state/reducers/formSlice";
-import { API_FETCH_QUESTIONBLOCK_URL, API_FETCH_QUESTIONCHOICES, API_FETCH_QUESTION_URL } from "../types/constants";
+import {
+  API_FETCH_QUESTIONBLOCK_URL,
+  API_FETCH_QUESTIONCHOICES,
+  API_FETCH_QUESTION_URL
+} from "../types/constants";
 
 const useStyles = makeStyles((theme) => ({
   navi: {
     zIndex: 10000,
     fontFamily: "HelsinkiGrotesk",
-    fontSize: 16,
+    fontSize: 16
   },
   mainGrid: {
-    marginTop: theme.spacing(3),
+    marginTop: theme.spacing(3)
   },
   hero: (heroShallow: Boolean) => ({
-    height: heroShallow ? 360 : 550,
+    height: heroShallow ? 360 : 550
   }),
   main: {},
   paragraphs: {
-    marginTop: 56,
-  },
+    marginTop: 56
+  }
 }));
 
-const Main = ({ isMobile, QuestionsData, QuestionChoicesData, QuestionBlocksData }: MainEntranceFormProps): ReactElement => {
+const Main = ({
+  isMobile,
+  QuestionsData,
+  QuestionChoicesData,
+  QuestionBlocksData
+}: MainEntranceFormProps): ReactElement => {
   const i18n = useI18n();
   const curLocale: string = i18n.locale();
   const curLocaleId: number = LANGUAGE_LOCALES[curLocale];
   const dispatch = useAppDispatch();
 
-  console.log(QuestionsData);
-  console.log(QuestionChoicesData);
-  console.log(QuestionBlocksData);
-
   const openTermsOfUse = () => {
     window.open("www.google.com", "_blank");
   };
 
-  const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
+  let curAnsweredChoices = useAppSelector(
+    (state) => state.formReducer.answeredChoices
+  );
 
   // This checks whether the view has become so thin, i.e. mobile view, that the languageselector component should change place.
   if (typeof window !== "undefined") {
@@ -73,7 +81,7 @@ const Main = ({ isMobile, QuestionsData, QuestionChoicesData, QuestionBlocksData
 
   let heroTitle = i18n.t("common.landing.title");
   let heroText = "";
-  //let heroUrl = "https://i.stack.imgur.com/y9DpT.jpg";
+  // let heroUrl = "https://i.stack.imgur.com/y9DpT.jpg";
   // let heroUrl = "https://i.stack.imgur.com/y9DpT.jpg";
 
   const heroUrl = "http://localhost:3000/homepagephoto.png";
@@ -93,13 +101,19 @@ const Main = ({ isMobile, QuestionsData, QuestionChoicesData, QuestionBlocksData
           // isHero ? ()
           // isHero ? (
           <div className={classes.hero}>
-            {heroShallow ? <HeroShallow title={heroTitle} imageUrl={heroUrl} /> : <Hero title={heroTitle} text={heroText} imageUrl={heroUrl} />}
+            {heroShallow ? (
+              <HeroShallow title={heroTitle} imageUrl={heroUrl} />
+            ) : (
+              <Hero title={heroTitle} text={heroText} imageUrl={heroUrl} />
+            )}
           </div>
           /* ) : (
           <></>
         )*/
         }
-        <div>{isMobile ? <SearchBoxWithButtonsMobile /> : <SearchBoxWithButtons />}</div>
+        <div>
+          {isMobile ? <SearchBoxWithButtonsMobile /> : <SearchBoxWithButtons />}
+        </div>
         {/*
         <div className={styles.infoLinkContainer}>
           <Button variant="supplementary" size="small" iconRight={<IconAngleRight aria-hidden />} onClick={openTermsOfUse}>
@@ -107,7 +121,7 @@ const Main = ({ isMobile, QuestionsData, QuestionChoicesData, QuestionBlocksData
           </Button>
         </div>
 
-        for redux-toolkit example -> delete 
+        for redux-toolkit example -> delete
         <h2>{`count is: ${curCount}`}</h2>
 
         <Notice
@@ -131,21 +145,41 @@ const Main = ({ isMobile, QuestionsData, QuestionChoicesData, QuestionBlocksData
         {QuestionBlocksData && QuestionsData && QuestionChoicesData
           ? QuestionBlocksData.map((block: QuestionBlockProps) => {
               const isVisible =
-                (block.visible_if_question_choice == null && block.language_id == curLocaleId) ||
-                (curAnsweredChoices.includes(block.visible_if_question_choice ? block.visible_if_question_choice : "") &&
+                (block.visible_if_question_choice == null &&
+                  block.language_id == curLocaleId) ||
+                (curAnsweredChoices.includes(
+                  block.visible_if_question_choice
+                    ? block.visible_if_question_choice
+                    : ""
+                ) &&
                   block.language_id == curLocaleId);
 
               const blockQuestions = isVisible
-                ? QuestionsData.filter((question) => question.question_block_id === block.question_block_id && question.language_id == curLocaleId)
+                ? QuestionsData.filter(
+                    (question) =>
+                      question.question_block_id === block.question_block_id &&
+                      question.language_id == curLocaleId
+                  )
                 : null;
 
               const answerChoices = isVisible
-                ? QuestionChoicesData.filter((choice) => choice.question_block_id === block.question_block_id && choice.language_id == curLocaleId)
+                ? QuestionChoicesData.filter(
+                    (choice) =>
+                      choice.question_block_id === block.question_block_id &&
+                      choice.language_id == curLocaleId
+                  )
                 : null;
               {
                 return isVisible && blockQuestions && answerChoices ? (
-                  <HeadlineQuestionContainer key={block.question_block_id} text={block.text}>
-                    <QuestionBlock description={block.description ?? null} questions={blockQuestions} answers={answerChoices} />
+                  <HeadlineQuestionContainer
+                    key={block.question_block_id}
+                    text={block.text}
+                  >
+                    <QuestionBlock
+                      description={block.description ?? null}
+                      questions={blockQuestions}
+                      answers={answerChoices}
+                    />
                   </HeadlineQuestionContainer>
                 ) : null;
               }
@@ -160,16 +194,24 @@ const Main = ({ isMobile, QuestionsData, QuestionChoicesData, QuestionBlocksData
           {" "}
           <QuestionBlock />{" "}
         </HeadlineQuestionContainer> */}
-        <QuestionFormCtrlButtons hasCancelButton hasValidateButton hasSaveDraftButton hasPreviewButton />
+        <QuestionFormCtrlButtons
+          hasCancelButton
+          hasValidateButton
+          hasSaveDraftButton
+          hasPreviewButton
+        />
       </main>
     </Layout>
   );
 };
 
 // Server-side rendering
-export const getServerSideProps: GetServerSideProps = async ({ params, req, locales }) => {
+export const getServerSideProps: GetServerSideProps = async ({
+  params,
+  req,
+  locales
+}) => {
   const lngDict = await i18nLoader(locales);
-  console.log("KIELIÄÄÄ ", lngDict);
 
   const reduxStore = store;
   // reduxStore.dispatch({ type: CLEAR_STATE });
@@ -207,13 +249,13 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, loca
       QuestionsData: QuestionsData,
       QuestionChoicesData: QuestionChoicesData,
       QuestionBlocksData: QuestionBlocksData,
-      lngDict,
-    },
+      lngDict
+    }
   };
 };
 
 Main.defaultProps = {
-  isMobile: false,
+  isMobile: false
 };
 
 export default Main;

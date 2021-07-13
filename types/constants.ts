@@ -12,7 +12,7 @@ export const API_FETCH_QUESTIONCHOICES = "http://localhost:8000/api/ArBackendQue
 export enum LANGUAGE_LOCALES {
   fi = 1,
   sv = 2,
-  en = 3,
+  en = 3
 }
 
 export default null;

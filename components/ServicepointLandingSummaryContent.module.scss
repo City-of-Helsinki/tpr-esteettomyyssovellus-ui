@@ -2,14 +2,14 @@
 @import "../styles/mixins.scss";
 
 .maincontainer {
-    .header {
-        color: $color-bus;
-        font-size: $fontsize-heading-m !important;
-        margin-top: $spacing-l;
-        margin-bottom: $spacing-2-xs;
-    }
-    .container {
-        background-color: #f2f2fc;
-        padding: $spacing-m;
-    }
+  .header {
+    color: $color-bus;
+    font-size: $fontsize-heading-m !important;
+    margin-top: $spacing-l;
+    margin-bottom: $spacing-2-xs;
+  }
+  .container {
+    background-color: #f2f2fc;
+    padding: $spacing-m;
+  }
 }

@@ -2,13 +2,21 @@ import React from "react";
 import QuestionDropdown from "./QuestionDropdown";
 import QuestionRadioButtons from "./QuestionRadioButtons";
 import QuestionContainer from "./QuestionContainer";
-import { QuestionChoicesProps, QuestionDataProps, QuestionsListProps } from "../types/general";
+import {
+  QuestionChoicesProps,
+  QuestionDataProps,
+  QuestionsListProps
+} from "../types/general";
 import { TextInput } from "hds-react";
 import { Dictionary } from "@reduxjs/toolkit";
 
 // TODO: when data, get questions data as props and map to return
 // used to list multiple questions: <QContainer><QElement /></QC>
-const QuestionsList = ({ additionalInfoVisible, questions, answers }: QuestionsListProps): JSX.Element => {
+const QuestionsList = ({
+  additionalInfoVisible,
+  questions,
+  answers
+}: QuestionsListProps): JSX.Element => {
   // remove mock data after real data from fecth
 
   // const mockDataList = [
@@ -36,7 +44,6 @@ const QuestionsList = ({ additionalInfoVisible, questions, answers }: QuestionsL
   // ];
 
   let dataComponent: JSX.Element;
-
   return (
     <>
       {questions?.map((question: any, ind: number) => {
@@ -45,6 +52,7 @@ const QuestionsList = ({ additionalInfoVisible, questions, answers }: QuestionsL
           .map((choice) => {
             return {
               label: choice.text,
+              value: choice.question_choice_id
             };
           });
 
@@ -55,19 +63,39 @@ const QuestionsList = ({ additionalInfoVisible, questions, answers }: QuestionsL
             questionNumber={question.question_code}
             questionText={question.text}
             questionInfo={question.description ?? null}
-            hasAdditionalInfo={additionalInfoVisible}
+            hasAdditionalInfo={
+              additionalInfoVisible &&
+              (question.can_add_location == "Y" ||
+                question.can_add_comment == "Y" ||
+                question.can_add_photo_max_count != 0)
+            }
             backgroundColor={backgroundColor}
+            canAddLocation={question.can_add_location == "Y"}
+            canAddComment={question.can_add_comment}
+            canAddPhotoMaxCount={question.can_add_photo_max_count}
+            photoText={question.photo_text}
+            photoUrl={question.photo_url}
           >
             {/* {dataComponent} */}
             {/* For checking if the component is yes_or_no question -> data from db */}
             {question.yes_no_question === "Y" ? (
               // todo: add some logic to figure out what qustion id is and save answer to state
               <>
-                <QuestionRadioButtons key={question.question_code} />
+                <QuestionRadioButtons
+                  key={question.question_code}
+                  options={answerChoices}
+                  value={question.question_id}
+                  firstButtonLabel={answerChoices[0].label}
+                  secondButtonLabel={answerChoices[1].label}
+                />
               </>
             ) : (
               <>
-                <QuestionDropdown key={question.question_code} options={answerChoices} />
+                <QuestionDropdown
+                  key={question.question_id}
+                  options={answerChoices}
+                  questionNumber={question.question_id}
+                />
               </>
             )}
           </QuestionContainer>

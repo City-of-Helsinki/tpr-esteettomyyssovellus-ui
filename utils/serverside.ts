@@ -17,34 +17,34 @@ export const redirectToLogin = (resolvedUrl: string): { redirect: Redirect } => 
   return {
     redirect: {
       destination: `${process.env.BASE_PATH}/helauth/login/?next=${process.env.BASE_PATH}${resolvedUrl}`,
-      permanent: false,
-    },
+      permanent: false
+    }
   };
 };
 
- export const checkUser = async (req: IncomingMessage): Promise<User | undefined> => {
-   // Check the current user
-   // TODO: define how a moderator user is identified
+export const checkUser = async (req: IncomingMessage): Promise<User | undefined> => {
+  // Check the current user
+  // TODO: define how a moderator user is identified
 
-   // PLACEHOLDER **********
-   const userResponse = await fetch(`https://www.hel.fi/api/user/?format=json`, { headers: { cookie: req.headers.cookie as string } });
+  // PLACEHOLDER **********
+  const userResponse = await fetch(`https://www.hel.fi/api/user/?format=json`, { headers: { cookie: req.headers.cookie as string } });
 
-   // UNCOMMENT THIS  
-   //const userResponse = await fetch(`${getOriginServerSide()}/api/user/?format=json`, { headers: { cookie: req.headers.cookie as string } });
+  // UNCOMMENT THIS
+  //const userResponse = await fetch(`${getOriginServerSide()}/api/user/?format=json`, { headers: { cookie: req.headers.cookie as string } });
 
-   if (!userResponse.ok) {
-     // Invalid user
-     return undefined;
-   }
+  if (!userResponse.ok) {
+    // Invalid user
+    return undefined;
+  }
 
-   // Check the user response
-   const user = await userResponse.json();
+  // Check the user response
+  const user = await userResponse.json();
 
-   if (!user.email || user.email.length === 0) {
-     // Invalid user
-     return undefined;
-   }
+  if (!user.email || user.email.length === 0) {
+    // Invalid user
+    return undefined;
+  }
 
-   // Valid user
-   return { authenticated: true, ...user };
- };
+  // Valid user
+  return { authenticated: true, ...user };
+};

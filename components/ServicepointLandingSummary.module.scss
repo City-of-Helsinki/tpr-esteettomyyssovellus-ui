@@ -2,39 +2,39 @@
 @import "../styles/mixins.scss";
 
 .maincontainer {
-    margin-top: $spacing-l;
-    .headercontainer {
-        display: flex;
-        flex-direction: row;
-        align-content: center;
-        align-items: center;
-        justify-content: space-between;
-        @include media(xs, s, m) {
-            flex-direction: column;
-            align-content: flex-start;
-            align-items: flex-start;
-        }
-        h2 {
-            width: 70%;
-            color: $color-bus;
-            font-size: $fontsize-heading-l !important;
-        }
+  margin-top: $spacing-l;
+  .headercontainer {
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    align-items: center;
+    justify-content: space-between;
+    @include media(xs, s, m) {
+      flex-direction: column;
+      align-content: flex-start;
+      align-items: flex-start;
     }
-    h3 {
-        margin-left: -$spacing-m;
+    h2 {
+      width: 70%;
+      color: $color-bus;
+      font-size: $fontsize-heading-l !important;
     }
-    .contactInformation {
-        display: flex;
-        justify-content: space-evenly;
+  }
+  h3 {
+    margin-left: -$spacing-m;
+  }
+  .contactInformation {
+    display: flex;
+    justify-content: space-evenly;
+  }
+  .nodatacontainer {
+    span {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      svg {
+        margin-right: $spacing-s;
+      }
     }
-    .nodatacontainer {
-        span {
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
-            svg {
-                margin-right: $spacing-s;
-            }
-        }
-    }
+  }
 }

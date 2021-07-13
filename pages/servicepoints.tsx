@@ -40,8 +40,8 @@ export const getServerSideProps: GetServerSideProps = async ({ req, locales }) =
   return {
     props: {
       initialReduxState,
-      lngDict,
-    },
+      lngDict
+    }
   };
 };
 

@@ -38,15 +38,18 @@
     "generalMainInfoIsOpen": "Nära hjälp",
     "generalMainInfoIsClose": "Instruktioner för tillhandahållande av tillgänglighetsinformation",
     "generalChoose": "Välja",
-    "generalExplanation": "Förklaring"
+    "generalExplanation": "Förklaring",
+    "mainEntrance": "Huvudingången",
+    "additionalEntrance": "Alternativ ingång",
+    "updated": "Uppdaterad"
   },
-    "buttons": {
-      "saveAndReturn": "spara och returnera",
-      "returnNoSave": "avsluta utan att spara"
-    },
-    "question": {
-      "something": "something"
-  }, 
+  "buttons": {
+    "saveAndReturn": "spara och returnera",
+    "returnNoSave": "avsluta utan att spara"
+  },
+  "question": {
+    "something": "something"
+  },
   "servicepoint": {
     "buttons": {
       "createServicepoint": "Fyll i tillgänglighetsformuläret",
@@ -56,7 +59,16 @@
     },
     "contactInfoHeader": "Kontaktinformation för tillgänglighet på kontoret",
     "contactFormSummaryHeader": "Servicepoint tillgänglighetsinformation",
-    "noDataContactinfo": "Inga kontaktuppgifter för tillgänglighetsfrågor har lämnats till kontoret"
+    "noDataContactinfo": "Inga kontaktuppgifter för tillgänglighetsfrågor har lämnats till kontoret",
+    "phoneNumber": "Telefonnummer",
+    "email": "E-postadress",
+    "noInfo": "(ingen information)"
+  },
+  "questionFormControlButtons": {
+    "quit": "Avbryta",
+    "verifyInformation": "Kolla informationen",
+    "saveAsIncomplete": "Spara som oavslutad",
+    "preview": "Förhandsvisning"
   },
   "additionalInfo": {
     "elementsCtrlButtonsHeader": "Lägg information",
@@ -94,5 +106,17 @@
       "addPictureLink": "Lägg bildlänk",
       "addNewLocation": "Lägg plats"
     }
+  },
+  "accessibilityForm": {
+    "choose": "--Välja--",
+    "continue": "Fortsätta",
+    "whatDoesThisMean": "Vad betyder det här?",
+    "closeGuidance": "Nära hjälp"
+  },
+  "QuestionFormImportExistingData": {
+    "chooseServicepoint": "Välj ett kontor",
+    "bringInformation": "Importera informationen",
+    "addAdditionalInfo": "Lägg till en bild, plats eller ytterligare text",
+    "hideAddButtons": "Dölj lägg till knappar"
   }
 }

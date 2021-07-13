@@ -13,7 +13,7 @@
   .main {
     display: flex;
     flex-direction: column;
-    // TODO: figure out which flex-grow e.g. are best 
+    // TODO: figure out which flex-grow e.g. are best
     flex-grow: 2;
 
     @include media(xs) {

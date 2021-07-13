@@ -42,11 +42,14 @@
     "buttons": {
       "saveAndReturn": "Save and return",
       "returnNoSave": "Exit without saving"
-    }
+    },
+    "mainEntrance": "Main entrance",
+    "additionalEntrance": "Additional entrance",
+    "updated": "Updated"
   },
   "question": {
     "something": "something"
-  }, 
+  },
   "servicepoint": {
     "buttons": {
       "createServicepoint": "Fill accessibility form",
@@ -56,7 +59,16 @@
     },
     "contactInfoHeader": "Servicepoint contact information",
     "contactFormSummaryHeader": "Servicepoint accessibility information",
-    "noDataContactinfo": "No contact details for accessibility issues have been provided to the office"
+    "noDataContactinfo": "No contact details for accessibility issues have been provided to the office",
+    "phoneNumber": "Phone number",
+    "email": "Email address",
+    "noInfo": "(no information)"
+  },
+  "questionFormControlButtons": {
+    "quit": "Quit",
+    "verifyInformation": "Verify information",
+    "saveAsIncomplete": "Save as incomplete",
+    "preview": "Preview"
   },
   "additionalInfo": {
     "elementsCtrlButtonsHeader": "Add information",
@@ -94,5 +106,17 @@
       "addPictureLink": "Add picturelink",
       "addNewLocation": "Add location"
     }
+  },
+  "accessibilityForm": {
+    "choose": "--Choose--",
+    "continue": "Continue",
+    "whatDoesThisMean": "What does this mean?",
+    "closeGuidance": "Close help"
+  },
+  "QuestionFormImportExistingData": {
+    "chooseServicepoint": "Choose servicepoint",
+    "bringInformation": "Import information",
+    "addAdditionalInfo": "Add picture, location or additional text",
+    "hideAddButtons": "Hide add info -buttons"
   }
 }

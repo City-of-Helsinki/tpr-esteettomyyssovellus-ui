@@ -2,16 +2,14 @@
 @import "../styles/mixins.scss";
 
 .container {
-    padding: $spacing-s $spacing-m $spacing-s $spacing-s;
-    :focus::after {
-        margin-right: -15px;
+  padding: $spacing-s $spacing-m $spacing-s $spacing-s;
+  :focus::after {
+    margin-right: -15px;
+  }
+  Button {
+    margin: auto $spacing-2-xs;
+    @include media(xs, s, m, l) {
+      margin: 0;
     }
-    Button {
-        margin: auto $spacing-2-xs;
-        @include media(xs, s, m, l) {
-            margin: 0;
-            
-        }
-        
-    }
+  }
 }

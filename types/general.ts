@@ -23,18 +23,25 @@ export interface QuestionContainerProps {
   children: JSX.Element;
   hasAdditionalInfo: boolean;
   backgroundColor: string;
+  canAddLocation?: boolean;
+  canAddPhotoMaxCount?: number;
+  canAddComment?: boolean;
+  photoUrl?: string | null;
+  photoText?: string | null;
 }
 
 export interface HeadlineQuestionContainerProps {
   text?: string;
   initOpen?: boolean;
   children?: any;
+  number?: number;
 }
 
 export interface DropdownQuestionProps {
   options: Dictionary<string>[];
   label?: string;
   placeholder?: string;
+  questionNumber?: number;
 }
 
 export interface QuestionInfoProps {
@@ -68,6 +75,8 @@ export interface QuestionRadioButtonsProps {
   mainLabel?: string;
   firstButtonLabel?: string;
   secondButtonLabel?: string;
+  options?: Dictionary<string>[];
+  value?: number;
 }
 
 export interface QuestionFormCtrlButtonsProps {
@@ -169,6 +178,8 @@ export interface MainEntranceFormProps {
   QuestionsData?: QuestionProps[];
   QuestionChoicesData?: QuestionChoicesProps[];
   QuestionBlocksData?: QuestionBlockProps[];
+  ServicePointData?: any;
+  QuestionAnswerData?: any;
 }
 
 // todo: added ? optional questionmark to all, remove where mandatory
@@ -206,6 +217,8 @@ export interface QuestionBlockProps {
   technical_id?: string;
   text?: string;
   visible_if_question_choice?: string | null;
+  photoUrl?: string | null;
+  photoText?: string | null;
 }
 
 export interface QuestionChoicesProps {
@@ -236,5 +249,15 @@ export interface QuestionBlocksProps {
 //TODO: add type for questionlist and question
 export interface QuestionBlockProps {
   mainInfoText?: string;
-  questionList: any;
+  // questionList: any;
+}
+
+export interface PathTreeProps {
+  treeItems: any[];
+}
+
+export interface QuestionAdditionalInfoProps {
+  canAddLocation?: boolean;
+  canAddPhotoMaxCount?: number;
+  canAddComment?: boolean;
 }

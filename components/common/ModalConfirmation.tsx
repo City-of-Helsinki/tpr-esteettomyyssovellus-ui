@@ -23,7 +23,7 @@ const ModalConfirmation = ({
   messageKey,
   cancelKey,
   confirmKey,
-  confirmCallback,
+  confirmCallback
 }: ModalConfirmationProps): ReactElement => {
   const i18n = useI18n();
 
@@ -48,7 +48,7 @@ const ModalConfirmation = ({
 };
 
 ModalConfirmation.defaultProps = {
-  titleKey: "",
+  titleKey: ""
 };
 
 export default ModalConfirmation;
