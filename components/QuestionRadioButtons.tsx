@@ -19,31 +19,33 @@ const QuestionRadioButtons = ({
   // todo: maybe take in prost
   const i18n = useI18n();
   const dispatch = useAppDispatch();
-  const [selectedRadioItem, setSelectedRadioItem] = useState("0");
   let curAnswers = useAppSelector((state) => state.formReducer.answers);
+  let startState = "0";
+  if (value != undefined && curAnswers[value] != undefined) {
+    startState = curAnswers[value].toString();
+  }
+  const [selectedRadioItem, setSelectedRadioItem] = useState(startState);
 
   const handleRadioClick = (e: any) => {
     setSelectedRadioItem(e.target.value);
     const questionNumber = value ? value : -1;
-    const yesOrNo = e.target.value.substr(e.target.value.length - 1);
 
     if (value && options) {
-      const v = yesOrNo == "Y" ? options[0].value : options[1].value;
-      const a = v ? v : "";
-      const answer = Number(a);
-      console.log(curAnswers);
+      const answer = Number(e.target.value);
+      // console.log(curAnswers);
       if (curAnswers[questionNumber] != undefined) {
         dispatch(removeAnsweredChoice(curAnswers[questionNumber].toString()));
       }
-      dispatch(setAnsweredChoice(a));
+      // @ts-ignore: this is weird
+      dispatch(setAnsweredChoice(answer));
       dispatch(setAnswer({ questionNumber, answer }));
     }
   };
 
   // Add values to radiobuttons. The Y and N makes them uniques which then can also be used
   // to collect the answer.
-  const firstValue = value?.toString() + "Y";
-  const secondValue = value != undefined ? (value + "N").toString() : "";
+  const firstValue = options != undefined ? options[0].value?.toString() : "";
+  const secondValue = options != undefined ? options[1].value?.toString() : "";
   const firstId = "v-radio" + firstValue;
   const secondId = "v-radio" + secondValue;
 

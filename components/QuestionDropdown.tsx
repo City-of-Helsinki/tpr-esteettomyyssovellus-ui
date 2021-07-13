@@ -23,13 +23,16 @@ const QuestionDropdown = ({
 }: DropdownQuestionProps): JSX.Element => {
   const dispatch = useAppDispatch();
   const i18n = useI18n();
+
   const handleChange = (selected: Dictionary<string>) => {
     const answerString = selected["value"];
     const questionNumString = questionNumber;
-
+    console.log(selected);
     if (answerString != undefined && questionNumber != undefined) {
-      options.map((element: any) => {
-        dispatch(removeAnsweredChoice(element["value"]));
+      options.map((element: Dictionary<string>) => {
+        element["value"] != undefined
+          ? dispatch(removeAnsweredChoice(element["value"]))
+          : null;
       });
       const answer = Number(answerString);
       const questionNumber = Number(questionNumString);
@@ -39,9 +42,6 @@ const QuestionDropdown = ({
   };
 
   const currentValues = useAppSelector((state) => state.formReducer);
-  const questionNumString =
-    questionNumber != undefined ? questionNumber.toString() : "";
-
   const x =
     questionNumber != undefined &&
     currentValues.answers[questionNumber] != undefined

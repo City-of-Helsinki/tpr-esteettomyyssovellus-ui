@@ -21,22 +21,48 @@ import HeadlineQuestionContainer from "../../components/HeadlineQuestionContaine
 import { LANGUAGE_LOCALES } from "../../types/constants";
 import QuestionFormCtrlButtons from "../../components/QuestionFormCtrlButtons";
 import PathTreeComponent from "../../components/PathTreeComponent";
+import { setAnswer, setAnsweredChoice } from "../../state/reducers/formSlice";
 
 const AccessibilityEdit = ({
   QuestionsData,
   QuestionChoicesData,
-  QuestionBlocksData
+  QuestionBlocksData,
+  QuestionAnswerData
 }: MainEntranceFormProps): ReactElement => {
   const i18n = useI18n();
   const curLocale: string = i18n.locale();
+  const dispatch = useAppDispatch();
   // @ts-ignore: TODO:
   const curLocaleId: number = LANGUAGE_LOCALES[curLocale];
+
   let curAnsweredChoices = useAppSelector(
     (state) => state.formReducer.answeredChoices
   );
+
+  if (QuestionAnswerData) {
+    let curAnswers = useAppSelector((state) => state.formReducer.answers);
+    QuestionAnswerData.map((a: any) => {
+      const questionNumber = a.question_id;
+      const answer = a.question_choice_id;
+      const answerString = answer;
+      if (
+        !curAnsweredChoices.includes(answer) &&
+        curAnswers[questionNumber] == undefined
+      ) {
+        dispatch(setAnsweredChoice(answerString));
+        dispatch(setAnswer({ questionNumber, answer }));
+      }
+    });
+  }
+
   let isContinueClicked = useAppSelector(
     (state) => state.formReducer.isContinueClicked
   );
+  // let curAnswers = useAppSelector(
+  //   (state) => state.formReducer.answeredChoices
+  // );
+  //console.log(curAnsweredChoices);
+
   // let curFinishedBlocks = useAppSelector((state) => state.formReducer.finishedBlocks);
   let nextBlock = 0;
   let visibleBlocks =
@@ -137,6 +163,7 @@ const AccessibilityEdit = ({
 };
 
 export const getServerSideProps: GetServerSideProps = async ({
+  params,
   req,
   locales
 }) => {
@@ -157,27 +184,36 @@ export const getServerSideProps: GetServerSideProps = async ({
   let QuestionsData;
   let QuestionChoicesData;
   let QuestionBlocksData;
-  try {
-    // todo: put urls in types/constants and get form_id from props
-    const QuestionsResp = await fetch(API_FETCH_QUESTION_URL);
-    const QuestionChoicesResp = await fetch(API_FETCH_QUESTIONCHOICES);
-    const QuestionBlocksResp = await fetch(API_FETCH_QUESTIONBLOCK_URL);
+  let QuestionAnswerData;
+  if (params != undefined) {
+    try {
+      // todo: put urls in types/constants and get form_id from props
+      const QuestionsResp = await fetch(API_FETCH_QUESTION_URL);
+      const QuestionChoicesResp = await fetch(API_FETCH_QUESTIONCHOICES);
+      const QuestionBlocksResp = await fetch(API_FETCH_QUESTIONBLOCK_URL);
+      const entrance_id = params.entranceId;
+      const QuestionAnswersResp = await fetch(
+        `http://localhost:8000/api/ArBackendEntranceAnswer/?entrance_id=${entrance_id}&format=json`
+      );
 
-    QuestionsData = await QuestionsResp.json();
-    QuestionChoicesData = await QuestionChoicesResp.json();
-    QuestionBlocksData = await QuestionBlocksResp.json();
-  } catch (e) {
-    QuestionsData = {};
-    QuestionChoicesData = {};
-    QuestionBlocksData = {};
+      QuestionsData = await QuestionsResp.json();
+      QuestionChoicesData = await QuestionChoicesResp.json();
+      QuestionBlocksData = await QuestionBlocksResp.json();
+      QuestionAnswerData = await QuestionAnswersResp.json();
+    } catch (e) {
+      QuestionsData = {};
+      QuestionChoicesData = {};
+      QuestionBlocksData = {};
+      QuestionAnswerData = {};
+    }
   }
-
   return {
     props: {
       initialReduxState,
       QuestionsData: QuestionsData,
       QuestionChoicesData: QuestionChoicesData,
       QuestionBlocksData: QuestionBlocksData,
+      QuestionAnswerData: QuestionAnswerData,
       lngDict
     }
   };

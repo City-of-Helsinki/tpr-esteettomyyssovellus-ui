@@ -1,4 +1,5 @@
 import { createSlice, Dictionary, PayloadAction } from "@reduxjs/toolkit";
+import { finished } from "node:stream";
 import { string } from "yup/lib/locale";
 import type { RootState } from "../store";
 
@@ -75,10 +76,16 @@ export const formSlice = createSlice({
       };
     },
     setFinished: (state, action: PayloadAction<number>) => {
-      return {
-        ...state,
-        finishedBlocks: [...state.finishedBlocks, action.payload]
-      };
+      if (!state.finishedBlocks.includes(action.payload)) {
+        return {
+          ...state,
+          finishedBlocks: [...state.finishedBlocks, action.payload]
+        };
+      } else {
+        return {
+          ...state
+        };
+      }
     },
     unsetFinished: (state, action: PayloadAction<number>) => {
       return {
