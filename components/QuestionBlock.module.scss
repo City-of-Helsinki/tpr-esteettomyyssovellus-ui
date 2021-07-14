@@ -4,15 +4,15 @@
 .continueButton {
   margin-top: $spacing-m;
   :focus::after {
-    margin-right: -15px;
+    margin-right: -0.95rem;
   }
 }
 .infoContainer {
   display: flex;
   flex-direction: column;
   .infoPicture {
-    height: 250px;
-    width: 300px;
+    height: 20rem;
+    width: 25rem;
   }
 }
 .importAddinfoContainer {

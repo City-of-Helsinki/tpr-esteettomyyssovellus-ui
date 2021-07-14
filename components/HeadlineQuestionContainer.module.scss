@@ -46,15 +46,15 @@
       display: flex;
       align-items: center;
       .heading {
-        padding-right: 10px;
+        padding-right: 1rem;
       }
     }
   }
   :focus::after {
-    --focus-outline-width: 3px;
+    --focus-outline-width: 0.3rem;
     --focus-outline-color: var(--color-coat-of-arms);
-    --focus-outline-border-radius: 2px;
-    margin-left: -15px;
+    --focus-outline-border-radius: 0.2rem;
+    margin-left: -0.95rem;
   }
   .card {
     padding: 0;

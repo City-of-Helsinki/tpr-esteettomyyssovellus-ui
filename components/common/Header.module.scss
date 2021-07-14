@@ -2,8 +2,8 @@
 @import "../../styles/mixins";
 
 .header {
-  border-bottom: 2px solid black;
-  line-height: 18px;
+  border-bottom: 0.15rem solid black;
+  line-height: 1.5rem;
 }
 
 .actions {
@@ -13,7 +13,7 @@
 }
 
 .choices {
-  margin-top: 20px;
+  margin-top: 1.3rem;
   position: relative;
 }
 
@@ -22,8 +22,8 @@
 }
 
 .mobileLanguages {
-  padding-top: 30px;
-  padding-bottom: 40px;
+  padding-top: 2rem;
+  padding-bottom: 2.5rem;
   display: flex;
   flex-direction: row;
   align-items: center;
