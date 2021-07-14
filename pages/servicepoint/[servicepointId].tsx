@@ -58,6 +58,10 @@ const Servicepoint = ({
     dispatch(setEntranceId(entranceData.results[0].entrance_id));
   }
 
+  const hasData =
+    Object.keys(entranceData).length !== 0 ||
+    Object.keys(servicepointData).length !== 0;
+
   return (
     <Layout>
       <Head>
@@ -105,7 +109,7 @@ const Servicepoint = ({
               data={filteredAccessibilityData}
             />
           </div>
-          <ServicepointLandingSummaryCtrlButtons hasData />
+          <ServicepointLandingSummaryCtrlButtons hasData={hasData} />
         </div>
       </main>
     </Layout>

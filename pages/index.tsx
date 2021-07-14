@@ -56,6 +56,7 @@ const Main = ({
 }: MainEntranceFormProps): ReactElement => {
   const i18n = useI18n();
   const curLocale: string = i18n.locale();
+  // @ts-ignore: TODO:
   const curLocaleId: number = LANGUAGE_LOCALES[curLocale];
   const dispatch = useAppDispatch();
 

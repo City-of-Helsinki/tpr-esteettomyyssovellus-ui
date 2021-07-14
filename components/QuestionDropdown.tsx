@@ -42,18 +42,18 @@ const QuestionDropdown = ({
   };
 
   const currentValues = useAppSelector((state) => state.formReducer);
-  const x =
+  const value =
     questionNumber != undefined &&
     currentValues.answers[questionNumber] != undefined
       ? currentValues.answers[questionNumber]
       : "";
   let currentLabel = options.find((element) => {
-    return element["value"] === x;
+    return element["value"] === value;
   });
 
   const currentValue: Dictionary<string> = {
     label: currentLabel != undefined ? currentLabel["label"] : "",
-    value: x.toString()
+    value: value.toString()
   };
 
   return (

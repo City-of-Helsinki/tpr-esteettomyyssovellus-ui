@@ -22,6 +22,7 @@ import { LANGUAGE_LOCALES } from "../../types/constants";
 import QuestionFormCtrlButtons from "../../components/QuestionFormCtrlButtons";
 import PathTreeComponent from "../../components/PathTreeComponent";
 import { setAnswer, setAnsweredChoice } from "../../state/reducers/formSlice";
+import ContactInformationQuestionContainer from "../../components/ContactInformationQuestionContainer";
 
 const AccessibilityEdit = ({
   QuestionsData,
@@ -100,6 +101,8 @@ const AccessibilityEdit = ({
                   choice.language_id == curLocaleId
               )
             : null;
+          // console.log(blockQuestions);
+          // console.log(block);
           {
             return isVisible && blockQuestions && answerChoices ? (
               <HeadlineQuestionContainer
@@ -120,7 +123,15 @@ const AccessibilityEdit = ({
           }
         })
       : null;
+
   const treeItems = ["PH: Päiväkoti apila", "Esteettömyystiedot"];
+  if (isContinueClicked) {
+    visibleBlocks?.push(
+      <HeadlineQuestionContainer text={"PH: Yhteistiedot"} initOpen={false}>
+        <ContactInformationQuestionContainer />{" "}
+      </HeadlineQuestionContainer>
+    );
+  }
 
   return (
     <Layout>

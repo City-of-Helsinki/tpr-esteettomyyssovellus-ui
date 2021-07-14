@@ -91,6 +91,7 @@ export interface QuestionsListProps {
   additionalInfoVisible: boolean;
   questions?: QuestionProps[] | null;
   answers?: QuestionChoicesProps[] | null;
+  isContactQuestionList?: boolean;
 }
 
 export interface QuestionAdditionalInfoCtrlButtonProps {
@@ -190,8 +191,8 @@ export interface QuestionProps {
   description?: string;
   form_id?: number;
   language_id: number;
-  photo_text?: string;
-  photo_url?: string;
+  photo_text?: string | null;
+  photo_url?: string | null;
   question_block_id?: number;
   question_code?: string;
   question_id?: number;

@@ -1,0 +1,22 @@
+@import "~hds-design-tokens/lib/all.scss";
+@import "../styles/mixins.scss";
+
+.continueButton {
+  margin-top: $spacing-m;
+  :focus::after {
+    margin-right: -15px;
+  }
+}
+.infoContainer {
+  display: flex;
+  flex-direction: column;
+  .infoPicture {
+    height: 250px;
+    width: 300px;
+  }
+}
+.importAddinfoContainer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}

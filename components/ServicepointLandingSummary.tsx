@@ -106,10 +106,11 @@ const ServicepointLandingSummary = ({
 
   // Make sure that the main entrance is listed before the side entrances.
   contents = mainEntrance.concat(contents);
+  let buttonText =
+    Object.keys(data).length === 0
+      ? i18n.t("servicepoint.buttons.createServicepoint")
+      : i18n.t("servicepoint.buttons.editServicepoint");
 
-  const buttonText = data
-    ? i18n.t("servicepoint.buttons.editServicepoint")
-    : i18n.t("servicepoint.buttons.createServicepoint");
   return (
     <div className={styles.maincontainer}>
       <div className={styles.headercontainer}>
@@ -119,7 +120,7 @@ const ServicepointLandingSummary = ({
         </Button>
       </div>
       <div>
-        {data ? (
+        {Object.keys(data).length !== 0 ? (
           <>{contents}</>
         ) : (
           <div className={styles.nodatacontainer}>
