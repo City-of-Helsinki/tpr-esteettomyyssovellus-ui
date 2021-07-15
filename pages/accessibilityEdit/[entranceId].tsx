@@ -66,6 +66,7 @@ const AccessibilityEdit = ({
 
   // let curFinishedBlocks = useAppSelector((state) => state.formReducer.finishedBlocks);
   let nextBlock = 0;
+  let lastBlockNumber = "";
   let visibleBlocks =
     QuestionBlocksData && QuestionsData && QuestionChoicesData
       ? QuestionBlocksData.map((block: QuestionBlockProps) => {
@@ -103,6 +104,13 @@ const AccessibilityEdit = ({
             : null;
           // console.log(blockQuestions);
           // console.log(block);
+          if (
+            isVisible &&
+            blockQuestions &&
+            answerChoices &&
+            block.question_block_code != undefined
+          )
+            lastBlockNumber = block.question_block_code;
           {
             return isVisible && blockQuestions && answerChoices ? (
               <HeadlineQuestionContainer
@@ -124,14 +132,17 @@ const AccessibilityEdit = ({
         })
       : null;
 
-  const treeItems = ["PH: Päiväkoti apila", "Esteettömyystiedot"];
   if (isContinueClicked) {
     visibleBlocks?.push(
       <HeadlineQuestionContainer text={"PH: Yhteistiedot"} initOpen={false}>
-        <ContactInformationQuestionContainer />{" "}
+        <ContactInformationQuestionContainer
+          blockNumber={Number(lastBlockNumber) + 1}
+        />{" "}
       </HeadlineQuestionContainer>
     );
   }
+
+  const treeItems = ["PH: Päiväkoti apila", "Esteettömyystiedot"];
 
   return (
     <Layout>

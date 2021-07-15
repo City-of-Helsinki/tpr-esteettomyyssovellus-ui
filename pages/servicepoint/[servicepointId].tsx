@@ -17,7 +17,9 @@ import PathTreeComponent from "../../components/PathTreeComponent";
 import { useAppDispatch } from "../../state/hooks";
 import {
   setServicepointId,
-  setEntranceId
+  setEntranceId,
+  setPhoneNumber,
+  setEmail
 } from "../../state/reducers/formSlice";
 
 export const getFinnishDate = (jsonTimeStamp: Date) => {
@@ -61,6 +63,15 @@ const Servicepoint = ({
   const hasData =
     Object.keys(entranceData).length !== 0 ||
     Object.keys(servicepointData).length !== 0;
+
+  if (hasData) {
+    if (servicepointData["accessibility_phone"] != undefined) {
+      dispatch(setPhoneNumber(servicepointData["accessibility_phone"]));
+    }
+    if (servicepointData["accessibility_email"] != undefined) {
+      dispatch(setEmail(servicepointData["accessibility_email"]));
+    }
+  }
 
   return (
     <Layout>

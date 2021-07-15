@@ -91,7 +91,6 @@ export interface QuestionsListProps {
   additionalInfoVisible: boolean;
   questions?: QuestionProps[] | null;
   answers?: QuestionChoicesProps[] | null;
-  isContactQuestionList?: boolean;
 }
 
 export interface QuestionAdditionalInfoCtrlButtonProps {
@@ -261,4 +260,8 @@ export interface QuestionAdditionalInfoProps {
   canAddLocation?: boolean;
   canAddPhotoMaxCount?: number;
   canAddComment?: boolean;
+}
+
+export interface ContactInformationProps {
+  blockNumber?: number;
 }

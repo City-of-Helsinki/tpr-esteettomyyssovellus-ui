@@ -129,7 +129,6 @@ const QuestionBlock = ({
         additionalInfoVisible={showAdditionalInfo}
         questions={filteredQuestions}
         answers={answers}
-        isContactQuestionList={false}
       />
       {hasInfoAndButtons || !showContinue ? null : (
         <div className={styles.continueButton}>
