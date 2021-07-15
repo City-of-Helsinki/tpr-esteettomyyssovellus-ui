@@ -12,33 +12,32 @@ const ContactInformationQuestionContainer = ({
   const i18n = useI18n();
   const contactQuestions = [
     {
-      placeholder: "PH: Esim. vahtimestari tai Etunimi Sukunimi",
+      placeholder: i18n.t("ContactInformation.personPlaceholder"),
       question_block_id: blockNumber,
       question_code: blockNumber + ".1",
       question_id: -1,
       question_level: 1,
-      text: "PH: Yhteishenkilö"
+      text: i18n.t("ContactInformation.contactPerson")
     },
     {
-      placeholder: "Esim. +358 50 123 4567",
+      placeholder: i18n.t("ContactInformation.phonePlaceholder"),
       question_block_id: blockNumber,
       question_code: blockNumber + ".2",
       question_id: -2,
       question_level: 1,
-      text: "PH: Puhelinnumero"
+      text: i18n.t("ContactInformation.phoneNumber")
     },
     {
-      placeholder: "Esim. osoite@maili.fi",
+      placeholder: i18n.t("ContactInformation.emailPlaceholder"),
       question_block_id: blockNumber,
       question_code: blockNumber + ".3",
       question_id: -3,
       question_level: 1,
-      text: "PH: Sähköposti"
+      text: i18n.t("ContactInformation.email")
     }
   ];
 
-  const desc =
-    "PH: Täytä tähän yhteistiedot toimipisteen esteettömyystietojen lisätietojen kysymystä varten.";
+  const desc = i18n.t("ContactInformation.contactInformationText");
   return (
     <>
       <div className={styles.mainInfo}>

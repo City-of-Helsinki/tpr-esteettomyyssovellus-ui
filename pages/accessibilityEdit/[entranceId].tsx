@@ -134,7 +134,10 @@ const AccessibilityEdit = ({
 
   if (isContinueClicked) {
     visibleBlocks?.push(
-      <HeadlineQuestionContainer text={"PH: Yhteistiedot"} initOpen={false}>
+      <HeadlineQuestionContainer
+        text={i18n.t("ContactInformation.contactInformation")}
+        initOpen={false}
+      >
         <ContactInformationQuestionContainer
           blockNumber={Number(lastBlockNumber) + 1}
         />{" "}

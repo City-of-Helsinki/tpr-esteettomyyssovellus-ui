@@ -18,7 +18,8 @@ const i18nLoader = async (
       additionalInfo: lngDict.additionalInfo,
       questionFormControlButtons: lngDict.questionFormControlButtons,
       accessibilityForm: lngDict.accessibilityForm,
-      QuestionFormImportExistingData: lngDict.QuestionFormImportExistingData
+      QuestionFormImportExistingData: lngDict.QuestionFormImportExistingData,
+      ContactInformation: lngDict.ContactInformation
     }
   };
 };

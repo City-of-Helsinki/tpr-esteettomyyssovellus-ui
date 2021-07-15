@@ -17,8 +17,7 @@ import { useAppSelector } from "../state/hooks";
 const QuestionsList = ({
   additionalInfoVisible,
   questions,
-  answers,
-  isContactQuestionList
+  answers
 }: QuestionsListProps): JSX.Element => {
   let dataComponent: JSX.Element;
   return (
