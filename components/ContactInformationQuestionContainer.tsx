@@ -3,13 +3,15 @@ import styles from "./ContactInformationQuestionContainer.module.scss";
 import { useI18n } from "next-localization";
 import QuestionContainer from "./QuestionContainer";
 import { TextInput } from "hds-react";
-import { useAppSelector } from "../state/hooks";
+import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { ContactInformationProps } from "../types/general";
+import { setEmail, setPhoneNumber } from "../state/reducers/formSlice";
 
 const ContactInformationQuestionContainer = ({
   blockNumber
 }: ContactInformationProps): JSX.Element => {
   const i18n = useI18n();
+  const dispatch = useAppDispatch();
   const contactQuestions = [
     {
       placeholder: i18n.t("ContactInformation.personPlaceholder"),
@@ -37,11 +39,24 @@ const ContactInformationQuestionContainer = ({
     }
   ];
 
-  const desc = i18n.t("ContactInformation.contactInformationText");
+  const handleChange = (event: any) => {
+    switch (event.target.id) {
+      case "-1":
+        // TODO: update contact person
+        break;
+      case "-2":
+        dispatch(setPhoneNumber(event.target.value));
+        break;
+      case "-3":
+        dispatch(setEmail(event.target.value));
+        break;
+    }
+  };
+
   return (
     <>
       <div className={styles.mainInfo}>
-        <p>{desc ?? null}</p>
+        <p>{i18n.t("ContactInformation.contactInformationText")}</p>
         <div className={styles.infoContainer}></div>
       </div>
       <div className={styles.importAddinfoContainer}>
@@ -57,6 +72,9 @@ const ContactInformationQuestionContainer = ({
         let value = "";
         const backgroundColor: string = ind % 2 === 0 ? "#f2f2fc" : "#ffffff";
         switch (question.question_id) {
+          case -1:
+            // TODO: Handle contact person
+            break;
           case -2:
             value = phoneNumber;
             break;
@@ -77,7 +95,8 @@ const ContactInformationQuestionContainer = ({
               className={styles.textInput}
               id={question.question_id.toString()}
               placeholder={question.placeholder}
-              value={value}
+              onChange={handleChange}
+              value={value ? value : undefined}
             />
           </QuestionContainer>
         );

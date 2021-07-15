@@ -247,7 +247,6 @@ export const getServerSideProps: GetServerSideProps = async ({
       QuestionBlocksData = await QuestionBlocksResp.json();
       QuestionAnswerData = await QuestionAnswersResp.json();
       ServicepointData = await ServicepointResp.json();
-      console.log(ServicepointData);
     } catch (e) {
       QuestionsData = {};
       QuestionChoicesData = {};
