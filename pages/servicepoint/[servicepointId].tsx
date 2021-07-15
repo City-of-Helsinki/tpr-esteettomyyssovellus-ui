@@ -141,31 +141,33 @@ export const getServerSideProps: GetServerSideProps = async ({
 
   // Try except to stop software crashes when developing without backend running
   // TODO: Make this more reliable and change URLs and add to constants before production
+  let accessibilityData: any = {};
+  let entranceData;
+  let servicepointData;
   if (params != undefined) {
     try {
-      const res1 = await fetch(
+      const ServicepointResp = await fetch(
         `http://0.0.0.0:8000/api/ArServicepoints/${params.servicepointId}/?format=json`
       );
-      var servicepointData = await res1.json();
+      servicepointData = await ServicepointResp.json();
 
-      const res = await fetch(
+      const EntranceResp = await fetch(
         `http://0.0.0.0:8000/api/ArEntrances/?servicepoint=${servicepointData.servicepoint_id}&format=json`
       );
-      var entranceData = await res.json();
-      var i = 0;
-      var j = 1;
-      var accessibilityData: any = {};
+      entranceData = await EntranceResp.json();
+      let i = 0;
+      let j = 1;
 
       // Use while, because map function does not work with await
       while (i < entranceData.results.length) {
-        const res2 = await fetch(
+        const SentenceResp = await fetch(
           `http://0.0.0.0:8000/api/ArXStoredSentenceLangs/?entrance_id=${entranceData.results[i].entrance_id}&format=json`
         );
-        const data2 = await res2.json();
+        const sentenceData = await SentenceResp.json();
         if (entranceData.results[i].is_main_entrance == "Y") {
-          accessibilityData["main"] = data2;
+          accessibilityData["main"] = sentenceData;
         } else {
-          accessibilityData["side" + j] = data2;
+          accessibilityData["side" + j] = sentenceData;
           j++;
         }
         i++;

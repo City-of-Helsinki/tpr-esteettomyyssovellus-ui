@@ -27,7 +27,6 @@ const QuestionDropdown = ({
   const handleChange = (selected: Dictionary<string>) => {
     const answerString = selected["value"];
     const questionNumString = questionNumber;
-    console.log(selected);
     if (answerString != undefined && questionNumber != undefined) {
       options.map((element: Dictionary<string>) => {
         element["value"] != undefined

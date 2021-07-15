@@ -18,10 +18,16 @@ interface HeaderProps {
 
 // NOTE: The HDS Navigation component does not currently work for mobile views when server-side rendering
 // A workaround for this is to only use the Navigation component on the client-side
-// @ts-ignore: A dynamic import must be used to force client-side rendering regardless of the typescript errors
-const DynamicNavigation = dynamic(() => import("hds-react").then((hds) => hds.Navigation), { ssr: false });
+const DynamicNavigation = dynamic(
+  // @ts-ignore: A dynamic import must be used to force client-side rendering regardless of the typescript errors
+  () => import("hds-react").then((hds) => hds.Navigation),
+  { ssr: false }
+);
 
-const Header = ({ includeLanguageSelector, children }: HeaderProps): ReactElement => {
+const Header = ({
+  includeLanguageSelector,
+  children
+}: HeaderProps): ReactElement => {
   const i18n = useI18n();
   const router = useRouter();
 
@@ -38,7 +44,10 @@ const Header = ({ includeLanguageSelector, children }: HeaderProps): ReactElemen
       location: { pathname }
     } = window;
 
-    window.open(`${getOrigin(router)}/helauth/login/?next=${pathname}`, "_self");
+    window.open(
+      `${getOrigin(router)}/helauth/login/?next=${pathname}`,
+      "_self"
+    );
   };
 
   const signOut = async () => {
@@ -48,7 +57,7 @@ const Header = ({ includeLanguageSelector, children }: HeaderProps): ReactElemen
   };
 
   const handleKeyPress = (e: Event, id: string) => {
-    var evt = e as KeyboardEvent;
+    let evt = e as KeyboardEvent;
     if (evt.code == "Enter") {
       document.getElementById(id)?.click();
     }
@@ -115,7 +124,9 @@ const Header = ({ includeLanguageSelector, children }: HeaderProps): ReactElemen
             <Navigation.User
               label={i18n.t("common.header.login")}
               authenticated={true} /* Change to: currentUser?.authenticated} */
-              userName={"Placeholder"} /* Change to: currentUser?.first_name || currentUser?.email} */
+              userName={
+                "Placeholder"
+              } /* Change to: currentUser?.first_name || currentUser?.email} */
               onSignIn={signIn}
             >
               <Navigation.Item
@@ -123,7 +134,9 @@ const Header = ({ includeLanguageSelector, children }: HeaderProps): ReactElemen
                 href="#"
                 variant="supplementary"
                 className={includeLanguageSelector ? "" : styles.logout}
-                icon={!includeLanguageSelector ? "" : <IconSignout aria-hidden />}
+                icon={
+                  !includeLanguageSelector ? "" : <IconSignout aria-hidden />
+                }
                 label={i18n.t("common.header.logout")}
                 onClick={signOut}
               />
@@ -131,7 +144,9 @@ const Header = ({ includeLanguageSelector, children }: HeaderProps): ReactElemen
           }
 
           {includeLanguageSelector && (
-            <Navigation.LanguageSelector label={(router.locale || defaultLocale).toUpperCase()}>
+            <Navigation.LanguageSelector
+              label={(router.locale || defaultLocale).toUpperCase()}
+            >
               <Navigation.Item
                 role="button"
                 id="fi"
@@ -166,7 +181,9 @@ const Header = ({ includeLanguageSelector, children }: HeaderProps): ReactElemen
                 role="button"
                 id="fim"
                 tabIndex={0}
-                className={router.locale == "fi" ? styles.chosen : styles.unchosen}
+                className={
+                  router.locale == "fi" ? styles.chosen : styles.unchosen
+                }
                 label="Suomeksi (FI)"
                 onKeyPress={(e: any) => handleKeyPress(e, "fim")}
                 onClick={() => changeLanguage("fi")}
@@ -175,7 +192,9 @@ const Header = ({ includeLanguageSelector, children }: HeaderProps): ReactElemen
                 role="button"
                 id="svm"
                 tabIndex={0}
-                className={router.locale == "sv" ? styles.chosen : styles.unchosen}
+                className={
+                  router.locale == "sv" ? styles.chosen : styles.unchosen
+                }
                 label="På svenska (SV)"
                 onKeyPress={(e: any) => handleKeyPress(e, "svm")}
                 onClick={() => changeLanguage("sv")}
@@ -184,7 +203,9 @@ const Header = ({ includeLanguageSelector, children }: HeaderProps): ReactElemen
                 role="button"
                 id="enm"
                 tabIndex={0}
-                className={router.locale == "en" ? styles.chosen : styles.unchosen}
+                className={
+                  router.locale == "en" ? styles.chosen : styles.unchosen
+                }
                 label="In English (EN)"
                 onKeyPress={(e: any) => handleKeyPress(e, "enm")}
                 onClick={() => changeLanguage("en")}

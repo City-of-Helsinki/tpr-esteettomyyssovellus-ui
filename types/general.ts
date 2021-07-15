@@ -178,7 +178,7 @@ export interface MainEntranceFormProps {
   QuestionsData?: QuestionProps[];
   QuestionChoicesData?: QuestionChoicesProps[];
   QuestionBlocksData?: QuestionBlockProps[];
-  ServicePointData?: any;
+  ServicepointData?: any;
   QuestionAnswerData?: any;
 }
 
