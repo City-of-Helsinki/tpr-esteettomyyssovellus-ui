@@ -69,6 +69,18 @@ const AccessibilityEdit = ({
     });
   }
 
+  if (typeof window !== "undefined") {
+    window.onbeforeunload = (event) => {
+      const e = event || window.event;
+      // Cancel the event
+      e.preventDefault();
+      if (e) {
+        e.returnValue = ""; // Legacy method for cross browser support
+      }
+      return ""; // Legacy method for cross browser support
+    };
+  }
+
   let isContinueClicked = useAppSelector(
     (state) => state.formReducer.isContinueClicked
   );
@@ -115,8 +127,7 @@ const AccessibilityEdit = ({
                   choice.language_id == curLocaleId
               )
             : null;
-          // console.log(blockQuestions);
-          // console.log(block);
+
           if (
             isVisible &&
             blockQuestions &&

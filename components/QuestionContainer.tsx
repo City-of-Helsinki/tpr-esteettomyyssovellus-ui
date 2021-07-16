@@ -23,7 +23,7 @@ const QuestionContainer = ({
 }: QuestionContainerProps): JSX.Element => {
   const i18n = useI18n();
   const questionDepth = (questionNumber.toString().split(".") || []).length;
-  const paddingLeft: string = (questionDepth - 2) * 30 + "px";
+  const paddingLeft: string = (questionDepth - 2) * 5 + "rem";
   const photoTexts = photoText?.split("<BR>");
   const questionInfos = questionInfo?.split("<BR><BR>");
   return (
