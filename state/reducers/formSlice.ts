@@ -10,6 +10,7 @@ interface formState {
   answers: { [key: number]: number };
   isContinueClicked: boolean;
   finishedBlocks: number[];
+  contacts: { [key: string]: string };
 }
 
 const initialState: formState = {
@@ -18,7 +19,8 @@ const initialState: formState = {
   answeredChoices: [],
   answers: {},
   isContinueClicked: false,
-  finishedBlocks: []
+  finishedBlocks: [],
+  contacts: {}
 };
 
 export const formSlice = createSlice({
@@ -95,6 +97,18 @@ export const formSlice = createSlice({
             [])
         ]
       };
+    },
+    setPhoneNumber: (state, action: PayloadAction<string>) => {
+      return {
+        ...state,
+        contacts: { ...state.contacts, ["phoneNumber"]: action.payload }
+      };
+    },
+    setEmail: (state, action: PayloadAction<string>) => {
+      return {
+        ...state,
+        contacts: { ...state.contacts, ["email"]: action.payload }
+      };
     }
   }
 });
@@ -108,7 +122,9 @@ export const {
   setContinue,
   unsetContinue,
   setFinished,
-  unsetFinished
+  unsetFinished,
+  setPhoneNumber,
+  setEmail
 } = formSlice.actions;
 
 export default formSlice.reducer;

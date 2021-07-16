@@ -51,9 +51,9 @@ const QuestionBlock = ({
       ? questions.filter(
           (question) =>
             question.visible_if_question_choice == null ||
-            // @ts-ignore
             question.visible_if_question_choice
               ?.split("+")
+              // @ts-ignore: TODO:
               .some((elem) => curAnsweredChoices.includes(Number(elem)))
         )
       : null;

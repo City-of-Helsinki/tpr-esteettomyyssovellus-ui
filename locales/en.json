@@ -118,5 +118,15 @@
     "bringInformation": "Import information",
     "addAdditionalInfo": "Add picture, location or additional text",
     "hideAddButtons": "Hide add info -buttons"
+  },
+  "ContactInformation": {
+    "contactInformationText": "PH: Fill in contact information....",
+    "contactInformation": "Contact information",
+    "contactPerson": "Contact person",
+    "phoneNumber": "Phone number",
+    "email": "Email address",
+    "personPlaceholder": "Eg. janitor or Firstname Lastname",
+    "phonePlaceholder": "Eg. +358 50 123 4567",
+    "emailPlaceholder": "Eg. address@mail.com"
   }
 }

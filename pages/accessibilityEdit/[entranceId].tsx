@@ -21,13 +21,21 @@ import HeadlineQuestionContainer from "../../components/HeadlineQuestionContaine
 import { LANGUAGE_LOCALES } from "../../types/constants";
 import QuestionFormCtrlButtons from "../../components/QuestionFormCtrlButtons";
 import PathTreeComponent from "../../components/PathTreeComponent";
-import { setAnswer, setAnsweredChoice } from "../../state/reducers/formSlice";
+import {
+  setAnswer,
+  setAnsweredChoice,
+  setEmail,
+  setPhoneNumber,
+  setServicepointId
+} from "../../state/reducers/formSlice";
+import ContactInformationQuestionContainer from "../../components/ContactInformationQuestionContainer";
 
 const AccessibilityEdit = ({
   QuestionsData,
   QuestionChoicesData,
   QuestionBlocksData,
-  QuestionAnswerData
+  QuestionAnswerData,
+  ServicepointData
 }: MainEntranceFormProps): ReactElement => {
   const i18n = useI18n();
   const curLocale: string = i18n.locale();
@@ -38,6 +46,12 @@ const AccessibilityEdit = ({
   let curAnsweredChoices = useAppSelector(
     (state) => state.formReducer.answeredChoices
   );
+
+  if (ServicepointData != undefined) {
+    dispatch(setPhoneNumber(ServicepointData["accessibility_phone"]));
+    dispatch(setEmail(ServicepointData["accessibility_email"]));
+    dispatch(setServicepointId(ServicepointData["servicepoint_id"]));
+  }
 
   if (QuestionAnswerData) {
     let curAnswers = useAppSelector((state) => state.formReducer.answers);
@@ -65,6 +79,7 @@ const AccessibilityEdit = ({
 
   // let curFinishedBlocks = useAppSelector((state) => state.formReducer.finishedBlocks);
   let nextBlock = 0;
+  let lastBlockNumber = "";
   let visibleBlocks =
     QuestionBlocksData && QuestionsData && QuestionChoicesData
       ? QuestionBlocksData.map((block: QuestionBlockProps) => {
@@ -100,6 +115,15 @@ const AccessibilityEdit = ({
                   choice.language_id == curLocaleId
               )
             : null;
+          // console.log(blockQuestions);
+          // console.log(block);
+          if (
+            isVisible &&
+            blockQuestions &&
+            answerChoices &&
+            block.question_block_code != undefined
+          )
+            lastBlockNumber = block.question_block_code;
           {
             return isVisible && blockQuestions && answerChoices ? (
               <HeadlineQuestionContainer
@@ -120,6 +144,20 @@ const AccessibilityEdit = ({
           }
         })
       : null;
+
+  if (isContinueClicked) {
+    visibleBlocks?.push(
+      <HeadlineQuestionContainer
+        text={i18n.t("ContactInformation.contactInformation")}
+        initOpen={false}
+      >
+        <ContactInformationQuestionContainer
+          blockNumber={Number(lastBlockNumber) + 1}
+        />{" "}
+      </HeadlineQuestionContainer>
+    );
+  }
+
   const treeItems = ["PH: Päiväkoti apila", "Esteettömyystiedot"];
 
   return (
@@ -180,31 +218,42 @@ export const getServerSideProps: GetServerSideProps = async ({
   // if (user && user.authenticated) {
   //   initialReduxState.general.user = user;
   // }
-
   let QuestionsData;
   let QuestionChoicesData;
   let QuestionBlocksData;
   let QuestionAnswerData;
+  let EntranceData;
+  let ServicepointData;
   if (params != undefined) {
     try {
+      const entrance_id = params.entranceId;
       // todo: put urls in types/constants and get form_id from props
       const QuestionsResp = await fetch(API_FETCH_QUESTION_URL);
       const QuestionChoicesResp = await fetch(API_FETCH_QUESTIONCHOICES);
       const QuestionBlocksResp = await fetch(API_FETCH_QUESTIONBLOCK_URL);
-      const entrance_id = params.entranceId;
       const QuestionAnswersResp = await fetch(
         `http://localhost:8000/api/ArBackendEntranceAnswer/?entrance_id=${entrance_id}&format=json`
       );
-
+      const EntranceResp = await fetch(
+        `http://localhost:8000/api/ArEntrances/${entrance_id}/?format=json`
+      );
+      EntranceData = await EntranceResp.json();
+      const servicepoint_id = EntranceData["servicepoint"];
+      const ServicepointResp = await fetch(
+        `http://localhost:8000/api/ArServicepoints/${servicepoint_id}/?format=json`
+      );
       QuestionsData = await QuestionsResp.json();
       QuestionChoicesData = await QuestionChoicesResp.json();
       QuestionBlocksData = await QuestionBlocksResp.json();
       QuestionAnswerData = await QuestionAnswersResp.json();
+      ServicepointData = await ServicepointResp.json();
     } catch (e) {
       QuestionsData = {};
       QuestionChoicesData = {};
       QuestionBlocksData = {};
       QuestionAnswerData = {};
+      EntranceData = {};
+      ServicepointData = {};
     }
   }
   return {
@@ -214,6 +263,7 @@ export const getServerSideProps: GetServerSideProps = async ({
       QuestionChoicesData: QuestionChoicesData,
       QuestionBlocksData: QuestionBlocksData,
       QuestionAnswerData: QuestionAnswerData,
+      ServicepointData: ServicepointData,
       lngDict
     }
   };

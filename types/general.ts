@@ -178,7 +178,7 @@ export interface MainEntranceFormProps {
   QuestionsData?: QuestionProps[];
   QuestionChoicesData?: QuestionChoicesProps[];
   QuestionBlocksData?: QuestionBlockProps[];
-  ServicePointData?: any;
+  ServicepointData?: any;
   QuestionAnswerData?: any;
 }
 
@@ -190,8 +190,8 @@ export interface QuestionProps {
   description?: string;
   form_id?: number;
   language_id: number;
-  photo_text?: string;
-  photo_url?: string;
+  photo_text?: string | null;
+  photo_url?: string | null;
   question_block_id?: number;
   question_code?: string;
   question_id?: number;
@@ -260,4 +260,8 @@ export interface QuestionAdditionalInfoProps {
   canAddLocation?: boolean;
   canAddPhotoMaxCount?: number;
   canAddComment?: boolean;
+}
+
+export interface ContactInformationProps {
+  blockNumber?: number;
 }

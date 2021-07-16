@@ -27,7 +27,6 @@ const QuestionDropdown = ({
   const handleChange = (selected: Dictionary<string>) => {
     const answerString = selected["value"];
     const questionNumString = questionNumber;
-    console.log(selected);
     if (answerString != undefined && questionNumber != undefined) {
       options.map((element: Dictionary<string>) => {
         element["value"] != undefined
@@ -42,18 +41,18 @@ const QuestionDropdown = ({
   };
 
   const currentValues = useAppSelector((state) => state.formReducer);
-  const x =
+  const value =
     questionNumber != undefined &&
     currentValues.answers[questionNumber] != undefined
       ? currentValues.answers[questionNumber]
       : "";
   let currentLabel = options.find((element) => {
-    return element["value"] === x;
+    return element["value"] === value;
   });
 
   const currentValue: Dictionary<string> = {
     label: currentLabel != undefined ? currentLabel["label"] : "",
-    value: x.toString()
+    value: value.toString()
   };
 
   return (

@@ -118,5 +118,15 @@
     "bringInformation": "Tuo tiedot",
     "addAdditionalInfo": "Lisää kuva, sijainti tai lisäteksti",
     "hideAddButtons": "Piilota lisää -painikkeet"
+  },
+  "ContactInformation": {
+    "contactInformationText": "Täytä tähän yhteistiedot toimipisteen esteettömyystietojen lisätietojen kysymystä varten.",
+    "contactInformation": "Yhteystiedot",
+    "contactPerson": "Yhteyshenkilö",
+    "phoneNumber": "Puhelinnumero",
+    "email": "Sähköpostiosoite",
+    "personPlaceholder": "Esim. vahtimestari tai Etunimi Sukunimi",
+    "phonePlaceholder": "Esim. +358 50 123 4567",
+    "emailPlaceholder": "Esim. osoite@maili.fi"
   }
 }

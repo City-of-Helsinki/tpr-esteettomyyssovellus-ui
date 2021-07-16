@@ -9,6 +9,8 @@ import {
 } from "../types/general";
 import { TextInput } from "hds-react";
 import { Dictionary } from "@reduxjs/toolkit";
+import styles from "./QuestionList.module.scss";
+import { useAppSelector } from "../state/hooks";
 
 // TODO: when data, get questions data as props and map to return
 // used to list multiple questions: <QContainer><QElement /></QC>
@@ -17,32 +19,6 @@ const QuestionsList = ({
   questions,
   answers
 }: QuestionsListProps): JSX.Element => {
-  // remove mock data after real data from fecth
-
-  // const mockDataList = [
-  //   {
-  //     type: "dropdown",
-  //     qnumber: 1.1,
-  //     qText: "PH: Onko portaat",
-  //     qInfo: "Tässä on ohjeet",
-  //     data: [{ label: "100" }, { label: "200" }],
-  //   },
-  //   {
-  //     type: "dropdown",
-  //     qnumber: 1.2,
-  //     qText: "PH: Onko ovia",
-  //     qInfo: "Tässä on ohjeet 2",
-  //     data: [{ label: "900" }, { label: "901" }],
-  //   },
-  //   {
-  //     type: "radiobutton",
-  //     qnumber: 1.3,
-  //     qText: "PH: Onko ramppi",
-  //     qInfo: "",
-  //     data: [{}],
-  //   },
-  // ];
-
   let dataComponent: JSX.Element;
   return (
     <>
@@ -57,6 +33,7 @@ const QuestionsList = ({
           });
 
         const backgroundColor: string = ind % 2 === 0 ? "#f2f2fc" : "#ffffff";
+
         return (
           <QuestionContainer
             key={question.question_id}
@@ -101,10 +78,6 @@ const QuestionsList = ({
           </QuestionContainer>
         );
       })}
-      {/* for testing textinput component */}
-      {/* <QuestionContainer key={1.4} questionNumber={1.4} questionText="PH: Yhteyshenkilö" backgroundColor="white" hasAdditionalInfo={false}>
-        <TextInput id="1" placeholder="esim etunimi sukunimi" />
-      </QuestionContainer> */}
     </>
   );
 };

@@ -11,12 +11,16 @@
   display: flex;
   flex-direction: column;
   .infoPicture {
-    height: 20rem;
-    width: 25rem;
+    height: 1rem;
+    width: 1rem;
   }
 }
 .importAddinfoContainer {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
+}
+
+.textInput {
+  width: 30rem;
 }
