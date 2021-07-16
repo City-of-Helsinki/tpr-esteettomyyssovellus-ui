@@ -5,7 +5,7 @@ import QuestionContainer from "./QuestionContainer";
 import {
   QuestionChoicesProps,
   QuestionDataProps,
-  QuestionsListProps
+  QuestionsListProps,
 } from "../types/general";
 import { TextInput } from "hds-react";
 import { Dictionary } from "@reduxjs/toolkit";
@@ -15,34 +15,8 @@ import { Dictionary } from "@reduxjs/toolkit";
 const QuestionsList = ({
   additionalInfoVisible,
   questions,
-  answers
+  answers,
 }: QuestionsListProps): JSX.Element => {
-  // remove mock data after real data from fecth
-
-  // const mockDataList = [
-  //   {
-  //     type: "dropdown",
-  //     qnumber: 1.1,
-  //     qText: "PH: Onko portaat",
-  //     qInfo: "Tässä on ohjeet",
-  //     data: [{ label: "100" }, { label: "200" }],
-  //   },
-  //   {
-  //     type: "dropdown",
-  //     qnumber: 1.2,
-  //     qText: "PH: Onko ovia",
-  //     qInfo: "Tässä on ohjeet 2",
-  //     data: [{ label: "900" }, { label: "901" }],
-  //   },
-  //   {
-  //     type: "radiobutton",
-  //     qnumber: 1.3,
-  //     qText: "PH: Onko ramppi",
-  //     qInfo: "",
-  //     data: [{}],
-  //   },
-  // ];
-
   let dataComponent: JSX.Element;
   return (
     <>
@@ -52,7 +26,7 @@ const QuestionsList = ({
           .map((choice) => {
             return {
               label: choice.text,
-              value: choice.question_choice_id
+              value: choice.question_choice_id,
             };
           });
 
@@ -60,6 +34,7 @@ const QuestionsList = ({
         return (
           <QuestionContainer
             key={question.question_id}
+            questionId={question.question_id}
             questionNumber={question.question_code}
             questionText={question.text}
             questionInfo={question.description ?? null}

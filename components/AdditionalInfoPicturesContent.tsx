@@ -1,21 +1,45 @@
 import React, { useEffect, useRef, useState } from "react";
-import { IconPlus, IconMinus, TextArea, TextInput, Checkbox, Tooltip, SelectionGroup } from "hds-react";
+import {
+  IconPlus,
+  IconMinus,
+  TextArea,
+  TextInput,
+  Checkbox,
+  Tooltip,
+  SelectionGroup,
+} from "hds-react";
 import { useI18n } from "next-localization";
 import styles from "./AdditionalInfoPicturesContent.module.scss";
 import QuestionButton from "./QuestionButton";
 import QuestionInfo from "./QuestionInfo";
-import { addPicture, removePicture, setAlt, setPictureSource } from "../state/reducers/additionalInfoSlice";
+import {
+  addPicture,
+  removePicture,
+  setAlt,
+  setPictureSource,
+} from "../state/reducers/additionalInfoSlice";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { AdditionalContentProps } from "../types/general";
 import { CREATIVECOMMONS_URL } from "../types/constants";
 
-const AdditionalInfoPicturesContent = ({ questionNumber, compId, onlyLink = false, onDelete }: AdditionalContentProps): JSX.Element => {
+const AdditionalInfoPicturesContent = ({
+  questionId,
+  compId,
+  onlyLink = false,
+  onDelete,
+  initValue,
+}: AdditionalContentProps): JSX.Element => {
   // also use filename for conditionally displaying buttons and alt-text & preview picture
   const dispatch = useAppDispatch();
 
+  // TODO: change this it breaks if prev values
   const currentId = compId;
-  const curAddInfo = useAppSelector((state) => state.additionalInfoReducer[questionNumber]);
-  const curImage = curAddInfo.pictures?.filter((pic) => pic.id === currentId)[0];
+  const curAddInfo = useAppSelector(
+    (state) => state.additionalInfoReducer[questionId]
+  );
+  const curImage = curAddInfo?.pictures?.filter(
+    (pic) => pic.id === currentId
+  )[0];
   const [linkText, setLinkText] = useState("");
 
   const hiddenFileInput = useRef<HTMLInputElement>(null);
@@ -36,7 +60,7 @@ const AdditionalInfoPicturesContent = ({ questionNumber, compId, onlyLink = fals
       const img = e.target.files[0];
       const imgBase64 = window.URL.createObjectURL(img);
       const payload = {
-        qNumber: questionNumber,
+        qNumber: questionId,
         id: currentId,
         name: img.name,
         base: imgBase64,
@@ -44,14 +68,14 @@ const AdditionalInfoPicturesContent = ({ questionNumber, compId, onlyLink = fals
         alt_fi: "",
         alt_sv: "",
         alt_en: "",
-        source: ""
+        source: "",
       };
       dispatch(addPicture(payload));
     } else {
       const isImage = await validateUrlIsImage(linkText);
       if (isImage) {
         const payload = {
-          qNumber: questionNumber,
+          qNumber: questionId,
           id: currentId,
           name: "",
           base: linkText,
@@ -59,7 +83,7 @@ const AdditionalInfoPicturesContent = ({ questionNumber, compId, onlyLink = fals
           alt_fi: "",
           alt_sv: "",
           alt_en: "",
-          source: ""
+          source: "",
         };
         dispatch(addPicture(payload));
       }
@@ -83,7 +107,7 @@ const AdditionalInfoPicturesContent = ({ questionNumber, compId, onlyLink = fals
 
   // remove image from state
   const handleRemoveImage = () => {
-    dispatch(removePicture({ questionNumber, currentId }));
+    dispatch(removePicture({ questionId, currentId }));
   };
 
   // on delete button clicked chain delete image from store and delete component cb
@@ -94,11 +118,15 @@ const AdditionalInfoPicturesContent = ({ questionNumber, compId, onlyLink = fals
 
   // only update state after 1 sec from prev KeyDown, set Alt text with correct lang
   let timer: NodeJS.Timeout;
-  const handleAddAlt = (e: React.KeyboardEvent<HTMLTextAreaElement>, language: string, compId: number) => {
+  const handleAddAlt = (
+    e: React.KeyboardEvent<HTMLTextAreaElement>,
+    language: string,
+    compId: number
+  ) => {
     const value: string = e.currentTarget.value;
     clearTimeout(timer);
     timer = setTimeout(() => {
-      dispatch(setAlt({ questionNumber, language, value, compId }));
+      dispatch(setAlt({ questionId, language, value, compId }));
     }, 500);
   };
 
@@ -111,11 +139,13 @@ const AdditionalInfoPicturesContent = ({ questionNumber, compId, onlyLink = fals
   //update source on state
   const onSourceChange = (e: any) => {
     const source = e.currentTarget.value;
-    dispatch(setPictureSource({ questionNumber, source, compId }));
+    dispatch(setPictureSource({ questionId, source, compId }));
   };
 
   const handleLinkText = (e: any) => {
-    e.currentTarget.value.length > 0 ? setLinkText(e.currentTarget.value) : null;
+    e.currentTarget.value.length > 0
+      ? setLinkText(e.currentTarget.value)
+      : null;
   };
 
   const addFromDeviceButton = !onlyLink ? (
@@ -123,11 +153,20 @@ const AdditionalInfoPicturesContent = ({ questionNumber, compId, onlyLink = fals
       {i18n.t("additionalInfo.chooseFromDevice")}
     </QuestionButton>
   ) : (
-    //todo: need to remove image first
-    <QuestionButton variant="secondary" onClickHandler={() => handleImageRemoveAndAdded()} disabled={linkText ? false : true}>
+    <QuestionButton
+      variant="secondary"
+      onClickHandler={() => handleImageRemoveAndAdded()}
+      disabled={linkText ? false : true}
+    >
       ph: vahvista
     </QuestionButton>
   );
+
+  useEffect(() => {
+    if (initValue) {
+      setTermsChecked(!termsChecked);
+    }
+  }, []);
 
   return (
     <div className={styles.maincontainer}>
@@ -135,29 +174,49 @@ const AdditionalInfoPicturesContent = ({ questionNumber, compId, onlyLink = fals
         <span className={styles.inputfield}>
           <TextInput
             id="{`chooseimg-${currentId}`}"
-            label={onlyLink ? i18n.t("additionalInfo.pictureInputLink") : i18n.t("additionalInfo.pictureInput")}
+            label={
+              onlyLink
+                ? i18n.t("additionalInfo.pictureInputLink")
+                : i18n.t("additionalInfo.pictureInput")
+            }
             placeholder={curImage?.name}
             disabled={onlyLink ? false : true}
             onChange={(e) => handleLinkText(e)}
+            defaultValue={initValue?.url ?? null}
           />
         </span>
 
         {curImage?.base && !onlyLink ? (
-          <QuestionButton variant="secondary" onClickHandler={handleAddImageToInput}>
+          <QuestionButton
+            variant="secondary"
+            onClickHandler={handleAddImageToInput}
+          >
             {i18n.t("additionalInfo.changePicture")}
           </QuestionButton>
         ) : (
           addFromDeviceButton
         )}
-        <QuestionButton variant="secondary" onClickHandler={() => handleOnDelete()}>
+        <QuestionButton
+          variant="secondary"
+          onClickHandler={() => handleOnDelete()}
+        >
           {i18n.t("additionalInfo.cancelPicture")}
         </QuestionButton>
-        {onlyLink ? null : <input type="file" className={styles.hidden} ref={hiddenFileInput} onChange={handleImageAdded}></input>}
+        {onlyLink ? null : (
+          <input
+            type="file"
+            className={styles.hidden}
+            ref={hiddenFileInput}
+            onChange={handleImageAdded}
+          ></input>
+        )}
       </div>
       {curImage?.base ? (
         <div className={styles.lowercontentcontainer}>
           <div className={styles.picrutepreviewcontainer}>
-            <div style={{ backgroundImage: `url(` + `${curImage?.base}` + `)` }} />
+            <div
+              style={{ backgroundImage: `url(` + `${curImage?.base}` + `)` }}
+            />
           </div>
           <div className={styles.altcontainer}>
             <TextArea
@@ -165,10 +224,15 @@ const AdditionalInfoPicturesContent = ({ questionNumber, compId, onlyLink = fals
               label={i18n.t("additionalInfo.pictureLabel")}
               helperText={i18n.t("additionalInfo.pictureHelperText")}
               required
-              tooltipButtonLabel={i18n.t("additionalInfo.generalTooptipButtonLabel")}
+              tooltipButtonLabel={i18n.t(
+                "additionalInfo.generalTooptipButtonLabel"
+              )}
               tooltipLabel={i18n.t("additionalInfo.generalTooptipLabel")}
               tooltipText={i18n.t("additionalInfo.altToolTipContent")}
-              onKeyUp={(e: React.KeyboardEvent<HTMLTextAreaElement>) => handleAddAlt(e, "alt_fi", compId)}
+              onKeyUp={(e: React.KeyboardEvent<HTMLTextAreaElement>) =>
+                handleAddAlt(e, "alt_fi", compId)
+              }
+              defaultValue={initValue?.alt_fi ?? null}
             />
             <div className={styles.altLabel}>
               <QuestionInfo
@@ -182,7 +246,10 @@ const AdditionalInfoPicturesContent = ({ questionNumber, compId, onlyLink = fals
                   id={`text-sv-${currentId}`}
                   label={i18n.t("additionalInfo.pictureLabelSwe")}
                   helperText={i18n.t("additionalInfo.pictureHelperTextSwe")}
-                  onKeyUp={(e: React.KeyboardEvent<HTMLTextAreaElement>) => handleAddAlt(e, "alt_sv", compId)}
+                  onKeyUp={(e: React.KeyboardEvent<HTMLTextAreaElement>) =>
+                    handleAddAlt(e, "alt_sv", compId)
+                  }
+                  defaultValue={initValue?.alt_sv ?? null}
                 />
               </QuestionInfo>
             </div>
@@ -198,17 +265,25 @@ const AdditionalInfoPicturesContent = ({ questionNumber, compId, onlyLink = fals
                   id={`text-eng-${currentId}`}
                   label={i18n.t("additionalInfo.pictureLabelEng")}
                   helperText={i18n.t("additionalInfo.pictureHelperTextEng")}
-                  onKeyUp={(e: React.KeyboardEvent<HTMLTextAreaElement>) => handleAddAlt(e, "alt_en", compId)}
+                  onKeyUp={(e: React.KeyboardEvent<HTMLTextAreaElement>) =>
+                    handleAddAlt(e, "alt_en", compId)
+                  }
+                  defaultValue={initValue?.alt_en ?? null}
                 />
               </QuestionInfo>
             </div>
           </div>
           <div className={styles.picturetermscontainer}>
-            <SelectionGroup label={i18n.t("additionalInfo.sharePictureLicenseLabel")}>
+            <SelectionGroup
+              label={i18n.t("additionalInfo.sharePictureLicenseLabel")}
+            >
               <Checkbox
                 id={`picture-license-${currentId}`}
-                label={`${i18n.t("additionalInfo.sharePictureLicenseText")} ${i18n.t("additionalInfo.sharePictureLicense")}}`}
+                label={`${i18n.t(
+                  "additionalInfo.sharePictureLicenseText"
+                )} ${i18n.t("additionalInfo.sharePictureLicense")}}`}
                 name="agreeToPictureTerms"
+                // defaultChecked={initValue?.id === compId ? true : termsChecked}
                 checked={termsChecked}
                 onChange={onCheckChange}
               />
@@ -224,6 +299,7 @@ const AdditionalInfoPicturesContent = ({ questionNumber, compId, onlyLink = fals
               label={i18n.t("additionalInfo.sourceTooltipMainLabel")}
               onChange={onSourceChange}
               required
+              defaultValue={initValue?.source ?? null}
             />
           </div>
         </div>

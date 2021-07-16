@@ -9,17 +9,19 @@ import styles from "./AdditionalInfoLocationContent.module.scss";
 import Map from "./common/Map";
 import QuestionRadioButtons from "./QuestionRadioButtons";
 
-const AdditionalInfoLocationContent = ({ questionNumber, onDelete }: AdditionalContentProps): JSX.Element => {
+const AdditionalInfoLocationContent = ({
+  questionId,
+  onDelete,
+}: AdditionalContentProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
   const locations = useAppSelector((state) => state.additionalInfoReducer);
   const handleUpdateLocation = (location: LatLngExpression): void => {
-    // const qNumber = getQNumber()
     dispatch(
       addLocation({
-        questionNumber: questionNumber,
+        questionId: questionId,
         description: "test",
-        coordinates: location
+        coordinates: location,
       })
     );
   };
@@ -34,7 +36,12 @@ const AdditionalInfoLocationContent = ({ questionNumber, onDelete }: AdditionalC
           />
         </span>
         <span>
-          <TextInput id={"1"} label={i18n.t("common.generalExplanation")} placeholder="ph syötä insert tekstiä" required />
+          <TextInput
+            id={"1"}
+            label={i18n.t("common.generalExplanation")}
+            placeholder="ph syötä insert tekstiä"
+            required
+          />
         </span>
       </div>
       <div className={styles.mapcontainer}>
