@@ -17,6 +17,7 @@ export interface GeneralState {
 }
 
 export interface QuestionContainerProps {
+  questionId: number;
   questionNumber: number;
   questionText: string;
   questionInfo?: string | undefined;
@@ -125,9 +126,10 @@ export interface MapProps {
 // general for qnumber
 export interface AdditionalContentProps {
   onlyLink?: boolean;
-  questionNumber: string;
+  questionId: number;
   compId: number;
   onDelete?: (id?: number, type?: string) => void;
+  initValue?: any;
 }
 
 export interface Location {
@@ -148,7 +150,7 @@ export interface AdditionalComponentProps {
 }
 
 export interface PictureProps {
-  qNumber: string;
+  qNumber: number;
   id: number;
   base?: string;
   url?: string;
@@ -160,6 +162,7 @@ export interface PictureProps {
 }
 
 export interface AdditionalInfoProps {
+  curEditingInitialState: object;
   [key: string]: AdditionalInfos;
 }
 
@@ -257,7 +260,17 @@ export interface PathTreeProps {
 }
 
 export interface QuestionAdditionalInfoProps {
+  questionId: number;
   canAddLocation?: boolean;
   canAddPhotoMaxCount?: number;
   canAddComment?: boolean;
+}
+
+export interface AdditionalInfoPageProps {
+  questionId: number;
+  questionData?: QuestionProps[];
+}
+
+export interface AdditionalInfoCtrlButtonsProps {
+  questionId: number;
 }
