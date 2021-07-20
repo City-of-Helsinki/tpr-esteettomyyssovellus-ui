@@ -9,38 +9,51 @@ import { LatLngExpression } from "leaflet";
 
 // TODO: wait for customer / designs then complete this state
 // notice: many [questionNumber] OR [qNumber] is actually questionId
-const initialState = {
-  curEditingInitialState: null,
-  questionNumbers: {
-    locations: [
-      {
-        description: "",
-        coordinates: null,
-      },
-    ],
-    comments: {
-      comment_fi: "",
-      comment_en: "",
-      comment_sv: "",
-    },
-    pictures: [
-      {
-        id: 0,
-        base: "",
-        url: "",
-        alt_fi: "",
-        alt_en: "",
-        alt_sv: "",
-      },
-    ],
-    components: [],
-  },
-};
+// const initialState = {
+//   initAddInfoFromDb: false,
+//   curEditingInitialState: null,
+//   questionNumbers: {
+//     locations: [
+//       {
+//         description: "",
+//         coordinates: null,
+//       },
+//     ],
+//     comments: {
+//       comment_fi: "",
+//       comment_en: "",
+//       comment_sv: "",
+//     },
+//     pictures: [
+//       {
+//         id: 0,
+//         base: "",
+//         url: "",
+//         alt_fi: "",
+//         alt_en: "",
+//         alt_sv: "",
+//       },
+//     ],
+//     components: [],
+//   },
+// };
 
 export const additionalInfoSlice = createSlice({
   name: "additionalInfo",
   initialState: {} as AdditionalInfoProps,
   reducers: {
+    setInitAdditionalInfoFromDb: (
+      state,
+      action: PayloadAction<{
+        //should be boolean
+        isInited: any;
+      }>
+    ) => {
+      return {
+        ...state,
+        initAddInfoFromDb: action.payload.isInited,
+      };
+    },
     setEditingInitialState: (
       state,
       action: PayloadAction<{
@@ -275,6 +288,7 @@ export const {
   removeComment,
   removeSingleQuestionAdditionalinfo,
   setPreviousInitStateAdditionalinfo,
+  setInitAdditionalInfoFromDb,
 } = additionalInfoSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type

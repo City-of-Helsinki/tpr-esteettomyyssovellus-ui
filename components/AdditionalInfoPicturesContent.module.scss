@@ -66,8 +66,8 @@
         height: 25rem;
         width: 25rem;
         background-repeat: no-repeat;
-        background-size: cover;
-        background-position: center;
+        background-size: contain;
+        background-position: left;
         @include media(xs, s) {
           height: 15rem;
           width: 15rem;
