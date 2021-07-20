@@ -12,22 +12,37 @@ import ServicepointMainInfoContent from "../../components/ServicepointMainInfoCo
 import {
   API_FETCH_QUESTIONBLOCK_URL,
   API_FETCH_QUESTIONCHOICES,
-  API_FETCH_QUESTION_URL
+  API_FETCH_QUESTION_URL,
+  backendApiBaseUrl,
 } from "../../types/constants";
 import { useAppSelector, useAppDispatch } from "../../state/hooks";
 import QuestionBlock from "../../components/QuestionBlock";
-import { MainEntranceFormProps, QuestionBlockProps } from "../../types/general";
+import {
+  AddInfoPhoto,
+  AddInfoPhotoText,
+  MainEntranceFormProps,
+  QuestionBlockProps,
+} from "../../types/general";
 import HeadlineQuestionContainer from "../../components/HeadlineQuestionContainer";
 import { LANGUAGE_LOCALES } from "../../types/constants";
 import QuestionFormCtrlButtons from "../../components/QuestionFormCtrlButtons";
 import PathTreeComponent from "../../components/PathTreeComponent";
 import { setAnswer, setAnsweredChoice } from "../../state/reducers/formSlice";
+import {
+  addComment,
+  addComponent,
+  addLocation,
+  addPicture,
+  setAlt,
+  setInitAdditionalInfoFromDb,
+} from "../../state/reducers/additionalInfoSlice";
 
 const AccessibilityEdit = ({
   QuestionsData,
   QuestionChoicesData,
   QuestionBlocksData,
-  QuestionAnswerData
+  QuestionAnswerData,
+  AdditionalInfosData,
 }: MainEntranceFormProps): ReactElement => {
   const i18n = useI18n();
   const curLocale: string = i18n.locale();
@@ -38,6 +53,84 @@ const AccessibilityEdit = ({
   let curAnsweredChoices = useAppSelector(
     (state) => state.formReducer.answeredChoices
   );
+
+  const additionalInfoInitedFromDb = useAppSelector(
+    (state) => state.additionalInfoReducer.initAddInfoFromDb
+  );
+
+  // loop additional info to state, only once if data found
+  if (AdditionalInfosData && !additionalInfoInitedFromDb) {
+    dispatch(setInitAdditionalInfoFromDb({ isInited: true }));
+    if (AdditionalInfosData.comments) {
+      AdditionalInfosData.comments.forEach((comment, ind) => {
+        const curLangStr = LANGUAGE_LOCALES[comment.language];
+        dispatch(
+          addComment({
+            questionId: comment.question,
+            language: curLangStr,
+            value: comment.comment,
+          })
+        );
+        if (comment.language === 1 && ind === 0) {
+          dispatch(
+            addComponent({
+              questionId: comment.question,
+              type: "comment",
+              id: comment.answer_comment_id,
+            })
+          );
+        }
+      });
+    }
+    if (AdditionalInfosData.locations) {
+      AdditionalInfosData.locations.forEach((location) => {
+        // todo: todo
+        // dispatch(addLocation({}));
+      });
+    }
+
+    if (AdditionalInfosData.photos) {
+      AdditionalInfosData.photos.forEach((photo: AddInfoPhoto) => {
+        const picture = {
+          qNumber: photo.question,
+          id: photo.answer_photo_id,
+          base: photo.photo_url,
+          url: photo.photo_url,
+          fi: "",
+          sv: "",
+          en: "",
+        };
+
+        dispatch(addPicture(picture));
+        dispatch(
+          addComponent({
+            questionId: photo.question,
+            type: "link",
+            id: photo.answer_photo_id,
+          })
+        );
+
+        if (AdditionalInfosData.phototexts) {
+          const curPhotoAlts = AdditionalInfosData.phototexts.filter(
+            (phototext) => phototext.answer_photo === photo.answer_photo_id
+          );
+          if (curPhotoAlts) {
+            curPhotoAlts.forEach((alt: AddInfoPhotoText) => {
+              const curLangStr = LANGUAGE_LOCALES[alt.language];
+              dispatch(
+                setAlt({
+                  questionId: photo.question,
+                  language: curLangStr,
+                  value: alt.photo_text,
+                  compId: photo.answer_photo_id,
+                })
+              );
+            });
+          }
+        }
+      });
+    }
+  }
 
   if (QuestionAnswerData) {
     let curAnswers = useAppSelector((state) => state.formReducer.answers);
@@ -165,7 +258,7 @@ const AccessibilityEdit = ({
 export const getServerSideProps: GetServerSideProps = async ({
   params,
   req,
-  locales
+  locales,
 }) => {
   const lngDict = await i18nLoader(locales);
 
@@ -185,6 +278,11 @@ export const getServerSideProps: GetServerSideProps = async ({
   let QuestionChoicesData;
   let QuestionBlocksData;
   let QuestionAnswerData;
+  let AdditionalInfosData = {};
+  let AddInfoCommentsData;
+  let AddInfoLocationsData;
+  let AddInfoPhotosData;
+  let AddInfoPhotoTextsData;
   if (params != undefined) {
     try {
       // todo: put urls in types/constants and get form_id from props
@@ -193,18 +291,54 @@ export const getServerSideProps: GetServerSideProps = async ({
       const QuestionBlocksResp = await fetch(API_FETCH_QUESTIONBLOCK_URL);
       const entrance_id = params.entranceId;
       const QuestionAnswersResp = await fetch(
-        `http://localhost:8000/api/ArBackendEntranceAnswer/?entrance_id=${entrance_id}&format=json`
+        `${backendApiBaseUrl}/ArBackendEntranceAnswer/?entrance_id=${entrance_id}&format=json`
       );
 
       QuestionsData = await QuestionsResp.json();
       QuestionChoicesData = await QuestionChoicesResp.json();
       QuestionBlocksData = await QuestionBlocksResp.json();
       QuestionAnswerData = await QuestionAnswersResp.json();
+      const logId = (await QuestionAnswerData[0].log_id) ?? -1;
+
+      console.log("IIIDDD", logId);
+
+      if (logId && logId >= 0) {
+        const AddInfoComments = await fetch(
+          `${backendApiBaseUrl}/ArXQuesitonAnswerComment/?log=${logId}`
+        );
+
+        const AddInfoLocations = await fetch(
+          `${backendApiBaseUrl}/ArXQuesitonAnswerLocation/?log=${logId}`
+        );
+
+        const AddInfoPhotos = await fetch(
+          `${backendApiBaseUrl}/ArXQuesitonAnswerPhoto/?log=${logId}`
+        );
+
+        const AddInfoPhotoTexts = await fetch(
+          `${backendApiBaseUrl}/ArXQuesitonAnswerPhotoTxt/?log=${logId}`
+        );
+
+        console.log("halal2");
+
+        AddInfoCommentsData = await AddInfoComments.json();
+        AddInfoLocationsData = await AddInfoLocations.json();
+        AddInfoPhotosData = await AddInfoPhotos.json();
+        AddInfoPhotoTextsData = await AddInfoPhotoTexts.json();
+
+        AdditionalInfosData = {
+          comments: AddInfoCommentsData,
+          locations: AddInfoLocationsData,
+          photos: AddInfoPhotosData,
+          phototexts: AddInfoPhotoTextsData,
+        };
+      }
     } catch (e) {
       QuestionsData = {};
       QuestionChoicesData = {};
       QuestionBlocksData = {};
       QuestionAnswerData = {};
+      AdditionalInfosData = {};
     }
   }
   return {
@@ -214,8 +348,9 @@ export const getServerSideProps: GetServerSideProps = async ({
       QuestionChoicesData: QuestionChoicesData,
       QuestionBlocksData: QuestionBlocksData,
       QuestionAnswerData: QuestionAnswerData,
-      lngDict
-    }
+      AdditionalInfosData: AdditionalInfosData,
+      lngDict,
+    },
   };
 };
 

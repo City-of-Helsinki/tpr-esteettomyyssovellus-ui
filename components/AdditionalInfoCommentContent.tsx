@@ -65,12 +65,10 @@ const AdditionalInfoCommentContent = ({
               tooltipLabel={i18n.t("additionalInfo.generalTooptipLabel")}
               tooltipText={i18n.t("additionalInfo.altToolTipContent")}
               onKeyUp={(e: React.KeyboardEvent<HTMLTextAreaElement>) =>
-                handleAddComment(e, "comment_fi")
+                handleAddComment(e, "fi")
               }
-              onLoad={() =>
-                handleAddComment(initValue?.comment_fi, "comment_fi")
-              }
-              defaultValue={initValue?.comment_fi ?? null}
+              onLoad={() => handleAddComment(initValue?.fi, "fi")}
+              defaultValue={initValue?.fi ?? null}
             />
             <div className={styles.optionalaltscontainer}>
               <QuestionInfo
@@ -85,12 +83,10 @@ const AdditionalInfoCommentContent = ({
                   label="ph: lisäteksti ruotsiksi *"
                   helperText="Kerro lisää esteettömyydestä ruotsiksi"
                   onKeyUp={(e: React.KeyboardEvent<HTMLTextAreaElement>) =>
-                    handleAddComment(e, "comment_sv")
+                    handleAddComment(e, "sv")
                   }
-                  onLoad={() =>
-                    handleAddComment(initValue?.comment_sv, "comment_sv")
-                  }
-                  defaultValue={initValue?.comment_sv ?? null}
+                  onLoad={() => handleAddComment(initValue?.sv, "sv")}
+                  defaultValue={initValue?.sv ?? null}
                 />
               </QuestionInfo>
               <QuestionInfo
@@ -105,12 +101,10 @@ const AdditionalInfoCommentContent = ({
                   label="ph: teksti englanniksi *"
                   helperText="Kerro lisää esteettömyydestä englanniksi"
                   onKeyUp={(e: React.KeyboardEvent<HTMLTextAreaElement>) =>
-                    handleAddComment(e, "comment_en")
+                    handleAddComment(e, "en")
                   }
-                  onLoad={() =>
-                    handleAddComment(initValue?.comment_en, "comment_en")
-                  }
-                  defaultValue={initValue?.comment_en ?? null}
+                  onLoad={() => handleAddComment(initValue?.en, "en")}
+                  defaultValue={initValue?.en ?? null}
                 />
               </QuestionInfo>
             </div>

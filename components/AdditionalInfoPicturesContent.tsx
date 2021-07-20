@@ -37,6 +37,10 @@ const AdditionalInfoPicturesContent = ({
   const curAddInfo = useAppSelector(
     (state) => state.additionalInfoReducer[questionId]
   );
+  console.log(typeof curAddInfo);
+  console.log(curAddInfo);
+  // initValue =
+  //   curAddInfo?.pictures?.filter((pic) => pic.id === currentId) ?? null;
   const curImage = curAddInfo?.pictures?.filter(
     (pic) => pic.id === currentId
   )[0];
@@ -65,9 +69,9 @@ const AdditionalInfoPicturesContent = ({
         name: img.name,
         base: imgBase64,
         url: "",
-        alt_fi: "",
-        alt_sv: "",
-        alt_en: "",
+        fi: "",
+        sv: "",
+        en: "",
         source: "",
       };
       dispatch(addPicture(payload));
@@ -80,9 +84,9 @@ const AdditionalInfoPicturesContent = ({
           name: "",
           base: linkText,
           url: linkText,
-          alt_fi: "",
-          alt_sv: "",
-          alt_en: "",
+          fi: "",
+          sv: "",
+          en: "",
           source: "",
         };
         dispatch(addPicture(payload));
@@ -163,10 +167,14 @@ const AdditionalInfoPicturesContent = ({
   );
 
   useEffect(() => {
-    if (initValue) {
+    if (initValue && curImage) {
+      // initValue = curImage;
       setTermsChecked(!termsChecked);
     }
   }, []);
+
+  console.log("tää on tää init val", initValue);
+  console.log(curImage);
 
   return (
     <div className={styles.maincontainer}>
@@ -182,7 +190,7 @@ const AdditionalInfoPicturesContent = ({
             placeholder={curImage?.name}
             disabled={onlyLink ? false : true}
             onChange={(e) => handleLinkText(e)}
-            defaultValue={initValue?.url ?? null}
+            defaultValue={curImage?.url ? curImage.url : ""}
           />
         </span>
 
@@ -211,7 +219,8 @@ const AdditionalInfoPicturesContent = ({
           ></input>
         )}
       </div>
-      {curImage?.base ? (
+      {/* todo: maybe remove base and use url -> need url for upload from ~Azure */}
+      {curImage?.base || curImage?.url ? (
         <div className={styles.lowercontentcontainer}>
           <div className={styles.picrutepreviewcontainer}>
             <div
@@ -230,9 +239,9 @@ const AdditionalInfoPicturesContent = ({
               tooltipLabel={i18n.t("additionalInfo.generalTooptipLabel")}
               tooltipText={i18n.t("additionalInfo.altToolTipContent")}
               onKeyUp={(e: React.KeyboardEvent<HTMLTextAreaElement>) =>
-                handleAddAlt(e, "alt_fi", compId)
+                handleAddAlt(e, "fi", compId)
               }
-              defaultValue={initValue?.alt_fi ?? null}
+              defaultValue={curImage?.fi ?? null}
             />
             <div className={styles.altLabel}>
               <QuestionInfo
@@ -247,9 +256,9 @@ const AdditionalInfoPicturesContent = ({
                   label={i18n.t("additionalInfo.pictureLabelSwe")}
                   helperText={i18n.t("additionalInfo.pictureHelperTextSwe")}
                   onKeyUp={(e: React.KeyboardEvent<HTMLTextAreaElement>) =>
-                    handleAddAlt(e, "alt_sv", compId)
+                    handleAddAlt(e, "sv", compId)
                   }
-                  defaultValue={initValue?.alt_sv ?? null}
+                  defaultValue={curImage?.sv ? curImage.sv : ""}
                 />
               </QuestionInfo>
             </div>
@@ -266,9 +275,9 @@ const AdditionalInfoPicturesContent = ({
                   label={i18n.t("additionalInfo.pictureLabelEng")}
                   helperText={i18n.t("additionalInfo.pictureHelperTextEng")}
                   onKeyUp={(e: React.KeyboardEvent<HTMLTextAreaElement>) =>
-                    handleAddAlt(e, "alt_en", compId)
+                    handleAddAlt(e, "en", compId)
                   }
-                  defaultValue={initValue?.alt_en ?? null}
+                  defaultValue={curImage?.en ? curImage.en : ""}
                 />
               </QuestionInfo>
             </div>
@@ -299,7 +308,7 @@ const AdditionalInfoPicturesContent = ({
               label={i18n.t("additionalInfo.sourceTooltipMainLabel")}
               onChange={onSourceChange}
               required
-              defaultValue={initValue?.source ?? null}
+              defaultValue={curImage?.source ? curImage?.source : null}
             />
           </div>
         </div>

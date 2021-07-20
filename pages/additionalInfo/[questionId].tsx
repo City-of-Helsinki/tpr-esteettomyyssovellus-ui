@@ -56,6 +56,7 @@ const AdditionalInfo = ({
   let curAdditionalInfo: any = useAppSelector(
     (state) => state.additionalInfoReducer[questionId] as AdditionalInfoProps
   );
+  let component;
 
   const filterByLanguage = (data: any) => {
     const i18n = useI18n();
@@ -103,6 +104,19 @@ const AdditionalInfo = ({
   useEffect(() => {
     dispatch(clearEditingInitialState());
 
+    const highestExistingId = Math.max.apply(
+      Math,
+      curAdditionalInfo?.components?.map((comp: any) => comp.id)
+    );
+
+    if (
+      highestExistingId &&
+      typeof highestExistingId === "number" &&
+      highestExistingId > -1
+    ) {
+      setIncreasingId(highestExistingId + 1);
+    }
+
     if (curAdditionalInfo && Object.entries(curAdditionalInfo).length > 0) {
       dispatch(
         setEditingInitialState({
@@ -116,9 +130,10 @@ const AdditionalInfo = ({
           ...prevCounts,
           [comp.type]: elementCounts[comp.type] + 1,
         }));
-        setIncreasingId(increasingId + 1);
+        // setIncreasingId(increasingId + 1);
       });
 
+      // todo: what is this??
       // const imageLinks = curAdditionalInfo?.pictures?.filter((pic) => pic)
       // const imageUploads
     }
@@ -174,7 +189,11 @@ const AdditionalInfo = ({
                           questionId={questionId}
                           compId={id}
                           onDelete={() => handleDelete(id, "upload")}
-                          initValue={curAdditionalInfo.pictures ?? null}
+                          initValue={
+                            curAdditionalInfo?.pictures
+                              ? curAdditionalInfo?.pictures
+                              : null
+                          }
                         />
                       </div>
                     );
@@ -189,7 +208,7 @@ const AdditionalInfo = ({
                           onDelete={() => handleDelete(id, "link")}
                           initValue={
                             curAdditionalInfo?.pictures
-                              ? curAdditionalInfo?.pictures[id]
+                              ? curAdditionalInfo?.pictures
                               : null
                           }
                         />
