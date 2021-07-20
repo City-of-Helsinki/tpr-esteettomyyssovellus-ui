@@ -36,6 +36,30 @@ const QuestionFormCtrlButtons = ({
     router.push(url);
   };
   const isPreviewActive = curAnsweredChoices.length > 1;
+  const handleSaveClick = async () => {
+    var log_id;
+    // TODO: Add correct data
+    console.log("save clicked");
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        ip_address: "",
+        started_answering: null,
+        finished_answering: null,
+        form_submitted: "N",
+        form_cancelled: "Y",
+        accessibility_editor: "Leba",
+        entrance: 341
+      })
+    };
+    await fetch("http://localhost:8000/api/ArXAnswerLog/", requestOptions)
+      .then((response) => response.json())
+      .then((data) => {
+        log_id = data;
+      });
+    console.log(log_id);
+  };
 
   return (
     <Card className={styles.container}>
@@ -57,7 +81,7 @@ const QuestionFormCtrlButtons = ({
           </Button>
         ) : null}
         {hasSaveDraftButton ? (
-          <Button variant="secondary" disabled>
+          <Button variant="secondary" onClickHandler={handleSaveClick}>
             {i18n.t("questionFormControlButtons.saveAsIncomplete")}
           </Button>
         ) : null}
