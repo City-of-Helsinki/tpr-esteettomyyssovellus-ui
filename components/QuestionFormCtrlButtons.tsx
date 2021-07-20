@@ -6,6 +6,12 @@ import styles from "./QuestionFormCtrlButtons.module.scss";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
 import router from "next/router";
 import { useI18n } from "next-localization";
+import publicIp from "public-ip";
+
+export const getClientIp = async () =>
+  await publicIp.v4({
+    fallbackUrls: ["https://ifconfig.co/ip"]
+  });
 
 const QuestionFormCtrlButtons = ({
   hasCancelButton,
@@ -26,6 +32,9 @@ const QuestionFormCtrlButtons = ({
   let curServicepointId = useAppSelector(
     (state) => state.formReducer.currentServicepointId
   );
+  const startedAnswering = useAppSelector(
+    (state) => state.formReducer.startedAnswering
+  );
   const handleCancel = (): void => {
     console.log("cancel clicked");
     // TODO: Add errorpage
@@ -38,15 +47,29 @@ const QuestionFormCtrlButtons = ({
   const isPreviewActive = curAnsweredChoices.length > 1;
   const handleSaveClick = async () => {
     var log_id;
+    let today = new Date();
+    const finishedAnswering =
+      today.getFullYear() +
+      "-" +
+      (today.getMonth() + 1) +
+      "-" +
+      today.getDate() +
+      "T" +
+      today.getHours() +
+      ":" +
+      today.getMinutes() +
+      ":" +
+      today.getSeconds();
     // TODO: Add correct data
     console.log("save clicked");
+    const ipAddress = await getClientIp();
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        ip_address: "",
-        started_answering: null,
-        finished_answering: null,
+        ip_address: ipAddress,
+        started_answering: startedAnswering,
+        finished_answering: finishedAnswering,
         form_submitted: "N",
         form_cancelled: "Y",
         accessibility_editor: "Leba",
@@ -58,7 +81,6 @@ const QuestionFormCtrlButtons = ({
       .then((data) => {
         log_id = data;
       });
-    console.log(log_id);
   };
 
   return (

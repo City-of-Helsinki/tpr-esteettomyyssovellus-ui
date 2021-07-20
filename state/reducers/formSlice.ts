@@ -1,4 +1,5 @@
 import { createSlice, Dictionary, PayloadAction } from "@reduxjs/toolkit";
+import { access } from "node:fs";
 import { finished } from "node:stream";
 import { string } from "yup/lib/locale";
 import type { RootState } from "../store";
@@ -11,6 +12,7 @@ interface formState {
   isContinueClicked: boolean;
   finishedBlocks: number[];
   contacts: { [key: string]: string };
+  startedAnswering: string;
 }
 
 const initialState: formState = {
@@ -20,7 +22,8 @@ const initialState: formState = {
   answers: {},
   isContinueClicked: false,
   finishedBlocks: [],
-  contacts: {}
+  contacts: {},
+  startedAnswering: ""
 };
 
 export const formSlice = createSlice({
@@ -109,6 +112,12 @@ export const formSlice = createSlice({
         ...state,
         contacts: { ...state.contacts, ["email"]: action.payload }
       };
+    },
+    setStartDate: (state, action: PayloadAction<string>) => {
+      return {
+        ...state,
+        startedAnswering: action.payload
+      };
     }
   }
 });
@@ -124,7 +133,8 @@ export const {
   setFinished,
   unsetFinished,
   setPhoneNumber,
-  setEmail
+  setEmail,
+  setStartDate
 } = formSlice.actions;
 
 export default formSlice.reducer;

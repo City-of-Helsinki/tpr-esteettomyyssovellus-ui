@@ -200,7 +200,7 @@ const AccessibilityEdit = ({
             {visibleBlocks}
             <QuestionFormCtrlButtons
               hasCancelButton
-              hasValidateButton
+              hasValidateButton={isContinueClicked}
               hasSaveDraftButton
               hasPreviewButton
             />
