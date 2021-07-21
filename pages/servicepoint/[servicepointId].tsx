@@ -66,9 +66,11 @@ const Servicepoint = ({
 
   if (hasData) {
     if (servicepointData["accessibility_phone"] != undefined) {
+      // TODO: POSSIBLY VALIDATE THESE STRAIGHT AWAY
       dispatch(setPhoneNumber(servicepointData["accessibility_phone"]));
     }
     if (servicepointData["accessibility_email"] != undefined) {
+      // TODO: POSSIBLY VALIDATE THESE STRAIGHT AWAY
       dispatch(setEmail(servicepointData["accessibility_email"]));
     }
   }

@@ -5,7 +5,8 @@ import {
   IconMinus,
   IconPlus,
   IconCheckCircleFill,
-  Card
+  Card,
+  IconAlertCircle
 } from "hds-react";
 import { HeadlineQuestionContainerProps } from "../types/general";
 import styles from "./HeadlineQuestionContainer.module.scss";
@@ -17,7 +18,8 @@ const HeadlineQuestionContainer = ({
   text,
   number,
   initOpen = false,
-  children
+  children,
+  isValid
 }: HeadlineQuestionContainerProps): JSX.Element => {
   // Handle accordion state with useAccordion hook
   let { isOpen, buttonProps, contentProps } = useAccordion({
@@ -35,6 +37,13 @@ const HeadlineQuestionContainer = ({
   let iconLeft = curFinishedBlocks.includes(Number(number)) ? (
     <IconCheckCircleFill aria-hidden />
   ) : null;
+  !isValid
+    ? (iconLeft = (
+        <IconAlertCircle aria-hidden color={"red"}>
+          tietoja puuttuu
+        </IconAlertCircle>
+      ))
+    : iconLeft;
   const buttonVariant =
     isOpen && !(isContinueClicked && number == 0) ? "primary" : "secondary";
 
@@ -43,7 +52,6 @@ const HeadlineQuestionContainer = ({
 
     router.reload();
   };
-
   return (
     // TODO: define unique id (?)
     <div className={styles.headline}>

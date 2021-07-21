@@ -36,6 +36,7 @@ export interface HeadlineQuestionContainerProps {
   initOpen?: boolean;
   children?: any;
   number?: number;
+  isValid?: boolean;
 }
 
 export interface DropdownQuestionProps {
@@ -85,6 +86,7 @@ export interface QuestionFormCtrlButtonsProps {
   hasValidateButton?: boolean;
   hasSaveDraftButton?: boolean;
   hasPreviewButton?: boolean;
+  visibleBlocks?: (JSX.Element | null)[] | null;
 }
 
 // todo: add type for questionlist

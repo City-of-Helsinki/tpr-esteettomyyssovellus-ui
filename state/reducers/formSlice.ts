@@ -11,8 +11,13 @@ interface formState {
   answers: { [key: number]: number };
   isContinueClicked: boolean;
   finishedBlocks: number[];
-  contacts: { [key: string]: string };
+  // A dictionary of all the necessary contact information.
+  // The arrays corresponding to the keys have the value and a boolean which
+  // indicates wheter the value is valid.
+  contacts: { [key: string]: [string, boolean] };
   startedAnswering: string;
+  invalidBlocks: number[];
+  formInited: boolean;
 }
 
 const initialState: formState = {
@@ -23,7 +28,9 @@ const initialState: formState = {
   isContinueClicked: false,
   finishedBlocks: [],
   contacts: {},
-  startedAnswering: ""
+  startedAnswering: "",
+  invalidBlocks: [],
+  formInited: false
 };
 
 export const formSlice = createSlice({
@@ -80,6 +87,12 @@ export const formSlice = createSlice({
         isContinueClicked: false
       };
     },
+    initForm: (state) => {
+      return {
+        ...state,
+        formInited: true
+      };
+    },
     setFinished: (state, action: PayloadAction<number>) => {
       if (!state.finishedBlocks.includes(action.payload)) {
         return {
@@ -101,22 +114,92 @@ export const formSlice = createSlice({
         ]
       };
     },
+    setContactPerson: (state, action: PayloadAction<string>) => {
+      return {
+        ...state,
+        contacts: {
+          ...state.contacts,
+          // Sets the contact person. The contact person is always valid at the start
+          // and changes to invalid if the validation fails
+          ["contactPerson"]: [action.payload, false]
+        }
+      };
+    },
     setPhoneNumber: (state, action: PayloadAction<string>) => {
       return {
         ...state,
-        contacts: { ...state.contacts, ["phoneNumber"]: action.payload }
+        contacts: {
+          ...state.contacts,
+          // Sets the phone number. The phone number is always valid at the start
+          // and changes to invalid if the validation fails. TODO: POSSIBLY VALIDATE
+          // WHEN SET
+          ["phoneNumber"]: [action.payload, false]
+        }
       };
     },
     setEmail: (state, action: PayloadAction<string>) => {
       return {
         ...state,
-        contacts: { ...state.contacts, ["email"]: action.payload }
+        // Sets the email. The email is always valid at the start
+        // and changes to invalid if the validation fails
+        contacts: { ...state.contacts, ["email"]: [action.payload, false] }
       };
     },
     setStartDate: (state, action: PayloadAction<string>) => {
       return {
         ...state,
         startedAnswering: action.payload
+      };
+    },
+    changeContactPersonStatus: (state, action: PayloadAction<boolean>) => {
+      return {
+        ...state,
+        contacts: {
+          ...state.contacts,
+          ["contactPerson"]: [
+            state.contacts["contactPerson"][0],
+            action.payload
+          ]
+        }
+      };
+    },
+    changePhoneNumberStatus: (state, action: PayloadAction<boolean>) => {
+      return {
+        ...state,
+        contacts: {
+          ...state.contacts,
+          ["phoneNumber"]: [state.contacts["phoneNumber"][0], action.payload]
+        }
+      };
+    },
+    changeEmailStatus: (state, action: PayloadAction<boolean>) => {
+      return {
+        ...state,
+        contacts: {
+          ...state.contacts,
+          ["email"]: [state.contacts["email"][0], action.payload]
+        }
+      };
+    },
+    setInvalid: (state, action: PayloadAction<number>) => {
+      if (!state.invalidBlocks.includes(action.payload)) {
+        return {
+          ...state,
+          invalidBlocks: [...state.invalidBlocks, action.payload]
+        };
+      } else {
+        return {
+          ...state
+        };
+      }
+    },
+    unsetInvalid: (state, action: PayloadAction<number>) => {
+      return {
+        ...state,
+        invalidBlocks: [
+          ...(state.invalidBlocks?.filter((elem) => elem != action.payload) ??
+            [])
+        ]
       };
     }
   }
@@ -132,9 +215,16 @@ export const {
   unsetContinue,
   setFinished,
   unsetFinished,
+  setContactPerson,
   setPhoneNumber,
   setEmail,
-  setStartDate
+  setStartDate,
+  changeContactPersonStatus,
+  changePhoneNumberStatus,
+  changeEmailStatus,
+  setInvalid,
+  unsetInvalid,
+  initForm
 } = formSlice.actions;
 
 export default formSlice.reducer;
