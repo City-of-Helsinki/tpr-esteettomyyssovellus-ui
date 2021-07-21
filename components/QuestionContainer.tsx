@@ -20,7 +20,7 @@ const QuestionContainer = ({
   backgroundColor,
   canAddLocation,
   canAddPhotoMaxCount,
-  canAddComment,
+  canAddComment
 }: QuestionContainerProps): JSX.Element => {
   const i18n = useI18n();
   const questionDepth = (questionNumber.toString().split(".") || []).length;
@@ -59,7 +59,7 @@ const QuestionContainer = ({
           ) : null}
         </div>
         <div className={styles.children}>{children}</div>
-        {hasAdditionalInfo ? (
+        {hasAdditionalInfo && questionId != undefined ? (
           <QuestionAdditionalInformation
             questionId={questionId}
             canAddLocation={canAddLocation}

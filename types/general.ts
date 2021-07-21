@@ -17,7 +17,7 @@ export interface GeneralState {
 }
 
 export interface QuestionContainerProps {
-  questionId: number;
+  questionId?: number;
   questionNumber: number;
   questionText: string;
   questionInfo?: string | undefined;
