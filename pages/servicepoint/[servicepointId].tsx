@@ -14,7 +14,7 @@ import ServicepointMainInfoContent from "../../components/ServicepointMainInfoCo
 import router from "next/router";
 import { Dictionary } from "@reduxjs/toolkit";
 import PathTreeComponent from "../../components/PathTreeComponent";
-import { useAppDispatch } from "../../state/hooks";
+import { useAppDispatch, useAppSelector } from "../../state/hooks";
 import {
   setServicepointId,
   setEntranceId,
@@ -47,6 +47,7 @@ const Servicepoint = ({
   const dispatch = useAppDispatch();
   const treeItems = [servicepointData.servicepoint_name];
   const finnishDate = getFinnishDate(servicepointData.modified);
+  const formInited = useAppSelector((state) => state.formReducer.formInited);
 
   // Filter by language
   const filteredAccessibilityData: any = {};
@@ -64,7 +65,7 @@ const Servicepoint = ({
     Object.keys(entranceData).length !== 0 ||
     Object.keys(servicepointData).length !== 0;
 
-  if (hasData) {
+  if (hasData && !formInited) {
     if (servicepointData["accessibility_phone"] != undefined) {
       // TODO: POSSIBLY VALIDATE THESE STRAIGHT AWAY
       dispatch(setPhoneNumber(servicepointData["accessibility_phone"]));

@@ -31,6 +31,9 @@ const HeadlineQuestionContainer = ({
   let isContinueClicked = useAppSelector(
     (state) => state.formReducer.isContinueClicked
   );
+  let curInvalidBlocks = useAppSelector(
+    (state) => state.formReducer.invalidBlocks
+  );
   //let isFinished = curFinishedBlocks.includes(number);
   // Change icon based on accordion open state
   const icon = isOpen ? <IconMinus aria-hidden /> : <IconPlus aria-hidden />;
@@ -39,13 +42,22 @@ const HeadlineQuestionContainer = ({
   ) : null;
   !isValid
     ? (iconLeft = (
-        <IconAlertCircle aria-hidden color={"red"}>
+        <IconAlertCircle aria-hidden color={"#b01038"}>
           tietoja puuttuu
         </IconAlertCircle>
       ))
     : iconLeft;
-  const buttonVariant =
+  let buttonVariant: "primary" | "secondary" | "danger" =
     isOpen && !(isContinueClicked && number == 0) ? "primary" : "secondary";
+
+  let buttonStyle =
+    number != undefined && curInvalidBlocks.includes(number) && !isOpen
+      ? { borderColor: "#b01038", borderWidth: "0.2rem" }
+      : {};
+  buttonVariant =
+    number != undefined && curInvalidBlocks.includes(number) && isOpen
+      ? "danger"
+      : buttonVariant;
 
   const handleOnClick = () => {
     console.log("CANT OPEN");
@@ -64,6 +76,7 @@ const HeadlineQuestionContainer = ({
           fullWidth
           className={styles.headlineButton}
           onClick={() => handleOnClick()}
+          style={buttonStyle}
         >
           <div className={styles.blockHeadline}>
             <p className={styles.heading}>{text}</p> {iconLeft}
@@ -77,6 +90,7 @@ const HeadlineQuestionContainer = ({
           variant={buttonVariant}
           fullWidth
           className={styles.headlineButton}
+          style={buttonStyle}
           //onClick={() => handleOnClick()}
         >
           <div className={styles.blockHeadline}>
