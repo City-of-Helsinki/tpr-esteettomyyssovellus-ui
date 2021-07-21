@@ -1,5 +1,5 @@
 import React from "react";
-import { IconInfoCircle, IconCrossCircle } from "hds-react";
+import { IconInfoCircle, IconCrossCircle, IconAlertCircle } from "hds-react";
 import styles from "./QuestionContainer.module.scss";
 import { QuestionContainerProps } from "../types/general";
 import QuestionInfo from "./QuestionInfo";
@@ -84,6 +84,12 @@ const QuestionContainer = ({
             canAddPhotoMaxCount={canAddPhotoMaxCount}
             canAddComment={canAddComment}
           />
+        ) : null}
+        {isInvalid && curAnswers[questionId!] == undefined ? (
+          <IconAlertCircle
+            className={styles.alertCircle}
+            aria-hidden
+          ></IconAlertCircle>
         ) : null}
       </div>
     </div>

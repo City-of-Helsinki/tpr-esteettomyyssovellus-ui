@@ -42,9 +42,7 @@ const HeadlineQuestionContainer = ({
   ) : null;
   !isValid
     ? (iconLeft = (
-        <IconAlertCircle aria-hidden color={"#b01038"}>
-          tietoja puuttuu
-        </IconAlertCircle>
+        <IconAlertCircle aria-hidden color={"#b01038"}></IconAlertCircle>
       ))
     : iconLeft;
   let buttonVariant: "primary" | "secondary" | "danger" =
