@@ -1,6 +1,10 @@
 // TODO: file might need to be renamed eg. like additionalinfo/[id] where id is the question (?)
-
-import React, { ReactElement, SetStateAction, useState } from "react";
+import React, {
+  ReactElement,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import { useI18n } from "next-localization";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
@@ -10,59 +14,79 @@ import {
   IconLocation,
   IconQuestionCircle,
   IconSpeechbubbleText,
-  IconUpload
+  IconUpload,
 } from "hds-react";
-import Layout from "../components/common/Layout";
-import { store } from "../state/store";
-import i18nLoader from "../utils/i18n";
+import Layout from "../../components/common/Layout";
+import { store } from "../../state/store";
+import i18nLoader from "../../utils/i18n";
 import styles from "./additionalInfo.module.scss";
-import QuestionInfo from "../components/QuestionInfo";
-import ServicepointMainInfoContent from "../components/ServicepointMainInfoContent";
-import AdditionalInfoCtrlButtons from "../components/AdditionalInfoCtrlButtons";
-import HeadlineQuestionContainer from "../components/HeadlineQuestionContainer";
-import QuestionButton from "../components/QuestionButton";
-import AdditionalInfoLocationContent from "../components/AdditionalInfoLocationContent";
-import AdditionalInfoPicturesContent from "../components/AdditionalInfoPicturesContent";
-import AdditionalInfoCommentContent from "../components/AdditionalInfoCommentContent";
+import QuestionInfo from "../../components/QuestionInfo";
+import ServicepointMainInfoContent from "../../components/ServicepointMainInfoContent";
+import AdditionalInfoCtrlButtons from "../../components/AdditionalInfoCtrlButtons";
+import HeadlineQuestionContainer from "../../components/HeadlineQuestionContainer";
+import QuestionButton from "../../components/QuestionButton";
+import AdditionalInfoLocationContent from "../../components/AdditionalInfoLocationContent";
+import AdditionalInfoPicturesContent from "../../components/AdditionalInfoPicturesContent";
+import AdditionalInfoCommentContent from "../../components/AdditionalInfoCommentContent";
 import {
   addComponent,
-  removeComponent
-} from "../state/reducers/additionalInfoSlice";
-import { useAppSelector, useAppDispatch } from "../state/hooks";
+  clearEditingInitialState,
+  removeComponent,
+  setEditingInitialState,
+} from "../../state/reducers/additionalInfoSlice";
+import { useAppSelector, useAppDispatch } from "../../state/hooks";
 import {
   AdditionalComponentProps,
-  AdditionalInfoProps
-} from "../types/general";
+  AdditionalInfoPageProps,
+  AdditionalInfoProps,
+  QuestionProps,
+} from "../../types/general";
+import { LANGUAGE_LOCALES } from "../../types/constants";
+import { Dictionary } from "@reduxjs/toolkit";
 
 // TODO: need to know what page is e.g. picture, comment or location
-const AdditionalInfo = (): ReactElement => {
-  // placeholder for pagenumber
-  const pageNumberPH: string = "1";
+const AdditionalInfo = ({
+  questionId,
+  questionData,
+}: AdditionalInfoPageProps): ReactElement => {
+  const i18n = useI18n();
   // todo: figure out better way to id
   const [increasingId, setIncreasingId] = useState(0);
   const dispatch = useAppDispatch();
   let curAdditionalInfo: any = useAppSelector(
-    (state) => state.additionalInfoReducer[pageNumberPH] as AdditionalInfoProps
+    (state) => state.additionalInfoReducer[questionId] as AdditionalInfoProps
   );
+  let component;
 
-  const i18n = useI18n();
+  const filterByLanguage = (data: any) => {
+    const i18n = useI18n();
+    const curLocale: string = i18n.locale();
+    // @ts-ignore: TODO:
+    const curLocaleId: number = LANGUAGE_LOCALES[curLocale];
+    return data.filter((entry: any) => {
+      return entry.language_id == curLocaleId;
+    });
+  };
+
+  const questionDataCurrentLanguage = filterByLanguage(questionData).pop();
+
   const [elementCounts, setElementCounts]: any = useState({
     comment: 0,
     upload: 0,
     link: 0,
-    location: 0
+    location: 0,
   });
 
   const handleAddElement = (type: string) => {
     setElementCounts((prevCounts: any) => ({
       ...prevCounts,
-      [type]: elementCounts[type] + 1
+      [type]: elementCounts[type] + 1,
     }));
     dispatch(
       addComponent({
-        questionNumber: pageNumberPH,
+        questionId: questionId,
         type: type,
-        id: increasingId
+        id: increasingId,
       })
     );
     setIncreasingId(increasingId + 1);
@@ -71,12 +95,49 @@ const AdditionalInfo = (): ReactElement => {
   const handleDelete = (deleteId: number, type: string) => {
     setElementCounts((prevCounts: any) => ({
       ...prevCounts,
-      [type]: elementCounts[type] - 1
+      [type]: elementCounts[type] - 1,
     }));
-    dispatch(
-      removeComponent({ questionNumber: pageNumberPH, delId: deleteId })
-    );
+    dispatch(removeComponent({ questionId: questionId, delId: deleteId }));
   };
+
+  // for saving current state obj initial state for if user edits and cancels without saving to return to init state of cur obj to state
+  useEffect(() => {
+    dispatch(clearEditingInitialState());
+
+    const highestExistingId = Math.max.apply(
+      Math,
+      curAdditionalInfo?.components?.map((comp: any) => comp.id)
+    );
+
+    if (
+      highestExistingId &&
+      typeof highestExistingId === "number" &&
+      highestExistingId > -1
+    ) {
+      setIncreasingId(highestExistingId + 1);
+    }
+
+    if (curAdditionalInfo && Object.entries(curAdditionalInfo).length > 0) {
+      dispatch(
+        setEditingInitialState({
+          obj: curAdditionalInfo,
+        })
+      );
+
+      // set component amounts correct with states components to disable buttons respectively
+      curAdditionalInfo.components?.forEach((comp: Dictionary<any>) => {
+        setElementCounts((prevCounts: any) => ({
+          ...prevCounts,
+          [comp.type]: elementCounts[comp.type] + 1,
+        }));
+        // setIncreasingId(increasingId + 1);
+      });
+
+      // todo: what is this??
+      // const imageLinks = curAdditionalInfo?.pictures?.filter((pic) => pic)
+      // const imageUploads
+    }
+  }, []);
 
   return (
     <Layout>
@@ -101,12 +162,12 @@ const AdditionalInfo = (): ReactElement => {
             <h2>{i18n.t("common.mainEntrance")} Katukatu 12, 00100 Helsinki</h2>
           </div>
           <div>
-            <AdditionalInfoCtrlButtons />
+            <AdditionalInfoCtrlButtons questionId={questionId} />
             <div>
               <div className={styles.mainheader}>
-                <p>
-                  {i18n.t("additionalInfo.addLocation")} {">"} 1.4 Onko
-                  kulkureittiä
+                <p>{questionDataCurrentLanguage.question_code ?? null}</p>
+                <p className={styles.headerspacing}>
+                  {questionDataCurrentLanguage.text ?? null}
                 </p>
               </div>
               <div className={styles.maininfoctrl}>
@@ -125,9 +186,14 @@ const AdditionalInfo = (): ReactElement => {
                       <div className={styles.componentcontainer}>
                         <AdditionalInfoPicturesContent
                           key={`key_${id}`}
-                          questionNumber="1"
+                          questionId={questionId}
                           compId={id}
                           onDelete={() => handleDelete(id, "upload")}
+                          initValue={
+                            curAdditionalInfo?.pictures
+                              ? curAdditionalInfo?.pictures
+                              : null
+                          }
                         />
                       </div>
                     );
@@ -137,9 +203,14 @@ const AdditionalInfo = (): ReactElement => {
                         <AdditionalInfoPicturesContent
                           onlyLink
                           key={`key_${id}`}
-                          questionNumber="1"
+                          questionId={questionId}
                           compId={id}
                           onDelete={() => handleDelete(id, "link")}
+                          initValue={
+                            curAdditionalInfo?.pictures
+                              ? curAdditionalInfo?.pictures
+                              : null
+                          }
                         />
                       </div>
                     );
@@ -148,9 +219,10 @@ const AdditionalInfo = (): ReactElement => {
                       <div className={styles.componentcontainer}>
                         <AdditionalInfoCommentContent
                           key={`key_${id}`}
-                          questionNumber="1"
+                          questionId={questionId}
                           compId={id}
                           onDelete={() => handleDelete(id, "comment")}
+                          initValue={curAdditionalInfo.comments ?? null}
                         />
                       </div>
                     );
@@ -159,9 +231,10 @@ const AdditionalInfo = (): ReactElement => {
                       <div className={styles.componentcontainer}>
                         <AdditionalInfoLocationContent
                           key={`key_${id}`}
-                          questionNumber="1"
+                          questionId={questionId}
                           compId={id}
                           onDelete={() => handleDelete(id, "location")}
+                          initValue={curAdditionalInfo.location ?? null}
                         />
                       </div>
                     );
@@ -226,14 +299,22 @@ const AdditionalInfo = (): ReactElement => {
 // Server-side rendering
 // Todo: edit, get servicepoint data
 export const getServerSideProps: GetServerSideProps = async ({
-  req,
-  locales
+  params,
+  locales,
 }) => {
   const lngDict = await i18nLoader(locales);
 
   const reduxStore = store;
   // reduxStore.dispatch({ type: CLEAR_STATE });
   const initialReduxState = reduxStore.getState();
+
+  const questionId = Number(params?.questionId) ?? null;
+
+  //e.g.
+  const questionDataReq = await fetch(
+    `http://localhost:8000/api/ArBackendQuestions/?question_id=${questionId}&format=json`
+  );
+  const questionData = await questionDataReq.json();
 
   // const user = await checkUser(req);
   // if (!user) {
@@ -245,9 +326,11 @@ export const getServerSideProps: GetServerSideProps = async ({
 
   return {
     props: {
+      questionId,
+      questionData,
       initialReduxState,
-      lngDict
-    }
+      lngDict,
+    },
   };
 };
 

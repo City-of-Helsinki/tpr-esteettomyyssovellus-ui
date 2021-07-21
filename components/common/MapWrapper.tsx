@@ -3,7 +3,13 @@
 import React, { ReactElement, useRef, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useI18n } from "next-localization";
-import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  useMap,
+  useMapEvents,
+} from "react-leaflet";
 import { Marker as LeafletMarker, Icon, LatLngExpression } from "leaflet";
 import getOrigin from "../../utils/request";
 import styles from "./MapWrapper.module.scss";
@@ -25,7 +31,7 @@ const MapWrapper = ({
   setLocation,
   setMapView,
   setMapReady,
-  draggableMarker
+  draggableMarker,
 }: MapWrapperProps): ReactElement => {
   const i18n = useI18n();
   const router = useRouter();
@@ -36,7 +42,8 @@ const MapWrapper = ({
   const icon = new Icon.Default({ imagePath: `${getOrigin(router)}/` });
 
   // Helper function
-  const isLocationValid = () => location && location.length === 2 && location[0] > 0 && location[1] > 0;
+  const isLocationValid = () =>
+    location && location.length === 2 && location[0] > 0 && location[1] > 0;
 
   // Center on the marker if possible
   const center = isLocationValid() ? location : initialCenter;
@@ -50,7 +57,7 @@ const MapWrapper = ({
         console.log(marker);
         setLocation([marker.getLatLng().lat, marker.getLatLng().lng]);
       }
-    }
+    },
   };
 
   // Use a ref to store the previous location, as described in the React hooks docs
@@ -90,7 +97,7 @@ const MapWrapper = ({
         if (!isLocationValid() && setLocation) {
           setLocation([evt.latlng.lat, evt.latlng.lng]);
         }
-      }
+      },
     });
 
     // Nothing to render for this
@@ -104,14 +111,29 @@ const MapWrapper = ({
   };
 
   return (
-    <MapContainer className={styles.mapwrapper} center={center} zoom={initialZoom} minZoom={5} maxZoom={18} whenReady={whenReady}>
+    <MapContainer
+      className={styles.mapwrapper}
+      center={center}
+      zoom={initialZoom}
+      minZoom={5}
+      maxZoom={18}
+      whenReady={whenReady}
+    >
       <CustomMapHandler />
       <TileLayer
         url="http://tiles.hel.ninja/styles/hel-osm-bright/{z}/{x}/{y}@2x@fi.png"
-        attribution={`<a href="https://www.openstreetmap.org/copyright" target="_blank">© ${i18n.t("common.map.osm")}</a>`}
+        attribution={`<a href="https://www.openstreetmap.org/copyright" target="_blank">© ${i18n.t(
+          "common.map.osm"
+        )}</a>`}
       />
       {isLocationValid() && (
-        <Marker ref={markerRef} icon={icon} position={location} draggable={draggableMarker} eventHandlers={markerEventHandlers} />
+        <Marker
+          ref={markerRef}
+          icon={icon}
+          position={location}
+          draggable={draggableMarker}
+          eventHandlers={markerEventHandlers}
+        />
       )}
     </MapContainer>
   );
@@ -120,7 +142,7 @@ const MapWrapper = ({
 MapWrapper.defaultProps = {
   setLocation: undefined,
   setMapView: undefined,
-  setMapReady: undefined
+  setMapReady: undefined,
 };
 
 export default MapWrapper;

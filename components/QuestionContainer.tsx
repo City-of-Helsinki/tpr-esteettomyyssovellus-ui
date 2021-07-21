@@ -9,6 +9,7 @@ import { useI18n } from "next-localization";
 
 // used for wrapping question text and additional infos with question 'data component' e.g. dropdown
 const QuestionContainer = ({
+  questionId,
   questionNumber,
   questionText,
   questionInfo,
@@ -19,13 +20,14 @@ const QuestionContainer = ({
   backgroundColor,
   canAddLocation,
   canAddPhotoMaxCount,
-  canAddComment
+  canAddComment,
 }: QuestionContainerProps): JSX.Element => {
   const i18n = useI18n();
   const questionDepth = (questionNumber.toString().split(".") || []).length;
   const paddingLeft: string = (questionDepth - 2) * 5 + "rem";
   const photoTexts = photoText?.split("<BR>");
   const questionInfos = questionInfo?.split("<BR><BR>");
+
   return (
     <div
       className={styles.maincontainer}
@@ -59,6 +61,7 @@ const QuestionContainer = ({
         <div className={styles.children}>{children}</div>
         {hasAdditionalInfo ? (
           <QuestionAdditionalInformation
+            questionId={questionId}
             canAddLocation={canAddLocation}
             canAddPhotoMaxCount={canAddPhotoMaxCount}
             canAddComment={canAddComment}

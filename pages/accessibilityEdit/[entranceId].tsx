@@ -12,11 +12,17 @@ import ServicepointMainInfoContent from "../../components/ServicepointMainInfoCo
 import {
   API_FETCH_QUESTIONBLOCK_URL,
   API_FETCH_QUESTIONCHOICES,
-  API_FETCH_QUESTION_URL
+  API_FETCH_QUESTION_URL,
+  backendApiBaseUrl,
 } from "../../types/constants";
 import { useAppSelector, useAppDispatch } from "../../state/hooks";
 import QuestionBlock from "../../components/QuestionBlock";
-import { MainEntranceFormProps, QuestionBlockProps } from "../../types/general";
+import {
+  AddInfoPhoto,
+  AddInfoPhotoText,
+  MainEntranceFormProps,
+  QuestionBlockProps,
+} from "../../types/general";
 import HeadlineQuestionContainer from "../../components/HeadlineQuestionContainer";
 import { LANGUAGE_LOCALES } from "../../types/constants";
 import QuestionFormCtrlButtons from "../../components/QuestionFormCtrlButtons";
@@ -26,16 +32,24 @@ import {
   setAnsweredChoice,
   setEmail,
   setPhoneNumber,
-  setServicepointId
+  setServicepointId,
 } from "../../state/reducers/formSlice";
 import ContactInformationQuestionContainer from "../../components/ContactInformationQuestionContainer";
-
+import {
+  addComment,
+  addComponent,
+  addLocation,
+  addPicture,
+  setAlt,
+  setInitAdditionalInfoFromDb,
+} from "../../state/reducers/additionalInfoSlice";
 const AccessibilityEdit = ({
   QuestionsData,
   QuestionChoicesData,
   QuestionBlocksData,
   QuestionAnswerData,
-  ServicepointData
+  ServicepointData,
+  AdditionalInfosData,
 }: MainEntranceFormProps): ReactElement => {
   const i18n = useI18n();
   const curLocale: string = i18n.locale();
@@ -51,6 +65,85 @@ const AccessibilityEdit = ({
     dispatch(setPhoneNumber(ServicepointData["accessibility_phone"]));
     dispatch(setEmail(ServicepointData["accessibility_email"]));
     dispatch(setServicepointId(ServicepointData["servicepoint_id"]));
+  }
+
+  const additionalInfoInitedFromDb = useAppSelector(
+    (state) => state.additionalInfoReducer.initAddInfoFromDb
+  );
+
+  // loop additional info to state, only once if data found
+  if (AdditionalInfosData && !additionalInfoInitedFromDb) {
+    dispatch(setInitAdditionalInfoFromDb({ isInited: true }));
+    if (AdditionalInfosData.comments) {
+      AdditionalInfosData.comments.forEach((comment, ind) => {
+        const curLangStr = LANGUAGE_LOCALES[comment.language];
+        dispatch(
+          addComment({
+            questionId: comment.question,
+            language: curLangStr,
+            value: comment.comment,
+          })
+        );
+        // little hacky, only add component for the 1st language => fi for not adding 3 components if all languages
+        if (comment.language === 1 && ind === 0) {
+          dispatch(
+            addComponent({
+              questionId: comment.question,
+              type: "comment",
+              id: comment.answer_comment_id,
+            })
+          );
+        }
+      });
+    }
+    if (AdditionalInfosData.locations) {
+      AdditionalInfosData.locations.forEach((location) => {
+        // todo: todo
+        // dispatch(addLocation({}));
+      });
+    }
+
+    if (AdditionalInfosData.photos) {
+      AdditionalInfosData.photos.forEach((photo: AddInfoPhoto) => {
+        const picture = {
+          qNumber: photo.question,
+          id: photo.answer_photo_id,
+          base: photo.photo_url,
+          url: photo.photo_url,
+          fi: "",
+          sv: "",
+          en: "",
+        };
+
+        dispatch(addPicture(picture));
+        dispatch(
+          addComponent({
+            questionId: photo.question,
+            type: "link",
+            id: photo.answer_photo_id,
+          })
+        );
+
+        if (AdditionalInfosData.phototexts) {
+          const curPhotoAlts = AdditionalInfosData.phototexts.filter(
+            (phototext) => phototext.answer_photo === photo.answer_photo_id
+          );
+          if (curPhotoAlts) {
+            curPhotoAlts.forEach((alt: AddInfoPhotoText) => {
+              const curLangStr = LANGUAGE_LOCALES[alt.language];
+              dispatch(
+                setAlt({
+                  questionId: photo.question,
+                  language: curLangStr,
+                  value: alt.photo_text,
+                  compId: photo.answer_photo_id,
+                })
+              );
+            });
+          }
+        }
+      });
+    }
   }
 
   if (QuestionAnswerData) {
@@ -70,7 +163,7 @@ const AccessibilityEdit = ({
   }
 
   if (typeof window !== "undefined") {
-    window.onbeforeunload = (event) => {
+    window.onbeforeunload = (event: BeforeUnloadEvent) => {
       const e = event || window.event;
       // Cancel the event
       e.preventDefault();
@@ -214,7 +307,7 @@ const AccessibilityEdit = ({
 export const getServerSideProps: GetServerSideProps = async ({
   params,
   req,
-  locales
+  locales,
 }) => {
   const lngDict = await i18nLoader(locales);
 
@@ -235,6 +328,11 @@ export const getServerSideProps: GetServerSideProps = async ({
   let QuestionAnswerData;
   let EntranceData;
   let ServicepointData;
+  let AdditionalInfosData = {};
+  let AddInfoCommentsData;
+  let AddInfoLocationsData;
+  let AddInfoPhotosData;
+  let AddInfoPhotoTextsData;
   if (params != undefined) {
     try {
       const entrance_id = params.entranceId;
@@ -243,7 +341,7 @@ export const getServerSideProps: GetServerSideProps = async ({
       const QuestionChoicesResp = await fetch(API_FETCH_QUESTIONCHOICES);
       const QuestionBlocksResp = await fetch(API_FETCH_QUESTIONBLOCK_URL);
       const QuestionAnswersResp = await fetch(
-        `http://localhost:8000/api/ArBackendEntranceAnswer/?entrance_id=${entrance_id}&format=json`
+        `${backendApiBaseUrl}/ArBackendEntranceAnswer/?entrance_id=${entrance_id}&format=json`
       );
       const EntranceResp = await fetch(
         `http://localhost:8000/api/ArEntrances/${entrance_id}/?format=json`
@@ -258,6 +356,37 @@ export const getServerSideProps: GetServerSideProps = async ({
       QuestionBlocksData = await QuestionBlocksResp.json();
       QuestionAnswerData = await QuestionAnswersResp.json();
       ServicepointData = await ServicepointResp.json();
+      const logId = (await QuestionAnswerData[0].log_id) ?? -1;
+
+      if (logId && logId >= 0) {
+        const AddInfoComments = await fetch(
+          `${backendApiBaseUrl}/ArXQuesitonAnswerComment/?log=${logId}`
+        );
+
+        const AddInfoLocations = await fetch(
+          `${backendApiBaseUrl}/ArXQuesitonAnswerLocation/?log=${logId}`
+        );
+
+        const AddInfoPhotos = await fetch(
+          `${backendApiBaseUrl}/ArXQuesitonAnswerPhoto/?log=${logId}`
+        );
+
+        const AddInfoPhotoTexts = await fetch(
+          `${backendApiBaseUrl}/ArXQuesitonAnswerPhotoTxt/?log=${logId}`
+        );
+
+        AddInfoCommentsData = await AddInfoComments.json();
+        AddInfoLocationsData = await AddInfoLocations.json();
+        AddInfoPhotosData = await AddInfoPhotos.json();
+        AddInfoPhotoTextsData = await AddInfoPhotoTexts.json();
+
+        AdditionalInfosData = {
+          comments: AddInfoCommentsData,
+          locations: AddInfoLocationsData,
+          photos: AddInfoPhotosData,
+          phototexts: AddInfoPhotoTextsData,
+        };
+      }
     } catch (e) {
       QuestionsData = {};
       QuestionChoicesData = {};
@@ -265,6 +394,7 @@ export const getServerSideProps: GetServerSideProps = async ({
       QuestionAnswerData = {};
       EntranceData = {};
       ServicepointData = {};
+      AdditionalInfosData = {};
     }
   }
   return {
@@ -275,8 +405,9 @@ export const getServerSideProps: GetServerSideProps = async ({
       QuestionBlocksData: QuestionBlocksData,
       QuestionAnswerData: QuestionAnswerData,
       ServicepointData: ServicepointData,
-      lngDict
-    }
+      AdditionalInfosData: AdditionalInfosData,
+      lngDict,
+    },
   };
 };
 

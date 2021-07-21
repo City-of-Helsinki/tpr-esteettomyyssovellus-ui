@@ -17,6 +17,7 @@ export interface GeneralState {
 }
 
 export interface QuestionContainerProps {
+  questionId: number;
   questionNumber: number;
   questionText: string;
   questionInfo?: string | undefined;
@@ -125,9 +126,10 @@ export interface MapProps {
 // general for qnumber
 export interface AdditionalContentProps {
   onlyLink?: boolean;
-  questionNumber: string;
+  questionId: number;
   compId: number;
   onDelete?: (id?: number, type?: string) => void;
+  initValue?: any;
 }
 
 export interface Location {
@@ -148,18 +150,20 @@ export interface AdditionalComponentProps {
 }
 
 export interface PictureProps {
-  qNumber: string;
+  qNumber: number;
   id: number;
   base?: string;
   url?: string;
   name?: string;
-  source: string;
-  alt_fi: string;
-  alt_en?: string;
-  alt_sv?: string;
+  source?: string;
+  fi: string;
+  en?: string;
+  sv?: string;
 }
 
 export interface AdditionalInfoProps {
+  initAddInfoFromDb: any;
+  curEditingInitialState: object;
   [key: string]: AdditionalInfos;
 }
 
@@ -180,6 +184,42 @@ export interface MainEntranceFormProps {
   QuestionBlocksData?: QuestionBlockProps[];
   ServicepointData?: any;
   QuestionAnswerData?: any;
+  AdditionalInfosData?: FetchAdditionalInfos;
+}
+
+interface FetchAdditionalInfos {
+  comments?: addInfoComment[];
+  locations?: AddInfoLocation[];
+  photos?: AddInfoPhoto[];
+  phototexts?: AddInfoPhotoText[];
+}
+
+export interface addInfoComment {
+  answer_comment_id: number;
+  comment: string;
+  language: number;
+  log: number;
+  question: number;
+}
+
+export interface AddInfoLocation {
+  answer_location_id: number;
+  loc_easting: number;
+  loc_northing: number;
+}
+
+export interface AddInfoPhoto {
+  answer_photo_id: number;
+  photo_url: string;
+  log: number;
+  question: number;
+}
+
+export interface AddInfoPhotoText {
+  answer_photo_txt_id: number;
+  answer_photo: number;
+  language: number;
+  photo_text: string;
 }
 
 // todo: added ? optional questionmark to all, remove where mandatory
@@ -257,6 +297,7 @@ export interface PathTreeProps {
 }
 
 export interface QuestionAdditionalInfoProps {
+  questionId: number;
   canAddLocation?: boolean;
   canAddPhotoMaxCount?: number;
   canAddComment?: boolean;
@@ -264,4 +305,13 @@ export interface QuestionAdditionalInfoProps {
 
 export interface ContactInformationProps {
   blockNumber?: number;
+}
+
+export interface AdditionalInfoPageProps {
+  questionId: number;
+  questionData?: QuestionProps[];
+}
+
+export interface AdditionalInfoCtrlButtonsProps {
+  questionId: number;
 }
