@@ -8,6 +8,15 @@ import router from "next/router";
 import { useI18n } from "next-localization";
 import publicIp from "public-ip";
 import { API_URL_BASE, FRONT_URL_BASE } from "../types/constants";
+import {
+  changeEmailStatus,
+  changePhoneNumberStatus,
+  setFinished,
+  setInvalid,
+  unsetFinished,
+  unsetInvalid,
+  changeContactPersonStatus
+} from "../state/reducers/formSlice";
 
 export const getClientIp = async () =>
   await publicIp.v4({
@@ -18,7 +27,8 @@ const QuestionFormCtrlButtons = ({
   hasCancelButton,
   hasValidateButton,
   hasSaveDraftButton,
-  hasPreviewButton
+  hasPreviewButton,
+  visibleBlocks
 }: QuestionFormCtrlButtonsProps): JSX.Element => {
   // TODO: save button might need own component of Button
   // also preview view should probably also have own component/buttons
@@ -26,6 +36,7 @@ const QuestionFormCtrlButtons = ({
   // testing click handle, edit with real logic later
   // also add handlers for all buttons respectively
   const i18n = useI18n();
+  const dispatch = useAppDispatch();
 
   let curAnsweredChoices = useAppSelector(
     (state) => state.formReducer.answeredChoices
@@ -36,9 +47,12 @@ const QuestionFormCtrlButtons = ({
   const startedAnswering = useAppSelector(
     (state) => state.formReducer.startedAnswering
   );
-
   const curEntranceId = useAppSelector(
     (state) => state.formReducer.currentEntranceId
+  );
+  const contacts = useAppSelector((state) => state.formReducer.contacts);
+  const finishedBlocks = useAppSelector(
+    (state) => state.formReducer.finishedBlocks
   );
 
   const handleCancel = (): void => {
@@ -130,6 +144,26 @@ const QuestionFormCtrlButtons = ({
     // TODO: CREATE SENTENCES WITH FUNCTION CALL
   };
 
+  const validateForm = () => {
+    console.log("Started validating.");
+
+    // VALIDATE BLOCKS
+    visibleBlocks?.forEach((elem) => {
+      if (elem != null) {
+        if (!finishedBlocks.includes(Number(elem?.key?.toString()))) {
+          dispatch(setInvalid(Number(elem?.key?.toString())));
+        } else {
+          dispatch(unsetInvalid(Number(elem?.key?.toString())));
+        }
+      }
+    });
+  };
+
+  const handleValidateClick = () => {
+    console.log("Validate clicked");
+    validateForm();
+  };
+
   return (
     <Card className={styles.container}>
       <div className={styles.left}>
@@ -145,7 +179,7 @@ const QuestionFormCtrlButtons = ({
       </div>
       <div className={styles.right}>
         {hasValidateButton ? (
-          <Button variant="secondary">
+          <Button variant="secondary" onClickHandler={handleValidateClick}>
             {i18n.t("questionFormControlButtons.verifyInformation")}
           </Button>
         ) : null}

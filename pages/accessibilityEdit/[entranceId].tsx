@@ -27,7 +27,9 @@ import {
   setAnsweredChoice,
   setEmail,
   setPhoneNumber,
-  setServicepointId
+  setServicepointId,
+  initForm,
+  setContactPerson
 } from "../../state/reducers/formSlice";
 import ContactInformationQuestionContainer from "../../components/ContactInformationQuestionContainer";
 
@@ -47,11 +49,18 @@ const AccessibilityEdit = ({
   let curAnsweredChoices = useAppSelector(
     (state) => state.formReducer.answeredChoices
   );
+  let curInvalidBlocks = useAppSelector(
+    (state) => state.formReducer.invalidBlocks
+  );
+  let formInited = useAppSelector((state) => state.formReducer.formInited);
 
-  if (ServicepointData != undefined) {
+  if (ServicepointData != undefined && !formInited) {
+    // TODO: POSSIBLY VALIDATE THESE STRAIGHT AWAY
     dispatch(setPhoneNumber(ServicepointData["accessibility_phone"]));
     dispatch(setEmail(ServicepointData["accessibility_email"]));
     dispatch(setServicepointId(ServicepointData["servicepoint_id"]));
+    dispatch(setContactPerson(""));
+    dispatch(initForm());
   }
 
   if (QuestionAnswerData) {
@@ -136,32 +145,38 @@ const AccessibilityEdit = ({
             block.question_block_code != undefined
           )
             lastBlockNumber = block.question_block_code;
-          {
-            return isVisible && blockQuestions && answerChoices ? (
-              <HeadlineQuestionContainer
-                key={block.question_block_id}
-                number={block.question_block_id}
-                text={block.question_block_code + " " + block.text}
-                initOpen={block.question_block_id == nextBlock}
-              >
-                <QuestionBlock
-                  description={block.description ?? null}
-                  questions={blockQuestions}
-                  answers={answerChoices}
-                  photoUrl={block.photo_url}
-                  photoText={block.photo_text}
-                />
-              </HeadlineQuestionContainer>
-            ) : null;
-          }
+
+          return isVisible &&
+            blockQuestions &&
+            answerChoices &&
+            block.question_block_id != undefined ? (
+            <HeadlineQuestionContainer
+              key={block.question_block_id}
+              number={block.question_block_id}
+              text={block.question_block_code + " " + block.text}
+              initOpen={block.question_block_id == nextBlock}
+              isValid={!curInvalidBlocks.includes(block.question_block_id)}
+            >
+              <QuestionBlock
+                description={block.description ?? null}
+                questions={blockQuestions}
+                answers={answerChoices}
+                photoUrl={block.photo_url}
+                photoText={block.photo_text}
+              />
+            </HeadlineQuestionContainer>
+          ) : null;
         })
       : null;
 
   if (isContinueClicked) {
     visibleBlocks?.push(
       <HeadlineQuestionContainer
+        key={99}
+        number={99}
         text={i18n.t("ContactInformation.contactInformation")}
         initOpen={false}
+        isValid={!curInvalidBlocks.includes(99)}
       >
         <ContactInformationQuestionContainer
           blockNumber={Number(lastBlockNumber) + 1}
@@ -204,6 +219,7 @@ const AccessibilityEdit = ({
               hasValidateButton={isContinueClicked}
               hasSaveDraftButton
               hasPreviewButton
+              visibleBlocks={visibleBlocks}
             />
           </div>
         </div>
