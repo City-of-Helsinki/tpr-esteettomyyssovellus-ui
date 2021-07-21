@@ -72,7 +72,6 @@ const QuestionFormCtrlButtons = ({
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data)
     };
-    console.log(data);
     //console.log(postAnswerOptions);
     return fetch(url, postAnswerOptions)
       .then((response) => response.json())
@@ -130,7 +129,6 @@ const QuestionFormCtrlButtons = ({
 
     // CHECK IF RETURNED LOG_ID IS A NUMBER. IF NOT A NUMBER STOP EXECUTING
     if (!isNaN(logId)) {
-      console.log(logId);
       // POST ALL QUESTION ANSWERS
       const data = { log: logId, data: curAnsweredChoices };
       postData(API_URL_BASE + "ArXQuestionAnswer/", data);

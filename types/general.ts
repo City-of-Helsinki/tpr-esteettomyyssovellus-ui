@@ -18,6 +18,7 @@ export interface GeneralState {
 
 export interface QuestionContainerProps {
   questionId?: number;
+  questionBlockId?: number;
   questionNumber: number;
   questionText: string;
   questionInfo?: string | undefined;
