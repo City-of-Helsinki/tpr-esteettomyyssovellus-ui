@@ -27,17 +27,14 @@ import HeadlineQuestionContainer from "../../components/HeadlineQuestionContaine
 import { LANGUAGE_LOCALES } from "../../types/constants";
 import QuestionFormCtrlButtons from "../../components/QuestionFormCtrlButtons";
 import PathTreeComponent from "../../components/PathTreeComponent";
-<<<<<<< HEAD
 import {
   setAnswer,
   setAnsweredChoice,
   setEmail,
   setPhoneNumber,
-  setServicepointId
+  setServicepointId,
 } from "../../state/reducers/formSlice";
 import ContactInformationQuestionContainer from "../../components/ContactInformationQuestionContainer";
-=======
-import { setAnswer, setAnsweredChoice } from "../../state/reducers/formSlice";
 import {
   addComment,
   addComponent,
@@ -46,18 +43,13 @@ import {
   setAlt,
   setInitAdditionalInfoFromDb,
 } from "../../state/reducers/additionalInfoSlice";
->>>>>>> looping the addinfo from db to state and other related fixes
-
 const AccessibilityEdit = ({
   QuestionsData,
   QuestionChoicesData,
   QuestionBlocksData,
   QuestionAnswerData,
-<<<<<<< HEAD
-  ServicepointData
-=======
+  ServicepointData,
   AdditionalInfosData,
->>>>>>> looping the addinfo from db to state and other related fixes
 }: MainEntranceFormProps): ReactElement => {
   const i18n = useI18n();
   const curLocale: string = i18n.locale();
@@ -69,12 +61,12 @@ const AccessibilityEdit = ({
     (state) => state.formReducer.answeredChoices
   );
 
-<<<<<<< HEAD
   if (ServicepointData != undefined) {
     dispatch(setPhoneNumber(ServicepointData["accessibility_phone"]));
     dispatch(setEmail(ServicepointData["accessibility_email"]));
     dispatch(setServicepointId(ServicepointData["servicepoint_id"]));
-=======
+  }
+
   const additionalInfoInitedFromDb = useAppSelector(
     (state) => state.additionalInfoReducer.initAddInfoFromDb
   );
@@ -151,7 +143,6 @@ const AccessibilityEdit = ({
         }
       });
     }
->>>>>>> looping the addinfo from db to state and other related fixes
   }
 
   if (QuestionAnswerData) {
@@ -171,7 +162,7 @@ const AccessibilityEdit = ({
   }
 
   if (typeof window !== "undefined") {
-    window.onbeforeunload = (event) => {
+    window.onbeforeunload = (event: BeforeUnloadEvent) => {
       const e = event || window.event;
       // Cancel the event
       e.preventDefault();
@@ -418,7 +409,7 @@ export const getServerSideProps: GetServerSideProps = async ({
       QuestionAnswerData: QuestionAnswerData,
       ServicepointData: ServicepointData,
       AdditionalInfosData: AdditionalInfosData,
-      lngDict
+      lngDict,
     },
   };
 };

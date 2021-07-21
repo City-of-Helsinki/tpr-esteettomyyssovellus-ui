@@ -32,6 +32,7 @@ const AdditionalInfoPicturesContent = ({
   // also use filename for conditionally displaying buttons and alt-text & preview picture
   const dispatch = useAppDispatch();
 
+  // TODO: change this it breaks if prev values
   const currentId = compId;
   const curAddInfo = useAppSelector(
     (state) => state.additionalInfoReducer[questionId]
@@ -154,7 +155,6 @@ const AdditionalInfoPicturesContent = ({
       {i18n.t("additionalInfo.chooseFromDevice")}
     </QuestionButton>
   ) : (
-    //todo: need to remove image first
     <QuestionButton
       variant="secondary"
       onClickHandler={() => handleImageRemoveAndAdded()}
@@ -287,6 +287,7 @@ const AdditionalInfoPicturesContent = ({
                   "additionalInfo.sharePictureLicenseText"
                 )} ${i18n.t("additionalInfo.sharePictureLicense")}}`}
                 name="agreeToPictureTerms"
+                // defaultChecked={initValue?.id === compId ? true : termsChecked}
                 checked={termsChecked}
                 onChange={onCheckChange}
               />

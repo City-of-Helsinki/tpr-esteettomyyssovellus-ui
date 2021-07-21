@@ -5,7 +5,7 @@ import QuestionContainer from "./QuestionContainer";
 import {
   QuestionChoicesProps,
   QuestionDataProps,
-  QuestionsListProps
+  QuestionsListProps,
 } from "../types/general";
 import { TextInput } from "hds-react";
 import { Dictionary } from "@reduxjs/toolkit";
@@ -17,7 +17,7 @@ import { useAppSelector } from "../state/hooks";
 const QuestionsList = ({
   additionalInfoVisible,
   questions,
-  answers
+  answers,
 }: QuestionsListProps): JSX.Element => {
   let dataComponent: JSX.Element;
   return (
@@ -28,7 +28,7 @@ const QuestionsList = ({
           .map((choice) => {
             return {
               label: choice.text,
-              value: choice.question_choice_id
+              value: choice.question_choice_id,
             };
           });
 
@@ -37,6 +37,7 @@ const QuestionsList = ({
         return (
           <QuestionContainer
             key={question.question_id}
+            questionId={question.question_id}
             questionNumber={question.question_code}
             questionText={question.text}
             questionInfo={question.description ?? null}

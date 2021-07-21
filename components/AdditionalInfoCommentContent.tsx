@@ -30,7 +30,7 @@ const AdditionalInfoCommentContent = ({
     dispatch(removeComment({ questionId }));
   };
 
-  // only update state after 1 sec from prev KeyDown, set Alt text with correct lang
+  // only update state after .5 sec from prev KeyDown, set Alt text with correct lang
   let timer: NodeJS.Timeout;
   const handleAddComment = (
     e: React.KeyboardEvent<HTMLTextAreaElement>,
