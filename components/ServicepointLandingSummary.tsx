@@ -6,10 +6,9 @@ import ServicepointLandingSummaryContent from "./ServicepointLandingSummaryConte
 import { ServicepointLandingSummaryProps } from "../types/general";
 import styles from "./ServicepointLandingSummary.module.scss";
 import router from "next/router";
-import { current } from "@reduxjs/toolkit";
-import { array } from "yup/lib/locale";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { setStartDate } from "../state/reducers/formSlice";
+import { FRONT_URL_BASE } from "../types/constants";
 
 const ServicepointLandingSummary = ({
   header,
@@ -38,7 +37,7 @@ const ServicepointLandingSummary = ({
         ":" +
         today.getSeconds();
       dispatch(setStartDate(startedAnswering));
-      const url = "http://localhost:3000/accessibilityEdit/" + curEntranceId;
+      const url = FRONT_URL_BASE + "accessibilityEdit/" + curEntranceId;
       // TODO: This preserves the state. Not necessary.
       router.push(url);
     } else {

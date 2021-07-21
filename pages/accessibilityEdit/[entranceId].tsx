@@ -12,7 +12,8 @@ import ServicepointMainInfoContent from "../../components/ServicepointMainInfoCo
 import {
   API_FETCH_QUESTIONBLOCK_URL,
   API_FETCH_QUESTIONCHOICES,
-  API_FETCH_QUESTION_URL
+  API_FETCH_QUESTION_URL,
+  API_URL_BASE
 } from "../../types/constants";
 import { useAppSelector, useAppDispatch } from "../../state/hooks";
 import QuestionBlock from "../../components/QuestionBlock";
@@ -243,15 +244,16 @@ export const getServerSideProps: GetServerSideProps = async ({
       const QuestionChoicesResp = await fetch(API_FETCH_QUESTIONCHOICES);
       const QuestionBlocksResp = await fetch(API_FETCH_QUESTIONBLOCK_URL);
       const QuestionAnswersResp = await fetch(
-        `http://localhost:8000/api/ArBackendEntranceAnswer/?entrance_id=${entrance_id}&format=json`
+        API_URL_BASE +
+          `ArBackendEntranceAnswer/?entrance_id=${entrance_id}&format=json`
       );
       const EntranceResp = await fetch(
-        `http://localhost:8000/api/ArEntrances/${entrance_id}/?format=json`
+        API_URL_BASE + `ArEntrances/${entrance_id}/?format=json`
       );
       EntranceData = await EntranceResp.json();
       const servicepoint_id = EntranceData["servicepoint"];
       const ServicepointResp = await fetch(
-        `http://localhost:8000/api/ArServicepoints/${servicepoint_id}/?format=json`
+        API_URL_BASE + `ArServicepoints/${servicepoint_id}/?format=json`
       );
       QuestionsData = await QuestionsResp.json();
       QuestionChoicesData = await QuestionChoicesResp.json();
