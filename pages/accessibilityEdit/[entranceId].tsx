@@ -14,6 +14,7 @@ import {
   API_FETCH_QUESTIONCHOICES,
   API_FETCH_QUESTION_URL,
   backendApiBaseUrl,
+  API_URL_BASE
 } from "../../types/constants";
 import { useAppSelector, useAppDispatch } from "../../state/hooks";
 import QuestionBlock from "../../components/QuestionBlock";
@@ -21,7 +22,7 @@ import {
   AddInfoPhoto,
   AddInfoPhotoText,
   MainEntranceFormProps,
-  QuestionBlockProps,
+  QuestionBlockProps
 } from "../../types/general";
 import HeadlineQuestionContainer from "../../components/HeadlineQuestionContainer";
 import { LANGUAGE_LOCALES } from "../../types/constants";
@@ -32,7 +33,7 @@ import {
   setAnsweredChoice,
   setEmail,
   setPhoneNumber,
-  setServicepointId,
+  setServicepointId
 } from "../../state/reducers/formSlice";
 import ContactInformationQuestionContainer from "../../components/ContactInformationQuestionContainer";
 import {
@@ -41,7 +42,7 @@ import {
   addLocation,
   addPicture,
   setAlt,
-  setInitAdditionalInfoFromDb,
+  setInitAdditionalInfoFromDb
 } from "../../state/reducers/additionalInfoSlice";
 const AccessibilityEdit = ({
   QuestionsData,
@@ -49,7 +50,7 @@ const AccessibilityEdit = ({
   QuestionBlocksData,
   QuestionAnswerData,
   ServicepointData,
-  AdditionalInfosData,
+  AdditionalInfosData
 }: MainEntranceFormProps): ReactElement => {
   const i18n = useI18n();
   const curLocale: string = i18n.locale();
@@ -81,7 +82,7 @@ const AccessibilityEdit = ({
           addComment({
             questionId: comment.question,
             language: curLangStr,
-            value: comment.comment,
+            value: comment.comment
           })
         );
         // little hacky, only add component for the 1st language => fi for not adding 3 components if all languages
@@ -90,7 +91,7 @@ const AccessibilityEdit = ({
             addComponent({
               questionId: comment.question,
               type: "comment",
-              id: comment.answer_comment_id,
+              id: comment.answer_comment_id
             })
           );
         }
@@ -112,7 +113,7 @@ const AccessibilityEdit = ({
           url: photo.photo_url,
           fi: "",
           sv: "",
-          en: "",
+          en: ""
         };
 
         dispatch(addPicture(picture));
@@ -120,7 +121,7 @@ const AccessibilityEdit = ({
           addComponent({
             questionId: photo.question,
             type: "link",
-            id: photo.answer_photo_id,
+            id: photo.answer_photo_id
           })
         );
 
@@ -136,7 +137,7 @@ const AccessibilityEdit = ({
                   questionId: photo.question,
                   language: curLangStr,
                   value: alt.photo_text,
-                  compId: photo.answer_photo_id,
+                  compId: photo.answer_photo_id
                 })
               );
             });
@@ -307,7 +308,7 @@ const AccessibilityEdit = ({
 export const getServerSideProps: GetServerSideProps = async ({
   params,
   req,
-  locales,
+  locales
 }) => {
   const lngDict = await i18nLoader(locales);
 
@@ -344,12 +345,12 @@ export const getServerSideProps: GetServerSideProps = async ({
         `${backendApiBaseUrl}/ArBackendEntranceAnswer/?entrance_id=${entrance_id}&format=json`
       );
       const EntranceResp = await fetch(
-        `http://localhost:8000/api/ArEntrances/${entrance_id}/?format=json`
+        API_URL_BASE + `ArEntrances/${entrance_id}/?format=json`
       );
       EntranceData = await EntranceResp.json();
       const servicepoint_id = EntranceData["servicepoint"];
       const ServicepointResp = await fetch(
-        `http://localhost:8000/api/ArServicepoints/${servicepoint_id}/?format=json`
+        API_URL_BASE + `ArServicepoints/${servicepoint_id}/?format=json`
       );
       QuestionsData = await QuestionsResp.json();
       QuestionChoicesData = await QuestionChoicesResp.json();
@@ -384,7 +385,7 @@ export const getServerSideProps: GetServerSideProps = async ({
           comments: AddInfoCommentsData,
           locations: AddInfoLocationsData,
           photos: AddInfoPhotosData,
-          phototexts: AddInfoPhotoTextsData,
+          phototexts: AddInfoPhotoTextsData
         };
       }
     } catch (e) {
@@ -406,8 +407,8 @@ export const getServerSideProps: GetServerSideProps = async ({
       QuestionAnswerData: QuestionAnswerData,
       ServicepointData: ServicepointData,
       AdditionalInfosData: AdditionalInfosData,
-      lngDict,
-    },
+      lngDict
+    }
   };
 };
 
