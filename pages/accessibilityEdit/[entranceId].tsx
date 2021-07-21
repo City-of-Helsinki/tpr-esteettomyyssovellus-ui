@@ -84,6 +84,7 @@ const AccessibilityEdit = ({
             value: comment.comment,
           })
         );
+        // little hacky, only add component for the 1st language => fi for not adding 3 components if all languages
         if (comment.language === 1 && ind === 0) {
           dispatch(
             addComponent({
@@ -357,8 +358,6 @@ export const getServerSideProps: GetServerSideProps = async ({
       ServicepointData = await ServicepointResp.json();
       const logId = (await QuestionAnswerData[0].log_id) ?? -1;
 
-      console.log("IIIDDD", logId);
-
       if (logId && logId >= 0) {
         const AddInfoComments = await fetch(
           `${backendApiBaseUrl}/ArXQuesitonAnswerComment/?log=${logId}`
@@ -375,8 +374,6 @@ export const getServerSideProps: GetServerSideProps = async ({
         const AddInfoPhotoTexts = await fetch(
           `${backendApiBaseUrl}/ArXQuesitonAnswerPhotoTxt/?log=${logId}`
         );
-
-        console.log("halal2");
 
         AddInfoCommentsData = await AddInfoComments.json();
         AddInfoLocationsData = await AddInfoLocations.json();
