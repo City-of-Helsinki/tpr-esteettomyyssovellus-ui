@@ -5,13 +5,23 @@ import QuestionContainer from "./QuestionContainer";
 import { TextInput } from "hds-react";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { ContactInformationProps } from "../types/general";
-import { setEmail, setPhoneNumber } from "../state/reducers/formSlice";
+import {
+  setEmail,
+  setPhoneNumber,
+  setContactPerson,
+  changeContactPersonStatus,
+  changePhoneNumberStatus,
+  changeEmailStatus,
+  setFinished,
+  unsetFinished
+} from "../state/reducers/formSlice";
 
 const ContactInformationQuestionContainer = ({
   blockNumber
 }: ContactInformationProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
+
   const contactQuestions = [
     {
       placeholder: i18n.t("ContactInformation.personPlaceholder"),
@@ -40,18 +50,55 @@ const ContactInformationQuestionContainer = ({
   ];
 
   const handleChange = (event: any) => {
+    // REGEXES FOR VALIDATING
+    var phonePattern = new RegExp(/^[^a-zA-Z]+$/);
+    var emailPattern = new RegExp(
+      /^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i
+    );
+
     switch (event.target.id) {
       case "-1":
-        // TODO: update contact person
+        dispatch(setContactPerson(event.target.value));
+        // VALIDATE CONTACTPERSON
+        if (event.target.value.length > 0) {
+          dispatch(changeContactPersonStatus(true));
+        } else {
+          dispatch(changeContactPersonStatus(false));
+        }
         break;
       case "-2":
         dispatch(setPhoneNumber(event.target.value));
+        // VALIDATE PHONE
+        if (!phonePattern.test(event.target.value)) {
+          dispatch(changePhoneNumberStatus(false));
+        } else {
+          dispatch(changePhoneNumberStatus(true));
+        }
         break;
       case "-3":
         dispatch(setEmail(event.target.value));
+        // VALIDATE EMAIL
+        if (!emailPattern.test(event.target.value)) {
+          dispatch(changeEmailStatus(false));
+        } else {
+          dispatch(changeEmailStatus(true));
+        }
         break;
     }
   };
+
+  // CHECK IF THE BLOCK IS FINISHED
+  const contacts = useAppSelector((state) => state.formReducer.contacts);
+  if (Object.values(contacts).every((e) => e[1] == true)) {
+    dispatch(setFinished(99));
+  } else {
+    dispatch(unsetFinished(99));
+  }
+
+  const invalidBlocks = useAppSelector(
+    (state) => state.formReducer.invalidBlocks
+  );
+  const isInvalid = invalidBlocks.includes(99);
 
   return (
     <>
@@ -63,42 +110,68 @@ const ContactInformationQuestionContainer = ({
         <QuestionFormImportExistingData />
       </div>
       {contactQuestions.map((question, ind: number) => {
-        const phoneNumber = useAppSelector(
-          (state) => state.formReducer.contacts
-        )["phoneNumber"];
-        const email = useAppSelector((state) => state.formReducer.contacts)[
-          "email"
-        ];
+        const contacts = useAppSelector((state) => state.formReducer.contacts);
+        const phoneNumber = contacts["phoneNumber"];
+        const email = contacts["email"];
+        const contactPerson = contacts["contactPerson"];
         let value = "";
+        let error = "";
+        let isAnswered = false;
         const backgroundColor: string = ind % 2 === 0 ? "#f2f2fc" : "#ffffff";
+
         switch (question.question_id) {
           case -1:
-            // TODO: Handle contact person
+            value = contactPerson[0];
+            isAnswered = contactPerson[1];
+            error = contactPerson[1] ? "" : "Please input contactperson";
             break;
           case -2:
-            value = phoneNumber;
+            value = phoneNumber[0];
+            isAnswered = phoneNumber[1];
+            // phoneNumber[1] is a boolean value indicating whether the phone number
+            // is valid. If the phone number is invalid displays an error text
+            error = phoneNumber[1] ? "" : "Please input valid phonenumber";
             break;
           case -3:
-            value = email;
+            value = email[0];
+            isAnswered = email[1];
+            // email[1] is a boolean value indicating whether the email
+            // is valid. If the email is invalid displays an error text
+            error = email[1] ? "" : "Please input valid email";
             break;
         }
 
+        const questionStyle =
+          isInvalid && !isAnswered
+            ? {
+                backgroundColor,
+                marginBottom: "0.1rem",
+                borderStyle: "solid",
+                borderColor: "#b01038"
+              }
+            : {
+                backgroundColor
+              };
+
         return (
-          <QuestionContainer
-            key={question.question_code}
-            questionNumber={Number(question.question_code)}
-            questionText={question.text}
-            backgroundColor={backgroundColor}
-            hasAdditionalInfo={false}
-          >
-            <TextInput
-              className={styles.textInput}
-              id={question.question_id.toString()}
-              placeholder={question.placeholder}
-              onChange={handleChange}
-              value={value ? value : undefined}
-            />
-          </QuestionContainer>
+          <div style={questionStyle}>
+            <QuestionContainer
+              key={question.question_code}
+              questionNumber={Number(question.question_code)}
+              questionText={question.text}
+              backgroundColor={backgroundColor}
+              hasAdditionalInfo={false}
+            >
+              <TextInput
+                className={styles.textInput}
+                id={question.question_id.toString()}
+                placeholder={question.placeholder}
+                onChange={handleChange}
+                value={value ? value : undefined}
+                errorText={error}
+              />
+            </QuestionContainer>
+          </div>
         );
       })}
     </>

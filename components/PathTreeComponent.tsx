@@ -14,6 +14,7 @@ import {
 import styles from "./PathTreeComponent.module.scss";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
 import { useI18n } from "next-localization";
+import { FRONT_URL_BASE } from "../types/constants";
 
 const PathTreeComponent = ({ treeItems }: PathTreeProps): JSX.Element => {
   const i18n = useI18n();
@@ -35,7 +36,7 @@ const PathTreeComponent = ({ treeItems }: PathTreeProps): JSX.Element => {
           <p>{" > "}</p>
           <a
             className={styles.link}
-            href={"http://localhost:3000/servicepoint/" + curServicepointId}
+            href={FRONT_URL_BASE + "servicepoint/" + curServicepointId}
           >
             {elem}
           </a>
@@ -47,7 +48,7 @@ const PathTreeComponent = ({ treeItems }: PathTreeProps): JSX.Element => {
 
   return (
     <>
-      <a href={"http://localhost:3000/"} className={styles.link}>
+      <a href={FRONT_URL_BASE} className={styles.link}>
         {"PH: Haku"}
       </a>{" "}
       {pathTree}

@@ -2,22 +2,14 @@ import React from "react";
 import QuestionDropdown from "./QuestionDropdown";
 import QuestionRadioButtons from "./QuestionRadioButtons";
 import QuestionContainer from "./QuestionContainer";
-import {
-  QuestionChoicesProps,
-  QuestionDataProps,
-  QuestionsListProps,
-} from "../types/general";
-import { TextInput } from "hds-react";
-import { Dictionary } from "@reduxjs/toolkit";
-import styles from "./QuestionList.module.scss";
-import { useAppSelector } from "../state/hooks";
+import { QuestionsListProps } from "../types/general";
 
 // TODO: when data, get questions data as props and map to return
 // used to list multiple questions: <QContainer><QElement /></QC>
 const QuestionsList = ({
   additionalInfoVisible,
   questions,
-  answers,
+  answers
 }: QuestionsListProps): JSX.Element => {
   let dataComponent: JSX.Element;
   return (
@@ -28,16 +20,16 @@ const QuestionsList = ({
           .map((choice) => {
             return {
               label: choice.text,
-              value: choice.question_choice_id,
+              value: choice.question_choice_id
             };
           });
 
         const backgroundColor: string = ind % 2 === 0 ? "#f2f2fc" : "#ffffff";
-
         return (
           <QuestionContainer
             key={question.question_id}
             questionId={question.question_id}
+            questionBlockId={question.question_block_id}
             questionNumber={question.question_code}
             questionText={question.text}
             questionInfo={question.description ?? null}
@@ -73,6 +65,7 @@ const QuestionsList = ({
                   key={question.question_id}
                   options={answerChoices}
                   questionNumber={question.question_id}
+                  blockId={question.question_block_id}
                 />
               </>
             )}

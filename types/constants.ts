@@ -14,10 +14,14 @@ export const API_FETCH_QUESTION_URL = `${backendApiBaseUrl}/ArBackendQuestions/?
 export const API_FETCH_QUESTIONCHOICES = `${backendApiBaseUrl}/ArBackendQuestionChoice/?form_id=0&format=json`;
 // export const API_FETCH_ADDITIONALINFOS = `${backendApiBaseUrl}/ArXAdditionalinfo/`;
 
+export const API_URL_BASE = "http://localhost:8000/api/";
+
+export const FRONT_URL_BASE = "http://localhost:3000/";
+
 export enum LANGUAGE_LOCALES {
   fi = 1,
   sv = 2,
-  en = 3,
+  en = 3
 }
 
 export default null;

@@ -20,7 +20,7 @@ import SearchBoxWithButtons from "../components/SearchBoxWithButtons";
 import SearchBoxWithButtonsMobile from "../components/SearchBoxWithButtonsMobile";
 import { Hero, HeroShallow } from "../components/common/Hero";
 import { MainEntranceFormProps, QuestionBlockProps } from "../types/general";
-import { LANGUAGE_LOCALES } from "../types/constants";
+import { FRONT_URL_BASE, LANGUAGE_LOCALES } from "../types/constants";
 import { connect } from "react-redux";
 
 import { setAnsweredChoice } from "../state/reducers/formSlice";
@@ -85,7 +85,7 @@ const Main = ({
   // let heroUrl = "https://i.stack.imgur.com/y9DpT.jpg";
   // let heroUrl = "https://i.stack.imgur.com/y9DpT.jpg";
 
-  const heroUrl = "http://localhost:3000/homepagephoto.png";
+  const heroUrl = FRONT_URL_BASE + "homepagephoto.png";
 
   // TODO: isHero variable can be removed if the hero component is placed directly to index.tsx. If it is placed into a page templ
   // let isHero = true;

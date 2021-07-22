@@ -17,7 +17,8 @@ export interface GeneralState {
 }
 
 export interface QuestionContainerProps {
-  questionId: number;
+  questionId?: number;
+  questionBlockId?: number;
   questionNumber: number;
   questionText: string;
   questionInfo?: string | undefined;
@@ -36,6 +37,7 @@ export interface HeadlineQuestionContainerProps {
   initOpen?: boolean;
   children?: any;
   number?: number;
+  isValid?: boolean;
 }
 
 export interface DropdownQuestionProps {
@@ -43,6 +45,7 @@ export interface DropdownQuestionProps {
   label?: string;
   placeholder?: string;
   questionNumber?: number;
+  blockId?: number;
 }
 
 export interface QuestionInfoProps {
@@ -85,6 +88,7 @@ export interface QuestionFormCtrlButtonsProps {
   hasValidateButton?: boolean;
   hasSaveDraftButton?: boolean;
   hasPreviewButton?: boolean;
+  visibleBlocks?: (JSX.Element | null)[] | null;
 }
 
 // todo: add type for questionlist
