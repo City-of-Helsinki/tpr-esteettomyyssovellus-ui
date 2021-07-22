@@ -181,7 +181,7 @@ const AccessibilityEdit = ({
     }
   }
 
-  if (QuestionAnswerData) {
+  if (Object.keys(QuestionAnswerData).length !== 0) {
     let curAnswers = useAppSelector((state) => state.formReducer.answers);
     QuestionAnswerData.map((a: any) => {
       const questionNumber = a.question_id;
@@ -398,38 +398,40 @@ export const getServerSideProps: GetServerSideProps = async ({
       QuestionBlocksData = await QuestionBlocksResp.json();
       QuestionAnswerData = await QuestionAnswersResp.json();
       ServicepointData = await ServicepointResp.json();
-      const logId = (await QuestionAnswerData[0].log_id) ?? -1;
+      if (QuestionAnswerData.length != 0) {
+        const logId = (await QuestionAnswerData[0].log_id) ?? -1;
+        if (logId && logId >= 0) {
+          const AddInfoComments = await fetch(
+            `${backendApiBaseUrl}/ArXQuesitonAnswerComment/?log=${logId}`
+          );
 
-      if (logId && logId >= 0) {
-        const AddInfoComments = await fetch(
-          `${backendApiBaseUrl}/ArXQuesitonAnswerComment/?log=${logId}`
-        );
+          const AddInfoLocations = await fetch(
+            `${backendApiBaseUrl}/ArXQuesitonAnswerLocation/?log=${logId}`
+          );
 
-        const AddInfoLocations = await fetch(
-          `${backendApiBaseUrl}/ArXQuesitonAnswerLocation/?log=${logId}`
-        );
+          const AddInfoPhotos = await fetch(
+            `${backendApiBaseUrl}/ArXQuesitonAnswerPhoto/?log=${logId}`
+          );
 
-        const AddInfoPhotos = await fetch(
-          `${backendApiBaseUrl}/ArXQuesitonAnswerPhoto/?log=${logId}`
-        );
+          const AddInfoPhotoTexts = await fetch(
+            `${backendApiBaseUrl}/ArXQuesitonAnswerPhotoTxt/?log=${logId}`
+          );
 
-        const AddInfoPhotoTexts = await fetch(
-          `${backendApiBaseUrl}/ArXQuesitonAnswerPhotoTxt/?log=${logId}`
-        );
+          AddInfoCommentsData = await AddInfoComments.json();
+          AddInfoLocationsData = await AddInfoLocations.json();
+          AddInfoPhotosData = await AddInfoPhotos.json();
+          AddInfoPhotoTextsData = await AddInfoPhotoTexts.json();
 
-        AddInfoCommentsData = await AddInfoComments.json();
-        AddInfoLocationsData = await AddInfoLocations.json();
-        AddInfoPhotosData = await AddInfoPhotos.json();
-        AddInfoPhotoTextsData = await AddInfoPhotoTexts.json();
-
-        AdditionalInfosData = {
-          comments: AddInfoCommentsData,
-          locations: AddInfoLocationsData,
-          photos: AddInfoPhotosData,
-          phototexts: AddInfoPhotoTextsData
-        };
+          AdditionalInfosData = {
+            comments: AddInfoCommentsData,
+            locations: AddInfoLocationsData,
+            photos: AddInfoPhotosData,
+            phototexts: AddInfoPhotoTextsData
+          };
+        }
       }
     } catch (e) {
+      console.log(e);
       QuestionsData = {};
       QuestionChoicesData = {};
       QuestionBlocksData = {};

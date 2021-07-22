@@ -201,6 +201,7 @@ export const getServerSideProps: GetServerSideProps = async ({
             .then((data) => {
               console.log(data);
             });
+          console.log("New servicepoint and entrance inserted to the database");
         } else {
           // TODO: COMPARE EXISTING VALUES
           servicepointId = ServicepointData[0].servicepoint_id;
@@ -234,8 +235,7 @@ export const getServerSideProps: GetServerSideProps = async ({
           redirect: {
             permanent: false,
             destination: FRONT_URL_BASE + "details/" + servicepointId
-          },
-          props: {}
+          }
         };
 
         //router.push(FRONT_URL_BASE + "details/" + params.servicePointId);
