@@ -44,7 +44,7 @@ export const getServerSideProps: GetServerSideProps = async ({
   //   initialReduxState.general.user = user;
   // }
 
-  // systemId=e186251e-1fb6-4f21-901c-cb6820aee164
+  // systemId=e186251e-1fb6-4f21-901c-cb6820aee164     DONE
   // &servicePointId=3266
   // &user=uusiesteettomyys%40hel.fi
   // &validUntil=2021-07-08T11%3a34%3a16
@@ -60,11 +60,11 @@ export const getServerSideProps: GetServerSideProps = async ({
   if (query != undefined) {
     if (
       query?.systemId == undefined ||
-      params?.servicePointId == undefined // ||
-      // params?.user == undefined ||
-      // params?.validUntil == undefined ||
-      // params?.name == undefined ||
-      // params?.streetAddress == undefined
+      query?.servicePointId == undefined // ||
+      // query?.user == undefined ||
+      // query?.validUntil == undefined ||
+      // query?.name == undefined ||
+      // query?.streetAddress == undefined
     ) {
       return {
         props: {
@@ -74,11 +74,12 @@ export const getServerSideProps: GetServerSideProps = async ({
       };
     } else {
       try {
+        let isNewServicepoint: boolean;
         const SystemResp = await fetch(
-          `${backendApiBaseUrl}ArSystems/?system_id=${query.systemId}&format=json`
+          `${backendApiBaseUrl}/ArSystems/?system_id=${query.systemId}&format=json`
         );
         const ServicepointResp = await fetch(
-          `${backendApiBaseUrl}ArServicepoints/${query.servicepointId}?format=json`
+          `${backendApiBaseUrl}/ArServicepoints/${query.servicePointId}/?format=json`
         );
         SystemData = await SystemResp.json();
         ServicepointData = await ServicepointResp.json();
@@ -95,6 +96,20 @@ export const getServerSideProps: GetServerSideProps = async ({
             "A servicepoint with this systemId cannot use form 0 or 1"
           );
         }
+
+        // console.log("ServicepointData", ServicepointData);
+
+        isNewServicepoint = ServicepointData["detail"] != undefined;
+
+        if (isNewServicepoint) {
+          // TODO: ADD NEW ENTRY TO ARSERVICEPOINTS
+          console.log("Create new servicepoint");
+        } else {
+          // TODO: COMPARE EXISTING VALUES
+          console.log("Compare old data");
+        }
+
+        // Variables from database
 
         // TODO: Check the servicepointdata response whether there is an entry in the database,
         // for the servicepointId. If not create a new entry to the table based on the URL info.
