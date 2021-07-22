@@ -12,7 +12,6 @@ import Notice from "../components/common/Notice";
 import styles from "./index.module.scss";
 import { checkUser } from "../utils/serverside";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
-import { decrement } from "../state/reducers/exampleSlice";
 import HeadlineQuestionContainer from "../components/HeadlineQuestionContainer";
 import QuestionBlock from "../components/QuestionBlock";
 import QuestionFormCtrlButtons from "../components/QuestionFormCtrlButtons";
@@ -27,32 +26,32 @@ import { setAnsweredChoice } from "../state/reducers/formSlice";
 import {
   API_FETCH_QUESTIONBLOCK_URL,
   API_FETCH_QUESTIONCHOICES,
-  API_FETCH_QUESTION_URL
+  API_FETCH_QUESTION_URL,
 } from "../types/constants";
 
 const useStyles = makeStyles((theme) => ({
   navi: {
     zIndex: 10000,
     fontFamily: "HelsinkiGrotesk",
-    fontSize: 16
+    fontSize: 16,
   },
   mainGrid: {
-    marginTop: theme.spacing(3)
+    marginTop: theme.spacing(3),
   },
   hero: (heroShallow: Boolean) => ({
-    height: heroShallow ? 360 : 550
+    height: heroShallow ? 360 : 550,
   }),
   main: {},
   paragraphs: {
-    marginTop: 56
-  }
+    marginTop: 56,
+  },
 }));
 
 const Main = ({
   isMobile,
   QuestionsData,
   QuestionChoicesData,
-  QuestionBlocksData
+  QuestionBlocksData,
 }: MainEntranceFormProps): ReactElement => {
   const i18n = useI18n();
   const curLocale: string = i18n.locale();
@@ -115,33 +114,12 @@ const Main = ({
         <div>
           {isMobile ? <SearchBoxWithButtonsMobile /> : <SearchBoxWithButtons />}
         </div>
-        {/*
-        <div className={styles.infoLinkContainer}>
+
+        {/* <div className={styles.infoLinkContainer}>
           <Button variant="supplementary" size="small" iconRight={<IconAngleRight aria-hidden />} onClick={openTermsOfUse}>
             {i18n.t("common.header.title")}
           </Button>
-        </div>
-
-        for redux-toolkit example -> delete
-        <h2>{`count is: ${curCount}`}</h2>
-
-        <Notice
-          className={styles.modifyOwnPlace}
-          icon={<IconStar size="xl" aria-hidden />}
-          titleKey=""
-          messageKey=""
-          button={
-            <Link href="/">
-              <Button variant="secondary" onClick={handleTestButton}>
-                {" "}
-                test button{" "}
-              </Button>
-            </Link>
-          }
-        />
-        */}
-        {/* for demo purposes modify with data / delete later */}
-        {/* QuestionsData, QuestionChoicesData, QuestionBlocksData */}
+        </div> */}
 
         {QuestionBlocksData && QuestionsData && QuestionChoicesData
           ? QuestionBlocksData.map((block: QuestionBlockProps) => {
@@ -187,14 +165,6 @@ const Main = ({
             })
           : null}
 
-        {/* <HeadlineQuestionContainer headline="1. ensimmäinen otsikko">
-          {" "}
-          <QuestionBlock />
-        </HeadlineQuestionContainer>
-        <HeadlineQuestionContainer headline="2. toinen otsikko">
-          {" "}
-          <QuestionBlock />{" "}
-        </HeadlineQuestionContainer> */}
         <QuestionFormCtrlButtons
           hasCancelButton
           hasValidateButton
@@ -210,7 +180,7 @@ const Main = ({
 export const getServerSideProps: GetServerSideProps = async ({
   params,
   req,
-  locales
+  locales,
 }) => {
   const lngDict = await i18nLoader(locales);
 
@@ -250,13 +220,13 @@ export const getServerSideProps: GetServerSideProps = async ({
       QuestionsData: QuestionsData,
       QuestionChoicesData: QuestionChoicesData,
       QuestionBlocksData: QuestionBlocksData,
-      lngDict
-    }
+      lngDict,
+    },
   };
 };
 
 Main.defaultProps = {
-  isMobile: false
+  isMobile: false,
 };
 
 export default Main;
