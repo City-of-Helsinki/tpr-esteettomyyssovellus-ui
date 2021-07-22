@@ -2,24 +2,40 @@
 @import "../styles/mixins.scss";
 
 .maincontainer {
-  width: 90%;
-  margin: $spacing-m;
   .controlscontainer {
     display: flex;
-    margin: $spacing-m 0;
-    @include media(xs, s) {
+    align-items: flex-end;
+    justify-content: flex-start;
+    margin: $spacing-3-xl 0 $spacing-xl 0;
+    button {
+      color: $color-bus !important;
+      background-color: $color-white !important;
+      border: 2px solid $color-bus !important;
+      margin-bottom: 0 !important;
+    }
+    @include media(xs, s, m) {
       flex-direction: column;
+      align-items: flex-start;
+      margin-top: 0;
       span {
         width: 100%;
         margin: $spacing-xs 0;
       }
+      button {
+        span {
+          margin: 0;
+        }
+        margin-left: 0 !important;
+      }
     }
-    span {
+    .addressinput {
       width: 50%;
+      margin-right: $spacing-s;
     }
   }
   .mapcontainer {
-    width: 100%;
+    margin: $spacing-m 0;
+    width: 90%;
     height: 100%;
   }
 }

@@ -14,7 +14,7 @@ import {
   API_FETCH_QUESTIONCHOICES,
   API_FETCH_QUESTION_URL,
   backendApiBaseUrl,
-  API_URL_BASE
+  API_URL_BASE,
 } from "../../types/constants";
 import { useAppSelector, useAppDispatch } from "../../state/hooks";
 import QuestionBlock from "../../components/QuestionBlock";
@@ -22,7 +22,7 @@ import {
   AddInfoPhoto,
   AddInfoPhotoText,
   MainEntranceFormProps,
-  QuestionBlockProps
+  QuestionBlockProps,
 } from "../../types/general";
 import HeadlineQuestionContainer from "../../components/HeadlineQuestionContainer";
 import { LANGUAGE_LOCALES } from "../../types/constants";
@@ -37,7 +37,7 @@ import {
   initForm,
   setContactPerson,
   changePhoneNumberStatus,
-  changeEmailStatus
+  changeEmailStatus,
 } from "../../state/reducers/formSlice";
 import ContactInformationQuestionContainer from "../../components/ContactInformationQuestionContainer";
 import {
@@ -46,7 +46,7 @@ import {
   addLocation,
   addPicture,
   setAlt,
-  setInitAdditionalInfoFromDb
+  setInitAdditionalInfoFromDb,
 } from "../../state/reducers/additionalInfoSlice";
 const AccessibilityEdit = ({
   QuestionsData,
@@ -54,7 +54,7 @@ const AccessibilityEdit = ({
   QuestionBlocksData,
   QuestionAnswerData,
   ServicepointData,
-  AdditionalInfosData
+  AdditionalInfosData,
 }: MainEntranceFormProps): ReactElement => {
   const i18n = useI18n();
   const curLocale: string = i18n.locale();
@@ -116,7 +116,7 @@ const AccessibilityEdit = ({
           addComment({
             questionId: comment.question,
             language: curLangStr,
-            value: comment.comment
+            value: comment.comment,
           })
         );
         // little hacky, only add component for the 1st language => fi for not adding 3 components if all languages
@@ -125,7 +125,7 @@ const AccessibilityEdit = ({
             addComponent({
               questionId: comment.question,
               type: "comment",
-              id: comment.answer_comment_id
+              id: comment.answer_comment_id,
             })
           );
         }
@@ -133,8 +133,21 @@ const AccessibilityEdit = ({
     }
     if (AdditionalInfosData.locations) {
       AdditionalInfosData.locations.forEach((location) => {
-        // todo: todo
-        // dispatch(addLocation({}));
+        dispatch(
+          addLocation({
+            questionId: location.question,
+            coordinates: [location.loc_northing, location.loc_easting],
+            locNorthing: location.loc_northing,
+            locEasting: location.loc_easting,
+          })
+        );
+        dispatch(
+          addComponent({
+            questionId: location.question,
+            type: "location",
+            id: location.answer_location_id,
+          })
+        );
       });
     }
 
@@ -147,7 +160,7 @@ const AccessibilityEdit = ({
           url: photo.photo_url,
           fi: "",
           sv: "",
-          en: ""
+          en: "",
         };
 
         dispatch(addPicture(picture));
@@ -155,7 +168,7 @@ const AccessibilityEdit = ({
           addComponent({
             questionId: photo.question,
             type: "link",
-            id: photo.answer_photo_id
+            id: photo.answer_photo_id,
           })
         );
 
@@ -171,7 +184,7 @@ const AccessibilityEdit = ({
                   questionId: photo.question,
                   language: curLangStr,
                   value: alt.photo_text,
-                  compId: photo.answer_photo_id
+                  compId: photo.answer_photo_id,
                 })
               );
             });
@@ -349,7 +362,7 @@ const AccessibilityEdit = ({
 export const getServerSideProps: GetServerSideProps = async ({
   params,
   req,
-  locales
+  locales,
 }) => {
   const lngDict = await i18nLoader(locales);
 
@@ -378,6 +391,7 @@ export const getServerSideProps: GetServerSideProps = async ({
   if (params != undefined) {
     try {
       const entrance_id = params.entranceId;
+
       // todo: put urls in types/constants and get form_id from props
       const QuestionsResp = await fetch(API_FETCH_QUESTION_URL);
       const QuestionChoicesResp = await fetch(API_FETCH_QUESTIONCHOICES);
@@ -426,7 +440,7 @@ export const getServerSideProps: GetServerSideProps = async ({
           comments: AddInfoCommentsData,
           locations: AddInfoLocationsData,
           photos: AddInfoPhotosData,
-          phototexts: AddInfoPhotoTextsData
+          phototexts: AddInfoPhotoTextsData,
         };
       }
     } catch (e) {
@@ -448,8 +462,8 @@ export const getServerSideProps: GetServerSideProps = async ({
       QuestionAnswerData: QuestionAnswerData,
       ServicepointData: ServicepointData,
       AdditionalInfosData: AdditionalInfosData,
-      lngDict
-    }
+      lngDict,
+    },
   };
 };
 

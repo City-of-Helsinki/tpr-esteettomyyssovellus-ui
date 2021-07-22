@@ -76,13 +76,41 @@ export const additionalInfoSlice = createSlice({
       state,
       action: PayloadAction<{
         questionId: number;
-        description: string;
-        coordinates: LatLngExpression;
+        coordinates: [number, number];
+        locNorthing: number;
+        locEasting: number;
       }>
     ) => {
       // TODO: set state and change payload (?)
+      const qId = action.payload.questionId;
+      const coordinates = action.payload.coordinates;
+      const locNorthing = action.payload.locNorthing;
+      const locEasting = action.payload.locEasting;
       return {
         ...state,
+        [qId]: {
+          ...state[qId],
+          locations: {
+            coordinates,
+            locNorthing,
+            locEasting,
+          },
+        },
+      };
+    },
+    removeLocation: (
+      state,
+      action: PayloadAction<{
+        questionId: number;
+      }>
+    ) => {
+      const qId = action.payload.questionId;
+      return {
+        ...state,
+        [qId]: {
+          ...state[qId],
+          locations: {},
+        },
       };
     },
     addPicture: (state, action: PayloadAction<PictureProps>) => {
@@ -278,6 +306,7 @@ export const {
   setEditingInitialState,
   clearEditingInitialState,
   addLocation,
+  removeLocation,
   addPicture,
   removePicture,
   addComment,
@@ -292,7 +321,5 @@ export const {
 } = additionalInfoSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
-export const selectCount = (state: RootState): number =>
-  state.exampleReducer.value;
 
 export default additionalInfoSlice.reducer;
