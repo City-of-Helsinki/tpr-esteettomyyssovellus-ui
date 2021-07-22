@@ -26,12 +26,14 @@ const DynamicNavigation = dynamic(
 
 const Header = ({
   includeLanguageSelector,
-  children
+  children,
 }: HeaderProps): ReactElement => {
   const i18n = useI18n();
   const router = useRouter();
 
-  const currentUser = useSelector((state: RootState) => state.general.user);
+  // const currentUser = useSelector(
+  //   (state: RootState) => state.generalSlice.user
+  // );
 
   const changeLanguage = (locale: string) => {
     // Use the shallow option to avoid a server-side render in order to preserve the state
@@ -41,7 +43,7 @@ const Header = ({
   // this files code from marketing project: needs editing or deleting
   const signIn = () => {
     const {
-      location: { pathname }
+      location: { pathname },
     } = window;
 
     window.open(
@@ -87,7 +89,7 @@ const Header = ({
         skipTo="#content"
         skipToContentLabel={i18n.t("common.header.skipToContent")}
         theme={{
-          "--header-background-color": "var(--color-bus-medium-light)"
+          "--header-background-color": "var(--color-bus-medium-light)",
         }}
         className={styles.header}
       >
@@ -220,7 +222,7 @@ const Header = ({
 
 Header.defaultProps = {
   includeLanguageSelector: true,
-  children: []
+  children: [],
 };
 
 export default Header;

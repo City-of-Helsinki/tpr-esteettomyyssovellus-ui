@@ -20,7 +20,7 @@ const AdditionalInfoCommentContent = ({
   const i18n = useI18n();
   const dispatch = useAppDispatch();
 
-  // on delete button clicked chain delete image from store and delete component cb
+  // on delete button clicked chain delete comment from store and delete component cb
   const handleOnDelete = () => {
     handleRemoveComment();
     onDelete ? onDelete() : null;

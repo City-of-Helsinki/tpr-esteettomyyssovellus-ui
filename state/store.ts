@@ -1,18 +1,16 @@
 import { configureStore } from "@reduxjs/toolkit";
-import exampleSlice from "./reducers/exampleSlice";
-import additionalInfoSlice from "./reducers/additionalInfoSlice";
-import formSlice from "./reducers/formSlice";
-import general from "./reducers/general";
+import additionalInfoReducer from "./reducers/additionalInfoSlice";
+import formReducer from "./reducers/formSlice";
+import generalSlice from "./reducers/generalSlice";
 
 // delete example reducer & exampleSlice just an example for toolkit
 
 export const store = configureStore({
   reducer: {
-    exampleReducer: exampleSlice,
-    formReducer: formSlice,
-    additionalInfoReducer: additionalInfoSlice,
-    general: general
-  }
+    formReducer,
+    additionalInfoReducer,
+    generalSlice,
+  },
 });
 
 export type RootState = ReturnType<typeof store.getState>;
