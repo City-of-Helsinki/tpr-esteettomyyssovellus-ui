@@ -303,7 +303,10 @@ const AccessibilityEdit = ({
     );
   }
 
-  const treeItems = ["PH: Päiväkoti apila", "Esteettömyystiedot"];
+  const treeItems = [
+    ServicepointData["servicepoint_name"],
+    "Esteettömyystiedot"
+  ];
 
   return (
     <Layout>
@@ -327,7 +330,7 @@ const AccessibilityEdit = ({
             </QuestionInfo>
           </div>
           <div className={styles.headingcontainer}>
-            <h1>PH: Päiväkoti apila</h1>
+            <h1>{ServicepointData["servicepoint_name"]}</h1>
             <h2>{i18n.t("common.mainEntrance")}</h2>
           </div>
           <div>
