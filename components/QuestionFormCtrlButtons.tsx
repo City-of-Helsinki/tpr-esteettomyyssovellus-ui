@@ -140,6 +140,7 @@ const QuestionFormCtrlButtons = ({
     // TODO: POST ALL ADDITIONAL INFO
 
     // TODO: CREATE SENTENCES WITH FUNCTION CALL
+    console.log("Posted to database new log entry with log_id=", logId);
   };
 
   const validateForm = () => {

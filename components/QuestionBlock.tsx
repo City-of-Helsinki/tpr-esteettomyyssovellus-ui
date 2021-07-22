@@ -11,7 +11,8 @@ import { useAppSelector, useAppDispatch } from "../state/hooks";
 import {
   setContinue,
   setFinished,
-  unsetFinished
+  unsetFinished,
+  unsetInvalid
 } from "../state/reducers/formSlice";
 import { useI18n } from "next-localization";
 

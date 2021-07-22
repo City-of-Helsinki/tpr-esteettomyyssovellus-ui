@@ -95,6 +95,11 @@ const ContactInformationQuestionContainer = ({
     dispatch(unsetFinished(99));
   }
 
+  const invalidBlocks = useAppSelector(
+    (state) => state.formReducer.invalidBlocks
+  );
+  const isInvalid = invalidBlocks.includes(99);
+
   return (
     <>
       <div className={styles.mainInfo}>
@@ -111,44 +116,62 @@ const ContactInformationQuestionContainer = ({
         const contactPerson = contacts["contactPerson"];
         let value = "";
         let error = "";
-        let mode = undefined;
+        let isAnswered = false;
         const backgroundColor: string = ind % 2 === 0 ? "#f2f2fc" : "#ffffff";
+
         switch (question.question_id) {
           case -1:
             value = contactPerson[0];
+            isAnswered = contactPerson[1];
             error = contactPerson[1] ? "" : "Please input contactperson";
             break;
           case -2:
             value = phoneNumber[0];
+            isAnswered = phoneNumber[1];
             // phoneNumber[1] is a boolean value indicating whether the phone number
             // is valid. If the phone number is invalid displays an error text
             error = phoneNumber[1] ? "" : "Please input valid phonenumber";
             break;
           case -3:
             value = email[0];
+            isAnswered = email[1];
             // email[1] is a boolean value indicating whether the email
             // is valid. If the email is invalid displays an error text
             error = email[1] ? "" : "Please input valid email";
             break;
         }
 
+        const questionStyle =
+          isInvalid && !isAnswered
+            ? {
+                backgroundColor,
+                marginBottom: "0.1rem",
+                borderStyle: "solid",
+                borderColor: "#b01038"
+              }
+            : {
+                backgroundColor
+              };
+
         return (
-          <QuestionContainer
-            key={question.question_code}
-            questionNumber={Number(question.question_code)}
-            questionText={question.text}
-            backgroundColor={backgroundColor}
-            hasAdditionalInfo={false}
-          >
-            <TextInput
-              className={styles.textInput}
-              id={question.question_id.toString()}
-              placeholder={question.placeholder}
-              onChange={handleChange}
-              value={value ? value : undefined}
-              errorText={error}
-            />
-          </QuestionContainer>
+          <div style={questionStyle}>
+            <QuestionContainer
+              key={question.question_code}
+              questionNumber={Number(question.question_code)}
+              questionText={question.text}
+              backgroundColor={backgroundColor}
+              hasAdditionalInfo={false}
+            >
+              <TextInput
+                className={styles.textInput}
+                id={question.question_id.toString()}
+                placeholder={question.placeholder}
+                onChange={handleChange}
+                value={value ? value : undefined}
+                errorText={error}
+              />
+            </QuestionContainer>
+          </div>
         );
       })}
     </>

@@ -19,7 +19,8 @@ const QuestionDropdown = ({
   options,
   placeholder = "--Valitse--",
   label = "",
-  questionNumber
+  questionNumber,
+  blockId
 }: DropdownQuestionProps): JSX.Element => {
   const dispatch = useAppDispatch();
   const i18n = useI18n();
@@ -41,6 +42,8 @@ const QuestionDropdown = ({
   };
 
   const currentValues = useAppSelector((state) => state.formReducer);
+  const invalidBlocks = currentValues.invalidBlocks;
+
   const value =
     questionNumber != undefined &&
     currentValues.answers[questionNumber] != undefined
@@ -55,6 +58,8 @@ const QuestionDropdown = ({
     value: value.toString()
   };
 
+  const isInvalid = value == "" && invalidBlocks.includes(blockId!);
+
   return (
     <Select
       className={style.selectDropdown}
@@ -67,6 +72,8 @@ const QuestionDropdown = ({
       options={options}
       onChange={handleChange}
       value={currentValue}
+      error="PH: Valinta puuttuu"
+      invalid={isInvalid}
     />
   );
 };

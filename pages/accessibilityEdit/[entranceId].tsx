@@ -35,7 +35,9 @@ import {
   setPhoneNumber,
   setServicepointId,
   initForm,
-  setContactPerson
+  setContactPerson,
+  changePhoneNumberStatus,
+  changeEmailStatus
 } from "../../state/reducers/formSlice";
 import ContactInformationQuestionContainer from "../../components/ContactInformationQuestionContainer";
 import {
@@ -69,10 +71,33 @@ const AccessibilityEdit = ({
   let formInited = useAppSelector((state) => state.formReducer.formInited);
 
   if (ServicepointData != undefined && !formInited) {
-    // TODO: POSSIBLY VALIDATE THESE STRAIGHT AWAY
-    dispatch(setPhoneNumber(ServicepointData["accessibility_phone"]));
-    dispatch(setEmail(ServicepointData["accessibility_email"]));
+    const phoneNumber = ServicepointData["accessibility_phone"];
+    const email = ServicepointData["accessibility_email"];
+
+    // REGEXES FOR VALIDATING
+    var phonePattern = new RegExp(/^[^a-zA-Z]+$/);
+    var emailPattern = new RegExp(
+      /^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i
+    );
+    dispatch(setPhoneNumber(phoneNumber));
+    dispatch(setEmail(email));
     dispatch(setServicepointId(ServicepointData["servicepoint_id"]));
+
+    // VALIDATE PHONE
+    if (!phonePattern.test(phoneNumber)) {
+      dispatch(changePhoneNumberStatus(false));
+    } else {
+      dispatch(changePhoneNumberStatus(true));
+    }
+
+    // VALIDATE EMAIL
+    if (!emailPattern.test(email)) {
+      dispatch(changeEmailStatus(false));
+    } else {
+      dispatch(changeEmailStatus(true));
+    }
+
+    // CONTACTPERSON DOES NOT EXIST IN THE DATABASE YET
     dispatch(setContactPerson(""));
     dispatch(initForm());
   }

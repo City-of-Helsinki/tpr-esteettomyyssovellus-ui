@@ -45,6 +45,7 @@ export interface DropdownQuestionProps {
   label?: string;
   placeholder?: string;
   questionNumber?: number;
+  blockId?: number;
 }
 
 export interface QuestionInfoProps {

@@ -65,6 +65,7 @@ const QuestionsList = ({
                   key={question.question_id}
                   options={answerChoices}
                   questionNumber={question.question_id}
+                  blockId={question.question_block_id}
                 />
               </>
             )}
