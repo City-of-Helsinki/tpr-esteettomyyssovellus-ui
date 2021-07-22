@@ -120,6 +120,7 @@ export interface ServicepointLandingSummaryCtrlButtonsProps {
 }
 
 export interface MapProps {
+  questionId: number;
   initCenter: [number, number];
   initZoom: number;
   initLocation: [number, number];
@@ -137,12 +138,14 @@ export interface AdditionalContentProps {
 }
 
 export interface Location {
-  description?: string;
-  coordinates?: [number, number] | null;
+  coordinates?: [number, number];
+  locNorthing?: number;
+  locEasting?: number;
 }
 
+// notice/todo: names locationS and commentS can atm have only one location and commend -> maybe rename
 export interface AdditionalInfos {
-  locations?: Location[];
+  locations?: Location;
   comments?: Languages;
   pictures?: PictureProps[];
   components?: AdditionalComponentProps[];
@@ -210,6 +213,8 @@ export interface AddInfoLocation {
   answer_location_id: number;
   loc_easting: number;
   loc_northing: number;
+  log: number;
+  question: number;
 }
 
 export interface AddInfoPhoto {
