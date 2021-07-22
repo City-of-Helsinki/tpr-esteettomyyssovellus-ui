@@ -6,7 +6,11 @@ import Layout from "../components/common/Layout";
 import { store } from "../state/store";
 import i18nLoader from "../utils/i18n";
 import { useRouter } from "next/router";
-import { backendApiBaseUrl, FRONT_URL_BASE } from "../types/constants";
+import {
+  API_URL_BASE,
+  backendApiBaseUrl,
+  FRONT_URL_BASE
+} from "../types/constants";
 
 const Servicepoints = (): ReactElement => {
   const i18n = useI18n();
@@ -60,11 +64,15 @@ export const getServerSideProps: GetServerSideProps = async ({
   if (query != undefined) {
     if (
       query?.systemId == undefined ||
-      query?.servicePointId == undefined // ||
-      // query?.user == undefined ||
+      query?.servicePointId == undefined ||
+      query?.user == undefined ||
       // query?.validUntil == undefined ||
-      // query?.name == undefined ||
-      // query?.streetAddress == undefined
+      query?.name == undefined ||
+      query?.streetAddress == undefined ||
+      query?.postOffice == undefined ||
+      query?.northing == undefined ||
+      query?.easting == undefined ||
+      query?.checksum == undefined
     ) {
       return {
         props: {
@@ -75,11 +83,12 @@ export const getServerSideProps: GetServerSideProps = async ({
     } else {
       try {
         let isNewServicepoint: boolean;
+        let servicepointId: number = 0;
         const SystemResp = await fetch(
           `${backendApiBaseUrl}/ArSystems/?system_id=${query.systemId}&format=json`
         );
         const ServicepointResp = await fetch(
-          `${backendApiBaseUrl}/ArServicepoints/${query.servicePointId}/?format=json`
+          `${backendApiBaseUrl}/ArServicepoints/?ext_servicepoint_id=${query.servicePointId}&format=json`
         );
         SystemData = await SystemResp.json();
         ServicepointData = await ServicepointResp.json();
@@ -98,14 +107,103 @@ export const getServerSideProps: GetServerSideProps = async ({
         }
 
         // console.log("ServicepointData", ServicepointData);
-
-        isNewServicepoint = ServicepointData["detail"] != undefined;
+        isNewServicepoint = ServicepointData.length == 0;
 
         if (isNewServicepoint) {
           // TODO: ADD NEW ENTRY TO ARSERVICEPOINTS
           console.log("Create new servicepoint");
+          let today = new Date();
+          const date =
+            today.getFullYear() +
+            "-" +
+            (today.getMonth() + 1) +
+            "-" +
+            today.getDate() +
+            "T" +
+            today.getHours() +
+            ":" +
+            today.getMinutes() +
+            ":" +
+            today.getSeconds() +
+            "Z";
+
+          const servicepointRequestOptions = {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              // TODO: figure out
+              // - business_id
+              // - organisation_code
+              // - system_id_old
+              // - ext_servicepoint_id
+              // - created
+              // - modified
+              // - modified_by
+              // - address_street_name (THESE CAN BE GENERATED USING DATABASE FUNCTION)
+              // - address_no (THESE CAN BE GENERATED USING DATABASE FUNCTION)
+              // - address_city (THESE CAN BE GENERATED USING DATABASE FUNCTION)
+              business_id: null,
+              organisation_code: null,
+              system_id_old: null,
+              servicepoint_name: query.name,
+              ext_servicepoint_id: query.servicePointId,
+              created: date,
+              created_by: query.user,
+              modified: date,
+              modified_by: query.user,
+              address_street_name: null,
+              address_no: null,
+              address_city: null,
+              accessibility_phone: null, // Set in accessibilityEdit
+              accessibility_email: null, // Set in accessibilityEdit
+              accessibility_www: null, // Set in accessibilityEdit
+              is_searchable: "Y", // TODO: Y or N?
+              organisation_id: query.systemId,
+              loc_easting: query.easting,
+              loc_northing: query.northing,
+              location_id: null, // NULL according to mail
+              system: query.systemId
+            })
+          };
+
+          // POST TO ARSERVICEPOINT. RETURNS NEW SERVICEPOINTID USED FOR OTHER POST REQUESTS
+          await fetch(
+            API_URL_BASE + "ArServicepoints/",
+            servicepointRequestOptions
+          )
+            .then((response) => response.json())
+            .then((data) => {
+              servicepointId = data["servicepoint_id"];
+            });
+
+          const entranceRequestOption = {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name_fi: "",
+              name_sv: null,
+              name_en: null,
+              loc_easting: query.easting,
+              loc_northing: query.northing,
+              photo_url: null,
+              streetview_url: null,
+              created: date,
+              created_by: query.user,
+              modified: date,
+              modified_by: query.user,
+              is_main_entrance: "Y",
+              servicepoint: servicepointId,
+              form: 0
+            })
+          };
+          await fetch(API_URL_BASE + "ArEntrances/", entranceRequestOption)
+            .then((response) => response.json())
+            .then((data) => {
+              console.log(data);
+            });
         } else {
           // TODO: COMPARE EXISTING VALUES
+          servicepointId = ServicepointData[0].servicepoint_id;
           console.log("Compare old data");
         }
 
@@ -135,7 +233,7 @@ export const getServerSideProps: GetServerSideProps = async ({
         return {
           redirect: {
             permanent: false,
-            destination: FRONT_URL_BASE + "details/" + query.servicePointId
+            destination: FRONT_URL_BASE + "details/" + servicepointId
           },
           props: {}
         };
