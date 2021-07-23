@@ -434,7 +434,6 @@ export const getServerSideProps: GetServerSideProps = async ({
             `${backendApiBaseUrl}/ArXQuesitonAnswerPhotoTxt/?log=${logId}`
           );
 
-<<<<<<< HEAD
           AddInfoCommentsData = await AddInfoComments.json();
           AddInfoLocationsData = await AddInfoLocations.json();
           AddInfoPhotosData = await AddInfoPhotos.json();
@@ -447,14 +446,6 @@ export const getServerSideProps: GetServerSideProps = async ({
             phototexts: AddInfoPhotoTextsData,
           };
         }
-=======
-        AdditionalInfosData = {
-          comments: AddInfoCommentsData,
-          locations: AddInfoLocationsData,
-          photos: AddInfoPhotosData,
-          phototexts: AddInfoPhotoTextsData,
-        };
->>>>>>> 924f53b4277281f30a8f03331c86cbacc29065d5
       }
     } catch (e) {
       console.log(e);
