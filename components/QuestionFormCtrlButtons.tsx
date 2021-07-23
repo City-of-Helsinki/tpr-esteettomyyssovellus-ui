@@ -61,7 +61,7 @@ const QuestionFormCtrlButtons = ({
     const url =
       curServicepointId == ""
         ? FRONT_URL_BASE
-        : FRONT_URL_BASE + "servicepoint/" + curServicepointId;
+        : FRONT_URL_BASE + "details/" + curServicepointId;
     router.push(url);
   };
   const isPreviewActive = curAnsweredChoices.length > 1;

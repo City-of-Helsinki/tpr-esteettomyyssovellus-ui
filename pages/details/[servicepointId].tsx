@@ -7,7 +7,7 @@ import Layout from "../../components/common/Layout";
 import { store } from "../../state/store";
 import i18nLoader from "../../utils/i18n";
 import ServicepointLandingSummary from "../../components/ServicepointLandingSummary";
-import styles from "./servicepoint.module.scss";
+import styles from "./details.module.scss";
 import ServicepointLandingSummaryCtrlButtons from "../../components/ServicepointLandingSummaryCtrlButtons";
 import QuestionInfo from "../../components/QuestionInfo";
 import ServicepointMainInfoContent from "../../components/ServicepointMainInfoContent";
@@ -38,7 +38,7 @@ export const filterByLanguage = (dict: Dictionary<any>) => {
   });
 };
 
-const Servicepoint = ({
+const details = ({
   servicepointData,
   accessibilityData,
   entranceData
@@ -200,4 +200,4 @@ export const getServerSideProps: GetServerSideProps = async ({
   };
 };
 
-export default Servicepoint;
+export default details;

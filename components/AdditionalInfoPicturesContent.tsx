@@ -6,7 +6,7 @@ import {
   TextInput,
   Checkbox,
   Tooltip,
-  SelectionGroup,
+  SelectionGroup
 } from "hds-react";
 import { useI18n } from "next-localization";
 import styles from "./AdditionalInfoPicturesContent.module.scss";
@@ -16,7 +16,7 @@ import {
   addPicture,
   removePicture,
   setAlt,
-  setPictureSource,
+  setPictureSource
 } from "../state/reducers/additionalInfoSlice";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { AdditionalContentProps } from "../types/general";
@@ -27,7 +27,7 @@ const AdditionalInfoPicturesContent = ({
   compId,
   onlyLink = false,
   onDelete,
-  initValue,
+  initValue
 }: AdditionalContentProps): JSX.Element => {
   // also use filename for conditionally displaying buttons and alt-text & preview picture
   const dispatch = useAppDispatch();
@@ -70,7 +70,7 @@ const AdditionalInfoPicturesContent = ({
         fi: "",
         sv: "",
         en: "",
-        source: "",
+        source: ""
       };
       dispatch(addPicture(payload));
     } else {
@@ -85,7 +85,7 @@ const AdditionalInfoPicturesContent = ({
           fi: "",
           sv: "",
           en: "",
-          source: "",
+          source: ""
         };
         dispatch(addPicture(payload));
       }
