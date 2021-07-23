@@ -106,12 +106,37 @@ export const getServerSideProps: GetServerSideProps = async ({
           );
         }
 
+        let addressData: any[] = [];
+        // CHOP THE ADDRESS
+        const addressRequestOptions = {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            address: query.streetAddress,
+            postOffice: query.postOffice
+          })
+        };
+        await fetch(API_URL_BASE + "ChopAddress/", addressRequestOptions)
+          .then((response) => response.json())
+          .then((data) => {
+            addressData = data;
+          });
+
+        let choppedAddress = "";
+        let choppedApartmentNumber = "";
+        let choppedPostOffice = "";
+
+        if (addressData.length == 3) {
+          choppedAddress = addressData[0];
+          choppedApartmentNumber = addressData[1];
+          choppedPostOffice = addressData[2];
+        }
+
         // console.log("ServicepointData", ServicepointData);
         isNewServicepoint = ServicepointData.length == 0;
 
         if (isNewServicepoint) {
           // TODO: ADD NEW ENTRY TO ARSERVICEPOINTS
-          console.log("Create new servicepoint");
           let today = new Date();
           const date =
             today.getFullYear() +
@@ -151,9 +176,9 @@ export const getServerSideProps: GetServerSideProps = async ({
               created_by: query.user,
               modified: date,
               modified_by: query.user,
-              address_street_name: null,
-              address_no: null,
-              address_city: null,
+              address_street_name: choppedAddress,
+              address_no: choppedApartmentNumber,
+              address_city: choppedPostOffice,
               accessibility_phone: null, // Set in accessibilityEdit
               accessibility_email: null, // Set in accessibilityEdit
               accessibility_www: null, // Set in accessibilityEdit
@@ -173,6 +198,7 @@ export const getServerSideProps: GetServerSideProps = async ({
           )
             .then((response) => response.json())
             .then((data) => {
+              console.log("Create new servicepoint");
               servicepointId = data["servicepoint_id"];
             });
 
@@ -193,12 +219,16 @@ export const getServerSideProps: GetServerSideProps = async ({
               modified_by: query.user,
               is_main_entrance: "Y",
               servicepoint: servicepointId,
+              // TODO: HOW IS THIS DETERMINED? POSSIBLY 0 DUE TO THE FACT THAT THIS IS
+              // THE MAIN ENTRANCE?
               form: 0
             })
           };
+
           await fetch(API_URL_BASE + "ArEntrances/", entranceRequestOption)
             .then((response) => response.json())
             .then((data) => {
+              console.log("Create new entrance");
               console.log(data);
             });
           console.log("New servicepoint and entrance inserted to the database");
