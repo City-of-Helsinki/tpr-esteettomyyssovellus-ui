@@ -26,32 +26,32 @@ import { setAnsweredChoice } from "../state/reducers/formSlice";
 import {
   API_FETCH_QUESTIONBLOCK_URL,
   API_FETCH_QUESTIONCHOICES,
-  API_FETCH_QUESTION_URL,
+  API_FETCH_QUESTION_URL
 } from "../types/constants";
 
 const useStyles = makeStyles((theme) => ({
   navi: {
     zIndex: 10000,
     fontFamily: "HelsinkiGrotesk",
-    fontSize: 16,
+    fontSize: 16
   },
   mainGrid: {
-    marginTop: theme.spacing(3),
+    marginTop: theme.spacing(3)
   },
   hero: (heroShallow: Boolean) => ({
-    height: heroShallow ? 360 : 550,
+    height: heroShallow ? 360 : 550
   }),
   main: {},
   paragraphs: {
-    marginTop: 56,
-  },
+    marginTop: 56
+  }
 }));
 
 const Main = ({
   isMobile,
   QuestionsData,
   QuestionChoicesData,
-  QuestionBlocksData,
+  QuestionBlocksData
 }: MainEntranceFormProps): ReactElement => {
   const i18n = useI18n();
   const curLocale: string = i18n.locale();
@@ -180,7 +180,7 @@ const Main = ({
 export const getServerSideProps: GetServerSideProps = async ({
   params,
   req,
-  locales,
+  locales
 }) => {
   const lngDict = await i18nLoader(locales);
 
@@ -188,13 +188,13 @@ export const getServerSideProps: GetServerSideProps = async ({
   // reduxStore.dispatch({ type: CLEAR_STATE });
   const initialReduxState = reduxStore.getState();
 
-  const user = await checkUser(req);
-  if (!user) {
-    // Invalid user but login is not required
-  }
-  if (user && user.authenticated) {
-    initialReduxState.general.user = user;
-  }
+  // const user = await checkUser(req);
+  // if (!user) {
+  //   // Invalid user but login is not required
+  // }
+  // if (user && user.authenticated) {
+  //   initialReduxState.general.user = user;
+  // }
 
   let QuestionsData;
   let QuestionChoicesData;
@@ -220,13 +220,13 @@ export const getServerSideProps: GetServerSideProps = async ({
       QuestionsData: QuestionsData,
       QuestionChoicesData: QuestionChoicesData,
       QuestionBlocksData: QuestionBlocksData,
-      lngDict,
-    },
+      lngDict
+    }
   };
 };
 
 Main.defaultProps = {
-  isMobile: false,
+  isMobile: false
 };
 
 export default Main;

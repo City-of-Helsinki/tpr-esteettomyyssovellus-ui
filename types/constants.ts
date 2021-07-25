@@ -9,9 +9,9 @@ export const CREATIVECOMMONS_URL = "creativecommons.org/licences/by/4.0";
 
 export const backendApiBaseUrl = "http://localhost:8000/api";
 
-export const API_FETCH_QUESTIONBLOCK_URL = `${backendApiBaseUrl}/ArBackendQuestionBlocks/?form_id=0&format=json`;
-export const API_FETCH_QUESTION_URL = `${backendApiBaseUrl}/ArBackendQuestions/?form_id=0&format=json`;
-export const API_FETCH_QUESTIONCHOICES = `${backendApiBaseUrl}/ArBackendQuestionChoice/?form_id=0&format=json`;
+export const API_FETCH_QUESTIONBLOCK_URL = `${backendApiBaseUrl}/ArBackendQuestionBlocks/?form_id=1&format=json`;
+export const API_FETCH_QUESTION_URL = `${backendApiBaseUrl}/ArBackendQuestions/?form_id=1&format=json`;
+export const API_FETCH_QUESTIONCHOICES = `${backendApiBaseUrl}/ArBackendQuestionChoice/?form_id=1&format=json`;
 // export const API_FETCH_ADDITIONALINFOS = `${backendApiBaseUrl}/ArXAdditionalinfo/`;
 
 export const API_URL_BASE = "http://localhost:8000/api/";
