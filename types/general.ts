@@ -324,3 +324,15 @@ export interface AdditionalInfoPageProps {
 export interface AdditionalInfoCtrlButtonsProps {
   questionId: number;
 }
+
+export interface ChangeProps {
+  changed?: string;
+  servicepointId?: number;
+  servicePointName?: string;
+  newAddress?: string;
+  oldAddress?: string;
+  newAddressNumber?: string;
+  oldAddressNumber?: string;
+  newAddressCity?: string;
+  oldAddressCity?: string;
+}

@@ -5,15 +5,68 @@ import { GetServerSideProps } from "next";
 import Layout from "../components/common/Layout";
 import { store } from "../state/store";
 import i18nLoader from "../utils/i18n";
-import { useRouter } from "next/router";
+import router, { useRouter } from "next/router";
 import {
   API_URL_BASE,
   backendApiBaseUrl,
   FRONT_URL_BASE
 } from "../types/constants";
+import { getPreciseDistance } from "geolib";
+import { ChangeProps } from "../types/general";
+import styles from "./ServicePoint.module.scss";
+import { Button, RadioButton, SelectionGroup } from "hds-react";
+import { useState } from "react";
 
-const Servicepoints = (): ReactElement => {
+const Servicepoints = ({
+  changed,
+  servicepointId,
+  servicepointName,
+  newAddress,
+  oldAddress,
+  newAddressNumber,
+  oldAddressNumber,
+  newAddressCity,
+  oldAddressCity
+}: ChangeProps): ReactElement => {
   const i18n = useI18n();
+  const startState = "0";
+  const radioButtonYesText = "PH: Kyllä blaablaa";
+  const radioButtonNoText = "PH: EI blaablaa";
+  const [selectedRadioItem, setSelectedRadioItem] = useState(startState);
+  const handleRadioClick = (e: any) => {
+    setSelectedRadioItem(e.target.value);
+  };
+  const handleContinueClick = async (e: any) => {
+    if (selectedRadioItem == "1") {
+      console.log("Yes selected");
+
+      // TODO: (Remove entry from ArServicePoint)? and create a new entry.
+    } else if (selectedRadioItem == "2") {
+      console.log("No selected");
+      const updateAddressOptions = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          address_street_name: newAddress,
+          address_no: newAddressNumber,
+          address_city: newAddressCity
+        })
+      };
+      const updateAddressUrl =
+        API_URL_BASE + "ArServicepoints/" + servicepointId + "/update_address";
+      console.log(updateAddressUrl);
+      await fetch(updateAddressUrl, updateAddressOptions)
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Success:", data);
+        });
+      const url = `details/${servicepointId}`;
+      // router.push(url);
+      // TODO: Update entry in ArServicePoint and redirect to /details/x page.
+    }
+  };
 
   return (
     <Layout>
@@ -21,7 +74,60 @@ const Servicepoints = (): ReactElement => {
         <title>{i18n.t("notification.title")}</title>
       </Head>
       <main id="content">
-        <h1>Sovelluksessa tapahtui virhe</h1>
+        {changed ? (
+          changed == "address" ? (
+            <div>
+              <h1>Toimipisteen {servicepointName} sijainti on muuttunut.</h1>
+              <div className={styles.addressBlock}>
+                <p>Vanha osoite:</p>
+                <h4 className={styles.address}>
+                  {oldAddress + " " + oldAddressNumber + ", " + oldAddressCity}
+                </h4>
+              </div>
+              <div className={styles.addressBlock}>
+                <p>Uusi osoite:</p>
+                <h4 className={styles.address}>
+                  {newAddress + " " + newAddressNumber + ", " + newAddressCity}
+                </h4>
+              </div>
+              <div className={styles.radioButtonDiv}>
+                <SelectionGroup label="PH: Onko toimipiste muuttanu uusiin tiloihin?">
+                  <RadioButton
+                    id="v-radio1"
+                    name="v-radio"
+                    label={radioButtonYesText}
+                    value="1"
+                    checked={selectedRadioItem === "1"}
+                    onChange={handleRadioClick}
+                  />
+                  <RadioButton
+                    id="v-radio2"
+                    name="v-radio"
+                    label={radioButtonNoText}
+                    value="2"
+                    checked={selectedRadioItem === "2"}
+                    onChange={handleRadioClick}
+                  />
+                </SelectionGroup>
+              </div>
+              <Button
+                id="continueButton"
+                variant="primary"
+                disabled={selectedRadioItem === startState}
+                onClick={handleContinueClick}
+              >
+                PH: Jatka
+              </Button>
+              {
+                // TODO: Sulje välilehti
+              }
+            </div>
+          ) : (
+            <h1>Lokaatio on vaihtunut</h1>
+          )
+        ) : (
+          <h1>Sovelluksessa tapahtui virhe</h1>
+        )}
       </main>
     </Layout>
   );
@@ -123,12 +229,12 @@ export const getServerSideProps: GetServerSideProps = async ({
           });
 
         let choppedAddress = "";
-        let choppedApartmentNumber = "";
+        let choppedAddressNumber = "";
         let choppedPostOffice = "";
 
         if (addressData.length == 3) {
           choppedAddress = addressData[0];
-          choppedApartmentNumber = addressData[1];
+          choppedAddressNumber = addressData[1];
           choppedPostOffice = addressData[2];
         }
 
@@ -177,7 +283,7 @@ export const getServerSideProps: GetServerSideProps = async ({
               modified: date,
               modified_by: query.user,
               address_street_name: choppedAddress,
-              address_no: choppedApartmentNumber,
+              address_no: choppedAddressNumber,
               address_city: choppedPostOffice,
               accessibility_phone: null, // Set in accessibilityEdit
               accessibility_email: null, // Set in accessibilityEdit
@@ -234,8 +340,66 @@ export const getServerSideProps: GetServerSideProps = async ({
           console.log("New servicepoint and entrance inserted to the database");
         } else {
           // TODO: COMPARE EXISTING VALUES
-          servicepointId = ServicepointData[0].servicepoint_id;
           console.log("Compare old data");
+          servicepointId = ServicepointData[0].servicepoint_id;
+          const oldAddress = ServicepointData[0].address_street_name;
+          const oldAddressNumber = ServicepointData[0].address_no;
+          const oldAddressCity = ServicepointData[0].address_city;
+          const oldEasting = ServicepointData[0].loc_easting;
+          const oldNorthing = ServicepointData[0].loc_northing;
+
+          const addressHasChanged =
+            oldAddress != choppedAddress ||
+            oldAddressNumber != choppedAddressNumber ||
+            oldAddressCity != choppedPostOffice;
+
+          const preciseDistance = getPreciseDistance(
+            { latitude: oldNorthing, longitude: oldEasting },
+            {
+              latitude: Number(query.northing),
+              longitude: Number(query.easting)
+            }
+          );
+
+          // console.log(oldNorthing, oldEasting);
+          // console.log(Number(query.northing), Number(query.easting));
+          // console.log(preciseDistance);
+          const locationHasChanged = preciseDistance > 15;
+
+          const newAddress = choppedAddress;
+          const newAddressNumber = choppedAddressNumber;
+          const newAddressCity = choppedPostOffice;
+          const servicepointName = query.name;
+
+          if (addressHasChanged) {
+            let changed = "address";
+            return {
+              props: {
+                initialReduxState,
+                lngDict,
+                changed,
+                servicepointId,
+                servicepointName,
+                oldAddress,
+                oldAddressNumber,
+                oldAddressCity,
+                newAddress,
+                newAddressNumber,
+                newAddressCity
+              }
+            };
+          }
+          // if (locationHasChanged) {
+          //   let changed = "location";
+          //   return {
+          //     props: {
+          //       initialReduxState,
+          //       lngDict,
+          //       changed,
+          //       servicepointId
+          //     }
+          //   };
+          // }
         }
 
         // Variables from database
