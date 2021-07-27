@@ -47,7 +47,6 @@ export const isLocationValid = (coordinates: [number, number]): boolean =>
 // define CRS's here, can be made as a list, need to add named crs here to be able to use it's name in conversion
 proj4.defs(
   "EPSG:3067",
-  // "+title=WGS 84 (long/lat) +proj=longlat +ellps=WGS84 +datum=WGS84 +units=degrees"
   "+title=EPSG:3067 +proj=utm +zone=35 +ellps=GRS80 +datum=ETRS89 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
 );
 
