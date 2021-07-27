@@ -19,29 +19,14 @@ import {
   setServicepointId,
   setEntranceId,
   setPhoneNumber,
-  setEmail,
+  setEmail
 } from "../../state/reducers/formSlice";
-
-export const getFinnishDate = (jsonTimeStamp: Date) => {
-  const date = new Date(jsonTimeStamp);
-  const month = date.getMonth() + 1;
-  const day = date.getDate();
-  const year = date.getFullYear();
-  const finnish_date = day + "." + month + "." + year;
-  return finnish_date;
-};
-
-export const filterByLanguage = (dict: Dictionary<any>) => {
-  const i18n = useI18n();
-  return dict.filter((entry: any) => {
-    return entry.language_code == i18n.locale();
-  });
-};
+import { getFinnishDate, filterByLanguage } from "../../utils/utilFunctions";
 
 const details = ({
   servicepointData,
   accessibilityData,
-  entranceData,
+  entranceData
 }: any): ReactElement => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
@@ -58,7 +43,8 @@ const details = ({
   // Update entranceId and servicepointId to redux state
   if (servicepointData && entranceData.results) {
     dispatch(setServicepointId(servicepointData.servicepoint_id));
-    dispatch(setEntranceId(entranceData.results[0].entrance_id));
+    // TODO: Logic for when editing additional entrance vs main entrance
+    dispatch(setEntranceId(accessibilityData["main"][0].entrance_id));
   }
 
   const hasData =
@@ -134,7 +120,7 @@ const details = ({
 export const getServerSideProps: GetServerSideProps = async ({
   params,
   req,
-  locales,
+  locales
 }) => {
   const lngDict = await i18nLoader(locales);
 
@@ -195,8 +181,8 @@ export const getServerSideProps: GetServerSideProps = async ({
       lngDict,
       servicepointData,
       accessibilityData,
-      entranceData,
-    },
+      entranceData
+    }
   };
 };
 
