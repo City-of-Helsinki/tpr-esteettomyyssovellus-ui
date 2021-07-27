@@ -25,6 +25,10 @@ const Layout = ({ children }: LayoutProps): ReactElement => {
     <div className="hidden" ref={ref}>
       <Head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link
+          rel="stylesheet"
+          href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+        />
       </Head>
       <div className={styles.left} />
       <div className={styles.main}>

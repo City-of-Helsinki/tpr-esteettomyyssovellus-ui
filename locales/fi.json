@@ -111,7 +111,10 @@
     "choose": "--Valitse--",
     "continue": "Jatka",
     "whatDoesThisMean": "Mitä tämä tarkoittaa?",
-    "closeGuidance": "Sulje ohje "
+    "closeGuidance": "Sulje ohje ",
+    "additionalInfoPreviewHeader": "Lisätiedot",
+    "additionalInfoPreviewAltText": "Kuva: ",
+    "additionalInfoPreviewSourceText": "Lähde: "
   },
   "QuestionFormImportExistingData": {
     "chooseServicepoint": "Valitse toimipiste",

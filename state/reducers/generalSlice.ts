@@ -2,26 +2,28 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "../store";
 
 interface generalSliceProps {
-  northing: number;
-  easting: number;
+  coordinates: [number, number];
 }
 
 // todo: get the initial location to here
 const initialState: generalSliceProps = {
-  northing: 0,
-  easting: 4,
+  coordinates: [0, 0],
 };
 
 export const generalSlice = createSlice({
-  name: "counter",
+  name: "generalSlice",
   initialState,
   reducers: {
-    setLocation: (state) => {
-      return { ...state };
+    setServicepointLocation: (
+      state,
+      action: PayloadAction<{ coordinates: [number, number] }>
+    ) => {
+      const coordinates = action.payload.coordinates;
+      return { ...state, coordinates };
     },
   },
 });
 
-export const { setLocation } = generalSlice.actions;
+export const { setServicepointLocation } = generalSlice.actions;
 
 export default generalSlice.reducer;

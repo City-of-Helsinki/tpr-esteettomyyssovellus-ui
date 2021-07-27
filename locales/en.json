@@ -111,7 +111,10 @@
     "choose": "--Choose--",
     "continue": "Continue",
     "whatDoesThisMean": "What does this mean?",
-    "closeGuidance": "Close help"
+    "closeGuidance": "Close help",
+    "additionalInfoPreviewHeader": "Additional Information",
+    "additionalInfoPreviewAltText": "Picture: ",
+    "additionalInfoPreviewSourceText": "Source: "
   },
   "QuestionFormImportExistingData": {
     "chooseServicepoint": "Choose servicepoint",

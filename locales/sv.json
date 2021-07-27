@@ -111,7 +111,10 @@
     "choose": "--Välja--",
     "continue": "Fortsätta",
     "whatDoesThisMean": "Vad betyder det här?",
-    "closeGuidance": "Nära hjälp"
+    "closeGuidance": "Nära hjälp",
+    "additionalInfoPreviewHeader": "Ytterligare information",
+    "additionalInfoPreviewAltText": "Bild: ",
+    "additionalInfoPreviewSourceText": "Källa: "
   },
   "QuestionFormImportExistingData": {
     "chooseServicepoint": "Välj ett kontor",

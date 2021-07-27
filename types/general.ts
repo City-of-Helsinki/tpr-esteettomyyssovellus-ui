@@ -126,6 +126,7 @@ export interface MapProps {
   initLocation: [number, number];
   draggableMarker?: boolean;
   updateLocationHandler?: (location: LatLngExpression) => void;
+  makeStatic?: boolean;
 }
 
 // general for qnumber
@@ -141,6 +142,7 @@ export interface Location {
   coordinates?: [number, number];
   locNorthing?: number;
   locEasting?: number;
+  usedZoom?: number;
 }
 
 // notice/todo: names locationS and commentS can atm have only one location and commend -> maybe rename

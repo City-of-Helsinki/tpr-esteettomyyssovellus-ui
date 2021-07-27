@@ -2,10 +2,12 @@ import React from "react";
 import { IconInfoCircle, IconCrossCircle, IconAlertCircle } from "hds-react";
 import styles from "./QuestionContainer.module.scss";
 import { QuestionContainerProps } from "../types/general";
+import LANGUAGE_LOCALES from "../types/constants";
 import QuestionInfo from "./QuestionInfo";
 import QuestionAdditionalInformation from "./QuestionAdditionalInformation";
 import { i18n } from "../next.config";
 import { useI18n } from "next-localization";
+import Map from "./common/Map";
 import { useAppSelector } from "../state/hooks";
 
 // used for wrapping question text and additional infos with question 'data component' e.g. dropdown
@@ -22,15 +24,20 @@ const QuestionContainer = ({
   backgroundColor,
   canAddLocation,
   canAddPhotoMaxCount,
-  canAddComment
+  canAddComment,
 }: QuestionContainerProps): JSX.Element => {
   const i18n = useI18n();
+
+  const curLocale: string = i18n.locale();
   const questionDepth = (questionNumber.toString().split(".") || []).length;
   const paddingLeft: string = (questionDepth - 2) * 5 + "rem";
   const photoTexts = photoText?.split("<BR>");
   const questionInfos = questionInfo?.split("<BR><BR>");
   const invalidBlocks = useAppSelector(
     (state) => state.formReducer.invalidBlocks
+  );
+  const curQuestionAddinfos = useAppSelector(
+    (state) => state.additionalInfoReducer[questionId!]
   );
   const curAnswers = useAppSelector((state) => state.formReducer.answers);
   const isInvalid = invalidBlocks.includes(questionBlockId!);
@@ -42,11 +49,11 @@ const QuestionContainer = ({
           backgroundColor,
           marginBottom: "0.1rem",
           borderStyle: "solid",
-          borderColor: "#b01038"
+          borderColor: "#b01038",
         }
       : {
           paddingLeft,
-          backgroundColor
+          backgroundColor,
         };
 
   return (
@@ -92,6 +99,79 @@ const QuestionContainer = ({
           ></IconAlertCircle>
         ) : null}
       </div>
+      {curQuestionAddinfos ? (
+        <div
+          className={styles.addinfos}
+          style={{ backgroundColor: backgroundColor }}
+        >
+          {
+            <>
+              <div
+                className={styles.addinfos}
+                style={{ backgroundColor: backgroundColor }}
+              >
+                <h4>
+                  {i18n.t("accessibilityForm.additionalInfoPreviewHeader")}
+                </h4>
+                {curQuestionAddinfos.comments ? (
+                  <div className={styles.addinfopreviewcontainer}>
+                    {/* @ts-ignore */}
+                    <p>{curQuestionAddinfos.comments[curLocale]}</p>
+                  </div>
+                ) : null}
+                {curQuestionAddinfos.pictures
+                  ? curQuestionAddinfos.pictures.map((pic) => {
+                      return (
+                        <div className={styles.addinfopreviewcontainer}>
+                          <div
+                            className={styles.addinfopicturepreview}
+                            style={{
+                              backgroundImage:
+                                `url(` + `${pic.base ?? pic.url}` + `)`,
+                            }}
+                          />
+
+                          <p>
+                            <span>
+                              {i18n.t(
+                                "accessibilityForm.additionalInfoPreviewAltText"
+                              )}
+                            </span>
+                            {/* @ts-ignore */}
+                            {pic[curLocale]}
+                          </p>
+                          <p>
+                            <span>
+                              {i18n.t(
+                                "accessibilityForm.additionalInfoPreviewSourceText"
+                              )}
+                            </span>
+                            {pic.source ? pic.source : null}
+                          </p>
+                        </div>
+                      );
+                    })
+                  : null}
+                {curQuestionAddinfos.locations &&
+                curQuestionAddinfos.locations.coordinates ? (
+                  <div>
+                    <Map
+                      initCenter={curQuestionAddinfos.locations.coordinates!}
+                      initLocation={curQuestionAddinfos.locations.coordinates!}
+                      initZoom={17}
+                      draggableMarker={false}
+                      questionId={questionId!}
+                      makeStatic={true}
+                    />
+                  </div>
+                ) : null}
+              </div>
+
+              <p>PH: tähän vissiin "muokkaa lisätietoja"</p>
+            </>
+          }
+        </div>
+      ) : null}
     </div>
   );
 };
