@@ -55,7 +55,7 @@ const Servicepoints = ({
         })
       };
       const updateAddressUrl =
-        API_URL_BASE + "ArServicepoints/" + servicepointId + "/update_address";
+        API_URL_BASE + "ArServicepoints/" + servicepointId + "/update_address/";
       console.log(updateAddressUrl);
       await fetch(updateAddressUrl, updateAddressOptions)
         .then((response) => response.json())
@@ -63,7 +63,7 @@ const Servicepoints = ({
           console.log("Success:", data);
         });
       const url = `details/${servicepointId}`;
-      // router.push(url);
+      router.push(url);
       // TODO: Update entry in ArServicePoint and redirect to /details/x page.
     }
   };
