@@ -192,6 +192,7 @@ export interface MainEntranceFormProps {
   ServicepointData?: any;
   QuestionAnswerData?: any;
   AdditionalInfosData?: FetchAdditionalInfos;
+  form_id?: number;
 }
 
 interface FetchAdditionalInfos {
@@ -328,11 +329,12 @@ export interface AdditionalInfoCtrlButtonsProps {
 export interface ChangeProps {
   changed?: string;
   servicepointId?: number;
-  servicePointName?: string;
+  servicepointName?: string;
   newAddress?: string;
   oldAddress?: string;
   newAddressNumber?: string;
   oldAddressNumber?: string;
   newAddressCity?: string;
   oldAddressCity?: string;
+  user?: string;
 }

@@ -16,6 +16,7 @@ import { ChangeProps } from "../types/general";
 import styles from "./ServicePoint.module.scss";
 import { Button, RadioButton, SelectionGroup } from "hds-react";
 import { useState } from "react";
+import { getCurrentDate } from "../utils/utilFunctions";
 
 const Servicepoints = ({
   changed,
@@ -26,7 +27,8 @@ const Servicepoints = ({
   newAddressNumber,
   oldAddressNumber,
   newAddressCity,
-  oldAddressCity
+  oldAddressCity,
+  user
 }: ChangeProps): ReactElement => {
   const i18n = useI18n();
   const startState = "0";
@@ -51,11 +53,13 @@ const Servicepoints = ({
         body: JSON.stringify({
           address_street_name: newAddress,
           address_no: newAddressNumber,
-          address_city: newAddressCity
+          address_city: newAddressCity,
+          modified: getCurrentDate(),
+          modified_by: user
         })
       };
       const updateAddressUrl =
-        API_URL_BASE + "ArServicepoints/" + servicepointId + "/update_address";
+        API_URL_BASE + "ArServicepoints/" + servicepointId + "/update_address/";
       console.log(updateAddressUrl);
       await fetch(updateAddressUrl, updateAddressOptions)
         .then((response) => response.json())
@@ -63,7 +67,7 @@ const Servicepoints = ({
           console.log("Success:", data);
         });
       const url = `details/${servicepointId}`;
-      // router.push(url);
+      router.push(url);
       // TODO: Update entry in ArServicePoint and redirect to /details/x page.
     }
   };
@@ -243,21 +247,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 
         if (isNewServicepoint) {
           // TODO: ADD NEW ENTRY TO ARSERVICEPOINTS
-          let today = new Date();
-          const date =
-            today.getFullYear() +
-            "-" +
-            (today.getMonth() + 1) +
-            "-" +
-            today.getDate() +
-            "T" +
-            today.getHours() +
-            ":" +
-            today.getMinutes() +
-            ":" +
-            today.getSeconds() +
-            "Z";
-
+          const date = getCurrentDate();
           const servicepointRequestOptions = {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -385,7 +375,8 @@ export const getServerSideProps: GetServerSideProps = async ({
                 oldAddressCity,
                 newAddress,
                 newAddressNumber,
-                newAddressCity
+                newAddressCity,
+                user: query.user
               }
             };
           }

@@ -17,6 +17,7 @@ import {
   unsetInvalid,
   changeContactPersonStatus
 } from "../state/reducers/formSlice";
+import { getCurrentDate } from "../utils/utilFunctions";
 
 export const getClientIp = async () =>
   await publicIp.v4({
@@ -85,19 +86,7 @@ const QuestionFormCtrlButtons = ({
     let logId: any;
 
     // DATE FOR FINISHED ANSWERING
-    let today = new Date();
-    const finishedAnswering =
-      today.getFullYear() +
-      "-" +
-      (today.getMonth() + 1) +
-      "-" +
-      today.getDate() +
-      "T" +
-      today.getHours() +
-      ":" +
-      today.getMinutes() +
-      ":" +
-      today.getSeconds();
+    const finishedAnswering = getCurrentDate();
 
     // THIS RETURNS THE IP ADDRESS OF THE CLIENT USED IN THE ANSWER LOG
     const ipAddress = await getClientIp();

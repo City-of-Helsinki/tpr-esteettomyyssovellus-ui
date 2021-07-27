@@ -9,6 +9,7 @@ import router from "next/router";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { setStartDate } from "../state/reducers/formSlice";
 import { FRONT_URL_BASE } from "../types/constants";
+import { getCurrentDate } from "../utils/utilFunctions";
 
 const ServicepointLandingSummary = ({
   header,
@@ -23,19 +24,7 @@ const ServicepointLandingSummary = ({
   const handleEditorAddPointData = () => {
     if (data) {
       console.log("edit data clicked, todo create logic");
-      let today = new Date();
-      const startedAnswering =
-        today.getFullYear() +
-        "-" +
-        (today.getMonth() + 1) +
-        "-" +
-        today.getDate() +
-        "T" +
-        today.getHours() +
-        ":" +
-        today.getMinutes() +
-        ":" +
-        today.getSeconds();
+      const startedAnswering = getCurrentDate();
       dispatch(setStartDate(startedAnswering));
       const url = FRONT_URL_BASE + "accessibilityEdit/" + curEntranceId;
       // TODO: This preserves the state. Not necessary.
