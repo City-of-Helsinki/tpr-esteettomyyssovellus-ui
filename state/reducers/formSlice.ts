@@ -30,7 +30,7 @@ const initialState: formState = {
   contacts: {},
   startedAnswering: "",
   invalidBlocks: [],
-  formInited: false
+  formInited: false,
 };
 
 export const formSlice = createSlice({
@@ -40,19 +40,19 @@ export const formSlice = createSlice({
     setServicepointId: (state, action: PayloadAction<string>) => {
       return {
         ...state,
-        currentServicepointId: action.payload
+        currentServicepointId: action.payload,
       };
     },
     setEntranceId: (state, action: PayloadAction<string>) => {
       return {
         ...state,
-        currentEntranceId: action.payload
+        currentEntranceId: action.payload,
       };
     },
     setAnsweredChoice: (state, action: PayloadAction<string>) => {
       return {
         ...state,
-        answeredChoices: [...state.answeredChoices, action.payload]
+        answeredChoices: [...state.answeredChoices, action.payload],
       };
     },
     removeAnsweredChoice: (state, action: PayloadAction<string>) => {
@@ -60,8 +60,8 @@ export const formSlice = createSlice({
         ...state,
         answeredChoices: [
           ...(state.answeredChoices?.filter((elem) => elem != action.payload) ??
-            [])
-        ]
+            []),
+        ],
       };
     },
     setAnswer: (
@@ -72,36 +72,36 @@ export const formSlice = createSlice({
       const a = action.payload.answer;
       return {
         ...state,
-        answers: { ...state.answers, [qNumber]: a }
+        answers: { ...state.answers, [qNumber]: a },
       };
     },
     setContinue: (state) => {
       return {
         ...state,
-        isContinueClicked: true
+        isContinueClicked: true,
       };
     },
     unsetContinue: (state) => {
       return {
         ...state,
-        isContinueClicked: false
+        isContinueClicked: false,
       };
     },
     initForm: (state) => {
       return {
         ...state,
-        formInited: true
+        formInited: true,
       };
     },
     setFinished: (state, action: PayloadAction<number>) => {
       if (!state.finishedBlocks.includes(action.payload)) {
         return {
           ...state,
-          finishedBlocks: [...state.finishedBlocks, action.payload]
+          finishedBlocks: [...state.finishedBlocks, action.payload],
         };
       } else {
         return {
-          ...state
+          ...state,
         };
       }
     },
@@ -110,8 +110,8 @@ export const formSlice = createSlice({
         ...state,
         finishedBlocks: [
           ...(state.finishedBlocks?.filter((elem) => elem != action.payload) ??
-            [])
-        ]
+            []),
+        ],
       };
     },
     setContactPerson: (state, action: PayloadAction<string>) => {
@@ -121,8 +121,8 @@ export const formSlice = createSlice({
           ...state.contacts,
           // Sets the contact person. The contact person is always valid at the start
           // and changes to invalid if the validation fails
-          ["contactPerson"]: [action.payload, false]
-        }
+          ["contactPerson"]: [action.payload, false],
+        },
       };
     },
     setPhoneNumber: (state, action: PayloadAction<string>) => {
@@ -133,8 +133,8 @@ export const formSlice = createSlice({
           // Sets the phone number. The phone number is always valid at the start
           // and changes to invalid if the validation fails. TODO: POSSIBLY VALIDATE
           // WHEN SET
-          ["phoneNumber"]: [action.payload, false]
-        }
+          ["phoneNumber"]: [action.payload, false],
+        },
       };
     },
     setEmail: (state, action: PayloadAction<string>) => {
@@ -142,13 +142,13 @@ export const formSlice = createSlice({
         ...state,
         // Sets the email. The email is always valid at the start
         // and changes to invalid if the validation fails
-        contacts: { ...state.contacts, ["email"]: [action.payload, false] }
+        contacts: { ...state.contacts, ["email"]: [action.payload, false] },
       };
     },
     setStartDate: (state, action: PayloadAction<string>) => {
       return {
         ...state,
-        startedAnswering: action.payload
+        startedAnswering: action.payload,
       };
     },
     changeContactPersonStatus: (state, action: PayloadAction<boolean>) => {
@@ -158,9 +158,9 @@ export const formSlice = createSlice({
           ...state.contacts,
           ["contactPerson"]: [
             state.contacts["contactPerson"][0],
-            action.payload
-          ]
-        }
+            action.payload,
+          ],
+        },
       };
     },
     changePhoneNumberStatus: (state, action: PayloadAction<boolean>) => {
@@ -168,8 +168,8 @@ export const formSlice = createSlice({
         ...state,
         contacts: {
           ...state.contacts,
-          ["phoneNumber"]: [state.contacts["phoneNumber"][0], action.payload]
-        }
+          ["phoneNumber"]: [state.contacts["phoneNumber"][0], action.payload],
+        },
       };
     },
     changeEmailStatus: (state, action: PayloadAction<boolean>) => {
@@ -177,19 +177,19 @@ export const formSlice = createSlice({
         ...state,
         contacts: {
           ...state.contacts,
-          ["email"]: [state.contacts["email"][0], action.payload]
-        }
+          ["email"]: [state.contacts["email"][0], action.payload],
+        },
       };
     },
     setInvalid: (state, action: PayloadAction<number>) => {
       if (!state.invalidBlocks.includes(action.payload)) {
         return {
           ...state,
-          invalidBlocks: [...state.invalidBlocks, action.payload]
+          invalidBlocks: [...state.invalidBlocks, action.payload],
         };
       } else {
         return {
-          ...state
+          ...state,
         };
       }
     },
@@ -198,11 +198,11 @@ export const formSlice = createSlice({
         ...state,
         invalidBlocks: [
           ...(state.invalidBlocks?.filter((elem) => elem != action.payload) ??
-            [])
-        ]
+            []),
+        ],
       };
-    }
-  }
+    },
+  },
 });
 
 export const {
@@ -224,7 +224,7 @@ export const {
   changeEmailStatus,
   setInvalid,
   unsetInvalid,
-  initForm
+  initForm,
 } = formSlice.actions;
 
 export default formSlice.reducer;

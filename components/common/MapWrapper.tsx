@@ -1,6 +1,6 @@
 // this files code from marketing project: needs editing or deleting
 
-import React, { ReactElement, useRef, useEffect } from "react";
+import React, { ReactElement, useRef, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useI18n } from "next-localization";
 import {
@@ -10,12 +10,18 @@ import {
   useMap,
   useMapEvents,
 } from "react-leaflet";
-import { Marker as LeafletMarker, Icon, LatLngExpression } from "leaflet";
+import L, {
+  Marker as LeafletMarker,
+  Icon,
+  LatLngExpression,
+  Point,
+} from "leaflet";
 import getOrigin from "../../utils/request";
 import styles from "./MapWrapper.module.scss";
 import { useDispatch } from "react-redux";
 import { addLocation } from "../../state/reducers/additionalInfoSlice";
 import { useAppSelector } from "../../state/hooks";
+import { convertCoordinates, isLocationValid } from "../../utils/utilFunctions";
 
 interface MapWrapperProps {
   questionId: number;
@@ -25,17 +31,18 @@ interface MapWrapperProps {
   setLocation?: (initLocation: [number, number]) => void;
   setMapView?: (center: LatLngExpression, zoom: number) => void;
   setMapReady?: (ready: boolean) => void;
-  draggableMarker: boolean;
+  draggableMarker?: boolean;
+  makeStatic: boolean;
 }
 
 const MapWrapper = ({
   questionId,
   initialCenter,
   initialZoom,
-  initLocation,
   setMapView,
   setMapReady,
   draggableMarker,
+  makeStatic,
 }: MapWrapperProps): ReactElement => {
   const i18n = useI18n();
   const router = useRouter();
@@ -47,35 +54,52 @@ const MapWrapper = ({
     (state) => state.additionalInfoReducer[questionId]?.locations?.coordinates
   );
 
-  //todo: remove and add to general reducer
-  initLocation = [60.5000754478697, 25.501958086223556];
+  const initLocation = useAppSelector(
+    (state) => state.generalSlice.coordinates
+  );
 
+  // @ts-ignore : ignore types because .reverse() returns number[]
   const curLocation: [number, number] =
-    stateLocation && stateLocation !== undefined ? stateLocation : initLocation;
+    stateLocation && stateLocation !== undefined
+      ? stateLocation
+      : convertCoordinates("EPSG:3067", "WGS84", initLocation).reverse();
 
-  const setLocation = (coordinates: [number, number]) => {
+  const setLocation = (
+    coordinates: [number, number],
+    initNorthing?: number,
+    initEasting?: number
+  ) => {
+    let locNor, locEas;
+    // transform coordinates to northing and easting for db
+    const LonLatReverseCoordinates: [number, number] = [
+      coordinates[1],
+      coordinates[0],
+    ];
+    // if init values are provided, set those to the state
+    // otherwise transform coordinates (reversed) from wgs84 to 3067 and set to state
+    if (initNorthing && initEasting) {
+      locNor = initNorthing;
+      locEas = initEasting;
+    } else {
+      [locEas, locNor] = convertCoordinates(
+        "WGS84",
+        "EPSG:3067",
+        LonLatReverseCoordinates
+      );
+    }
+
     dispatch(
       addLocation({
         questionId: questionId,
         coordinates: coordinates,
-        locNorthing: coordinates[0],
-        locEasting: coordinates[1],
+        locNorthing: Math.round(locNor),
+        locEasting: Math.round(locEas),
       })
     );
   };
 
   // Use the icon images from the public folder
   const icon = new Icon.Default({ imagePath: `${getOrigin(router)}/` });
-
-  // Helper function
-  const isLocationValid = () =>
-    curLocation &&
-    curLocation.length === 2 &&
-    curLocation[0] > 0 &&
-    curLocation[1] > 0;
-
-  // Center on the marker if possible
-  const center = isLocationValid() ? curLocation : initialCenter;
 
   // Set the initLocation in redux state after the marker is dragged to a new position
   // Note: this will cause the map to pan to centre on these coordinates
@@ -104,12 +128,29 @@ const MapWrapper = ({
     const map = useMap();
 
     // Force a map update otherwise the map does not always render correctly after a page is first loaded
+    // this not apparently really working in the preview map in main form
+    map.invalidateSize();
+
+    if (makeStatic) {
+      map.dragging.disable();
+      map.touchZoom.disable();
+      map.doubleClickZoom.disable();
+      map.scrollWheelZoom.disable();
+      map.boxZoom.disable();
+      map.keyboard.disable();
+      if (map.tap) map.tap.disable();
+    }
+
     map.invalidateSize();
 
     // If the initLocation in redux state has changed, by geocoding or dragging, pan the map to centre on the new position
     useEffect(() => {
-      if (isLocationValid() && prevLocation !== curLocation) {
-        map.flyTo(curLocation, 18);
+      if (
+        isLocationValid(curLocation) &&
+        prevLocation !== curLocation &&
+        !makeStatic
+      ) {
+        map.setView(curLocation, 18);
       }
     }, [map]);
 
@@ -117,13 +158,9 @@ const MapWrapper = ({
     // The map centre is stored if needed, but currently the map is always centred on the marker position
     // If there is no initLocation, allow a map click (or tap) to store the click initLocation in redux, which then causes the marker to be shown
     useMapEvents({
-      moveend: () => {
-        if (setMapView) {
-          setMapView(map.getCenter(), map.getZoom());
-        }
-      },
+      // moveend: () => {},
       click: (evt) => {
-        if (isLocationValid()) {
+        if (isLocationValid(curLocation) && !makeStatic) {
           setLocation([evt.latlng.lat, evt.latlng.lng]);
         }
       },
@@ -137,12 +174,15 @@ const MapWrapper = ({
     if (setMapReady) {
       setMapReady(true);
     }
+    if (!stateLocation || stateLocation === undefined) {
+      setLocation(curLocation, initLocation[1], initLocation[0]);
+    }
   };
 
   return (
     <MapContainer
       className={styles.mapwrapper}
-      center={center}
+      center={curLocation}
       zoom={initialZoom}
       minZoom={5}
       maxZoom={18}
@@ -155,7 +195,7 @@ const MapWrapper = ({
           "common.map.osm"
         )}</a>`}
       />
-      {isLocationValid() && (
+      {isLocationValid(curLocation) && (
         <Marker
           ref={markerRef}
           icon={icon}

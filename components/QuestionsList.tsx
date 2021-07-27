@@ -9,7 +9,7 @@ import { QuestionsListProps } from "../types/general";
 const QuestionsList = ({
   additionalInfoVisible,
   questions,
-  answers
+  answers,
 }: QuestionsListProps): JSX.Element => {
   let dataComponent: JSX.Element;
   return (
@@ -20,7 +20,7 @@ const QuestionsList = ({
           .map((choice) => {
             return {
               label: choice.text,
-              value: choice.question_choice_id
+              value: choice.question_choice_id,
             };
           });
 

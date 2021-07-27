@@ -71,7 +71,7 @@ const AdditionalInfoLocationContent = ({
           initCenter={coordinates}
           initLocation={coordinates}
           initZoom={14}
-          draggableMarker
+          draggableMarker={true}
           questionId={questionId}
         />
       </div>

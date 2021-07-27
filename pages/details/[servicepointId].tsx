@@ -19,20 +19,38 @@ import {
   setServicepointId,
   setEntranceId,
   setPhoneNumber,
-  setEmail
+  setEmail,
 } from "../../state/reducers/formSlice";
 import { getFinnishDate, filterByLanguage } from "../../utils/utilFunctions";
+
+import { setServicepointLocation } from "../../state/reducers/generalSlice";
 
 const details = ({
   servicepointData,
   accessibilityData,
-  entranceData
+  entranceData,
 }: any): ReactElement => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
   const treeItems = [servicepointData.servicepoint_name];
   const finnishDate = getFinnishDate(servicepointData.modified);
   const formInited = useAppSelector((state) => state.formReducer.formInited);
+
+  // set coordinates from data to state gerenalSlice for e.g. leafletmaps
+  if (
+    servicepointData &&
+    servicepointData.loc_northing &&
+    servicepointData.loc_easting
+  ) {
+    const northing: number = servicepointData.loc_northing;
+    const easthing: number = servicepointData.loc_easting;
+    const coordinates: [number, number] = [easthing, northing];
+    dispatch(
+      setServicepointLocation({
+        coordinates,
+      })
+    );
+  }
 
   // Filter by language
   const filteredAccessibilityData: any = {};
@@ -120,7 +138,7 @@ const details = ({
 export const getServerSideProps: GetServerSideProps = async ({
   params,
   req,
-  locales
+  locales,
 }) => {
   const lngDict = await i18nLoader(locales);
 
@@ -181,8 +199,8 @@ export const getServerSideProps: GetServerSideProps = async ({
       lngDict,
       servicepointData,
       accessibilityData,
-      entranceData
-    }
+      entranceData,
+    },
   };
 };
 

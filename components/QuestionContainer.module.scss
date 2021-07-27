@@ -48,4 +48,37 @@
   .borderTopIfOpen {
     border-top: 1px solid blue;
   }
+  .addinfos {
+    padding: $spacing-m $spacing-s;
+
+    p {
+      word-wrap: break-word;
+      max-width: 80%;
+    }
+
+    h4 {
+      padding: 0 0 $spacing-m 0;
+    }
+
+    .addinfopreviewcontainer {
+      border-bottom: 1px solid $color-black-40;
+      margin: $spacing-m 0;
+      max-width: 50%;
+      .addinfopicturepreview {
+        padding: $spacing-s;
+        @include media(xs, s) {
+          padding: 0;
+        }
+        height: 15rem;
+        width: 15rem;
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: left;
+        @include media(xs, s) {
+          height: 10rem;
+          width: 10rem;
+        }
+      }
+    }
+  }
 }
