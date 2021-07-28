@@ -15,6 +15,7 @@ import {
   setFinished,
   unsetFinished
 } from "../state/reducers/formSlice";
+import { EMAIL_REGEX, PHONE_REGEX } from "../types/constants";
 
 const ContactInformationQuestionContainer = ({
   blockNumber
@@ -51,10 +52,8 @@ const ContactInformationQuestionContainer = ({
 
   const handleChange = (event: any) => {
     // REGEXES FOR VALIDATING
-    var phonePattern = new RegExp(/^[^a-zA-Z]+$/);
-    var emailPattern = new RegExp(
-      /^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i
-    );
+    var phonePattern = new RegExp(PHONE_REGEX);
+    var emailPattern = new RegExp(EMAIL_REGEX);
 
     switch (event.target.id) {
       case "-1":
@@ -123,21 +122,21 @@ const ContactInformationQuestionContainer = ({
           case -1:
             value = contactPerson[0];
             isAnswered = contactPerson[1];
-            error = contactPerson[1] ? "" : "Please input contactperson";
+            error = contactPerson[1] ? "" : "PH: Please input contactperson";
             break;
           case -2:
             value = phoneNumber[0];
             isAnswered = phoneNumber[1];
             // phoneNumber[1] is a boolean value indicating whether the phone number
             // is valid. If the phone number is invalid displays an error text
-            error = phoneNumber[1] ? "" : "Please input valid phonenumber";
+            error = phoneNumber[1] ? "" : "PH: Please input valid phonenumber";
             break;
           case -3:
             value = email[0];
             isAnswered = email[1];
             // email[1] is a boolean value indicating whether the email
             // is valid. If the email is invalid displays an error text
-            error = email[1] ? "" : "Please input valid email";
+            error = email[1] ? "" : "PH: Please input valid email";
             break;
         }
 

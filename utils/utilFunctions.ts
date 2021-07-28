@@ -1,5 +1,6 @@
 import { Dictionary } from "@reduxjs/toolkit";
 import { useI18n } from "next-localization";
+import proj4 from "proj4";
 
 export const getCurrentDate = () => {
   let today = new Date();
@@ -34,8 +35,6 @@ export const filterByLanguage = (dict: Dictionary<any>) => {
     return entry.language_code == i18n.locale();
   });
 };
-
-import proj4 from "proj4";
 
 // Helper function
 export const isLocationValid = (coordinates: [number, number]): boolean =>

@@ -15,6 +15,8 @@ import {
   API_FETCH_QUESTION_URL,
   backendApiBaseUrl,
   API_URL_BASE,
+  PHONE_REGEX,
+  EMAIL_REGEX
 } from "../../types/constants";
 import { useAppSelector, useAppDispatch } from "../../state/hooks";
 import QuestionBlock from "../../components/QuestionBlock";
@@ -22,7 +24,7 @@ import {
   AddInfoPhoto,
   AddInfoPhotoText,
   MainEntranceFormProps,
-  QuestionBlockProps,
+  QuestionBlockProps
 } from "../../types/general";
 import HeadlineQuestionContainer from "../../components/HeadlineQuestionContainer";
 import { LANGUAGE_LOCALES } from "../../types/constants";
@@ -37,7 +39,7 @@ import {
   initForm,
   setContactPerson,
   changePhoneNumberStatus,
-  changeEmailStatus,
+  changeEmailStatus
 } from "../../state/reducers/formSlice";
 import ContactInformationQuestionContainer from "../../components/ContactInformationQuestionContainer";
 import {
@@ -46,8 +48,9 @@ import {
   addLocation,
   addPicture,
   setAlt,
-  setInitAdditionalInfoFromDb,
+  setInitAdditionalInfoFromDb
 } from "../../state/reducers/additionalInfoSlice";
+
 const AccessibilityEdit = ({
   QuestionsData,
   QuestionChoicesData,
@@ -55,7 +58,7 @@ const AccessibilityEdit = ({
   QuestionAnswerData,
   ServicepointData,
   AdditionalInfosData,
-  form_id,
+  form_id
 }: MainEntranceFormProps): ReactElement => {
   const i18n = useI18n();
   const curLocale: string = i18n.locale();
@@ -70,16 +73,26 @@ const AccessibilityEdit = ({
     (state) => state.formReducer.invalidBlocks
   );
   let formInited = useAppSelector((state) => state.formReducer.formInited);
+  const additionalInfoInitedFromDb = useAppSelector(
+    (state) => state.additionalInfoReducer.initAddInfoFromDb
+  );
+  let isContinueClicked = useAppSelector(
+    (state) => state.formReducer.isContinueClicked
+  );
+
+  const treeItems = [
+    ServicepointData["servicepoint_name"],
+    "PH: Esteettömyystiedot"
+  ];
 
   if (ServicepointData != undefined && !formInited) {
     const phoneNumber = ServicepointData["accessibility_phone"];
     const email = ServicepointData["accessibility_email"];
 
     // REGEXES FOR VALIDATING
-    var phonePattern = new RegExp(/^[^a-zA-Z]+$/);
-    var emailPattern = new RegExp(
-      /^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i
-    );
+    var phonePattern = new RegExp(PHONE_REGEX);
+    var emailPattern = new RegExp(EMAIL_REGEX);
+
     dispatch(setPhoneNumber(phoneNumber));
     dispatch(setEmail(email));
     dispatch(setServicepointId(ServicepointData["servicepoint_id"]));
@@ -103,10 +116,6 @@ const AccessibilityEdit = ({
     dispatch(initForm());
   }
 
-  const additionalInfoInitedFromDb = useAppSelector(
-    (state) => state.additionalInfoReducer.initAddInfoFromDb
-  );
-
   // loop additional info to state, only once if data found
   if (AdditionalInfosData && !additionalInfoInitedFromDb) {
     dispatch(setInitAdditionalInfoFromDb({ isInited: true }));
@@ -117,7 +126,7 @@ const AccessibilityEdit = ({
           addComment({
             questionId: comment.question,
             language: curLangStr,
-            value: comment.comment,
+            value: comment.comment
           })
         );
         // little hacky, only add component for the 1st language => fi for not adding 3 components if all languages
@@ -126,7 +135,7 @@ const AccessibilityEdit = ({
             addComponent({
               questionId: comment.question,
               type: "comment",
-              id: comment.answer_comment_id,
+              id: comment.answer_comment_id
             })
           );
         }
@@ -139,14 +148,14 @@ const AccessibilityEdit = ({
             questionId: location.question,
             coordinates: [location.loc_northing, location.loc_easting],
             locNorthing: location.loc_northing,
-            locEasting: location.loc_easting,
+            locEasting: location.loc_easting
           })
         );
         dispatch(
           addComponent({
             questionId: location.question,
             type: "location",
-            id: location.answer_location_id,
+            id: location.answer_location_id
           })
         );
       });
@@ -161,7 +170,7 @@ const AccessibilityEdit = ({
           url: photo.photo_url,
           fi: "",
           sv: "",
-          en: "",
+          en: ""
         };
 
         dispatch(addPicture(picture));
@@ -169,7 +178,7 @@ const AccessibilityEdit = ({
           addComponent({
             questionId: photo.question,
             type: "link",
-            id: photo.answer_photo_id,
+            id: photo.answer_photo_id
           })
         );
 
@@ -185,7 +194,7 @@ const AccessibilityEdit = ({
                   questionId: photo.question,
                   language: curLangStr,
                   value: alt.photo_text,
-                  compId: photo.answer_photo_id,
+                  compId: photo.answer_photo_id
                 })
               );
             });
@@ -223,9 +232,6 @@ const AccessibilityEdit = ({
     };
   }
 
-  let isContinueClicked = useAppSelector(
-    (state) => state.formReducer.isContinueClicked
-  );
   // let curAnswers = useAppSelector(
   //   (state) => state.formReducer.answeredChoices
   // );
@@ -317,11 +323,6 @@ const AccessibilityEdit = ({
     );
   }
 
-  const treeItems = [
-    ServicepointData["servicepoint_name"],
-    "Esteettömyystiedot",
-  ];
-
   return (
     <Layout>
       <Head>
@@ -370,7 +371,7 @@ const AccessibilityEdit = ({
 export const getServerSideProps: GetServerSideProps = async ({
   params,
   req,
-  locales,
+  locales
 }) => {
   const lngDict = await i18nLoader(locales);
 
@@ -427,7 +428,11 @@ export const getServerSideProps: GetServerSideProps = async ({
       QuestionAnswerData = await QuestionAnswersResp.json();
       ServicepointData = await ServicepointResp.json();
       if (QuestionAnswerData.length != 0) {
-        const logId = (await QuestionAnswerData[0].log_id) ?? -1;
+        const logId =
+          (await QuestionAnswerData.sort((a: any, b: any) => {
+            return b.log_id - a.log_id;
+          })[0].log_id) ?? -1;
+
         if (logId && logId >= 0) {
           const AddInfoComments = await fetch(
             `${backendApiBaseUrl}/ArXQuesitonAnswerComment/?log=${logId}`
@@ -454,7 +459,7 @@ export const getServerSideProps: GetServerSideProps = async ({
             comments: AddInfoCommentsData,
             locations: AddInfoLocationsData,
             photos: AddInfoPhotosData,
-            phototexts: AddInfoPhotoTextsData,
+            phototexts: AddInfoPhotoTextsData
           };
         }
       }
@@ -479,8 +484,8 @@ export const getServerSideProps: GetServerSideProps = async ({
       QuestionAnswerData: QuestionAnswerData,
       ServicepointData: ServicepointData,
       AdditionalInfosData: AdditionalInfosData,
-      lngDict,
-    },
+      lngDict
+    }
   };
 };
 

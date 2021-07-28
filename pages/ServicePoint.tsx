@@ -35,9 +35,11 @@ const Servicepoints = ({
   const radioButtonYesText = "PH: Kyllä blaablaa";
   const radioButtonNoText = "PH: EI blaablaa";
   const [selectedRadioItem, setSelectedRadioItem] = useState(startState);
+
   const handleRadioClick = (e: any) => {
     setSelectedRadioItem(e.target.value);
   };
+
   const handleContinueClick = async (e: any) => {
     if (selectedRadioItem == "1") {
       console.log("Yes selected");
@@ -60,7 +62,7 @@ const Servicepoints = ({
       };
       const updateAddressUrl =
         API_URL_BASE + "ArServicepoints/" + servicepointId + "/update_address/";
-      console.log(updateAddressUrl);
+
       await fetch(updateAddressUrl, updateAddressOptions)
         .then((response) => response.json())
         .then((data) => {
@@ -337,6 +339,10 @@ export const getServerSideProps: GetServerSideProps = async ({
           const oldAddressCity = ServicepointData[0].address_city;
           const oldEasting = ServicepointData[0].loc_easting;
           const oldNorthing = ServicepointData[0].loc_northing;
+          const newAddress = choppedAddress;
+          const newAddressNumber = choppedAddressNumber;
+          const newAddressCity = choppedPostOffice;
+          const servicepointName = query.name;
 
           const addressHasChanged =
             oldAddress != choppedAddress ||
@@ -355,11 +361,6 @@ export const getServerSideProps: GetServerSideProps = async ({
           // console.log(Number(query.northing), Number(query.easting));
           // console.log(preciseDistance);
           const locationHasChanged = preciseDistance > 15;
-
-          const newAddress = choppedAddress;
-          const newAddressNumber = choppedAddressNumber;
-          const newAddressCity = choppedPostOffice;
-          const servicepointName = query.name;
 
           if (addressHasChanged) {
             let changed = "address";
