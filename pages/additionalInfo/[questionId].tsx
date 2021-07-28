@@ -38,12 +38,10 @@ import { useAppSelector, useAppDispatch } from "../../state/hooks";
 import {
   AdditionalComponentProps,
   AdditionalInfoPageProps,
-  AdditionalInfoProps,
-  QuestionProps
+  AdditionalInfoProps
 } from "../../types/general";
 import {
   LANGUAGE_LOCALES,
-  API_URL_BASE,
   API_FETCH_BACKEND_QUESTIONS
 } from "../../types/constants";
 import { Dictionary } from "@reduxjs/toolkit";

@@ -25,15 +25,15 @@ import {
   API_FETCH_ANSWER_LOGS,
   API_FETCH_ENTRANCES,
   API_FETCH_SENTENCE_LANGS,
-  API_FETCH_SERVICEPOINTS,
-  API_URL_BASE
+  API_FETCH_SERVICEPOINTS
 } from "../../types/constants";
 
 const details = ({
   servicepointData,
   accessibilityData,
   entranceData,
-  hasExistingFormData
+  hasExistingFormData,
+  isFinished
 }: any): ReactElement => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
@@ -123,7 +123,12 @@ const details = ({
             </h2>
             <span className={styles.statuslabel}>
               {/* TODO: change statuslabel with data respectively */}
-              <StatusLabel type="success"> PH: Valmis </StatusLabel>
+              {isFinished ? (
+                <StatusLabel type="success"> PH: Valmis </StatusLabel>
+              ) : (
+                <StatusLabel type="neutral"> PH: Kesken </StatusLabel>
+              )}
+
               <p>
                 {i18n.t("common.updated")} {finnishDate}
               </p>
@@ -166,6 +171,7 @@ export const getServerSideProps: GetServerSideProps = async ({
   let entranceData;
   let servicepointData;
   let hasExistingFormData = false;
+  let isFinished = false;
   if (params != undefined) {
     try {
       const ServicepointResp = await fetch(
@@ -201,7 +207,10 @@ export const getServerSideProps: GetServerSideProps = async ({
           `${API_FETCH_ANSWER_LOGS}?entrance=${mainEntranceId}`
         );
         const logData = await LogResp.json();
+
+        // TODO: Should the this be true even if the form has not been submitted
         hasExistingFormData = logData.length != 0;
+        isFinished = logData.some((e: any) => e["form_submitted"] == "Y");
       }
     } catch (err) {
       servicepointData = {};
@@ -224,7 +233,8 @@ export const getServerSideProps: GetServerSideProps = async ({
       servicepointData,
       accessibilityData,
       entranceData,
-      hasExistingFormData
+      hasExistingFormData,
+      isFinished
     }
   };
 };
