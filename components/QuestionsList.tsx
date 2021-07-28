@@ -9,9 +9,8 @@ import { QuestionsListProps } from "../types/general";
 const QuestionsList = ({
   additionalInfoVisible,
   questions,
-  answers,
+  answers
 }: QuestionsListProps): JSX.Element => {
-  let dataComponent: JSX.Element;
   return (
     <>
       {questions?.map((question: any, ind: number) => {
@@ -20,7 +19,7 @@ const QuestionsList = ({
           .map((choice) => {
             return {
               label: choice.text,
-              value: choice.question_choice_id,
+              value: choice.question_choice_id
             };
           });
 
@@ -46,10 +45,8 @@ const QuestionsList = ({
             photoText={question.photo_text}
             photoUrl={question.photo_url}
           >
-            {/* {dataComponent} */}
             {/* For checking if the component is yes_or_no question -> data from db */}
             {question.yes_no_question === "Y" ? (
-              // todo: add some logic to figure out what qustion id is and save answer to state
               <>
                 <QuestionRadioButtons
                   key={question.question_code}

@@ -21,7 +21,13 @@ import {
 } from "../../state/reducers/formSlice";
 import { getFinnishDate, filterByLanguage } from "../../utils/utilFunctions";
 import { setServicepointLocation } from "../../state/reducers/generalSlice";
-import { API_URL_BASE } from "../../types/constants";
+import {
+  API_FETCH_ANSWER_LOGS,
+  API_FETCH_ENTRANCES,
+  API_FETCH_SENTENCE_LANGS,
+  API_FETCH_SERVICEPOINTS,
+  API_URL_BASE
+} from "../../types/constants";
 
 const details = ({
   servicepointData,
@@ -163,12 +169,12 @@ export const getServerSideProps: GetServerSideProps = async ({
   if (params != undefined) {
     try {
       const ServicepointResp = await fetch(
-        `${API_URL_BASE}ArServicepoints/${params.servicepointId}/?format=json`
+        `${API_FETCH_SERVICEPOINTS}${params.servicepointId}/?format=json`
       );
       servicepointData = await ServicepointResp.json();
 
       const EntranceResp = await fetch(
-        `${API_URL_BASE}ArEntrances/?servicepoint=${servicepointData.servicepoint_id}&format=json`
+        `${API_FETCH_ENTRANCES}?servicepoint=${servicepointData.servicepoint_id}&format=json`
       );
       entranceData = await EntranceResp.json();
       let i = 0;
@@ -177,7 +183,7 @@ export const getServerSideProps: GetServerSideProps = async ({
       // Use while, because map function does not work with await
       while (i < entranceData.results.length) {
         const SentenceResp = await fetch(
-          `${API_URL_BASE}ArXStoredSentenceLangs/?entrance_id=${entranceData.results[i].entrance_id}&format=json`
+          `${API_FETCH_SENTENCE_LANGS}?entrance_id=${entranceData.results[i].entrance_id}&format=json`
         );
         const sentenceData = await SentenceResp.json();
         if (entranceData.results[i].is_main_entrance == "Y") {
@@ -192,7 +198,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 
       if (entranceData.results.length != 0) {
         const LogResp = await fetch(
-          `${API_URL_BASE}ArXAnswerLog/?entrance=${mainEntranceId}`
+          `${API_FETCH_ANSWER_LOGS}?entrance=${mainEntranceId}`
         );
         const logData = await LogResp.json();
         hasExistingFormData = logData.length != 0;

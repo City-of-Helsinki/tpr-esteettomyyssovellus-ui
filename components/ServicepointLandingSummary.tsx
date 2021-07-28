@@ -41,6 +41,7 @@ const ServicepointLandingSummary = ({
 
   // If the data is of type servicePointData
   if (data && "servicepoint_id" in data) {
+    // Keys of accessibility data values
     const keysToDisplay = ["accessibility_phone", "accessibility_email"];
     let itemList: any = [];
     hasData = keysToDisplay.some((e) => data[e] != null);

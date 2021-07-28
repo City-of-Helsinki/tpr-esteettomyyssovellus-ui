@@ -7,8 +7,10 @@ import { store } from "../state/store";
 import i18nLoader from "../utils/i18n";
 import router, { useRouter } from "next/router";
 import {
-  API_URL_BASE,
-  backendApiBaseUrl,
+  API_CHOP_ADDRESS,
+  API_FETCH_ENTRANCES,
+  API_FETCH_SERVICEPOINTS,
+  API_FETCH_SYSTEMS,
   FRONT_URL_BASE
 } from "../types/constants";
 import { getPreciseDistance } from "geolib";
@@ -60,8 +62,7 @@ const Servicepoints = ({
           modified_by: user
         })
       };
-      const updateAddressUrl =
-        API_URL_BASE + "ArServicepoints/" + servicepointId + "/update_address/";
+      const updateAddressUrl = `${API_FETCH_SERVICEPOINTS}${servicepointId}/update_address/`;
 
       await fetch(updateAddressUrl, updateAddressOptions)
         .then((response) => response.json())
@@ -196,11 +197,9 @@ export const getServerSideProps: GetServerSideProps = async ({
       try {
         let isNewServicepoint: boolean;
         let servicepointId: number = 0;
-        const SystemResp = await fetch(
-          `${backendApiBaseUrl}/ArSystems/?system_id=${query.systemId}&format=json`
-        );
+        const SystemResp = await fetch(API_FETCH_SYSTEMS + query.systemId);
         const ServicepointResp = await fetch(
-          `${backendApiBaseUrl}/ArServicepoints/?ext_servicepoint_id=${query.servicePointId}&format=json`
+          `${API_FETCH_SERVICEPOINTS}?format=json&ext_servicepoint_id=${query.servicePointId}`
         );
         SystemData = await SystemResp.json();
         ServicepointData = await ServicepointResp.json();
@@ -228,7 +227,7 @@ export const getServerSideProps: GetServerSideProps = async ({
             postOffice: query.postOffice
           })
         };
-        await fetch(API_URL_BASE + "ChopAddress/", addressRequestOptions)
+        await fetch(API_CHOP_ADDRESS, addressRequestOptions)
           .then((response) => response.json())
           .then((data) => {
             addressData = data;
@@ -244,7 +243,6 @@ export const getServerSideProps: GetServerSideProps = async ({
           choppedPostOffice = addressData[2];
         }
 
-        // console.log("ServicepointData", ServicepointData);
         isNewServicepoint = ServicepointData.length == 0;
 
         if (isNewServicepoint) {
@@ -290,10 +288,7 @@ export const getServerSideProps: GetServerSideProps = async ({
           };
 
           // POST TO ARSERVICEPOINT. RETURNS NEW SERVICEPOINTID USED FOR OTHER POST REQUESTS
-          await fetch(
-            API_URL_BASE + "ArServicepoints/",
-            servicepointRequestOptions
-          )
+          await fetch(API_FETCH_SERVICEPOINTS, servicepointRequestOptions)
             .then((response) => response.json())
             .then((data) => {
               console.log("Create new servicepoint");
@@ -323,7 +318,7 @@ export const getServerSideProps: GetServerSideProps = async ({
             })
           };
 
-          await fetch(API_URL_BASE + "ArEntrances/", entranceRequestOption)
+          await fetch(API_FETCH_ENTRANCES, entranceRequestOption)
             .then((response) => response.json())
             .then((data) => {
               console.log("Create new entrance");

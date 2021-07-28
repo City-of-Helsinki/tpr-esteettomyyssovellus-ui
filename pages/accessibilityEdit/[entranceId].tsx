@@ -13,10 +13,16 @@ import {
   API_FETCH_QUESTIONBLOCK_URL,
   API_FETCH_QUESTIONCHOICES,
   API_FETCH_QUESTION_URL,
-  backendApiBaseUrl,
   API_URL_BASE,
   PHONE_REGEX,
-  EMAIL_REGEX
+  EMAIL_REGEX,
+  API_FETCH_ENTRANCES,
+  API_FETCH_BACKEND_ENTRANCE_ANSWERS,
+  API_FETCH_SERVICEPOINTS,
+  API_FETCH_QUESTION_ANSWER_COMMENTS,
+  API_FETCH_QUESTION_ANSWER_LOCATIONS,
+  API_FETCH_QUESTION_ANSWER_PHOTOS,
+  API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS
 } from "../../types/constants";
 import { useAppSelector, useAppDispatch } from "../../state/hooks";
 import QuestionBlock from "../../components/QuestionBlock";
@@ -402,7 +408,7 @@ export const getServerSideProps: GetServerSideProps = async ({
     try {
       const entrance_id = params.entranceId;
       const EntranceResp = await fetch(
-        API_URL_BASE + `ArEntrances/${entrance_id}/?format=json`
+        `${API_FETCH_ENTRANCES}${entrance_id}/?format=json`
       );
       EntranceData = await EntranceResp.json();
       const servicepoint_id = EntranceData["servicepoint"];
@@ -416,11 +422,11 @@ export const getServerSideProps: GetServerSideProps = async ({
         API_FETCH_QUESTIONBLOCK_URL + form_id
       );
       const QuestionAnswersResp = await fetch(
-        `${backendApiBaseUrl}/ArBackendEntranceAnswer/?entrance_id=${entrance_id}&format=json`
+        `${API_FETCH_BACKEND_ENTRANCE_ANSWERS}?entrance_id=${entrance_id}&format=json`
       );
 
       const ServicepointResp = await fetch(
-        API_URL_BASE + `ArServicepoints/${servicepoint_id}/?format=json`
+        `${API_FETCH_SERVICEPOINTS}${servicepoint_id}/?format=json`
       );
       QuestionsData = await QuestionsResp.json();
       QuestionChoicesData = await QuestionChoicesResp.json();
@@ -435,19 +441,19 @@ export const getServerSideProps: GetServerSideProps = async ({
 
         if (logId && logId >= 0) {
           const AddInfoComments = await fetch(
-            `${backendApiBaseUrl}/ArXQuesitonAnswerComment/?log=${logId}`
+            `${API_FETCH_QUESTION_ANSWER_COMMENTS}?log=${logId}`
           );
 
           const AddInfoLocations = await fetch(
-            `${backendApiBaseUrl}/ArXQuesitonAnswerLocation/?log=${logId}`
+            `${API_FETCH_QUESTION_ANSWER_LOCATIONS}?log=${logId}`
           );
 
           const AddInfoPhotos = await fetch(
-            `${backendApiBaseUrl}/ArXQuesitonAnswerPhoto/?log=${logId}`
+            `${API_FETCH_QUESTION_ANSWER_PHOTOS}?log=${logId}`
           );
 
           const AddInfoPhotoTexts = await fetch(
-            `${backendApiBaseUrl}/ArXQuesitonAnswerPhotoTxt/?log=${logId}`
+            `${API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS}?log=${logId}`
           );
 
           AddInfoCommentsData = await AddInfoComments.json();
