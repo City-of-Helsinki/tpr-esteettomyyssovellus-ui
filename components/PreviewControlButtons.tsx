@@ -1,8 +1,8 @@
 import React from "react";
-import { IconArrowRight, IconArrowLeft, Card } from "hds-react";
+import { IconArrowRight, IconArrowLeft, Card, Notification } from "hds-react";
 import Button from "./QuestionButton";
 import { QuestionFormCtrlButtonsProps } from "../types/general";
-import styles from "./QuestionFormCtrlButtons.module.scss";
+import styles from "./PreviewControlButtons.module.scss";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
 import router from "next/router";
 import { useI18n } from "next-localization";
@@ -12,24 +12,16 @@ import {
   API_FETCH_QUESTION_ANSWERS,
   FRONT_URL_BASE
 } from "../types/constants";
-import {
-  setFormFinished,
-  setInvalid,
-  unsetFormFinished,
-  unsetInvalid
-} from "../state/reducers/formSlice";
+import { setInvalid, unsetInvalid } from "../state/reducers/formSlice";
 import { getCurrentDate } from "../utils/utilFunctions";
+import { stat } from "node:fs";
 
 export const getClientIp = async () =>
   await publicIp.v4({
     fallbackUrls: ["https://ifconfig.co/ip"]
   });
 
-const QuestionFormCtrlButtons = ({
-  hasCancelButton,
-  hasValidateButton,
-  hasSaveDraftButton,
-  hasPreviewButton,
+const PreviewControlButtons = ({
   visibleBlocks
 }: QuestionFormCtrlButtonsProps): JSX.Element => {
   // TODO: save button might need own component of Button
@@ -56,17 +48,18 @@ const QuestionFormCtrlButtons = ({
   const finishedBlocks = useAppSelector(
     (state) => state.formReducer.finishedBlocks
   );
-
-  const handleCancel = (): void => {
+  const formFinished = useAppSelector(
+    (state) => state.formReducer.formFinished
+  );
+  const handelContinueEditing = (): void => {
     console.log("cancel clicked");
     // TODO: Add errorpage
     const url =
       curServicepointId == ""
         ? FRONT_URL_BASE
-        : FRONT_URL_BASE + "details/" + curServicepointId;
+        : `${FRONT_URL_BASE}accessibilityEdit/${curEntranceId}`;
     router.push(url);
   };
-  const isPreviewActive = curAnsweredChoices.length > 1;
 
   const postData = async (url: string, data: {}) => {
     let postAnswerOptions = {
@@ -146,69 +139,46 @@ const QuestionFormCtrlButtons = ({
     });
   };
 
-  const invalidBlocks = useAppSelector(
-    (state) => state.formReducer.invalidBlocks
-  );
-  if (invalidBlocks.length == 0) {
-    dispatch(setFormFinished());
-  } else {
-    dispatch(unsetFormFinished());
-  }
-
-  const handleValidateClick = () => {
-    console.log("Validate clicked");
-    validateForm();
-  };
-
-  const handlePreviewClick = () => {
-    console.log("Validate clicked");
-    validateForm();
-
-    // TODO: Check that the form is valid
-    router.push("/preview/" + curServicepointId);
+  const handleSaveAndSend = () => {
+    console.log("Save and send clicked");
   };
 
   return (
     <Card className={styles.container}>
-      <div className={styles.left}>
-        {hasCancelButton ? (
-          <Button
-            variant="secondary"
-            iconLeft={<IconArrowLeft />}
-            onClickHandler={handleCancel}
-          >
-            {i18n.t("questionFormControlButtons.quit")}
-          </Button>
-        ) : null}
+      <div className={styles.previewButtonHeader}>
+        <h2>PH: Esikatsele esteettömyystiedot</h2>
+        {formFinished ? (
+          <Notification label="Form done" type="success">
+            PH: Form filled correctly
+          </Notification>
+        ) : (
+          <Notification label="Missing information" type="error">
+            PH: Form is missing critical information.
+          </Notification>
+        )}
       </div>
-      <div className={styles.right}>
-        {hasValidateButton ? (
-          <Button variant="secondary" onClickHandler={handleValidateClick}>
-            {i18n.t("questionFormControlButtons.verifyInformation")}
-          </Button>
-        ) : null}
-        {
-          // TODO: THIS SAVE DRAFT BUTTON SHOULD ONLY EXIST IF THE SERVICEPOINT HAS NO
-          // FINISHED FORM ENTRIES
-          // IT SHOULD ALSO ONLY EXIST IF FORM_ID IS 0 OR 1
-        }
-        {hasSaveDraftButton ? (
-          <Button variant="secondary" onClickHandler={handleSaveDraftClick}>
-            {i18n.t("questionFormControlButtons.saveAsIncomplete")}
-          </Button>
-        ) : null}
-        {hasPreviewButton ? (
-          <Button
-            variant="primary"
-            iconRight={<IconArrowRight />}
-            disabled={!isPreviewActive}
-            onClickHandler={handlePreviewClick}
-          >
-            {i18n.t("questionFormControlButtons.preview")}
-          </Button>
-        ) : null}
+
+      <div className={styles.previewControlButtons}>
+        <Button
+          variant="primary"
+          iconLeft={<IconArrowLeft />}
+          onClickHandler={handelContinueEditing}
+        >
+          {"PH: Jatka muokkaamista"}
+        </Button>
+        <Button variant="secondary" onClickHandler={handleSaveDraftClick}>
+          {i18n.t("questionFormControlButtons.saveAsIncomplete")}
+        </Button>
+        <Button
+          variant="primary"
+          disabled={!formFinished}
+          onClickHandler={handleSaveAndSend}
+        >
+          {"PH: Tallenna ja lähetä"}
+        </Button>
       </div>
     </Card>
   );
 };
-export default QuestionFormCtrlButtons;
+
+export default PreviewControlButtons;
