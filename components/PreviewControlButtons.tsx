@@ -21,9 +21,7 @@ export const getClientIp = async () =>
     fallbackUrls: ["https://ifconfig.co/ip"]
   });
 
-const PreviewControlButtons = ({
-  visibleBlocks
-}: QuestionFormCtrlButtonsProps): JSX.Element => {
+const PreviewControlButtons = ({ hasHeader }: any): JSX.Element => {
   // TODO: save button might need own component of Button
   // also preview view should probably also have own component/buttons
 
@@ -124,39 +122,28 @@ const PreviewControlButtons = ({
     console.log("Posted to database new log entry with log_id=", logId);
   };
 
-  const validateForm = () => {
-    console.log("Started validating.");
-
-    // VALIDATE BLOCKS
-    visibleBlocks?.forEach((elem) => {
-      if (elem != null) {
-        if (!finishedBlocks.includes(Number(elem?.key?.toString()))) {
-          dispatch(setInvalid(Number(elem?.key?.toString())));
-        } else {
-          dispatch(unsetInvalid(Number(elem?.key?.toString())));
-        }
-      }
-    });
-  };
-
   const handleSaveAndSend = () => {
     console.log("Save and send clicked");
   };
 
   return (
     <Card className={styles.container}>
-      <div className={styles.previewButtonHeader}>
-        <h2>PH: Esikatsele esteettömyystiedot</h2>
-        {formFinished ? (
-          <Notification label="Form done" type="success">
-            PH: Form filled correctly
-          </Notification>
-        ) : (
-          <Notification label="Missing information" type="error">
-            PH: Form is missing critical information.
-          </Notification>
-        )}
-      </div>
+      {hasHeader ? (
+        <div className={styles.previewButtonHeader}>
+          <h2>PH: Esikatsele esteettömyystiedot</h2>
+          {formFinished ? (
+            <Notification label="Form done" type="success">
+              PH: Form filled correctly
+            </Notification>
+          ) : (
+            <Notification label="Missing information" type="error">
+              PH: Form is missing critical information.
+            </Notification>
+          )}
+        </div>
+      ) : (
+        ""
+      )}
 
       <div className={styles.previewControlButtons}>
         <Button

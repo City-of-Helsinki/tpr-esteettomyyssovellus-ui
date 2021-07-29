@@ -94,13 +94,16 @@ const preview = ({
             </h2>
           </div>
           <div>
-            <PreviewControlButtons />
+            <PreviewControlButtons hasHeader={true} />
           </div>
           <div>
             <PreviewPageLandingSummary
               header={i18n.t("servicepoint.contactFormSummaryHeader")}
               data={filteredAccessibilityData}
             />
+          </div>
+          <div>
+            <PreviewControlButtons hasHeader={false} />
           </div>
         </div>
       </main>
