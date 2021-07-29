@@ -12,7 +12,11 @@ import {
   API_FETCH_QUESTION_ANSWERS,
   FRONT_URL_BASE
 } from "../types/constants";
-import { setInvalid, unsetInvalid } from "../state/reducers/formSlice";
+import {
+  setContinue,
+  setInvalid,
+  unsetInvalid
+} from "../state/reducers/formSlice";
 import { getCurrentDate } from "../utils/utilFunctions";
 import { stat } from "node:fs";
 
@@ -42,15 +46,12 @@ const PreviewControlButtons = ({ hasHeader }: any): JSX.Element => {
   const curEntranceId = useAppSelector(
     (state) => state.formReducer.currentEntranceId
   );
-  const contacts = useAppSelector((state) => state.formReducer.contacts);
-  const finishedBlocks = useAppSelector(
-    (state) => state.formReducer.finishedBlocks
-  );
   const formFinished = useAppSelector(
     (state) => state.formReducer.formFinished
   );
   const handelContinueEditing = (): void => {
     console.log("cancel clicked");
+    dispatch(setContinue());
     // TODO: Add errorpage
     const url =
       curServicepointId == ""
