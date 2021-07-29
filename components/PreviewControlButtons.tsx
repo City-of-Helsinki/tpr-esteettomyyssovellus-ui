@@ -131,14 +131,14 @@ const PreviewControlButtons = ({ hasHeader }: any): JSX.Element => {
     <Card className={styles.container}>
       {hasHeader ? (
         <div className={styles.previewButtonHeader}>
-          <h2>PH: Esikatsele esteettömyystiedot</h2>
+          <h2>{i18n.t("PreviewPage.previewAccessibilityInformation")}</h2>
           {formFinished ? (
             <Notification label="Form done" type="success">
               PH: Form filled correctly
             </Notification>
           ) : (
             <Notification label="Missing information" type="error">
-              PH: Form is missing critical information.
+              {i18n.t("PreviewPage.errorNotice")}
             </Notification>
           )}
         </div>
@@ -152,7 +152,7 @@ const PreviewControlButtons = ({ hasHeader }: any): JSX.Element => {
           iconLeft={<IconArrowLeft />}
           onClickHandler={handelContinueEditing}
         >
-          {"PH: Jatka muokkaamista"}
+          {i18n.t("PreviewPage.continueEditing")}
         </Button>
         <Button variant="secondary" onClickHandler={handleSaveDraftClick}>
           {i18n.t("questionFormControlButtons.saveAsIncomplete")}
@@ -162,7 +162,7 @@ const PreviewControlButtons = ({ hasHeader }: any): JSX.Element => {
           disabled={!formFinished}
           onClickHandler={handleSaveAndSend}
         >
-          {"PH: Tallenna ja lähetä"}
+          {i18n.t("PreviewPage.saveAndSend")}
         </Button>
       </div>
     </Card>

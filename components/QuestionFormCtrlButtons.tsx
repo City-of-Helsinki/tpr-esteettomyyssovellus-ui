@@ -164,6 +164,9 @@ const QuestionFormCtrlButtons = ({
     console.log("Validate clicked");
     validateForm();
 
+    // TODO: TÄSSÄ KOHTAA MAHDOLLISESTI PITÄÄ POSTATA TIEDOT APIIN/KANTAAN, ETTÄ PREVIEW SIVULLE
+    // SAADAAN NÄKYMÄÄN JUURI TÄYTETYT TIEDOT.
+
     // TODO: Check that the form is valid
     router.push("/preview/" + curServicepointId);
   };

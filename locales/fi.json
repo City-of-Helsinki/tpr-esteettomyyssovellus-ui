@@ -131,5 +131,11 @@
     "personPlaceholder": "Esim. vahtimestari tai Etunimi Sukunimi",
     "phonePlaceholder": "Esim. +358 50 123 4567",
     "emailPlaceholder": "Esim. osoite@maili.fi"
+  },
+  "PreviewPage": {
+    "continueEditing": "Jatka muokkaamista",
+    "saveAndSend": "Tallenna ja lähetä",
+    "previewAccessibilityInformation": "Esikatsele esteettömyystiedot",
+    "errorNotice": "Lomakkeen kaikkia pakollisia tietoja ei ole vielä täytetty. Palaa täydentämään tietoja."
   }
 }
