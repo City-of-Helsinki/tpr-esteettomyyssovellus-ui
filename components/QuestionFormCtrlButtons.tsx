@@ -7,7 +7,11 @@ import { useAppSelector, useAppDispatch } from "../state/hooks";
 import router from "next/router";
 import { useI18n } from "next-localization";
 import publicIp from "public-ip";
-import { API_URL_BASE, FRONT_URL_BASE } from "../types/constants";
+import {
+  API_FETCH_ANSWER_LOGS,
+  API_FETCH_QUESTION_ANSWERS,
+  FRONT_URL_BASE
+} from "../types/constants";
 import {
   changeEmailStatus,
   changePhoneNumberStatus,
@@ -73,12 +77,10 @@ const QuestionFormCtrlButtons = ({
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data)
     };
-    //console.log(postAnswerOptions);
     return fetch(url, postAnswerOptions)
       .then((response) => response.json())
       .then((data) => console.log(data));
   };
-  // console.log(curAnsweredChoices);
 
   // TODO: MAKE INTO SMALLER FUNCTIONS
   const handleSaveDraftClick = async () => {
@@ -110,7 +112,7 @@ const QuestionFormCtrlButtons = ({
     };
 
     // POST TO AR_X_ANSWER_LOG. RETURNS NEW LOG_ID USED FOR OTHER POST REQUESTS
-    await fetch(API_URL_BASE + "ArXAnswerLog/", requestOptions)
+    await fetch(API_FETCH_ANSWER_LOGS, requestOptions)
       .then((response) => response.json())
       .then((data) => {
         logId = data;
@@ -120,7 +122,7 @@ const QuestionFormCtrlButtons = ({
     if (!isNaN(logId)) {
       // POST ALL QUESTION ANSWERS
       const data = { log: logId, data: curAnsweredChoices };
-      postData(API_URL_BASE + "ArXQuestionAnswer/", data);
+      postData(API_FETCH_QUESTION_ANSWERS, data);
     } else {
       console.log("log_id was not number");
       return -1;

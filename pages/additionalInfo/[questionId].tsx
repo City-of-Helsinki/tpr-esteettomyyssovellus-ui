@@ -3,7 +3,7 @@ import React, {
   ReactElement,
   SetStateAction,
   useEffect,
-  useState,
+  useState
 } from "react";
 import { useI18n } from "next-localization";
 import Head from "next/head";
@@ -14,7 +14,7 @@ import {
   IconLocation,
   IconQuestionCircle,
   IconSpeechbubbleText,
-  IconUpload,
+  IconUpload
 } from "hds-react";
 import Layout from "../../components/common/Layout";
 import { store } from "../../state/store";
@@ -32,22 +32,24 @@ import {
   addComponent,
   clearEditingInitialState,
   removeComponent,
-  setEditingInitialState,
+  setEditingInitialState
 } from "../../state/reducers/additionalInfoSlice";
 import { useAppSelector, useAppDispatch } from "../../state/hooks";
 import {
   AdditionalComponentProps,
   AdditionalInfoPageProps,
-  AdditionalInfoProps,
-  QuestionProps,
+  AdditionalInfoProps
 } from "../../types/general";
-import { LANGUAGE_LOCALES } from "../../types/constants";
+import {
+  LANGUAGE_LOCALES,
+  API_FETCH_BACKEND_QUESTIONS
+} from "../../types/constants";
 import { Dictionary } from "@reduxjs/toolkit";
 
 // TODO: need to know what page is e.g. picture, comment or location
 const AdditionalInfo = ({
   questionId,
-  questionData,
+  questionData
 }: AdditionalInfoPageProps): ReactElement => {
   const i18n = useI18n();
   // todo: figure out better way to id
@@ -74,19 +76,19 @@ const AdditionalInfo = ({
     comment: 0,
     upload: 0,
     link: 0,
-    location: 0,
+    location: 0
   });
 
   const handleAddElement = (type: string) => {
     setElementCounts((prevCounts: any) => ({
       ...prevCounts,
-      [type]: elementCounts[type] + 1,
+      [type]: elementCounts[type] + 1
     }));
     dispatch(
       addComponent({
         questionId: questionId,
         type: type,
-        id: increasingId,
+        id: increasingId
       })
     );
     setIncreasingId(increasingId + 1);
@@ -95,7 +97,7 @@ const AdditionalInfo = ({
   const handleDelete = (deleteId: number, type: string) => {
     setElementCounts((prevCounts: any) => ({
       ...prevCounts,
-      [type]: elementCounts[type] - 1,
+      [type]: elementCounts[type] - 1
     }));
     dispatch(removeComponent({ questionId: questionId, delId: deleteId }));
   };
@@ -120,7 +122,7 @@ const AdditionalInfo = ({
     if (curAdditionalInfo && Object.entries(curAdditionalInfo).length > 0) {
       dispatch(
         setEditingInitialState({
-          obj: curAdditionalInfo,
+          obj: curAdditionalInfo
         })
       );
 
@@ -128,7 +130,7 @@ const AdditionalInfo = ({
       curAdditionalInfo.components?.forEach((comp: Dictionary<any>) => {
         setElementCounts((prevCounts: any) => ({
           ...prevCounts,
-          [comp.type]: elementCounts[comp.type] + 1,
+          [comp.type]: elementCounts[comp.type] + 1
         }));
         // setIncreasingId(increasingId + 1);
       });
@@ -300,7 +302,7 @@ const AdditionalInfo = ({
 // Todo: edit, get servicepoint data
 export const getServerSideProps: GetServerSideProps = async ({
   params,
-  locales,
+  locales
 }) => {
   const lngDict = await i18nLoader(locales);
 
@@ -312,7 +314,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 
   //e.g.
   const questionDataReq = await fetch(
-    `http://localhost:8000/api/ArBackendQuestions/?question_id=${questionId}&format=json`
+    `${API_FETCH_BACKEND_QUESTIONS}?question_id=${questionId}&format=json`
   );
   const questionData = await questionDataReq.json();
 
@@ -329,8 +331,8 @@ export const getServerSideProps: GetServerSideProps = async ({
       questionId,
       questionData,
       initialReduxState,
-      lngDict,
-    },
+      lngDict
+    }
   };
 };
 

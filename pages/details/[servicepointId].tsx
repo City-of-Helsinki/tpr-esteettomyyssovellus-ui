@@ -11,30 +11,38 @@ import styles from "./details.module.scss";
 import ServicepointLandingSummaryCtrlButtons from "../../components/ServicepointLandingSummaryCtrlButtons";
 import QuestionInfo from "../../components/QuestionInfo";
 import ServicepointMainInfoContent from "../../components/ServicepointMainInfoContent";
-import router from "next/router";
-import { Dictionary } from "@reduxjs/toolkit";
 import PathTreeComponent from "../../components/PathTreeComponent";
 import { useAppDispatch, useAppSelector } from "../../state/hooks";
 import {
   setServicepointId,
   setEntranceId,
   setPhoneNumber,
-  setEmail,
+  setEmail
 } from "../../state/reducers/formSlice";
 import { getFinnishDate, filterByLanguage } from "../../utils/utilFunctions";
-
 import { setServicepointLocation } from "../../state/reducers/generalSlice";
+import {
+  API_FETCH_ANSWER_LOGS,
+  API_FETCH_ENTRANCES,
+  API_FETCH_SENTENCE_LANGS,
+  API_FETCH_SERVICEPOINTS
+} from "../../types/constants";
 
 const details = ({
   servicepointData,
   accessibilityData,
   entranceData,
+  hasExistingFormData,
+  isFinished
 }: any): ReactElement => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
   const treeItems = [servicepointData.servicepoint_name];
   const finnishDate = getFinnishDate(servicepointData.modified);
   const formInited = useAppSelector((state) => state.formReducer.formInited);
+  const hasData =
+    Object.keys(entranceData).length !== 0 ||
+    Object.keys(servicepointData).length !== 0;
 
   // set coordinates from data to state gerenalSlice for e.g. leafletmaps
   if (
@@ -47,11 +55,11 @@ const details = ({
     const coordinates: [number, number] = [easthing, northing];
     dispatch(
       setServicepointLocation({
-        coordinates,
+        coordinates
       })
     );
   }
-
+  //console.log(accessibilityData);
   // Filter by language
   const filteredAccessibilityData: any = {};
   Object.keys(accessibilityData).map(function (key, index) {
@@ -59,15 +67,19 @@ const details = ({
   });
 
   // Update entranceId and servicepointId to redux state
-  if (servicepointData && entranceData.results) {
+  if (
+    servicepointData &&
+    entranceData.results &&
+    accessibilityData["main"].length != 0
+  ) {
     dispatch(setServicepointId(servicepointData.servicepoint_id));
     // TODO: Logic for when editing additional entrance vs main entrance
     dispatch(setEntranceId(accessibilityData["main"][0].entrance_id));
+  } else if (servicepointData && entranceData.results) {
+    dispatch(setServicepointId(servicepointData.servicepoint_id));
+    // TODO: Logic for when editing additional entrance vs main entrance
+    dispatch(setEntranceId(entranceData.results[0].entrance_id));
   }
-
-  const hasData =
-    Object.keys(entranceData).length !== 0 ||
-    Object.keys(servicepointData).length !== 0;
 
   if (hasData && !formInited) {
     if (servicepointData["accessibility_phone"] != undefined) {
@@ -111,7 +123,12 @@ const details = ({
             </h2>
             <span className={styles.statuslabel}>
               {/* TODO: change statuslabel with data respectively */}
-              <StatusLabel type="success"> PH: Valmis </StatusLabel>
+              {isFinished ? (
+                <StatusLabel type="success"> PH: Valmis </StatusLabel>
+              ) : (
+                <StatusLabel type="neutral"> PH: Kesken </StatusLabel>
+              )}
+
               <p>
                 {i18n.t("common.updated")} {finnishDate}
               </p>
@@ -127,7 +144,9 @@ const details = ({
               data={filteredAccessibilityData}
             />
           </div>
-          <ServicepointLandingSummaryCtrlButtons hasData={hasData} />
+          <ServicepointLandingSummaryCtrlButtons
+            hasData={hasExistingFormData}
+          />
         </div>
       </main>
     </Layout>
@@ -138,7 +157,7 @@ const details = ({
 export const getServerSideProps: GetServerSideProps = async ({
   params,
   req,
-  locales,
+  locales
 }) => {
   const lngDict = await i18nLoader(locales);
 
@@ -151,33 +170,47 @@ export const getServerSideProps: GetServerSideProps = async ({
   let accessibilityData: any = {};
   let entranceData;
   let servicepointData;
+  let hasExistingFormData = false;
+  let isFinished = false;
   if (params != undefined) {
     try {
       const ServicepointResp = await fetch(
-        `http://0.0.0.0:8000/api/ArServicepoints/${params.servicepointId}/?format=json`
+        `${API_FETCH_SERVICEPOINTS}${params.servicepointId}/?format=json`
       );
       servicepointData = await ServicepointResp.json();
 
       const EntranceResp = await fetch(
-        `http://0.0.0.0:8000/api/ArEntrances/?servicepoint=${servicepointData.servicepoint_id}&format=json`
+        `${API_FETCH_ENTRANCES}?servicepoint=${servicepointData.servicepoint_id}&format=json`
       );
       entranceData = await EntranceResp.json();
       let i = 0;
       let j = 1;
-
+      let mainEntranceId = 0;
       // Use while, because map function does not work with await
       while (i < entranceData.results.length) {
         const SentenceResp = await fetch(
-          `http://0.0.0.0:8000/api/ArXStoredSentenceLangs/?entrance_id=${entranceData.results[i].entrance_id}&format=json`
+          `${API_FETCH_SENTENCE_LANGS}?entrance_id=${entranceData.results[i].entrance_id}&format=json`
         );
         const sentenceData = await SentenceResp.json();
         if (entranceData.results[i].is_main_entrance == "Y") {
           accessibilityData["main"] = sentenceData;
+          mainEntranceId = entranceData.results[i].entrance_id;
         } else {
           accessibilityData["side" + j] = sentenceData;
           j++;
         }
         i++;
+      }
+
+      if (entranceData.results.length != 0) {
+        const LogResp = await fetch(
+          `${API_FETCH_ANSWER_LOGS}?entrance=${mainEntranceId}`
+        );
+        const logData = await LogResp.json();
+
+        // TODO: Should the this be true even if the form has not been submitted
+        hasExistingFormData = logData.length != 0;
+        isFinished = logData.some((e: any) => e["form_submitted"] == "Y");
       }
     } catch (err) {
       servicepointData = {};
@@ -200,7 +233,9 @@ export const getServerSideProps: GetServerSideProps = async ({
       servicepointData,
       accessibilityData,
       entranceData,
-    },
+      hasExistingFormData,
+      isFinished
+    }
   };
 };
 

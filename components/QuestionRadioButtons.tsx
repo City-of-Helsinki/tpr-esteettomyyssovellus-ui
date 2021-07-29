@@ -16,14 +16,14 @@ const QuestionRadioButtons = ({
   options,
   value
 }: QuestionRadioButtonsProps): JSX.Element => {
-  // todo: maybe take in prost
-  const i18n = useI18n();
   const dispatch = useAppDispatch();
   let curAnswers = useAppSelector((state) => state.formReducer.answers);
-  let startState = "0";
-  if (value != undefined && curAnswers[value] != undefined) {
-    startState = curAnswers[value].toString();
-  }
+
+  let startState =
+    value != undefined && curAnswers[value] != undefined
+      ? curAnswers[value].toString()
+      : "0";
+
   const [selectedRadioItem, setSelectedRadioItem] = useState(startState);
 
   const handleRadioClick = (e: any) => {
@@ -32,7 +32,6 @@ const QuestionRadioButtons = ({
 
     if (value && options) {
       const answer = Number(e.target.value);
-      // console.log(curAnswers);
       if (curAnswers[questionNumber] != undefined) {
         dispatch(removeAnsweredChoice(curAnswers[questionNumber].toString()));
       }
@@ -50,7 +49,6 @@ const QuestionRadioButtons = ({
   const secondId = "v-radio" + secondValue;
 
   return (
-    // TODO: id, name, value, label (?) for radiobuttons needs to be set programatically with data
     <SelectionGroup direction="horizontal" label={mainLabel}>
       <RadioButton
         id={firstId}

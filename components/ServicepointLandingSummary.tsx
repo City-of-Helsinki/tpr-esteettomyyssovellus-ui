@@ -37,11 +37,14 @@ const ServicepointLandingSummary = ({
   // Add React components to these arrays.
   let contents: any = [];
   let mainEntrance: any = [];
+  let hasData = false;
 
   // If the data is of type servicePointData
   if (data && "servicepoint_id" in data) {
+    // Keys of accessibility data values
     const keysToDisplay = ["accessibility_phone", "accessibility_email"];
     let itemList: any = [];
+    hasData = keysToDisplay.some((e) => data[e] != null);
     keysToDisplay.map((key) => {
       let title = "";
       switch (key) {
@@ -68,6 +71,8 @@ const ServicepointLandingSummary = ({
     );
     // Else if the data is of type accessibilityData
   } else if (data) {
+    hasData = data != undefined && data["main"].length != 0;
+
     let keys = Object.keys(data);
     keys.map((key) => {
       let itemList: any = [];
@@ -88,7 +93,6 @@ const ServicepointLandingSummary = ({
       // Check if main entrance.
       if (key == "main") {
         mainEntrance.push(
-          // TODO: Add to locales Pääsisäänkäynti jne.
           <ServicepointLandingSummaryContent
             contentHeader={i18n.t("common.mainEntrance")}
           >
@@ -97,7 +101,6 @@ const ServicepointLandingSummary = ({
         );
       } else {
         contents.push(
-          // TODO: Add to locales Lisäsisäänkäynti jne.
           <ServicepointLandingSummaryContent
             contentHeader={i18n.t("common.additionalEntrance")}
           >
@@ -110,10 +113,11 @@ const ServicepointLandingSummary = ({
 
   // Make sure that the main entrance is listed before the side entrances.
   contents = mainEntrance.concat(contents);
-  let buttonText =
-    Object.keys(data).length === 0
-      ? i18n.t("servicepoint.buttons.createServicepoint")
-      : i18n.t("servicepoint.buttons.editServicepoint");
+
+  // If has no data buttons should say create servicepoint otherwise edit servicepoint
+  let buttonText = !hasData
+    ? i18n.t("servicepoint.buttons.createServicepoint")
+    : i18n.t("servicepoint.buttons.editServicepoint");
 
   return (
     <div className={styles.maincontainer}>
@@ -124,7 +128,7 @@ const ServicepointLandingSummary = ({
         </Button>
       </div>
       <div>
-        {Object.keys(data).length !== 0 ? (
+        {hasData ? (
           <>{contents}</>
         ) : (
           <div className={styles.nodatacontainer}>
