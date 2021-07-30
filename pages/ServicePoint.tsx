@@ -84,21 +84,27 @@ const Servicepoints = ({
         {changed ? (
           changed == "address" ? (
             <div>
-              <h1>Toimipisteen {servicepointName} sijainti on muuttunut.</h1>
+              <h1>
+                {i18n.t("AddressChangedPage.headerSentence1")}
+                {servicepointName}
+                {i18n.t("AddressChangedPage.headerSentence2")}
+              </h1>
               <div className={styles.addressBlock}>
-                <p>Vanha osoite:</p>
+                <p>{i18n.t("AddressChangedPage.oldAddress")}:</p>
                 <h4 className={styles.address}>
                   {oldAddress + " " + oldAddressNumber + ", " + oldAddressCity}
                 </h4>
               </div>
               <div className={styles.addressBlock}>
-                <p>Uusi osoite:</p>
+                <p>{i18n.t("AddressChangedPage.oldAddress")}:</p>
                 <h4 className={styles.address}>
                   {newAddress + " " + newAddressNumber + ", " + newAddressCity}
                 </h4>
               </div>
               <div className={styles.radioButtonDiv}>
-                <SelectionGroup label="PH: Onko toimipiste muuttanu uusiin tiloihin?">
+                <SelectionGroup
+                  label={i18n.t("AddressChangedPage.hasServicepointMoved")}
+                >
                   <RadioButton
                     id="v-radio1"
                     name="v-radio"
@@ -123,17 +129,17 @@ const Servicepoints = ({
                 disabled={selectedRadioItem === startState}
                 onClick={handleContinueClick}
               >
-                PH: Jatka
+                {i18n.t("accessibilityForm.continue")}
               </Button>
               {
                 // TODO: Sulje välilehti
               }
             </div>
           ) : (
-            <h1>Lokaatio on vaihtunut</h1>
+            <h1>{i18n.t("AddressChangedPage.locationHasChanged")}</h1>
           )
         ) : (
-          <h1>Sovelluksessa tapahtui virhe</h1>
+          <h1>{i18n.t("AddressChangedPage.errorHasOccured")}</h1>
         )}
       </main>
     </Layout>
