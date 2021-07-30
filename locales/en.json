@@ -137,5 +137,13 @@
     "saveAndSend": "Save and send",
     "previewAccessibilityInformation": "Preview accessibility information",
     "errorNotice": "EN: Lomakkeen kaikkia pakollisia tietoja ei ole vielä täytetty. Palaa täydentämään tietoja."
+  },
+  "AddressChangedPage": {
+    "oldAddress": "Old address",
+    "locationHasChanged": "Location has changed",
+    "errorHasOccured": "An error has occured in the software",
+    "hasServicepointMoved": "Has the servicepoint moved to new premises?",
+    "headerSentence1": "The location of ",
+    "headerSentence2": " servicepoint has changed."
   }
 }

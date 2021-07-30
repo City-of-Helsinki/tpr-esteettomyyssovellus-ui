@@ -94,7 +94,6 @@ const AccessibilityEdit = ({
     const phoneNumber = ServicepointData["accessibility_phone"];
     const email = ServicepointData["accessibility_email"];
 
-    // REGEXES FOR VALIDATING
     var phonePattern = new RegExp(PHONE_REGEX);
     var emailPattern = new RegExp(EMAIL_REGEX);
 

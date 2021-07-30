@@ -20,7 +20,8 @@ const i18nLoader = async (
       accessibilityForm: lngDict.accessibilityForm,
       QuestionFormImportExistingData: lngDict.QuestionFormImportExistingData,
       ContactInformation: lngDict.ContactInformation,
-      PreviewPage: lngDict.PreviewPage
+      PreviewPage: lngDict.PreviewPage,
+      AddressChangedPage: lngDict.AddressChangedPage
     }
   };
 };
