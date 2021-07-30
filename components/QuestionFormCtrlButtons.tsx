@@ -56,6 +56,9 @@ const QuestionFormCtrlButtons = ({
   const finishedBlocks = useAppSelector(
     (state) => state.formReducer.finishedBlocks
   );
+  const isContinueClicked = useAppSelector(
+    (state) => state.formReducer.isContinueClicked
+  );
 
   const handleCancel = (): void => {
     console.log("cancel clicked");
@@ -204,7 +207,7 @@ const QuestionFormCtrlButtons = ({
           <Button
             variant="primary"
             iconRight={<IconArrowRight />}
-            disabled={!isPreviewActive}
+            disabled={!isPreviewActive || !isContinueClicked}
             onClickHandler={handlePreviewClick}
           >
             {i18n.t("questionFormControlButtons.preview")}
