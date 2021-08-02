@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { IconPlus, IconMinus, IconCross } from "hds-react";
 import { useI18n } from "next-localization";
 import styles from "./AdditionalInfoCommentContent.module.scss";
@@ -7,14 +7,17 @@ import QuestionInfo from "./QuestionInfo";
 import { AdditionalContentProps } from "../types/general";
 import {
   addComment,
+  addInvalidValues,
   removeComment,
+  removeInvalidValues,
 } from "../state/reducers/additionalInfoSlice";
-import { useAppDispatch } from "../state/hooks";
+import { useAppDispatch, useAppSelector } from "../state/hooks";
 import QuestionButton from "./QuestionButton";
 
 const AdditionalInfoCommentContent = ({
   questionId,
   onDelete,
+  compId,
   initValue,
 }: AdditionalContentProps): JSX.Element => {
   const i18n = useI18n();
@@ -30,6 +33,12 @@ const AdditionalInfoCommentContent = ({
     dispatch(removeComment({ questionId }));
   };
 
+  const currentInvalids = useAppSelector((state) =>
+    state.additionalInfoReducer[questionId].invalidValues?.find(
+      (invs) => invs.id === compId
+    )
+  );
+
   // only update state after .5 sec from prev KeyDown, set Alt text with correct lang
   let timer: NodeJS.Timeout;
   const handleAddComment = (
@@ -41,7 +50,37 @@ const AdditionalInfoCommentContent = ({
     timer = setTimeout(() => {
       dispatch(addComment({ questionId, language, value }));
     }, 500);
+    // validation for fi comment field
+    if (value && value !== "" && language === "fi") {
+      dispatch(
+        removeInvalidValues({
+          questionId: questionId,
+          compId: compId,
+          removeTarget: "fi",
+        })
+      );
+    } else if (value === "" && language === "fi") {
+      dispatch(
+        addInvalidValues({
+          questionId: questionId,
+          compId: compId,
+          invalidAnswers: ["fi"],
+        })
+      );
+    }
   };
+
+  useEffect(() => {
+    if (!initValue?.fi || initValue?.fi === "") {
+      dispatch(
+        addInvalidValues({
+          questionId: questionId,
+          compId: compId,
+          invalidAnswers: ["fi"],
+        })
+      );
+    }
+  }, []);
 
   return (
     <div className={styles.maincontainer}>
@@ -69,6 +108,14 @@ const AdditionalInfoCommentContent = ({
               }
               onLoad={() => handleAddComment(initValue?.fi, "fi")}
               defaultValue={initValue?.fi ?? null}
+              invalid={
+                currentInvalids?.invalidAnswers?.includes("fi") ? true : false
+              }
+              errorText={
+                currentInvalids?.invalidAnswers?.includes("fi")
+                  ? "PH: olkaa hyvä ja syöttäkää arvo"
+                  : ""
+              }
             />
             <div className={styles.optionalaltscontainer}>
               <QuestionInfo
