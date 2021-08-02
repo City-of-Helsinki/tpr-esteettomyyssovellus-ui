@@ -8,6 +8,8 @@ import { useAppDispatch, useAppSelector } from "../state/hooks";
 import {
   removeSingleQuestionAdditionalinfo,
   setPreviousInitStateAdditionalinfo,
+  setProperlySaved,
+  // setQuestionsWithAddInfo,
 } from "../state/reducers/additionalInfoSlice";
 import {
   AdditionalInfoCtrlButtonsProps,
@@ -22,8 +24,17 @@ const AdditionalInfoCtrlButtons = ({
   const dispatch = useAppDispatch();
 
   const handleSaveAndReturn = () => {
+    // dispatch(setQuestionsWithAddInfo({ qNumber: questionId }));
+    dispatch(setProperlySaved({ questionId: questionId, properlySaved: true }));
     router.back();
   };
+
+  const hasInvalidValidations = useAppSelector((state) =>
+    state.additionalInfoReducer[questionId]?.invalidValues?.filter(
+      (invalids) =>
+        invalids.invalidAnswers && invalids.invalidAnswers.length > 0
+    )
+  );
 
   const prevState = useAppSelector(
     (state) =>
@@ -46,6 +57,11 @@ const AdditionalInfoCtrlButtons = ({
         variant="secondary"
         iconLeft={<IconArrowLeft />}
         onClickHandler={handleSaveAndReturn}
+        disabled={
+          hasInvalidValidations && hasInvalidValidations.length > 0
+            ? true
+            : false
+        }
       >
         {i18n.t("common.buttons.saveAndReturn")}
       </QuestionButton>
