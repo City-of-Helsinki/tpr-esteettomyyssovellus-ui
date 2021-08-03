@@ -62,7 +62,7 @@
 
     .addinfopreviewcontainer {
       border-bottom: 1px solid $color-black-40;
-      // margin: $spacing-m 0;
+      margin: $spacing-m 0;
       max-width: 50%;
       .addinfopicturepreview {
         padding: $spacing-s;
@@ -78,6 +78,13 @@
           height: 10rem;
           width: 10rem;
         }
+      }
+    }
+    .editaddinfobutton {
+      margin-left: 0;
+      padding-left: 0;
+      button {
+        border: 0;
       }
     }
   }

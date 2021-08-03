@@ -125,7 +125,8 @@ const QuestionContainer = ({
                 <h4>
                   {i18n.t("accessibilityForm.additionalInfoPreviewHeader")}
                 </h4>
-                {curQuestionAddinfos.comments ? (
+                {curQuestionAddinfos.comments &&
+                curQuestionAddinfos?.comments.fi !== "" ? (
                   <div className={styles.addinfopreviewcontainer}>
                     {/* @ts-ignore */}
                     <p>{curQuestionAddinfos.comments[curLocale]}</p>
@@ -179,12 +180,14 @@ const QuestionContainer = ({
                 ) : null}
               </div>
 
-              <QuestionButton
-                variant="secondary"
-                onClickHandler={handleEditAddInfo}
-              >
-                PH: Muokkaa lisätietoja
-              </QuestionButton>
+              <div className={styles.editaddinfobutton}>
+                <QuestionButton
+                  variant="secondary"
+                  onClickHandler={handleEditAddInfo}
+                >
+                  PH: Muokkaa lisätietoja
+                </QuestionButton>
+              </div>
             </>
           }
         </div>

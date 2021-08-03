@@ -236,6 +236,9 @@ const AdditionalInfoPicturesContent = ({
     // if addinfo page with no curimage or initvalue add default validation errors
     if (!curImage || !initValue) {
       handleAddInvalidValues(["url", "fi", "source", "sharelicense"]);
+    } else {
+      // set terms checked if already validated image due to always checked otherwise cant save
+      setTermsChecked(true);
     }
   }, []);
 
