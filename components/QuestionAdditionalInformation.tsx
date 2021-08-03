@@ -55,27 +55,6 @@ const QuestionAdditionalInformation = ({
           >
             <IconCrossCircleFill className={styles.infoButton} aria-hidden />
           </span>
-          {
-            // TODO: Link to the http://localhost:3000/additionalinfo/ page
-            // THIS IS NOT NEEDED
-            // <div className={styles.lineBreak}>
-            //   {canAddPhotoMaxCount != 0 ? (
-            //     <div>
-            //       PH: Lisää kuva <IconPlusCircle aria-hidden />
-            //     </div>
-            //   ) : null}
-            //   {canAddLocation ? (
-            //     <div>
-            //       PH: Lisää sijainti <IconPlusCircle aria-hidden />
-            //     </div>
-            //   ) : null}
-            //   {canAddComment ? (
-            //     <div>
-            //       PH: Lisää kommentti <IconPlusCircle aria-hidden />
-            //     </div>
-            //   ) : null}
-            // </div>
-          }
         </>
       )}
     </>

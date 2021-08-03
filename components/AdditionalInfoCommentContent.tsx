@@ -34,7 +34,7 @@ const AdditionalInfoCommentContent = ({
   };
 
   const currentInvalids = useAppSelector((state) =>
-    state.additionalInfoReducer[questionId].invalidValues?.find(
+    state.additionalInfoReducer[questionId]?.invalidValues?.find(
       (invs) => invs.id === compId
     )
   );

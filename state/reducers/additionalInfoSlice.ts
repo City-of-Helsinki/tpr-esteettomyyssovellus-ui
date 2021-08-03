@@ -42,6 +42,23 @@ export const additionalInfoSlice = createSlice({
   name: "additionalInfo",
   initialState: {} as AdditionalInfoProps,
   reducers: {
+    setProperlySaved: (
+      state,
+      action: PayloadAction<{
+        questionId: number;
+        properlySaved: boolean;
+      }>
+    ) => {
+      const qId = action.payload.questionId;
+      const isSavedProper = action.payload.properlySaved;
+      return {
+        ...state,
+        [qId]: {
+          ...state[qId],
+          properlySaved: isSavedProper,
+        },
+      };
+    },
     setInitAdditionalInfoFromDb: (
       state,
       action: PayloadAction<{
@@ -299,10 +316,100 @@ export const additionalInfoSlice = createSlice({
         [qNumber]: prevState,
       };
     },
+    addInvalidValues: (
+      state,
+      action: PayloadAction<{
+        questionId: number;
+        compId: number;
+        invalidAnswers: string[];
+      }>
+    ) => {
+      const qId = action.payload.questionId;
+      const compId = action.payload.compId;
+      const values = action.payload.invalidAnswers;
+
+      const targetInvalid = state[qId]?.invalidValues?.find(
+        (invalids) => invalids.id === compId
+      );
+
+      const invalidInitDublicates =
+        targetInvalid &&
+        targetInvalid?.invalidAnswers &&
+        targetInvalid?.invalidAnswers.length > 0
+          ? targetInvalid?.invalidAnswers?.concat(values)
+          : values;
+
+      //@ts-ignore
+      const newInvaRemoveDublicates = [...new Set(invalidInitDublicates)];
+
+      return {
+        ...state,
+        [qId]: {
+          ...state[qId],
+          invalidValues: [
+            ...(state[qId]?.invalidValues?.filter(
+              (invs) => invs.id !== compId
+            ) ?? []),
+            { id: compId, invalidAnswers: newInvaRemoveDublicates },
+          ],
+        },
+      };
+    },
+    removeInvalidValues: (
+      state,
+      action: PayloadAction<{
+        questionId: number;
+        compId: number;
+        removeTarget: string;
+      }>
+    ) => {
+      const qId = action.payload.questionId;
+      const compId = action.payload.compId;
+      const remoTarget = action.payload.removeTarget;
+      const targetInvalid = state[qId]?.invalidValues?.find(
+        (invalids) => invalids.id === compId
+      );
+      const newInvalids = targetInvalid
+        ? targetInvalid.invalidAnswers?.filter((val) => val !== remoTarget)
+        : [];
+      return {
+        ...state,
+        [qId]: {
+          ...state[qId],
+          invalidValues: [
+            ...(state[qId].invalidValues?.filter(
+              (values) => values.id !== compId
+            ) || []),
+            { id: compId, invalidAnswers: newInvalids },
+          ],
+        },
+      };
+    },
+    removeAllInvalids: (
+      state,
+      action: PayloadAction<{
+        questionId: number;
+        compId: number;
+      }>
+    ) => {
+      const qId = action.payload.questionId;
+      const compId = action.payload.compId;
+      const invalidTargetRemoved = state[qId]?.invalidValues?.filter(
+        (invalids) => invalids.id !== compId
+      );
+      return {
+        ...state,
+        [qId]: {
+          ...state[qId],
+          invalidValues: invalidTargetRemoved,
+        },
+      };
+    },
   },
 });
 
 export const {
+  setProperlySaved,
   setEditingInitialState,
   clearEditingInitialState,
   addLocation,
@@ -318,6 +425,9 @@ export const {
   removeSingleQuestionAdditionalinfo,
   setPreviousInitStateAdditionalinfo,
   setInitAdditionalInfoFromDb,
+  removeAllInvalids,
+  removeInvalidValues,
+  addInvalidValues,
 } = additionalInfoSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type

@@ -64,6 +64,26 @@ const AdditionalInfoPicturesContent = ({
       hiddenFileInput.current.click();
     }
   };
+
+  const handleremoveInvalidValue = (remoTarget: string) => {
+    dispatch(
+      removeInvalidValues({
+        questionId: questionId,
+        compId: currentId,
+        removeTarget: remoTarget,
+      })
+    );
+  };
+
+  const handleAddInvalidValues = (answersToAdd: string[]) => {
+    dispatch(
+      addInvalidValues({
+        questionId: questionId,
+        compId: currentId,
+        invalidAnswers: answersToAdd,
+      })
+    );
+  };
   // add image to state, elseif -> when adding just the img link/url
   const handleImageAdded = async (e?: any) => {
     setTermsChecked(false);
@@ -83,23 +103,12 @@ const AdditionalInfoPicturesContent = ({
       };
       dispatch(addPicture(payload));
       // remove or add mandatory url validation to state
+      handleAddInvalidValues(["url", "fi", "source", "sharelicense"]);
       if ((imgBase64 && imgBase64 !== "") || (img.name && img.name !== "")) {
-        dispatch(
-          removeInvalidValues({
-            questionId: questionId,
-            compId: compId,
-            removeTarget: "url",
-          })
-        );
+        handleremoveInvalidValue("url");
         //  todo: what is this
       } else if (imgBase64 !== "" || img.name === "") {
-        dispatch(
-          addInvalidValues({
-            questionId: questionId,
-            compId: compId,
-            invalidAnswers: ["url"],
-          })
-        );
+        handleAddInvalidValues(["url"]);
       }
       // below for links (not upload)
     } else {
@@ -117,20 +126,11 @@ const AdditionalInfoPicturesContent = ({
           source: "",
         };
         dispatch(addPicture(payload));
-        dispatch(
-          addInvalidValues({
-            questionId: questionId,
-            compId: compId,
-            invalidAnswers: ["fi", "source", "sharelicense"],
-          })
-        );
-        dispatch(
-          removeInvalidValues({
-            questionId: questionId,
-            compId: compId,
-            removeTarget: "url",
-          })
-        );
+
+        // handleAddInvalidValues(["url"]);
+        handleremoveInvalidValue("url");
+      } else {
+        handleAddInvalidValues(["url"]);
       }
     }
   };
@@ -155,13 +155,7 @@ const AdditionalInfoPicturesContent = ({
     dispatch(removePicture({ questionId, currentId }));
     // also add errors back for validation
     // todo maybe add this dispatch back
-    // dispatch(
-    //   addInvalidValues({
-    //     questionId: questionId,
-    //     compId: compId,
-    //     invalidAnswers: ["fi", "source", "sharelicense", "url"],
-    //   })
-    // );
+    handleAddInvalidValues(["url", "fi", "source", "sharelicense"]);
   };
 
   // on delete button clicked chain delete image from store and delete component cb
@@ -184,21 +178,9 @@ const AdditionalInfoPicturesContent = ({
     }, 500);
     // remove or add mandatory alt fi validation to state
     if (value && value !== "") {
-      dispatch(
-        removeInvalidValues({
-          questionId: questionId,
-          compId: compId,
-          removeTarget: "fi",
-        })
-      );
+      handleremoveInvalidValue("fi");
     } else if (value === "") {
-      dispatch(
-        addInvalidValues({
-          questionId: questionId,
-          compId: compId,
-          invalidAnswers: ["fi"],
-        })
-      );
+      handleAddInvalidValues(["fi"]);
     }
   };
 
@@ -208,21 +190,9 @@ const AdditionalInfoPicturesContent = ({
   const onCheckChange = (e: any) => {
     setTermsChecked(!termsChecked);
     if (!termsChecked) {
-      dispatch(
-        removeInvalidValues({
-          questionId: questionId,
-          compId: compId,
-          removeTarget: "sharelicense",
-        })
-      );
+      handleremoveInvalidValue("sharelicense");
     } else {
-      dispatch(
-        addInvalidValues({
-          questionId: questionId,
-          compId: compId,
-          invalidAnswers: ["sharelicense"],
-        })
-      );
+      handleAddInvalidValues(["sharelicense"]);
     }
   };
 
@@ -232,21 +202,9 @@ const AdditionalInfoPicturesContent = ({
     dispatch(setPictureSource({ questionId, source, compId }));
     // remove or add mandatory source validation to state
     if (source && source !== "") {
-      dispatch(
-        removeInvalidValues({
-          questionId: questionId,
-          compId: compId,
-          removeTarget: "source",
-        })
-      );
+      handleremoveInvalidValue("source");
     } else if (source === "") {
-      dispatch(
-        addInvalidValues({
-          questionId: questionId,
-          compId: compId,
-          invalidAnswers: ["source"],
-        })
-      );
+      handleAddInvalidValues(["source"]);
     }
   };
 
@@ -254,21 +212,9 @@ const AdditionalInfoPicturesContent = ({
     const value = e.currentTarget.value;
     value.length > 0 ? setLinkText(value) : null;
     if (value && value !== "") {
-      dispatch(
-        removeInvalidValues({
-          questionId: questionId,
-          compId: compId,
-          removeTarget: "url",
-        })
-      );
+      handleremoveInvalidValue("url");
     } else if (value === "") {
-      dispatch(
-        addInvalidValues({
-          questionId: questionId,
-          compId: compId,
-          invalidAnswers: ["url"],
-        })
-      );
+      handleAddInvalidValues(["url"]);
     }
   };
 
@@ -287,28 +233,9 @@ const AdditionalInfoPicturesContent = ({
   );
 
   useEffect(() => {
-    // if (initValue && curImage) {
-    //   // initValue = curImage;
-    //   setTermsChecked(!termsChecked);
-    // }
-    // if addinfo page with no curimage or initvalue add default validation errors (this needed?)
-    if (
-      // !curImage?.fi ||
-      // initValue?.fi === "" ||
-      // !curImage?.source ||
-      // initValue?.source === "" ||
-      // !curImage?.source ||
-      // initValue?.source === "" ||
-      !curImage ||
-      !initValue
-    ) {
-      dispatch(
-        addInvalidValues({
-          questionId: questionId,
-          compId: compId,
-          invalidAnswers: ["fi", "source", "sharelicense", "url"],
-        })
-      );
+    // if addinfo page with no curimage or initvalue add default validation errors
+    if (!curImage || !initValue) {
+      handleAddInvalidValues(["url", "fi", "source", "sharelicense"]);
     }
   }, []);
 
@@ -332,7 +259,7 @@ const AdditionalInfoPicturesContent = ({
             }
             errorText={
               currentInvalids?.invalidAnswers?.includes("url")
-                ? "PH: olkaa hyvä ja syöttäkää lähde"
+                ? "PH: olkaa hyvä ja syöttäkää kuvalinkki"
                 : ""
             }
           />
@@ -444,14 +371,8 @@ const AdditionalInfoPicturesContent = ({
                   "additionalInfo.sharePictureLicenseText"
                 )} ${i18n.t("additionalInfo.sharePictureLicense")}}`}
                 name="agreeToPictureTerms"
-                // defaultChecked={initValue?.id === compId ? true : termsChecked}
                 checked={termsChecked}
                 onChange={onCheckChange}
-                // invalid={
-                //   currentInvalids?.invalidAnswers?.includes("sharelicense")
-                //     ? true
-                //     : false
-                // }
                 errorText={
                   currentInvalids?.invalidAnswers?.includes("sharelicense")
                     ? "PH: olkaa hyvä ja hyväksykää ehdot"
@@ -470,7 +391,7 @@ const AdditionalInfoPicturesContent = ({
               label={i18n.t("additionalInfo.sourceTooltipMainLabel")}
               onChange={onSourceChange}
               required
-              defaultValue={curImage?.source ? curImage?.source : null}
+              defaultValue={curImage?.source ? curImage?.source : ""}
               invalid={
                 currentInvalids?.invalidAnswers?.includes("source")
                   ? true

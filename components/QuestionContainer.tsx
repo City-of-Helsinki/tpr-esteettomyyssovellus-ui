@@ -9,6 +9,8 @@ import { i18n } from "../next.config";
 import { useI18n } from "next-localization";
 import Map from "./common/Map";
 import { useAppSelector } from "../state/hooks";
+import QuestionButton from "./QuestionButton";
+import { useRouter } from "next/router";
 
 // used for wrapping question text and additional infos with question 'data component' e.g. dropdown
 const QuestionContainer = ({
@@ -27,6 +29,7 @@ const QuestionContainer = ({
   canAddComment,
 }: QuestionContainerProps): JSX.Element => {
   const i18n = useI18n();
+  const router = useRouter();
 
   const curLocale: string = i18n.locale();
   const questionDepth = (questionNumber.toString().split(".") || []).length;
@@ -55,6 +58,13 @@ const QuestionContainer = ({
           paddingLeft,
           backgroundColor,
         };
+
+  const handleEditAddInfo = () => {
+    // Use the shallow option to avoid a server-side render in order to preserve the state
+    router.push(`/additionalInfo/${questionId ?? ""}`, undefined, {
+      shallow: true,
+    });
+  };
 
   return (
     <div className={styles.maincontainer} style={questionStyle}>
@@ -99,7 +109,9 @@ const QuestionContainer = ({
           ></IconAlertCircle>
         ) : null}
       </div>
-      {curQuestionAddinfos ? (
+      {(curQuestionAddinfos && curQuestionAddinfos?.comments) ||
+      curQuestionAddinfos?.pictures ||
+      curQuestionAddinfos?.locations ? (
         <div
           className={styles.addinfos}
           style={{ backgroundColor: backgroundColor }}
@@ -167,7 +179,12 @@ const QuestionContainer = ({
                 ) : null}
               </div>
 
-              <p>PH: tähän vissiin "muokkaa lisätietoja"</p>
+              <QuestionButton
+                variant="secondary"
+                onClickHandler={handleEditAddInfo}
+              >
+                PH: Muokkaa lisätietoja
+              </QuestionButton>
             </>
           }
         </div>
