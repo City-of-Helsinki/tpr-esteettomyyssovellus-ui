@@ -113,10 +113,14 @@ const AdditionalInfo = ({
     );
     dispatch(clearEditingInitialState());
 
-    const highestExistingId = Math.max.apply(
+    const highestIdState = Math.max.apply(
       Math,
       curAdditionalInfo?.components?.map((comp: any) => comp.id)
     );
+
+    const highestExistingId = curAdditionalInfo?.components
+      ? curAdditionalInfo.components.length + highestIdState
+      : highestIdState;
 
     if (
       highestExistingId &&
@@ -293,6 +297,7 @@ const AdditionalInfo = ({
                 </QuestionButton>
               </div>
             </div>
+            <AdditionalInfoCtrlButtons questionId={questionId} />
           </div>
         </div>
       </main>
