@@ -62,6 +62,15 @@ const AdditionalInfo = ({
     (state) => state.additionalInfoReducer[questionId] as AdditionalInfoProps
   );
 
+  const canAddCommentCount =
+    questionData && questionData[0].can_add_comment === "Y" ? 0 : -1;
+  const photoMaxCount =
+    questionData && questionData[0].can_add_photo_max_count
+      ? questionData[0]?.can_add_photo_max_count
+      : -1;
+  const canAddLocationCount =
+    questionData && questionData[0].can_add_location === "Y" ? 0 : -1;
+
   const filterByLanguage = (data: any) => {
     const i18n = useI18n();
     const curLocale: string = i18n.locale();
@@ -257,7 +266,9 @@ const AdditionalInfo = ({
                   variant="secondary"
                   iconRight={<IconSpeechbubbleText />}
                   onClickHandler={() => handleAddElement("comment")}
-                  disabled={elementCounts["comment"] > 0 ? true : false}
+                  disabled={
+                    elementCounts["comment"] > canAddCommentCount ? true : false
+                  }
                 >
                   {i18n.t("additionalInfo.ctrlButtons.addNewComment")}
                 </QuestionButton>
@@ -266,7 +277,8 @@ const AdditionalInfo = ({
                   iconRight={<IconUpload />}
                   onClickHandler={() => handleAddElement("upload")}
                   disabled={
-                    elementCounts["upload"] + elementCounts["link"] > 1
+                    elementCounts["upload"] + elementCounts["link"] >=
+                    photoMaxCount
                       ? true
                       : false
                   }
@@ -280,7 +292,8 @@ const AdditionalInfo = ({
                   iconRight={<IconLink />}
                   onClickHandler={() => handleAddElement("link")}
                   disabled={
-                    elementCounts["upload"] + elementCounts["link"] > 1
+                    elementCounts["upload"] + elementCounts["link"] >=
+                    photoMaxCount
                       ? true
                       : false
                   }
@@ -291,7 +304,11 @@ const AdditionalInfo = ({
                   variant="secondary"
                   iconRight={<IconLocation />}
                   onClickHandler={() => handleAddElement("location")}
-                  disabled={elementCounts["location"] > 0 ? true : false}
+                  disabled={
+                    elementCounts["location"] > canAddLocationCount
+                      ? true
+                      : false
+                  }
                 >
                   {i18n.t("additionalInfo.ctrlButtons.addNewLocation")}
                 </QuestionButton>

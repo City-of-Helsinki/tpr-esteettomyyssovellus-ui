@@ -244,7 +244,14 @@ const AdditionalInfoPicturesContent = ({
 
   return (
     <div className={styles.maincontainer}>
-      <div className={styles.inputcontainer}>
+      <div
+        className={styles.inputcontainer}
+        style={
+          currentInvalids?.invalidAnswers?.includes("url")
+            ? { alignItems: "center" }
+            : { alignItems: "flex-end" }
+        }
+      >
         <span className={styles.inputfield}>
           <TextInput
             id="{`chooseimg-${currentId}`}"
