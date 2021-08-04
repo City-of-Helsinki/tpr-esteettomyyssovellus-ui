@@ -95,7 +95,12 @@ const PreviewControlButtons = ({ hasHeader }: any): JSX.Element => {
       // POST ALL QUESTION ANSWERS
       const data = { log: logId, data: curAnsweredChoices };
       postData(API_FETCH_QUESTION_ANSWERS, data);
-      // postAdditionalInfo(logId, additionalInfo["additionalInfosData"]);
+      const parsedAdditionalInfos = Object.keys(additionalInfo).map((key) => {
+        if (!isNaN(Number(key))) return [key, additionalInfo[key]];
+      });
+      if (parsedAdditionalInfos != undefined) {
+        postAdditionalInfo(logId, parsedAdditionalInfos);
+      }
       window.location.href = FRONT_URL_BASE;
     } else {
       console.log("log_id was not number");
