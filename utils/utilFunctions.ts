@@ -1,7 +1,14 @@
 import { Dictionary } from "@reduxjs/toolkit";
 import { useI18n } from "next-localization";
 import proj4 from "proj4";
-
+import publicIp from "public-ip";
+import {
+  API_FETCH_QUESTION_ANSWER_COMMENTS,
+  API_FETCH_QUESTION_ANSWER_LOCATIONS,
+  API_FETCH_QUESTION_ANSWER_PHOTOS,
+  API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS
+} from "../types/constants";
+import { AdditionalInfos } from "../types/general";
 export const getCurrentDate = () => {
   let today = new Date();
   const date =
@@ -59,4 +66,146 @@ export const convertCoordinates = (
 ): [number, number] => {
   if (!isLocationValid(coordinates)) return [0, 0];
   return proj4(fromProjection, toProjection, coordinates);
+};
+
+export const postData = async (url: string, data: {}) => {
+  let postAnswerOptions = {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  };
+  return fetch(url, postAnswerOptions)
+    .then((response) => response.json())
+    .then((data) => data);
+};
+
+export const getClientIp = async () =>
+  await publicIp.v4({
+    fallbackUrls: ["https://ifconfig.co/ip"]
+  });
+
+export const postAdditionalInfo = async (
+  logId: number,
+  data: ((string | AdditionalInfos)[] | undefined)[]
+) => {
+  console.log("Started posting additional info");
+  data.map((question: any) => {
+    if (question != undefined) {
+      const comments =
+        question[1]["comments"] != undefined ? question[1]["comments"] : null;
+      const pictures =
+        question[1]["pictures"] != undefined ? question[1]["pictures"] : null;
+      const location =
+        question[1]["locations"] != undefined ? question[1]["locations"] : null;
+      // COMMENTS
+      if (comments != null) {
+        Object.keys(comments).map((key) => {
+          const url = API_FETCH_QUESTION_ANSWER_COMMENTS;
+          let comment = comments[key];
+          let language = 0;
+          switch (key) {
+            case "fi":
+              language = 1;
+              break;
+            case "sv":
+              language = 2;
+              break;
+            case "en":
+              language = 3;
+              break;
+          }
+          const commentData = {
+            comment: comment,
+            log: logId,
+            question: question[0],
+            language: language
+          };
+          postData(url, commentData);
+          console.log(
+            "Posted additionalinfo comments for question ",
+            question[0]
+          );
+        });
+      }
+      // LOCATION
+      if (location != null) {
+        const locationData = {
+          loc_easting: location["locEasting"],
+          loc_northing: location["locNorthing"],
+          log: logId,
+          question: question[0]
+        };
+        postData(API_FETCH_QUESTION_ANSWER_LOCATIONS, locationData);
+        console.log(
+          "Posted additionalinfo location for question ",
+          question[0]
+        );
+      }
+      // PICTURES
+      if (pictures != null) {
+        pictures.map(async (pic: any) => {
+          const pictureData = {
+            photo_url: pic["url"],
+            log: logId,
+            question: pic["qNumber"]
+          };
+          const requestOptions = {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(pictureData)
+          };
+          let responseData = null;
+          await fetch(API_FETCH_QUESTION_ANSWER_PHOTOS, requestOptions)
+            .then((response) => response.json())
+            .then((data) => {
+              responseData = data;
+              // console.log(responseData);
+            });
+          console.log(
+            "Posted additionalinfo pictures for question ",
+            question[0]
+          );
+          const photoId =
+            responseData != null ? responseData["answer_photo_id"] : null;
+
+          const fiComment = pic["fi"];
+          const svComment = pic["sv"];
+          const enComment = pic["en"];
+          if (photoId != null) {
+            if (fiComment != "") {
+              const pictureTextData = {
+                photo_text: fiComment,
+                answer_photo: photoId,
+                language: 1
+              };
+              postData(API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS, pictureTextData);
+              // console.log("Posted additionalinfo picture text in fi for question ", question[0]);
+            }
+            if (svComment != "") {
+              const pictureTextData = {
+                photo_text: svComment,
+                answer_photo: photoId,
+                language: 2
+              };
+              postData(API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS, pictureTextData);
+              // console.log("Posted additionalinfo picture text in sv ");
+            }
+            if (enComment != "") {
+              const pictureTextData = {
+                photo_text: enComment,
+                answer_photo: photoId,
+                language: 3
+              };
+              postData(API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS, pictureTextData);
+              // console.log("Posted additionalinfo picture text in en");
+            }
+            console.log(
+              "Posted additionalinfo picture texts for question ",
+              question[0]
+            );
+          }
+        });
+      }
+    }
+  });
 };

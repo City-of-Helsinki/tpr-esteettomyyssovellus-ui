@@ -3,7 +3,7 @@ import type { RootState } from "../store";
 import {
   AdditionalInfoProps,
   AdditionalInfos,
-  PictureProps,
+  PictureProps
 } from "../../types/general";
 import { LatLngExpression } from "leaflet";
 
@@ -55,8 +55,8 @@ export const additionalInfoSlice = createSlice({
         ...state,
         [qId]: {
           ...state[qId],
-          properlySaved: isSavedProper,
-        },
+          properlySaved: isSavedProper
+        }
       };
     },
     setInitAdditionalInfoFromDb: (
@@ -68,7 +68,7 @@ export const additionalInfoSlice = createSlice({
     ) => {
       return {
         ...state,
-        initAddInfoFromDb: action.payload.isInited,
+        initAddInfoFromDb: action.payload.isInited
       };
     },
     setEditingInitialState: (
@@ -80,13 +80,13 @@ export const additionalInfoSlice = createSlice({
       const obj = action.payload.obj;
       return {
         ...state,
-        curEditingInitialState: obj,
+        curEditingInitialState: obj
       };
     },
     clearEditingInitialState: (state) => {
       return {
         ...state,
-        curEditingInitialState: {},
+        curEditingInitialState: {}
       };
     },
     addLocation: (
@@ -110,9 +110,9 @@ export const additionalInfoSlice = createSlice({
           locations: {
             coordinates,
             locNorthing,
-            locEasting,
-          },
-        },
+            locEasting
+          }
+        }
       };
     },
     removeLocation: (
@@ -126,8 +126,8 @@ export const additionalInfoSlice = createSlice({
         ...state,
         [qId]: {
           ...state[qId],
-          locations: {},
-        },
+          locations: {}
+        }
       };
     },
     addPicture: (state, action: PayloadAction<PictureProps>) => {
@@ -136,8 +136,8 @@ export const additionalInfoSlice = createSlice({
         ...state,
         [qNumber]: {
           ...state[qNumber],
-          pictures: [...(state[qNumber]?.pictures ?? []), action.payload],
-        },
+          pictures: [...(state[qNumber]?.pictures ?? []), action.payload]
+        }
       };
     },
     removeComment: (state, action: PayloadAction<{ questionId: number }>) => {
@@ -146,8 +146,8 @@ export const additionalInfoSlice = createSlice({
         ...state,
         [qNumber]: {
           ...state[qNumber],
-          comments: {},
-        },
+          comments: {}
+        }
       };
     },
     removePicture: (
@@ -163,9 +163,9 @@ export const additionalInfoSlice = createSlice({
           pictures: [
             ...(state[qNumber].pictures?.filter(
               (picture) => picture.id !== id
-            ) ?? []),
-          ],
-        },
+            ) ?? [])
+          ]
+        }
       };
     },
     // Use the PayloadAction type to declare the contents of `action.payload`
@@ -185,8 +185,8 @@ export const additionalInfoSlice = createSlice({
         ...state,
         [qNumber]: {
           ...state[qNumber],
-          comments: { ...state[qNumber]?.comments, [lang]: value },
-        },
+          comments: { ...state[qNumber]?.comments, [lang]: value }
+        }
       };
     },
     addComponent: (
@@ -206,9 +206,9 @@ export const additionalInfoSlice = createSlice({
           ...state[qNumber],
           components: [
             ...(state[qNumber]?.components ?? []),
-            { id: id, type: type },
-          ],
-        },
+            { id: id, type: type }
+          ]
+        }
       };
     },
     removeComponent: (
@@ -223,9 +223,9 @@ export const additionalInfoSlice = createSlice({
           ...state[qNumber],
           components: [
             ...(state[qNumber]?.components?.filter((elem) => elem.id !== id) ??
-              []),
-          ],
-        },
+              [])
+          ]
+        }
       };
     },
     setAlt: (
@@ -256,9 +256,9 @@ export const additionalInfoSlice = createSlice({
           ...state[qNumber],
           pictures: [
             ...(state[qNumber]?.pictures?.filter((pic) => pic.id !== id) || []),
-            targetPic,
-          ],
-        },
+            targetPic
+          ]
+        }
       };
     },
     setPictureSource: (
@@ -287,9 +287,9 @@ export const additionalInfoSlice = createSlice({
           ...state[qNumber],
           pictures: [
             ...(state[qNumber]?.pictures?.filter((pic) => pic.id !== id) || []),
-            targetPic,
-          ],
-        },
+            targetPic
+          ]
+        }
       };
     },
     removeSingleQuestionAdditionalinfo: (
@@ -299,7 +299,7 @@ export const additionalInfoSlice = createSlice({
       const qNumber = action.payload.questionId;
       return {
         ...state,
-        [qNumber]: {},
+        [qNumber]: {}
       };
     },
     setPreviousInitStateAdditionalinfo: (
@@ -313,7 +313,7 @@ export const additionalInfoSlice = createSlice({
       const prevState = action.payload.prevState;
       return {
         ...state,
-        [qNumber]: prevState,
+        [qNumber]: prevState
       };
     },
     addInvalidValues: (
@@ -350,9 +350,9 @@ export const additionalInfoSlice = createSlice({
             ...(state[qId]?.invalidValues?.filter(
               (invs) => invs.id !== compId
             ) ?? []),
-            { id: compId, invalidAnswers: newInvaRemoveDublicates },
-          ],
-        },
+            { id: compId, invalidAnswers: newInvaRemoveDublicates }
+          ]
+        }
       };
     },
     removeInvalidValues: (
@@ -380,9 +380,9 @@ export const additionalInfoSlice = createSlice({
             ...(state[qId].invalidValues?.filter(
               (values) => values.id !== compId
             ) || []),
-            { id: compId, invalidAnswers: newInvalids },
-          ],
-        },
+            { id: compId, invalidAnswers: newInvalids }
+          ]
+        }
       };
     },
     removeAllInvalids: (
@@ -401,11 +401,11 @@ export const additionalInfoSlice = createSlice({
         ...state,
         [qId]: {
           ...state[qId],
-          invalidValues: invalidTargetRemoved,
-        },
+          invalidValues: invalidTargetRemoved
+        }
       };
-    },
-  },
+    }
+  }
 });
 
 export const {
@@ -427,7 +427,7 @@ export const {
   setInitAdditionalInfoFromDb,
   removeAllInvalids,
   removeInvalidValues,
-  addInvalidValues,
+  addInvalidValues
 } = additionalInfoSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type

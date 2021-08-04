@@ -1,29 +1,22 @@
 import React from "react";
-import { IconArrowRight, IconArrowLeft, Card, Notification } from "hds-react";
+import { IconArrowLeft, Card, Notification } from "hds-react";
 import Button from "./QuestionButton";
-import { QuestionFormCtrlButtonsProps } from "../types/general";
 import styles from "./PreviewControlButtons.module.scss";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
 import router from "next/router";
 import { useI18n } from "next-localization";
-import publicIp from "public-ip";
 import {
   API_FETCH_ANSWER_LOGS,
   API_FETCH_QUESTION_ANSWERS,
   FRONT_URL_BASE
 } from "../types/constants";
-import {
-  setContinue,
-  setInvalid,
-  unsetInvalid
-} from "../state/reducers/formSlice";
+import { setContinue } from "../state/reducers/formSlice";
 import { getCurrentDate } from "../utils/utilFunctions";
-import { stat } from "node:fs";
-
-export const getClientIp = async () =>
-  await publicIp.v4({
-    fallbackUrls: ["https://ifconfig.co/ip"]
-  });
+import {
+  postData,
+  getClientIp,
+  postAdditionalInfo
+} from "../utils/utilFunctions";
 
 const PreviewControlButtons = ({ hasHeader }: any): JSX.Element => {
   // TODO: save button might need own component of Button
@@ -49,6 +42,7 @@ const PreviewControlButtons = ({ hasHeader }: any): JSX.Element => {
   const formFinished = useAppSelector(
     (state) => state.formReducer.formFinished
   );
+  const additionalInfo = useAppSelector((state) => state.additionalInfoReducer);
   const handelContinueEditing = (): void => {
     console.log("cancel clicked");
     dispatch(setContinue());
@@ -58,17 +52,6 @@ const PreviewControlButtons = ({ hasHeader }: any): JSX.Element => {
         ? FRONT_URL_BASE
         : `${FRONT_URL_BASE}accessibilityEdit/${curEntranceId}`;
     router.push(url);
-  };
-
-  const postData = async (url: string, data: {}) => {
-    let postAnswerOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data)
-    };
-    return fetch(url, postAnswerOptions)
-      .then((response) => response.json())
-      .then((data) => console.log(data));
   };
 
   // TODO: MAKE INTO SMALLER FUNCTIONS
@@ -112,6 +95,8 @@ const PreviewControlButtons = ({ hasHeader }: any): JSX.Element => {
       // POST ALL QUESTION ANSWERS
       const data = { log: logId, data: curAnsweredChoices };
       postData(API_FETCH_QUESTION_ANSWERS, data);
+      // postAdditionalInfo(logId, additionalInfo["additionalInfosData"]);
+      window.location.href = FRONT_URL_BASE;
     } else {
       console.log("log_id was not number");
       return -1;

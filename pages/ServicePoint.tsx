@@ -158,13 +158,12 @@ export const getServerSideProps: GetServerSideProps = async ({
   const reduxStore = store;
   // reduxStore.dispatch({ type: CLEAR_STATE });
   const initialReduxState = reduxStore.getState();
-
   // const user = await checkUser(req);
   // if (!user) {
   //   // Invalid user but login is not required
   // }
-  // if (user && user.authenticated) {
-  //   initialReduxState.general.user = user;
+  // if (query.user) {
+  //   initialReduxState.generalSlice.user = query.user;
   // }
 
   // systemId=e186251e-1fb6-4f21-901c-cb6820aee164     DONE

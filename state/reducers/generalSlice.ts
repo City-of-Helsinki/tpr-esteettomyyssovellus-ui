@@ -3,11 +3,13 @@ import type { RootState } from "../store";
 
 interface generalSliceProps {
   coordinates: [number, number];
+  user: string | string[];
 }
 
 // todo: get the initial location to here
 const initialState: generalSliceProps = {
   coordinates: [0, 0],
+  user: ""
 };
 
 export const generalSlice = createSlice({
@@ -21,9 +23,15 @@ export const generalSlice = createSlice({
       const coordinates = action.payload.coordinates;
       return { ...state, coordinates };
     },
-  },
+    setUser: (state, action: PayloadAction<string | string[]>) => {
+      return {
+        ...state,
+        user: action.payload
+      };
+    }
+  }
 });
 
-export const { setServicepointLocation } = generalSlice.actions;
+export const { setServicepointLocation, setUser } = generalSlice.actions;
 
 export default generalSlice.reducer;

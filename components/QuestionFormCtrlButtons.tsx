@@ -18,7 +18,11 @@ import {
   unsetFormFinished,
   unsetInvalid
 } from "../state/reducers/formSlice";
-import { getCurrentDate } from "../utils/utilFunctions";
+import {
+  getCurrentDate,
+  postData,
+  postAdditionalInfo
+} from "../utils/utilFunctions";
 
 export const getClientIp = async () =>
   await publicIp.v4({
@@ -59,6 +63,7 @@ const QuestionFormCtrlButtons = ({
   const isContinueClicked = useAppSelector(
     (state) => state.formReducer.isContinueClicked
   );
+  const additionalInfo = useAppSelector((state) => state.additionalInfoReducer);
 
   const handleCancel = (): void => {
     console.log("cancel clicked");
@@ -67,20 +72,9 @@ const QuestionFormCtrlButtons = ({
       curServicepointId == ""
         ? FRONT_URL_BASE
         : FRONT_URL_BASE + "details/" + curServicepointId;
-    router.push(url);
+    window.location.href = url;
   };
   const isPreviewActive = curAnsweredChoices.length > 1;
-
-  const postData = async (url: string, data: {}) => {
-    let postAnswerOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data)
-    };
-    return fetch(url, postAnswerOptions)
-      .then((response) => response.json())
-      .then((data) => console.log(data));
-  };
 
   // TODO: MAKE INTO SMALLER FUNCTIONS
   const handleSaveDraftClick = async () => {
@@ -121,14 +115,18 @@ const QuestionFormCtrlButtons = ({
     // CHECK IF RETURNED LOG_ID IS A NUMBER. IF NOT A NUMBER STOP EXECUTING
     if (!isNaN(logId)) {
       // POST ALL QUESTION ANSWERS
-      const data = { log: logId, data: curAnsweredChoices };
-      postData(API_FETCH_QUESTION_ANSWERS, data);
+      const questionAnswerData = { log: logId, data: curAnsweredChoices };
+      postData(API_FETCH_QUESTION_ANSWERS, questionAnswerData);
+      const parsedAdditionalInfos = Object.keys(additionalInfo).map((key) => {
+        if (!isNaN(Number(key))) return [key, additionalInfo[key]];
+      });
+      if (parsedAdditionalInfos != undefined) {
+        postAdditionalInfo(logId, parsedAdditionalInfos);
+      }
     } else {
       console.log("log_id was not number");
       return -1;
     }
-
-    // TODO: POST ALL ADDITIONAL INFO
 
     // TODO: CREATE SENTENCES WITH FUNCTION CALL
     console.log("Posted to database new log entry with log_id=", logId);
