@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface formState {
-  currentServicepointId: any;
-  currentEntranceId: any;
+  currentServicepointId: number;
+  currentEntranceId: number;
   answeredChoices: string[];
   answers: { [key: number]: number };
   isContinueClicked: boolean;
@@ -18,8 +18,8 @@ interface formState {
 }
 
 const initialState: formState = {
-  currentServicepointId: "",
-  currentEntranceId: "",
+  currentServicepointId: -1,
+  currentEntranceId: -1,
   answeredChoices: [],
   answers: {},
   isContinueClicked: false,
@@ -35,13 +35,13 @@ export const formSlice = createSlice({
   name: "mainForm",
   initialState,
   reducers: {
-    setServicepointId: (state, action: PayloadAction<string>) => {
+    setServicepointId: (state, action: PayloadAction<number>) => {
       return {
         ...state,
         currentServicepointId: action.payload
       };
     },
-    setEntranceId: (state, action: PayloadAction<string>) => {
+    setEntranceId: (state, action: PayloadAction<number>) => {
       return {
         ...state,
         currentEntranceId: action.payload

@@ -56,7 +56,6 @@ const QuestionFormCtrlButtons = ({
   const curEntranceId = useAppSelector(
     (state) => state.formReducer.currentEntranceId
   );
-  const contacts = useAppSelector((state) => state.formReducer.contacts);
   const finishedBlocks = useAppSelector(
     (state) => state.formReducer.finishedBlocks
   );
@@ -69,7 +68,7 @@ const QuestionFormCtrlButtons = ({
     console.log("cancel clicked");
     // TODO: Add errorpage
     const url =
-      curServicepointId == ""
+      curServicepointId == -1
         ? FRONT_URL_BASE
         : FRONT_URL_BASE + "details/" + curServicepointId;
     window.location.href = url;
@@ -86,7 +85,7 @@ const QuestionFormCtrlButtons = ({
 
     // THIS RETURNS THE IP ADDRESS OF THE CLIENT USED IN THE ANSWER LOG
     const ipAddress = await getClientIp();
-
+    console.log(startedAnswering);
     // POST ANSWER LOG
     // TODO: ERRORCHECK VALUES
     const requestOptions = {
@@ -104,6 +103,7 @@ const QuestionFormCtrlButtons = ({
         entrance: curEntranceId
       })
     };
+    console.log(requestOptions);
 
     // POST TO AR_X_ANSWER_LOG. RETURNS NEW LOG_ID USED FOR OTHER POST REQUESTS
     await fetch(API_FETCH_ANSWER_LOGS, requestOptions)
@@ -117,12 +117,16 @@ const QuestionFormCtrlButtons = ({
       // POST ALL QUESTION ANSWERS
       const questionAnswerData = { log: logId, data: curAnsweredChoices };
       postData(API_FETCH_QUESTION_ANSWERS, questionAnswerData);
+      // GENERATE SENTENCES
       const parsedAdditionalInfos = Object.keys(additionalInfo).map((key) => {
         if (!isNaN(Number(key))) return [key, additionalInfo[key]];
       });
       if (parsedAdditionalInfos != undefined) {
         postAdditionalInfo(logId, parsedAdditionalInfos);
       }
+      const generateData = { entrance_id: curEntranceId };
+      console.log(curEntranceId);
+      postData("http://localhost:8000/api/GenerateSentences/", generateData);
     } else {
       console.log("log_id was not number");
       return -1;
