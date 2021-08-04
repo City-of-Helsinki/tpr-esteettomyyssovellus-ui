@@ -147,10 +147,24 @@ export interface Location {
 
 // notice/todo: names locationS and commentS can atm have only one location and commend -> maybe rename
 export interface AdditionalInfos {
+  properlySaved?: boolean;
   locations?: Location;
   comments?: Languages;
   pictures?: PictureProps[];
   components?: AdditionalComponentProps[];
+  invalidValues?: addinfoInvalidAnswers[];
+}
+
+// invalid values 1 per component
+// interface addinfoInvalidValues {
+//   id: number;
+//   invalidValues?: addinfoInvalidAnswers;
+// }
+
+// invalid answers list of
+interface addinfoInvalidAnswers {
+  id: number;
+  invalidAnswers?: string[];
 }
 
 export interface AdditionalComponentProps {

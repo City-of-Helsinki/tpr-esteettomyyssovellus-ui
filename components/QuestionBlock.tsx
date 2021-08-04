@@ -12,7 +12,7 @@ import {
   setContinue,
   setFinished,
   unsetFinished,
-  unsetInvalid
+  unsetInvalid,
 } from "../state/reducers/formSlice";
 import { useI18n } from "next-localization";
 
@@ -21,7 +21,7 @@ const QuestionBlock = ({
   questions,
   answers,
   photoUrl,
-  photoText
+  photoText,
 }: QuestionBlockProps): JSX.Element => {
   const i18n = useI18n();
   const [showAdditionalInfo, setShowAdditionalInfo] = useState(false);
@@ -125,7 +125,7 @@ const QuestionBlock = ({
           pariatur. Excepteur sint occaecat cupi{" "}
         </p>
       )}
-      {/* TODO: add questions as params to QuestionsList, from fetch data */}
+      {/* QtionList loops the single question row(s) */}
       <QuestionsList
         additionalInfoVisible={showAdditionalInfo}
         questions={filteredQuestions}

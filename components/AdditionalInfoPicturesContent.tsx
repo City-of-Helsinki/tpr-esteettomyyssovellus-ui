@@ -6,17 +6,19 @@ import {
   TextInput,
   Checkbox,
   Tooltip,
-  SelectionGroup
+  SelectionGroup,
 } from "hds-react";
 import { useI18n } from "next-localization";
 import styles from "./AdditionalInfoPicturesContent.module.scss";
 import QuestionButton from "./QuestionButton";
 import QuestionInfo from "./QuestionInfo";
 import {
+  addInvalidValues,
   addPicture,
+  removeInvalidValues,
   removePicture,
   setAlt,
-  setPictureSource
+  setPictureSource,
 } from "../state/reducers/additionalInfoSlice";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { AdditionalContentProps } from "../types/general";
@@ -27,7 +29,7 @@ const AdditionalInfoPicturesContent = ({
   compId,
   onlyLink = false,
   onDelete,
-  initValue
+  initValue,
 }: AdditionalContentProps): JSX.Element => {
   // also use filename for conditionally displaying buttons and alt-text & preview picture
   const dispatch = useAppDispatch();
@@ -44,6 +46,12 @@ const AdditionalInfoPicturesContent = ({
   )[0];
   const [linkText, setLinkText] = useState("");
 
+  const currentInvalids = useAppSelector((state) =>
+    state.additionalInfoReducer[questionId].invalidValues?.find(
+      (invs) => invs.id === compId
+    )
+  );
+
   const hiddenFileInput = useRef<HTMLInputElement>(null);
   const i18n = useI18n();
   // add picture to state
@@ -56,8 +64,29 @@ const AdditionalInfoPicturesContent = ({
       hiddenFileInput.current.click();
     }
   };
+
+  const handleremoveInvalidValue = (remoTarget: string) => {
+    dispatch(
+      removeInvalidValues({
+        questionId: questionId,
+        compId: currentId,
+        removeTarget: remoTarget,
+      })
+    );
+  };
+
+  const handleAddInvalidValues = (answersToAdd: string[]) => {
+    dispatch(
+      addInvalidValues({
+        questionId: questionId,
+        compId: currentId,
+        invalidAnswers: answersToAdd,
+      })
+    );
+  };
   // add image to state, elseif -> when adding just the img link/url
   const handleImageAdded = async (e?: any) => {
+    setTermsChecked(false);
     if (e && e.target.files && e.target.files.length > 0) {
       const img = e.target.files[0];
       const imgBase64 = window.URL.createObjectURL(img);
@@ -70,9 +99,18 @@ const AdditionalInfoPicturesContent = ({
         fi: "",
         sv: "",
         en: "",
-        source: ""
+        source: "",
       };
       dispatch(addPicture(payload));
+      // remove or add mandatory url validation to state
+      handleAddInvalidValues(["url", "fi", "source", "sharelicense"]);
+      if ((imgBase64 && imgBase64 !== "") || (img.name && img.name !== "")) {
+        handleremoveInvalidValue("url");
+        //  todo: what is this
+      } else if (imgBase64 !== "" || img.name === "") {
+        handleAddInvalidValues(["url"]);
+      }
+      // below for links (not upload)
     } else {
       const isImage = await validateUrlIsImage(linkText);
       if (isImage) {
@@ -85,9 +123,14 @@ const AdditionalInfoPicturesContent = ({
           fi: "",
           sv: "",
           en: "",
-          source: ""
+          source: "",
         };
         dispatch(addPicture(payload));
+
+        // handleAddInvalidValues(["url"]);
+        handleremoveInvalidValue("url");
+      } else {
+        handleAddInvalidValues(["url"]);
       }
     }
   };
@@ -110,6 +153,9 @@ const AdditionalInfoPicturesContent = ({
   // remove image from state
   const handleRemoveImage = () => {
     dispatch(removePicture({ questionId, currentId }));
+    // also add errors back for validation
+    // todo maybe add this dispatch back
+    handleAddInvalidValues(["url", "fi", "source", "sharelicense"]);
   };
 
   // on delete button clicked chain delete image from store and delete component cb
@@ -130,24 +176,46 @@ const AdditionalInfoPicturesContent = ({
     timer = setTimeout(() => {
       dispatch(setAlt({ questionId, language, value, compId }));
     }, 500);
+    // remove or add mandatory alt fi validation to state
+    if (value && value !== "") {
+      handleremoveInvalidValue("fi");
+    } else if (value === "") {
+      handleAddInvalidValues(["fi"]);
+    }
   };
 
   // logic for checkbox picture terms using HDS
+  // todo: this could be put in to state, or maybe not because only used for validation (?)
   const [termsChecked, setTermsChecked] = useState(false);
   const onCheckChange = (e: any) => {
     setTermsChecked(!termsChecked);
+    if (!termsChecked) {
+      handleremoveInvalidValue("sharelicense");
+    } else {
+      handleAddInvalidValues(["sharelicense"]);
+    }
   };
 
   //update source on state
   const onSourceChange = (e: any) => {
     const source = e.currentTarget.value;
     dispatch(setPictureSource({ questionId, source, compId }));
+    // remove or add mandatory source validation to state
+    if (source && source !== "") {
+      handleremoveInvalidValue("source");
+    } else if (source === "") {
+      handleAddInvalidValues(["source"]);
+    }
   };
 
   const handleLinkText = (e: any) => {
-    e.currentTarget.value.length > 0
-      ? setLinkText(e.currentTarget.value)
-      : null;
+    const value = e.currentTarget.value;
+    value.length > 0 ? setLinkText(value) : null;
+    if (value && value !== "") {
+      handleremoveInvalidValue("url");
+    } else if (value === "") {
+      handleAddInvalidValues(["url"]);
+    }
   };
 
   const addFromDeviceButton = !onlyLink ? (
@@ -165,9 +233,12 @@ const AdditionalInfoPicturesContent = ({
   );
 
   useEffect(() => {
-    if (initValue && curImage) {
-      // initValue = curImage;
-      setTermsChecked(!termsChecked);
+    // if addinfo page with no curimage or initvalue add default validation errors
+    if (!curImage || !initValue) {
+      handleAddInvalidValues(["url", "fi", "source", "sharelicense"]);
+    } else {
+      // set terms checked if already validated image due to always checked otherwise cant save
+      setTermsChecked(true);
     }
   }, []);
 
@@ -186,6 +257,14 @@ const AdditionalInfoPicturesContent = ({
             disabled={onlyLink ? false : true}
             onChange={(e) => handleLinkText(e)}
             defaultValue={curImage?.url ? curImage.url : ""}
+            invalid={
+              currentInvalids?.invalidAnswers?.includes("url") ? true : false
+            }
+            errorText={
+              currentInvalids?.invalidAnswers?.includes("url")
+                ? "PH: olkaa hyvä ja syöttäkää kuvalinkki"
+                : ""
+            }
           />
         </span>
 
@@ -237,6 +316,14 @@ const AdditionalInfoPicturesContent = ({
                 handleAddAlt(e, "fi", compId)
               }
               defaultValue={curImage?.fi ?? null}
+              invalid={
+                currentInvalids?.invalidAnswers?.includes("fi") ? true : false
+              }
+              errorText={
+                currentInvalids?.invalidAnswers?.includes("fi")
+                  ? "PH: olkaa hyvä ja syöttäkää kuvateksti"
+                  : ""
+              }
             />
             <div className={styles.altLabel}>
               <QuestionInfo
@@ -287,9 +374,13 @@ const AdditionalInfoPicturesContent = ({
                   "additionalInfo.sharePictureLicenseText"
                 )} ${i18n.t("additionalInfo.sharePictureLicense")}}`}
                 name="agreeToPictureTerms"
-                // defaultChecked={initValue?.id === compId ? true : termsChecked}
                 checked={termsChecked}
                 onChange={onCheckChange}
+                errorText={
+                  currentInvalids?.invalidAnswers?.includes("sharelicense")
+                    ? "PH: olkaa hyvä ja hyväksykää ehdot"
+                    : ""
+                }
               />
             </SelectionGroup>
             <Tooltip> PH: Tähän tooltip tekstiä </Tooltip>
@@ -303,7 +394,17 @@ const AdditionalInfoPicturesContent = ({
               label={i18n.t("additionalInfo.sourceTooltipMainLabel")}
               onChange={onSourceChange}
               required
-              defaultValue={curImage?.source ? curImage?.source : null}
+              defaultValue={curImage?.source ? curImage?.source : ""}
+              invalid={
+                currentInvalids?.invalidAnswers?.includes("source")
+                  ? true
+                  : false
+              }
+              errorText={
+                currentInvalids?.invalidAnswers?.includes("source")
+                  ? "PH: olkaa hyvä ja syöttäkää lähde"
+                  : ""
+              }
             />
           </div>
         </div>

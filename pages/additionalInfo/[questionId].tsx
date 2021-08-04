@@ -3,7 +3,7 @@ import React, {
   ReactElement,
   SetStateAction,
   useEffect,
-  useState
+  useState,
 } from "react";
 import { useI18n } from "next-localization";
 import Head from "next/head";
@@ -14,7 +14,7 @@ import {
   IconLocation,
   IconQuestionCircle,
   IconSpeechbubbleText,
-  IconUpload
+  IconUpload,
 } from "hds-react";
 import Layout from "../../components/common/Layout";
 import { store } from "../../state/store";
@@ -31,25 +31,28 @@ import AdditionalInfoCommentContent from "../../components/AdditionalInfoComment
 import {
   addComponent,
   clearEditingInitialState,
+  removeAllInvalids,
   removeComponent,
-  setEditingInitialState
+  removeInvalidValues,
+  setEditingInitialState,
+  setProperlySaved,
 } from "../../state/reducers/additionalInfoSlice";
 import { useAppSelector, useAppDispatch } from "../../state/hooks";
 import {
   AdditionalComponentProps,
   AdditionalInfoPageProps,
-  AdditionalInfoProps
+  AdditionalInfoProps,
 } from "../../types/general";
 import {
   LANGUAGE_LOCALES,
-  API_FETCH_BACKEND_QUESTIONS
+  API_FETCH_BACKEND_QUESTIONS,
 } from "../../types/constants";
 import { Dictionary } from "@reduxjs/toolkit";
 
 // TODO: need to know what page is e.g. picture, comment or location
 const AdditionalInfo = ({
   questionId,
-  questionData
+  questionData,
 }: AdditionalInfoPageProps): ReactElement => {
   const i18n = useI18n();
   // todo: figure out better way to id
@@ -58,7 +61,6 @@ const AdditionalInfo = ({
   let curAdditionalInfo: any = useAppSelector(
     (state) => state.additionalInfoReducer[questionId] as AdditionalInfoProps
   );
-  let component;
 
   const filterByLanguage = (data: any) => {
     const i18n = useI18n();
@@ -76,19 +78,19 @@ const AdditionalInfo = ({
     comment: 0,
     upload: 0,
     link: 0,
-    location: 0
+    location: 0,
   });
 
   const handleAddElement = (type: string) => {
     setElementCounts((prevCounts: any) => ({
       ...prevCounts,
-      [type]: elementCounts[type] + 1
+      [type]: elementCounts[type] + 1,
     }));
     dispatch(
       addComponent({
         questionId: questionId,
         type: type,
-        id: increasingId
+        id: increasingId,
       })
     );
     setIncreasingId(increasingId + 1);
@@ -97,19 +99,28 @@ const AdditionalInfo = ({
   const handleDelete = (deleteId: number, type: string) => {
     setElementCounts((prevCounts: any) => ({
       ...prevCounts,
-      [type]: elementCounts[type] - 1
+      [type]: elementCounts[type] - 1,
     }));
     dispatch(removeComponent({ questionId: questionId, delId: deleteId }));
+    dispatch(removeAllInvalids({ questionId: questionId, compId: deleteId }));
   };
 
   // for saving current state obj initial state for if user edits and cancels without saving to return to init state of cur obj to state
   useEffect(() => {
+    // set properly saved if user e.g. press back button and validation / save process is not followed
+    dispatch(
+      setProperlySaved({ questionId: questionId, properlySaved: false })
+    );
     dispatch(clearEditingInitialState());
 
-    const highestExistingId = Math.max.apply(
+    const highestIdState = Math.max.apply(
       Math,
       curAdditionalInfo?.components?.map((comp: any) => comp.id)
     );
+
+    const highestExistingId = curAdditionalInfo?.components
+      ? curAdditionalInfo.components.length + highestIdState
+      : highestIdState;
 
     if (
       highestExistingId &&
@@ -122,7 +133,7 @@ const AdditionalInfo = ({
     if (curAdditionalInfo && Object.entries(curAdditionalInfo).length > 0) {
       dispatch(
         setEditingInitialState({
-          obj: curAdditionalInfo
+          obj: curAdditionalInfo,
         })
       );
 
@@ -130,14 +141,9 @@ const AdditionalInfo = ({
       curAdditionalInfo.components?.forEach((comp: Dictionary<any>) => {
         setElementCounts((prevCounts: any) => ({
           ...prevCounts,
-          [comp.type]: elementCounts[comp.type] + 1
+          [comp.type]: elementCounts[comp.type] + 1,
         }));
-        // setIncreasingId(increasingId + 1);
       });
-
-      // todo: what is this??
-      // const imageLinks = curAdditionalInfo?.pictures?.filter((pic) => pic)
-      // const imageUploads
     }
   }, []);
 
@@ -291,6 +297,7 @@ const AdditionalInfo = ({
                 </QuestionButton>
               </div>
             </div>
+            <AdditionalInfoCtrlButtons questionId={questionId} />
           </div>
         </div>
       </main>
@@ -302,7 +309,7 @@ const AdditionalInfo = ({
 // Todo: edit, get servicepoint data
 export const getServerSideProps: GetServerSideProps = async ({
   params,
-  locales
+  locales,
 }) => {
   const lngDict = await i18nLoader(locales);
 
@@ -331,8 +338,8 @@ export const getServerSideProps: GetServerSideProps = async ({
       questionId,
       questionData,
       initialReduxState,
-      lngDict
-    }
+      lngDict,
+    },
   };
 };
 
