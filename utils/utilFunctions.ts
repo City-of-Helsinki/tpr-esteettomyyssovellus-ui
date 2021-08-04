@@ -76,7 +76,7 @@ export const postData = async (url: string, data: {}) => {
   };
   return fetch(url, postAnswerOptions)
     .then((response) => response.json())
-    .then((data) => data);
+    .then((data) => console.log(data));
 };
 
 export const getClientIp = async () =>

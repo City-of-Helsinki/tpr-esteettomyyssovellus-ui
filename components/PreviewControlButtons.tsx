@@ -48,7 +48,7 @@ const PreviewControlButtons = ({ hasHeader }: any): JSX.Element => {
     dispatch(setContinue());
     // TODO: Add errorpage
     const url =
-      curServicepointId == ""
+      curServicepointId == -1
         ? FRONT_URL_BASE
         : `${FRONT_URL_BASE}accessibilityEdit/${curEntranceId}`;
     router.push(url);
@@ -101,6 +101,8 @@ const PreviewControlButtons = ({ hasHeader }: any): JSX.Element => {
       if (parsedAdditionalInfos != undefined) {
         postAdditionalInfo(logId, parsedAdditionalInfos);
       }
+      const generateData = { entrance_id: curEntranceId };
+      postData("http://localhost:8000/api/GenerateSentences/", generateData);
       window.location.href = FRONT_URL_BASE;
     } else {
       console.log("log_id was not number");

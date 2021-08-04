@@ -209,6 +209,7 @@ export interface MainEntranceFormProps {
   QuestionAnswerData?: any;
   AdditionalInfosData?: FetchAdditionalInfos;
   form_id?: number;
+  entrance_id?: string;
 }
 
 interface FetchAdditionalInfos {
