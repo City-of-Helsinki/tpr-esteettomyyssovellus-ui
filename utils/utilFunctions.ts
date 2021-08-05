@@ -1,4 +1,5 @@
 import { Dictionary } from "@reduxjs/toolkit";
+import { sha256 } from "js-sha256";
 import { useI18n } from "next-localization";
 import proj4 from "proj4";
 import publicIp from "public-ip";
@@ -208,4 +209,18 @@ export const postAdditionalInfo = async (
       }
     }
   });
+};
+
+export const validateChecksum = (
+  string: string,
+  checksum: string | string[]
+) => {
+  console.log(string);
+  var crypto = require("crypto");
+  const hash = crypto
+    .createHash("sha256")
+    .update(string)
+    .digest("hex")
+    .toUpperCase();
+  return hash == checksum;
 };
