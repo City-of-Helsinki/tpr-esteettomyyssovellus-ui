@@ -1,5 +1,4 @@
 import { Dictionary } from "@reduxjs/toolkit";
-import { sha256 } from "js-sha256";
 import { useI18n } from "next-localization";
 import proj4 from "proj4";
 import publicIp from "public-ip";
