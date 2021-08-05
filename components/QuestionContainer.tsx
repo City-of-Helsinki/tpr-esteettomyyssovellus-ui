@@ -109,9 +109,9 @@ const QuestionContainer = ({
           ></IconAlertCircle>
         ) : null}
       </div>
-      {(curQuestionAddinfos && curQuestionAddinfos?.comments) ||
-      curQuestionAddinfos?.pictures ||
-      curQuestionAddinfos?.locations ? (
+      {curQuestionAddinfos &&
+      curQuestionAddinfos.components &&
+      curQuestionAddinfos.components.length !== 0 ? (
         <div
           className={styles.addinfos}
           style={{ backgroundColor: backgroundColor }}
