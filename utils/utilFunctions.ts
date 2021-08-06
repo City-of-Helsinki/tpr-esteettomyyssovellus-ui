@@ -209,3 +209,17 @@ export const postAdditionalInfo = async (
     }
   });
 };
+
+export const validateChecksum = (
+  string: string,
+  checksum: string | string[]
+) => {
+  console.log(string);
+  var crypto = require("crypto");
+  const hash = crypto
+    .createHash("sha256")
+    .update(string)
+    .digest("hex")
+    .toUpperCase();
+  return hash == checksum;
+};

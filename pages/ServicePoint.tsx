@@ -18,7 +18,8 @@ import { ChangeProps } from "../types/general";
 import styles from "./ServicePoint.module.scss";
 import { Button, RadioButton, SelectionGroup } from "hds-react";
 import { useState } from "react";
-import { getCurrentDate } from "../utils/utilFunctions";
+import { getCurrentDate, validateChecksum } from "../utils/utilFunctions";
+import { checksumSecretTPRTesti } from "./checksumSecret";
 
 const Servicepoints = ({
   changed,
@@ -184,7 +185,7 @@ export const getServerSideProps: GetServerSideProps = async ({
       query?.systemId == undefined ||
       query?.servicePointId == undefined ||
       query?.user == undefined ||
-      // query?.validUntil == undefined ||
+      query?.validUntil == undefined ||
       query?.name == undefined ||
       query?.streetAddress == undefined ||
       query?.postOffice == undefined ||
@@ -211,12 +212,40 @@ export const getServerSideProps: GetServerSideProps = async ({
 
         const systemName = SystemData[0]["name"];
 
-        // TODO: MITÄ TÄLLÄ TEHDÄÄN???
         const checksumSecret = SystemData[0]["checksum_secret"];
+        const checksumString =
+          // TODO: CHANGE TO checksumSecret when moving to production
+          // checksumSecret +
+          checksumSecretTPRTesti +
+          query.systemId +
+          query.servicePointId +
+          query.user +
+          query.validUntil +
+          query.streetAddress +
+          query.postOffice +
+          query.name +
+          query.northing +
+          query.easting;
 
-        // LOMAKE 0 ja 1: systemName = "TPR" || "PTV"
-        // LOMAKE 2: systemName = "HKI KOKOUSTILAT"
+        const checksumIsValid = validateChecksum(
+          checksumString,
+          query.checksum
+        );
+
+        // TODO: UNCOMMENT WHEN MOVING TO PRODUCTION
+        if (!checksumIsValid) {
+          console.log("Checksums did not match.");
+          return {
+            props: {
+              initialReduxState,
+              lngDict
+            }
+          };
+        }
+        console.log("Checksums matched.");
         if (!(systemName == "TPR" || systemName == "PTV")) {
+          // LOMAKE 0 ja 1: systemName = "TPR" || "PTV"
+          // LOMAKE 2: systemName = "HKI KOKOUSTILAT"
           throw new Error(
             "A servicepoint with this systemId cannot use form 0 or 1"
           );

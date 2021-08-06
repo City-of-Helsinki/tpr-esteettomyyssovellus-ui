@@ -125,7 +125,6 @@ const QuestionFormCtrlButtons = ({
         postAdditionalInfo(logId, parsedAdditionalInfos);
       }
       const generateData = { entrance_id: curEntranceId };
-      console.log(curEntranceId);
       postData("http://localhost:8000/api/GenerateSentences/", generateData);
     } else {
       console.log("log_id was not number");
