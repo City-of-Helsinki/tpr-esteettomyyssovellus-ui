@@ -1,10 +1,5 @@
 // TODO: file might need to be renamed eg. like additionalinfo/[id] where id is the question (?)
-import React, {
-  ReactElement,
-  SetStateAction,
-  useEffect,
-  useState,
-} from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import { useI18n } from "next-localization";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
@@ -23,19 +18,15 @@ import styles from "./additionalInfo.module.scss";
 import QuestionInfo from "../../components/QuestionInfo";
 import ServicepointMainInfoContent from "../../components/ServicepointMainInfoContent";
 import AdditionalInfoCtrlButtons from "../../components/AdditionalInfoCtrlButtons";
-import HeadlineQuestionContainer from "../../components/HeadlineQuestionContainer";
 import QuestionButton from "../../components/QuestionButton";
 import AdditionalInfoLocationContent from "../../components/AdditionalInfoLocationContent";
 import AdditionalInfoPicturesContent from "../../components/AdditionalInfoPicturesContent";
 import AdditionalInfoCommentContent from "../../components/AdditionalInfoCommentContent";
 import {
   addComponent,
-  clearEditingInitialState,
   removeAllInvalids,
   removeComponent,
-  removeInvalidValues,
   setEditingInitialState,
-  setProperlySaved,
 } from "../../state/reducers/additionalInfoSlice";
 import { useAppSelector, useAppDispatch } from "../../state/hooks";
 import {
@@ -55,7 +46,7 @@ const AdditionalInfo = ({
   questionData,
 }: AdditionalInfoPageProps): ReactElement => {
   const i18n = useI18n();
-  // todo: figure out better way to id
+  // todo: figure out better way to id (?)
   const [increasingId, setIncreasingId] = useState(0);
   const dispatch = useAppDispatch();
   let curAdditionalInfo: any = useAppSelector(
@@ -116,12 +107,6 @@ const AdditionalInfo = ({
 
   // for saving current state obj initial state for if user edits and cancels without saving to return to init state of cur obj to state
   useEffect(() => {
-    // set properly saved if user e.g. press back button and validation / save process is not followed
-    dispatch(
-      setProperlySaved({ questionId: questionId, properlySaved: false })
-    );
-    dispatch(clearEditingInitialState());
-
     const highestIdState = Math.max.apply(
       Math,
       curAdditionalInfo?.components?.map((comp: any) => comp.id)
