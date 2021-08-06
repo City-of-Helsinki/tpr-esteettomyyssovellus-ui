@@ -21,7 +21,7 @@ import {
   API_FETCH_QUESTION_ANSWER_COMMENTS,
   API_FETCH_QUESTION_ANSWER_LOCATIONS,
   API_FETCH_QUESTION_ANSWER_PHOTOS,
-  API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS
+  API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS,
 } from "../../types/constants";
 import { useAppSelector, useAppDispatch } from "../../state/hooks";
 import QuestionBlock from "../../components/QuestionBlock";
@@ -29,7 +29,7 @@ import {
   AddInfoPhoto,
   AddInfoPhotoText,
   MainEntranceFormProps,
-  QuestionBlockProps
+  QuestionBlockProps,
 } from "../../types/general";
 import HeadlineQuestionContainer from "../../components/HeadlineQuestionContainer";
 import { LANGUAGE_LOCALES } from "../../types/constants";
@@ -46,7 +46,7 @@ import {
   changePhoneNumberStatus,
   changeEmailStatus,
   setEntranceId,
-  setStartDate
+  setStartDate,
 } from "../../state/reducers/formSlice";
 import ContactInformationQuestionContainer from "../../components/ContactInformationQuestionContainer";
 import {
@@ -54,9 +54,10 @@ import {
   addComponent,
   addLocation,
   addPicture,
+  clearEditingInitialState,
   // removeImproperlySavedAddInfos,
   setAlt,
-  setInitAdditionalInfoFromDb
+  setInitAdditionalInfoFromDb,
 } from "../../state/reducers/additionalInfoSlice";
 import { getCurrentDate } from "../../utils/utilFunctions";
 
@@ -68,7 +69,7 @@ const AccessibilityEdit = ({
   ServicepointData,
   AdditionalInfosData,
   form_id,
-  entrance_id
+  entrance_id,
 }: MainEntranceFormProps): ReactElement => {
   const i18n = useI18n();
   const curLocale: string = i18n.locale();
@@ -94,7 +95,7 @@ const AccessibilityEdit = ({
   );
   const treeItems = [
     ServicepointData["servicepoint_name"],
-    "PH: Esteettömyystiedot"
+    "PH: Esteettömyystiedot",
   ];
 
   if (ServicepointData != undefined && !formInited) {
@@ -141,7 +142,7 @@ const AccessibilityEdit = ({
           addComment({
             questionId: comment.question,
             language: curLangStr,
-            value: comment.comment
+            value: comment.comment,
           })
         );
         // little hacky, only add component for the 1st language => fi for not adding 3 components if all languages
@@ -150,7 +151,7 @@ const AccessibilityEdit = ({
             addComponent({
               questionId: comment.question,
               type: "comment",
-              id: comment.answer_comment_id
+              id: comment.answer_comment_id,
             })
           );
         }
@@ -163,14 +164,14 @@ const AccessibilityEdit = ({
             questionId: location.question,
             coordinates: [location.loc_northing, location.loc_easting],
             locNorthing: location.loc_northing,
-            locEasting: location.loc_easting
+            locEasting: location.loc_easting,
           })
         );
         dispatch(
           addComponent({
             questionId: location.question,
             type: "location",
-            id: location.answer_location_id
+            id: location.answer_location_id,
           })
         );
       });
@@ -185,7 +186,7 @@ const AccessibilityEdit = ({
           url: photo.photo_url,
           fi: "",
           sv: "",
-          en: ""
+          en: "",
         };
 
         dispatch(addPicture(picture));
@@ -193,7 +194,7 @@ const AccessibilityEdit = ({
           addComponent({
             questionId: photo.question,
             type: "link",
-            id: photo.answer_photo_id
+            id: photo.answer_photo_id,
           })
         );
 
@@ -209,7 +210,7 @@ const AccessibilityEdit = ({
                   questionId: photo.question,
                   language: curLangStr,
                   value: alt.photo_text,
-                  compId: photo.answer_photo_id
+                  compId: photo.answer_photo_id,
                 })
               );
             });
@@ -218,6 +219,9 @@ const AccessibilityEdit = ({
       });
     }
   }
+
+  // clear addinfo initState
+  dispatch(clearEditingInitialState());
 
   if (Object.keys(QuestionAnswerData).length !== 0) {
     let curAnswers = useAppSelector((state) => state.formReducer.answers);
@@ -386,7 +390,7 @@ const AccessibilityEdit = ({
 export const getServerSideProps: GetServerSideProps = async ({
   params,
   req,
-  locales
+  locales,
 }) => {
   const lngDict = await i18nLoader(locales);
 
@@ -475,7 +479,7 @@ export const getServerSideProps: GetServerSideProps = async ({
             comments: AddInfoCommentsData,
             locations: AddInfoLocationsData,
             photos: AddInfoPhotosData,
-            phototexts: AddInfoPhotoTextsData
+            phototexts: AddInfoPhotoTextsData,
           };
         }
       }
@@ -501,8 +505,8 @@ export const getServerSideProps: GetServerSideProps = async ({
       ServicepointData: ServicepointData,
       AdditionalInfosData: AdditionalInfosData,
       entrance_id,
-      lngDict
-    }
+      lngDict,
+    },
   };
 };
 
