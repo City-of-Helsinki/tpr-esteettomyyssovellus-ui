@@ -76,7 +76,7 @@ const QuestionFormCtrlButtons = ({
   const isPreviewActive = curAnsweredChoices.length > 1;
 
   // TODO: MAKE INTO SMALLER FUNCTIONS
-  const handleSaveDraftClick = async () => {
+  const saveDraft = async () => {
     console.log("save clicked");
     let logId: any;
 
@@ -97,7 +97,7 @@ const QuestionFormCtrlButtons = ({
         finished_answering: finishedAnswering,
         // BECAUSE THIS IS A DRAFT
         form_submitted: "D",
-        form_cancelled: "Y",
+        form_cancelled: "N",
         // TODO: GET CURRENT USER HERE
         accessibility_editor: "Leba",
         entrance: curEntranceId
@@ -116,16 +116,19 @@ const QuestionFormCtrlButtons = ({
     if (!isNaN(logId)) {
       // POST ALL QUESTION ANSWERS
       const questionAnswerData = { log: logId, data: curAnsweredChoices };
-      postData(API_FETCH_QUESTION_ANSWERS, questionAnswerData);
+      await postData(API_FETCH_QUESTION_ANSWERS, questionAnswerData);
       // GENERATE SENTENCES
       const parsedAdditionalInfos = Object.keys(additionalInfo).map((key) => {
         if (!isNaN(Number(key))) return [key, additionalInfo[key]];
       });
       if (parsedAdditionalInfos != undefined) {
-        postAdditionalInfo(logId, parsedAdditionalInfos);
+        await postAdditionalInfo(logId, parsedAdditionalInfos);
       }
-      const generateData = { entrance_id: curEntranceId };
-      postData("http://localhost:8000/api/GenerateSentences/", generateData);
+      const generateData = { entrance_id: curEntranceId, form_submitted: "D" };
+      await postData(
+        "http://localhost:8000/api/GenerateSentences/",
+        generateData
+      );
     } else {
       console.log("log_id was not number");
       return -1;
@@ -133,6 +136,10 @@ const QuestionFormCtrlButtons = ({
 
     // TODO: CREATE SENTENCES WITH FUNCTION CALL
     console.log("Posted to database new log entry with log_id=", logId);
+  };
+
+  const handleSaveDraftClick = () => {
+    saveDraft();
   };
 
   const validateForm = () => {
@@ -164,14 +171,13 @@ const QuestionFormCtrlButtons = ({
     validateForm();
   };
 
-  const handlePreviewClick = () => {
+  const handlePreviewClick = async () => {
     console.log("Validate clicked");
     validateForm();
-
+    await saveDraft();
     // TODO: TÄSSÄ KOHTAA MAHDOLLISESTI PITÄÄ POSTATA TIEDOT APIIN/KANTAAN, ETTÄ PREVIEW SIVULLE
     // SAADAAN NÄKYMÄÄN JUURI TÄYTETYT TIEDOT.
 
-    // TODO: Check that the form is valid
     router.push("/preview/" + curServicepointId);
   };
 
