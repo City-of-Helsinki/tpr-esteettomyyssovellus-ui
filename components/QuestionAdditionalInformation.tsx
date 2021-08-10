@@ -4,23 +4,31 @@ import { useI18n } from "next-localization";
 import styles from "./QuestionAdditionalInformation.module.scss";
 import { QuestionAdditionalInfoProps } from "../types/general";
 import { useRouter } from "next/router";
+import { setCurrentlyEditingBlock } from "../state/reducers/generalSlice";
+import { useAppDispatch } from "../state/hooks";
 
 // todo maybe remove this whole component or at least the changing buttons / functionality
 // used to display additional dropdown to add possible picture, location or comment
 const QuestionAdditionalInformation = ({
   questionId,
+  blockId,
   canAddLocation,
   canAddPhotoMaxCount,
   canAddComment,
 }: QuestionAdditionalInfoProps): JSX.Element => {
   const i18n = useI18n();
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const [
     showAdditionalInformation,
     setAdditionalInformationVisibility,
   ] = useState(false);
 
   const handleToggleAdditionalInfo = () => {
+    if (blockId && blockId !== undefined) {
+      dispatch(setCurrentlyEditingBlock(blockId));
+    }
+
     //todo maybe delete this -> was old for displaying below add picture/location/comment
     setAdditionalInformationVisibility(!showAdditionalInformation);
     // Use the shallow option to avoid a server-side render in order to preserve the state

@@ -6,7 +6,7 @@ import {
   IconPlus,
   IconCheckCircleFill,
   Card,
-  IconAlertCircle
+  IconAlertCircle,
 } from "hds-react";
 import { HeadlineQuestionContainerProps } from "../types/general";
 import styles from "./HeadlineQuestionContainer.module.scss";
@@ -19,11 +19,12 @@ const HeadlineQuestionContainer = ({
   number,
   initOpen = false,
   children,
-  isValid
+  isValid,
+  id = "",
 }: HeadlineQuestionContainerProps): JSX.Element => {
   // Handle accordion state with useAccordion hook
   let { isOpen, buttonProps, contentProps } = useAccordion({
-    initiallyOpen: initOpen
+    initiallyOpen: initOpen,
   });
   let curFinishedBlocks = useAppSelector(
     (state) => state.formReducer.finishedBlocks

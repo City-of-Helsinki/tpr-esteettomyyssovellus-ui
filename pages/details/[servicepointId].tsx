@@ -12,12 +12,12 @@ import ServicepointLandingSummaryCtrlButtons from "../../components/Servicepoint
 import QuestionInfo from "../../components/QuestionInfo";
 import ServicepointMainInfoContent from "../../components/ServicepointMainInfoContent";
 import PathTreeComponent from "../../components/PathTreeComponent";
-import { useAppDispatch, useAppSelector } from "../../state/hooks";
+import { useAppDispatch, useAppSelector, useLoading } from "../../state/hooks";
 import {
   setServicepointId,
   setEntranceId,
   setPhoneNumber,
-  setEmail
+  setEmail,
 } from "../../state/reducers/formSlice";
 import { getFinnishDate, filterByLanguage } from "../../utils/utilFunctions";
 import { setServicepointLocation } from "../../state/reducers/generalSlice";
@@ -25,18 +25,20 @@ import {
   API_FETCH_ANSWER_LOGS,
   API_FETCH_ENTRANCES,
   API_FETCH_SENTENCE_LANGS,
-  API_FETCH_SERVICEPOINTS
+  API_FETCH_SERVICEPOINTS,
 } from "../../types/constants";
+import LoadSpinner from "../../components/common/LoadSpinner";
 
 const details = ({
   servicepointData,
   accessibilityData,
   entranceData,
   hasExistingFormData,
-  isFinished
+  isFinished,
 }: any): ReactElement => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
+  const isLoading = useLoading();
   const treeItems = [servicepointData.servicepoint_name];
   const finnishDate = getFinnishDate(servicepointData.modified);
   const formInited = useAppSelector((state) => state.formReducer.formInited);
@@ -55,7 +57,7 @@ const details = ({
     const coordinates: [number, number] = [easthing, northing];
     dispatch(
       setServicepointLocation({
-        coordinates
+        coordinates,
       })
     );
   }
@@ -97,58 +99,62 @@ const details = ({
       <Head>
         <title>{i18n.t("notification.title")}</title>
       </Head>
-      <main id="content">
-        <div className={styles.maincontainer}>
-          <div className={styles.treecontainer}>
-            <PathTreeComponent treeItems={treeItems} />
-          </div>
-          <div className={styles.infocontainer}>
-            <QuestionInfo
-              openText={i18n.t("common.generalMainInfoIsClose")}
-              closeText={i18n.t("common.generalMainInfoIsOpen")}
-              openIcon={<IconQuestionCircle />}
-              closeIcon={<IconCrossCircle />}
-              textOnBottom
-            >
-              <ServicepointMainInfoContent />
-            </QuestionInfo>
-          </div>
-          <div className={styles.headingcontainer}>
-            <h1>{servicepointData.servicepoint_name}</h1>
-            <h2>
-              {i18n.t("common.mainEntrance")}
-              {": "}
-              {servicepointData.address_street_name}{" "}
-              {servicepointData.address_no}, {servicepointData.address_city}
-            </h2>
-            <span className={styles.statuslabel}>
-              {/* TODO: change statuslabel with data respectively */}
-              {isFinished ? (
-                <StatusLabel type="success"> PH: Valmis </StatusLabel>
-              ) : (
-                <StatusLabel type="neutral"> PH: Kesken </StatusLabel>
-              )}
+      {isLoading ? (
+        <LoadSpinner />
+      ) : (
+        <main id="content">
+          <div className={styles.maincontainer}>
+            <div className={styles.treecontainer}>
+              <PathTreeComponent treeItems={treeItems} />
+            </div>
+            <div className={styles.infocontainer}>
+              <QuestionInfo
+                openText={i18n.t("common.generalMainInfoIsClose")}
+                closeText={i18n.t("common.generalMainInfoIsOpen")}
+                openIcon={<IconQuestionCircle />}
+                closeIcon={<IconCrossCircle />}
+                textOnBottom
+              >
+                <ServicepointMainInfoContent />
+              </QuestionInfo>
+            </div>
+            <div className={styles.headingcontainer}>
+              <h1>{servicepointData.servicepoint_name}</h1>
+              <h2>
+                {i18n.t("common.mainEntrance")}
+                {": "}
+                {servicepointData.address_street_name}{" "}
+                {servicepointData.address_no}, {servicepointData.address_city}
+              </h2>
+              <span className={styles.statuslabel}>
+                {/* TODO: change statuslabel with data respectively */}
+                {isFinished ? (
+                  <StatusLabel type="success"> PH: Valmis </StatusLabel>
+                ) : (
+                  <StatusLabel type="neutral"> PH: Kesken </StatusLabel>
+                )}
 
-              <p>
-                {i18n.t("common.updated")} {finnishDate}
-              </p>
-            </span>
-          </div>
-          <div>
-            <ServicepointLandingSummary
-              header={i18n.t("servicepoint.contactInfoHeader")}
-              data={servicepointData}
+                <p>
+                  {i18n.t("common.updated")} {finnishDate}
+                </p>
+              </span>
+            </div>
+            <div>
+              <ServicepointLandingSummary
+                header={i18n.t("servicepoint.contactInfoHeader")}
+                data={servicepointData}
+              />
+              <ServicepointLandingSummary
+                header={i18n.t("servicepoint.contactFormSummaryHeader")}
+                data={filteredAccessibilityData}
+              />
+            </div>
+            <ServicepointLandingSummaryCtrlButtons
+              hasData={hasExistingFormData}
             />
-            <ServicepointLandingSummary
-              header={i18n.t("servicepoint.contactFormSummaryHeader")}
-              data={filteredAccessibilityData}
-            />
           </div>
-          <ServicepointLandingSummaryCtrlButtons
-            hasData={hasExistingFormData}
-          />
-        </div>
-      </main>
+        </main>
+      )}
     </Layout>
   );
 };
@@ -157,7 +163,7 @@ const details = ({
 export const getServerSideProps: GetServerSideProps = async ({
   params,
   req,
-  locales
+  locales,
 }) => {
   const lngDict = await i18nLoader(locales);
 
@@ -234,8 +240,8 @@ export const getServerSideProps: GetServerSideProps = async ({
       accessibilityData,
       entranceData,
       hasExistingFormData,
-      isFinished
-    }
+      isFinished,
+    },
   };
 };
 

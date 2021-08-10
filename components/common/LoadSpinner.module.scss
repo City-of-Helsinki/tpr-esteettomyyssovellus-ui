@@ -1,0 +1,10 @@
+@import "~hds-design-tokens/lib/all.scss";
+@import "../../styles/mixins";
+
+.maincontainer {
+  width: 100%;
+  height: 50vh;
+  margin: $spacing-5-xl auto;
+  display: flex;
+  justify-content: center;
+}

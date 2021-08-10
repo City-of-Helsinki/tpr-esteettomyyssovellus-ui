@@ -10,6 +10,7 @@ import {
   IconQuestionCircle,
   IconSpeechbubbleText,
   IconUpload,
+  LoadingSpinner,
 } from "hds-react";
 import Layout from "../../components/common/Layout";
 import { store } from "../../state/store";
@@ -28,7 +29,7 @@ import {
   removeComponent,
   setEditingInitialState,
 } from "../../state/reducers/additionalInfoSlice";
-import { useAppSelector, useAppDispatch } from "../../state/hooks";
+import { useAppSelector, useAppDispatch, useLoading } from "../../state/hooks";
 import {
   AdditionalComponentProps,
   AdditionalInfoPageProps,
@@ -39,6 +40,8 @@ import {
   API_FETCH_BACKEND_QUESTIONS,
 } from "../../types/constants";
 import { Dictionary } from "@reduxjs/toolkit";
+import { setCurrentlyEditingQuestion } from "../../state/reducers/generalSlice";
+import LoadSpinner from "../../components/common/LoadSpinner";
 
 // TODO: need to know what page is e.g. picture, comment or location
 const AdditionalInfo = ({
@@ -48,6 +51,7 @@ const AdditionalInfo = ({
   const i18n = useI18n();
   // todo: figure out better way to id (?)
   const [increasingId, setIncreasingId] = useState(0);
+  const isLoading = useLoading();
   const dispatch = useAppDispatch();
   let curAdditionalInfo: any = useAppSelector(
     (state) => state.additionalInfoReducer[questionId] as AdditionalInfoProps
@@ -107,6 +111,8 @@ const AdditionalInfo = ({
 
   // for saving current state obj initial state for if user edits and cancels without saving to return to init state of cur obj to state
   useEffect(() => {
+    dispatch(setCurrentlyEditingQuestion(questionId));
+
     const highestIdState = Math.max.apply(
       Math,
       curAdditionalInfo?.components?.map((comp: any) => comp.id)
@@ -146,163 +152,171 @@ const AdditionalInfo = ({
       <Head>
         <title>{i18n.t("notification.title")}</title>
       </Head>
-      <main id="content">
-        <div className={styles.maincontainer}>
-          <div className={styles.infocontainer}>
-            <QuestionInfo
-              openText={i18n.t("common.generalMainInfoIsClose")}
-              closeText={i18n.t("common.generalMainInfoIsOpen")}
-              openIcon={<IconQuestionCircle />}
-              closeIcon={<IconCrossCircle />}
-              textOnBottom
-            >
-              <ServicepointMainInfoContent />
-            </QuestionInfo>
-          </div>
-          <div className={styles.headingcontainer}>
-            <h1>PH: Aitohoiva - Esteettömyystietojen yhteenveto</h1>
-            <h2>{i18n.t("common.mainEntrance")} Katukatu 12, 00100 Helsinki</h2>
-          </div>
-          <div>
-            <AdditionalInfoCtrlButtons questionId={questionId} />
+      {isLoading ? (
+        <LoadSpinner />
+      ) : (
+        <main id="content">
+          <div className={styles.maincontainer}>
+            <div className={styles.infocontainer}>
+              <QuestionInfo
+                openText={i18n.t("common.generalMainInfoIsClose")}
+                closeText={i18n.t("common.generalMainInfoIsOpen")}
+                openIcon={<IconQuestionCircle />}
+                closeIcon={<IconCrossCircle />}
+                textOnBottom
+              >
+                <ServicepointMainInfoContent />
+              </QuestionInfo>
+            </div>
+            <div className={styles.headingcontainer}>
+              <h1>PH: Aitohoiva - Esteettömyystietojen yhteenveto</h1>
+              <h2>
+                {i18n.t("common.mainEntrance")} Katukatu 12, 00100 Helsinki
+              </h2>
+            </div>
             <div>
-              <div className={styles.mainheader}>
-                <p>{questionDataCurrentLanguage.question_code ?? null}</p>
-                <p className={styles.headerspacing}>
-                  {questionDataCurrentLanguage.text ?? null}
-                </p>
-              </div>
-              <div className={styles.maininfoctrl}>
-                {/* { infoButton ? <div className={styles.maininfocontent}>{infoButton}</div> : null}
+              <AdditionalInfoCtrlButtons questionId={questionId} />
+              <div>
+                <div className={styles.mainheader}>
+                  <p>{questionDataCurrentLanguage.question_code ?? null}</p>
+                  <p className={styles.headerspacing}>
+                    {questionDataCurrentLanguage.text ?? null}
+                  </p>
+                </div>
+                <div className={styles.maininfoctrl}>
+                  {/* { infoButton ? <div className={styles.maininfocontent}>{infoButton}</div> : null}
               <div className={styles.maininfocontent}>{infoText}</div> */}
-                tähä infoa
+                  tähä infoa
+                </div>
               </div>
-            </div>
-            <div className={styles.overrideheadlinestyles}>
-              {curAdditionalInfo?.components?.map(
-                (component: AdditionalComponentProps) => {
-                  const id = component.id;
-                  const type = component.type;
-                  if (type === "upload") {
-                    return (
-                      <div className={styles.componentcontainer}>
-                        <AdditionalInfoPicturesContent
-                          key={`key_${id}`}
-                          questionId={questionId}
-                          compId={id}
-                          onDelete={() => handleDelete(id, "upload")}
-                          initValue={
-                            curAdditionalInfo?.pictures
-                              ? curAdditionalInfo?.pictures
-                              : null
-                          }
-                        />
-                      </div>
-                    );
-                  } else if (type === "link") {
-                    return (
-                      <div className={styles.componentcontainer}>
-                        <AdditionalInfoPicturesContent
-                          onlyLink
-                          key={`key_${id}`}
-                          questionId={questionId}
-                          compId={id}
-                          onDelete={() => handleDelete(id, "link")}
-                          initValue={
-                            curAdditionalInfo?.pictures
-                              ? curAdditionalInfo?.pictures
-                              : null
-                          }
-                        />
-                      </div>
-                    );
-                  } else if (type === "comment") {
-                    return (
-                      <div className={styles.componentcontainer}>
-                        <AdditionalInfoCommentContent
-                          key={`key_${id}`}
-                          questionId={questionId}
-                          compId={id}
-                          onDelete={() => handleDelete(id, "comment")}
-                          initValue={curAdditionalInfo.comments ?? null}
-                        />
-                      </div>
-                    );
-                  } else if (type === "location") {
-                    return (
-                      <div className={styles.componentcontainer}>
-                        <AdditionalInfoLocationContent
-                          key={`key_${id}`}
-                          questionId={questionId}
-                          compId={id}
-                          onDelete={() => handleDelete(id, "location")}
-                          initValue={curAdditionalInfo.location ?? null}
-                        />
-                      </div>
-                    );
+              <div className={styles.overrideheadlinestyles}>
+                {curAdditionalInfo?.components?.map(
+                  (component: AdditionalComponentProps) => {
+                    const id = component.id;
+                    const type = component.type;
+                    if (type === "upload") {
+                      return (
+                        <div className={styles.componentcontainer}>
+                          <AdditionalInfoPicturesContent
+                            key={`key_${id}`}
+                            questionId={questionId}
+                            compId={id}
+                            onDelete={() => handleDelete(id, "upload")}
+                            initValue={
+                              curAdditionalInfo?.pictures
+                                ? curAdditionalInfo?.pictures
+                                : null
+                            }
+                          />
+                        </div>
+                      );
+                    } else if (type === "link") {
+                      return (
+                        <div className={styles.componentcontainer}>
+                          <AdditionalInfoPicturesContent
+                            onlyLink
+                            key={`key_${id}`}
+                            questionId={questionId}
+                            compId={id}
+                            onDelete={() => handleDelete(id, "link")}
+                            initValue={
+                              curAdditionalInfo?.pictures
+                                ? curAdditionalInfo?.pictures
+                                : null
+                            }
+                          />
+                        </div>
+                      );
+                    } else if (type === "comment") {
+                      return (
+                        <div className={styles.componentcontainer}>
+                          <AdditionalInfoCommentContent
+                            key={`key_${id}`}
+                            questionId={questionId}
+                            compId={id}
+                            onDelete={() => handleDelete(id, "comment")}
+                            initValue={curAdditionalInfo.comments ?? null}
+                          />
+                        </div>
+                      );
+                    } else if (type === "location") {
+                      return (
+                        <div className={styles.componentcontainer}>
+                          <AdditionalInfoLocationContent
+                            key={`key_${id}`}
+                            questionId={questionId}
+                            compId={id}
+                            onDelete={() => handleDelete(id, "location")}
+                            initValue={curAdditionalInfo.location ?? null}
+                          />
+                        </div>
+                      );
+                    }
                   }
-                }
-              )}
-            </div>
-            <div className={styles.editedelementsctrl}>
-              <h3>{i18n.t("additionalInfo.elementsCtrlButtonsHeader")}</h3>
-              <div className={styles.editedelementsctrlbuttons}>
-                <QuestionButton
-                  variant="secondary"
-                  iconRight={<IconSpeechbubbleText />}
-                  onClickHandler={() => handleAddElement("comment")}
-                  disabled={
-                    elementCounts["comment"] > canAddCommentCount ? true : false
-                  }
-                >
-                  {i18n.t("additionalInfo.ctrlButtons.addNewComment")}
-                </QuestionButton>
-                <QuestionButton
-                  variant="secondary"
-                  iconRight={<IconUpload />}
-                  onClickHandler={() => handleAddElement("upload")}
-                  disabled={
-                    elementCounts["upload"] + elementCounts["link"] >=
-                    photoMaxCount
-                      ? true
-                      : false
-                  }
-                >
-                  {i18n.t(
-                    "additionalInfo.ctrlButtons.addUploadImageFromDevice"
-                  )}
-                </QuestionButton>
-                <QuestionButton
-                  variant="secondary"
-                  iconRight={<IconLink />}
-                  onClickHandler={() => handleAddElement("link")}
-                  disabled={
-                    elementCounts["upload"] + elementCounts["link"] >=
-                    photoMaxCount
-                      ? true
-                      : false
-                  }
-                >
-                  {i18n.t("additionalInfo.ctrlButtons.addPictureLink")}
-                </QuestionButton>
-                <QuestionButton
-                  variant="secondary"
-                  iconRight={<IconLocation />}
-                  onClickHandler={() => handleAddElement("location")}
-                  disabled={
-                    elementCounts["location"] > canAddLocationCount
-                      ? true
-                      : false
-                  }
-                >
-                  {i18n.t("additionalInfo.ctrlButtons.addNewLocation")}
-                </QuestionButton>
+                )}
               </div>
+              <div className={styles.editedelementsctrl}>
+                <h3>{i18n.t("additionalInfo.elementsCtrlButtonsHeader")}</h3>
+                <div className={styles.editedelementsctrlbuttons}>
+                  <QuestionButton
+                    variant="secondary"
+                    iconRight={<IconSpeechbubbleText />}
+                    onClickHandler={() => handleAddElement("comment")}
+                    disabled={
+                      elementCounts["comment"] > canAddCommentCount
+                        ? true
+                        : false
+                    }
+                  >
+                    {i18n.t("additionalInfo.ctrlButtons.addNewComment")}
+                  </QuestionButton>
+                  <QuestionButton
+                    variant="secondary"
+                    iconRight={<IconUpload />}
+                    onClickHandler={() => handleAddElement("upload")}
+                    disabled={
+                      elementCounts["upload"] + elementCounts["link"] >=
+                      photoMaxCount
+                        ? true
+                        : false
+                    }
+                  >
+                    {i18n.t(
+                      "additionalInfo.ctrlButtons.addUploadImageFromDevice"
+                    )}
+                  </QuestionButton>
+                  <QuestionButton
+                    variant="secondary"
+                    iconRight={<IconLink />}
+                    onClickHandler={() => handleAddElement("link")}
+                    disabled={
+                      elementCounts["upload"] + elementCounts["link"] >=
+                      photoMaxCount
+                        ? true
+                        : false
+                    }
+                  >
+                    {i18n.t("additionalInfo.ctrlButtons.addPictureLink")}
+                  </QuestionButton>
+                  <QuestionButton
+                    variant="secondary"
+                    iconRight={<IconLocation />}
+                    onClickHandler={() => handleAddElement("location")}
+                    disabled={
+                      elementCounts["location"] > canAddLocationCount
+                        ? true
+                        : false
+                    }
+                  >
+                    {i18n.t("additionalInfo.ctrlButtons.addNewLocation")}
+                  </QuestionButton>
+                </div>
+              </div>
+              <AdditionalInfoCtrlButtons questionId={questionId} />
             </div>
-            <AdditionalInfoCtrlButtons questionId={questionId} />
           </div>
-        </div>
-      </main>
+        </main>
+      )}
     </Layout>
   );
 };
