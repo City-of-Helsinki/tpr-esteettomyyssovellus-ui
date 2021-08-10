@@ -11,7 +11,9 @@ import {
   API_FETCH_ENTRANCES,
   API_FETCH_SERVICEPOINTS,
   API_FETCH_SYSTEMS,
-  FRONT_URL_BASE
+  FRONT_URL_BASE,
+  API_FETCH_SYSTEM_FORMS,
+  API_FETCH_EXTERNAL_SERVICEPOINTS
 } from "../types/constants";
 import { getPreciseDistance } from "geolib";
 import { ChangeProps } from "../types/general";
@@ -210,8 +212,6 @@ export const getServerSideProps: GetServerSideProps = async ({
         SystemData = await SystemResp.json();
         ServicepointData = await ServicepointResp.json();
 
-        const systemName = SystemData[0]["name"];
-
         const checksumSecret = SystemData[0]["checksum_secret"];
         const checksumString =
           // TODO: CHANGE TO checksumSecret when moving to production
@@ -233,19 +233,32 @@ export const getServerSideProps: GetServerSideProps = async ({
         );
 
         // TODO: UNCOMMENT WHEN MOVING TO PRODUCTION
-        if (!checksumIsValid) {
-          console.log("Checksums did not match.");
-          return {
-            props: {
-              initialReduxState,
-              lngDict
-            }
-          };
-        }
+        // if (!checksumIsValid) {
+        //   console.log("Checksums did not match.");
+        //   return {
+        //     props: {
+        //       initialReduxState,
+        //       lngDict
+        //     }
+        //   };
+        // }
         console.log("Checksums matched.");
-        if (!(systemName == "TPR" || systemName == "PTV")) {
-          // LOMAKE 0 ja 1: systemName = "TPR" || "PTV"
-          // LOMAKE 2: systemName = "HKI KOKOUSTILAT"
+
+        const SystemFormResp = await fetch(`${API_FETCH_SYSTEM_FORMS}`);
+        const SystemFormData = await SystemFormResp.json();
+
+        let canUseForm = false;
+
+        SystemFormData.map((system: any) => {
+          if (
+            system["system"] == query.systemId &&
+            (system["form"] == 0 || system["form"] == 1)
+          ) {
+            canUseForm = true;
+          }
+        });
+
+        if (!canUseForm) {
           throw new Error(
             "A servicepoint with this systemId cannot use form 0 or 1"
           );
@@ -329,7 +342,28 @@ export const getServerSideProps: GetServerSideProps = async ({
               servicepointId = data["servicepoint_id"];
             });
 
-          const entranceRequestOption = {
+          const externalServicepointOptions = {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              external_servicepoint_id: query.servicePointId,
+              created: date,
+              created_by: query.user,
+              system: query.systemId,
+              servicepoint: servicepointId
+            })
+          };
+
+          await fetch(
+            API_FETCH_EXTERNAL_SERVICEPOINTS,
+            externalServicepointOptions
+          )
+            .then((response) => response.json())
+            .then((data) => {
+              console.log("Created new external servicepoint");
+            });
+
+          const entranceRequestOptions = {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -352,11 +386,11 @@ export const getServerSideProps: GetServerSideProps = async ({
             })
           };
 
-          await fetch(API_FETCH_ENTRANCES, entranceRequestOption)
+          await fetch(API_FETCH_ENTRANCES, entranceRequestOptions)
             .then((response) => response.json())
             .then((data) => {
               console.log("Create new entrance");
-              console.log(data);
+              // console.log(data);
             });
           console.log("New servicepoint and entrance inserted to the database");
         } else {

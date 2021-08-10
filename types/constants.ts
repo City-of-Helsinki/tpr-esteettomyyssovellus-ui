@@ -28,6 +28,8 @@ export const API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS = `${API_URL_BASE}ArXQuestion
 export const API_FETCH_BACKEND_QUESTIONS = `${API_URL_BASE}ArBackendQuestions/`;
 export const API_FETCH_SENTENCE_LANGS = `${API_URL_BASE}ArXStoredSentenceLangs/`;
 // export const API_FETCH_ADDITIONALINFOS = `${backendApiBaseUrl}/ArXAdditionalinfo/`;
+export const API_FETCH_SYSTEM_FORMS = `${API_URL_BASE}ArSystemForms/`;
+export const API_FETCH_EXTERNAL_SERVICEPOINTS = `${API_URL_BASE}ArExternalServicepoint/`;
 
 export enum LANGUAGE_LOCALES {
   fi = 1,

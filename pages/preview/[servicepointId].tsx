@@ -42,6 +42,7 @@ const preview = ({
     "PH: Esteettömyystiedot"
   ];
 
+  console.log(accessibilityData);
   // Filter by language
   const filteredAccessibilityData: any = {};
   Object.keys(accessibilityData).map(function (key, index) {
