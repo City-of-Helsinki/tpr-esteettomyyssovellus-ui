@@ -25,7 +25,8 @@ import {
   API_FETCH_ANSWER_LOGS,
   API_FETCH_ENTRANCES,
   API_FETCH_SENTENCE_LANGS,
-  API_FETCH_SERVICEPOINTS
+  API_FETCH_SERVICEPOINTS,
+  API_URL_BASE
 } from "../../types/constants";
 import PreviewPageLandingSummary from "../../components/PreviewPageLandingSummary";
 import PreviewControlButtons from "../../components/PreviewControlButtons";
@@ -42,13 +43,19 @@ const preview = ({
     "PH: Esteettömyystiedot"
   ];
 
-  console.log(accessibilityData);
   // Filter by language
   const filteredAccessibilityData: any = {};
-  Object.keys(accessibilityData).map(function (key, index) {
+  Object.keys(accessibilityData).map(function (key) {
     filteredAccessibilityData[key] = filterByLanguage(accessibilityData[key]);
+    console.log(filteredAccessibilityData[key]);
+    filteredAccessibilityData[key] = filteredAccessibilityData[key].filter(
+      (elem: any) => {
+        console.log(elem);
+        return elem["form_submitted"] == "Y" || elem["form_submitted"] == "D";
+      }
+    );
   });
-
+  console.log(filteredAccessibilityData);
   // Update entranceId and servicepointId to redux state
   if (
     servicepointData &&
@@ -168,7 +175,9 @@ export const getServerSideProps: GetServerSideProps = async ({
         const logData = await LogResp.json();
 
         // TODO: Should the this be true even if the form has not been submitted
-        hasExistingFormData = logData.length != 0;
+        hasExistingFormData = logData.some(
+          (e: any) => e["form_submitted"] == "Y" || e["form_submitted"] == "D"
+        );
         isFinished = logData.some((e: any) => e["form_submitted"] == "Y");
       }
     } catch (err) {

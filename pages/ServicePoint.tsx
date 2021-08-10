@@ -390,7 +390,6 @@ export const getServerSideProps: GetServerSideProps = async ({
             .then((response) => response.json())
             .then((data) => {
               console.log("Create new entrance");
-              // console.log(data);
             });
           console.log("New servicepoint and entrance inserted to the database");
         } else {

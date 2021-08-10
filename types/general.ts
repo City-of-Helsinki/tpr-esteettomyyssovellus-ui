@@ -89,6 +89,7 @@ export interface QuestionFormCtrlButtonsProps {
   hasSaveDraftButton?: boolean;
   hasPreviewButton?: boolean;
   visibleBlocks?: (JSX.Element | null)[] | null;
+  visibleQuestionChoices?: QuestionChoicesProps[] | undefined;
 }
 
 // todo: add type for questionlist

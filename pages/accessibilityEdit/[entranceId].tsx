@@ -345,6 +345,16 @@ const AccessibilityEdit = ({
     );
   }
 
+  const visibleQuestionChoices = QuestionChoicesData?.filter((choice) => {
+    if (
+      visibleBlocks
+        ?.map((elem) => Number(elem?.key))
+        .includes(choice.question_block_id!)
+    ) {
+      return choice.question_choice_id;
+    }
+  });
+
   return (
     <Layout>
       <Head>
@@ -382,6 +392,7 @@ const AccessibilityEdit = ({
               hasSaveDraftButton
               hasPreviewButton
               visibleBlocks={visibleBlocks}
+              visibleQuestionChoices={visibleQuestionChoices}
             />
           </div>
         </div>
