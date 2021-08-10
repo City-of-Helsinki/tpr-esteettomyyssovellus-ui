@@ -62,6 +62,7 @@
     "noDataContactinfo": "Toimipisteelle ei ole annettu esteettömyysasioiden yhteystietoja",
     "phoneNumber": "Puhelinnumero",
     "email": "Sähköpostiosoite",
+    "www": "Nettisivu",
     "noInfo": "(ei tietoa)"
   },
   "questionFormControlButtons": {
@@ -128,9 +129,11 @@
     "contactPerson": "Yhteyshenkilö",
     "phoneNumber": "Puhelinnumero",
     "email": "Sähköpostiosoite",
+    "www": "Nettisivu",
     "personPlaceholder": "Esim. vahtimestari tai Etunimi Sukunimi",
     "phonePlaceholder": "Esim. +358 50 123 4567",
-    "emailPlaceholder": "Esim. osoite@maili.fi"
+    "emailPlaceholder": "Esim. osoite@maili.fi",
+    "wwwPlaceholder": "Esim. www.address.fi"
   },
   "PreviewPage": {
     "continueEditing": "Jatka muokkaamista",

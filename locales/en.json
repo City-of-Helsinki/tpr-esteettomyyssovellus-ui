@@ -62,6 +62,7 @@
     "noDataContactinfo": "No contact details for accessibility issues have been provided to the office",
     "phoneNumber": "Phone number",
     "email": "Email address",
+    "www": "Webpage",
     "noInfo": "(no information)"
   },
   "questionFormControlButtons": {
@@ -128,9 +129,11 @@
     "contactPerson": "Contact person",
     "phoneNumber": "Phone number",
     "email": "Email address",
-    "personPlaceholder": "Eg. janitor or Firstname Lastname",
+    "www": "Webpage",
+    "personPlaceholder": "Eg. janitor",
     "phonePlaceholder": "Eg. +358 50 123 4567",
-    "emailPlaceholder": "Eg. address@mail.com"
+    "emailPlaceholder": "Eg. address@mail.com",
+    "wwwPlaceholder": "Eg. www.address.fi"
   },
   "PreviewPage": {
     "continueEditing": "Continue editing",

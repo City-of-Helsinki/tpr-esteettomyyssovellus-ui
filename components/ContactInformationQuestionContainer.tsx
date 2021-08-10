@@ -8,12 +8,14 @@ import { ContactInformationProps } from "../types/general";
 import {
   setEmail,
   setPhoneNumber,
+  setWwwAddress,
   setContactPerson,
   changeContactPersonStatus,
   changePhoneNumberStatus,
   changeEmailStatus,
   setFinished,
-  unsetFinished
+  unsetFinished,
+  changeWwwStatus
 } from "../state/reducers/formSlice";
 import { EMAIL_REGEX, PHONE_REGEX } from "../types/constants";
 
@@ -47,6 +49,14 @@ const ContactInformationQuestionContainer = ({
       question_id: -3,
       question_level: 1,
       text: i18n.t("ContactInformation.email")
+    },
+    {
+      placeholder: i18n.t("ContactInformation.wwwPlaceholder"),
+      question_block_id: blockNumber,
+      question_code: blockNumber + ".4",
+      question_id: -4,
+      question_level: 1,
+      text: i18n.t("ContactInformation.www")
     }
   ];
 
@@ -83,6 +93,13 @@ const ContactInformationQuestionContainer = ({
           dispatch(changeEmailStatus(true));
         }
         break;
+      case "-4":
+        dispatch(setWwwAddress(event.target.value));
+        if (event.target.value.length > 0) {
+          dispatch(changeWwwStatus(true));
+        } else {
+          dispatch(changeWwwStatus(false));
+        }
     }
   };
 
@@ -113,6 +130,7 @@ const ContactInformationQuestionContainer = ({
         const phoneNumber = contacts["phoneNumber"];
         const email = contacts["email"];
         const contactPerson = contacts["contactPerson"];
+        const www = contacts["www"];
         let value = "";
         let error = "";
         let isAnswered = false;
@@ -138,6 +156,13 @@ const ContactInformationQuestionContainer = ({
             // is valid. If the email is invalid displays an error text
             error = email[1] ? "" : "PH: Please input valid email";
             break;
+          case -4:
+            value = www[0];
+            isAnswered = www[1];
+            // email[1] is a boolean value indicating whether the email
+            // is valid. If the email is invalid displays an error text
+            error = www[1] ? "" : "PH: Please input valid www-page";
+            break;
         }
 
         const questionStyle =
@@ -156,7 +181,6 @@ const ContactInformationQuestionContainer = ({
           <div style={questionStyle}>
             <QuestionContainer
               key={question.question_code}
-              questionNumber={Number(question.question_code)}
               questionText={question.text}
               backgroundColor={backgroundColor}
               hasAdditionalInfo={false}
