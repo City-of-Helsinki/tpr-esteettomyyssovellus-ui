@@ -62,6 +62,7 @@
     "noDataContactinfo": "Inga kontaktuppgifter för tillgänglighetsfrågor har lämnats till kontoret",
     "phoneNumber": "Telefonnummer",
     "email": "E-postadress",
+    "www": "www-adress",
     "noInfo": "(ingen information)"
   },
   "questionFormControlButtons": {
@@ -128,9 +129,11 @@
     "contactPerson": "Kontaktperson",
     "phoneNumber": "Telefonnummer",
     "email": "E-postadress",
+    "www": "www-adress",
     "personPlaceholder": "t.ex. vaktmästare eller Förnamn Efternamn",
     "phonePlaceholder": "t.ex. +358 50 123 4567",
-    "emailPlaceholder": "t.ex. osoite@maili.fi"
+    "emailPlaceholder": "t.ex. osoite@maili.fi",
+    "wwwPlaceholder": "Et.ex. www.address.fi"
   },
   "PreviewPage": {
     "continueEditing": "Fortsätt redigera",

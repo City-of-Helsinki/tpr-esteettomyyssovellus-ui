@@ -42,7 +42,11 @@ const ServicepointLandingSummary = ({
   // If the data is of type servicePointData
   if (data && "servicepoint_id" in data) {
     // Keys of accessibility data values
-    const keysToDisplay = ["accessibility_phone", "accessibility_email"];
+    const keysToDisplay = [
+      "accessibility_phone",
+      "accessibility_email",
+      "accessibility_www"
+    ];
     let itemList: any = [];
     hasData = keysToDisplay.some((e) => data[e] != null);
     keysToDisplay.map((key) => {
@@ -53,6 +57,9 @@ const ServicepointLandingSummary = ({
           break;
         case "accessibility_email":
           title = i18n.t("servicepoint.email");
+          break;
+        case "accessibility_www":
+          title = i18n.t("servicepoint.www");
           break;
         default:
           console.log("Incorrect key");

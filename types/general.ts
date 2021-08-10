@@ -19,7 +19,7 @@ export interface GeneralState {
 export interface QuestionContainerProps {
   questionId?: number;
   questionBlockId?: number;
-  questionNumber: number;
+  questionNumber?: number;
   questionText: string;
   questionInfo?: string | undefined;
   children: JSX.Element;

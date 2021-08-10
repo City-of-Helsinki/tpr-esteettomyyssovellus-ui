@@ -26,13 +26,13 @@ const QuestionContainer = ({
   backgroundColor,
   canAddLocation,
   canAddPhotoMaxCount,
-  canAddComment,
+  canAddComment
 }: QuestionContainerProps): JSX.Element => {
   const i18n = useI18n();
   const router = useRouter();
 
   const curLocale: string = i18n.locale();
-  const questionDepth = (questionNumber.toString().split(".") || []).length;
+  const questionDepth = (questionNumber?.toString().split(".") || []).length;
   const paddingLeft: string = (questionDepth - 2) * 5 + "rem";
   const photoTexts = photoText?.split("<BR>");
   const questionInfos = questionInfo?.split("<BR><BR>");
@@ -52,17 +52,17 @@ const QuestionContainer = ({
           backgroundColor,
           marginBottom: "0.1rem",
           borderStyle: "solid",
-          borderColor: "#b01038",
+          borderColor: "#b01038"
         }
       : {
           paddingLeft,
-          backgroundColor,
+          backgroundColor
         };
 
   const handleEditAddInfo = () => {
     // Use the shallow option to avoid a server-side render in order to preserve the state
     router.push(`/additionalInfo/${questionId ?? ""}`, undefined, {
-      shallow: true,
+      shallow: true
     });
   };
 
@@ -140,7 +140,7 @@ const QuestionContainer = ({
                             className={styles.addinfopicturepreview}
                             style={{
                               backgroundImage:
-                                `url(` + `${pic.base ?? pic.url}` + `)`,
+                                `url(` + `${pic.base ?? pic.url}` + `)`
                             }}
                           />
 

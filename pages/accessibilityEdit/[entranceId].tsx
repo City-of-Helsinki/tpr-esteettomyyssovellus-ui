@@ -46,7 +46,8 @@ import {
   changePhoneNumberStatus,
   changeEmailStatus,
   setEntranceId,
-  setStartDate
+  setStartDate,
+  setWwwAddress
 } from "../../state/reducers/formSlice";
 import ContactInformationQuestionContainer from "../../components/ContactInformationQuestionContainer";
 import {
@@ -100,12 +101,14 @@ const AccessibilityEdit = ({
   if (ServicepointData != undefined && !formInited) {
     const phoneNumber = ServicepointData["accessibility_phone"];
     const email = ServicepointData["accessibility_email"];
+    const www = ServicepointData["accessibility_www"];
 
     var phonePattern = new RegExp(PHONE_REGEX);
     var emailPattern = new RegExp(EMAIL_REGEX);
 
     dispatch(setPhoneNumber(phoneNumber));
     dispatch(setEmail(email));
+    dispatch(setWwwAddress(www));
     dispatch(setServicepointId(ServicepointData["servicepoint_id"]));
     dispatch(setEntranceId(Number(entrance_id!)));
     // If page is refreshed so that all the information is lost updates the starting date
