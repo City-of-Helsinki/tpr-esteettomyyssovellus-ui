@@ -34,7 +34,8 @@ const QuestionFormCtrlButtons = ({
   hasValidateButton,
   hasSaveDraftButton,
   hasPreviewButton,
-  visibleBlocks
+  visibleBlocks,
+  visibleQuestionChoices
 }: QuestionFormCtrlButtonsProps): JSX.Element => {
   // TODO: save button might need own component of Button
   // also preview view should probably also have own component/buttons
@@ -85,7 +86,6 @@ const QuestionFormCtrlButtons = ({
 
     // THIS RETURNS THE IP ADDRESS OF THE CLIENT USED IN THE ANSWER LOG
     const ipAddress = await getClientIp();
-    console.log(startedAnswering);
     // POST ANSWER LOG
     // TODO: ERRORCHECK VALUES
     const requestOptions = {
@@ -103,7 +103,6 @@ const QuestionFormCtrlButtons = ({
         entrance: curEntranceId
       })
     };
-    console.log(requestOptions);
 
     // POST TO AR_X_ANSWER_LOG. RETURNS NEW LOG_ID USED FOR OTHER POST REQUESTS
     await fetch(API_FETCH_ANSWER_LOGS, requestOptions)
@@ -115,7 +114,18 @@ const QuestionFormCtrlButtons = ({
     // CHECK IF RETURNED LOG_ID IS A NUMBER. IF NOT A NUMBER STOP EXECUTING
     if (!isNaN(logId)) {
       // POST ALL QUESTION ANSWERS
-      const questionAnswerData = { log: logId, data: curAnsweredChoices };
+      const filteredAnswerChoices = curAnsweredChoices.filter((choice) => {
+        if (
+          visibleQuestionChoices
+            ?.map((elem) => {
+              return elem.question_choice_id;
+            })
+            .includes(Number(choice))
+        )
+          return choice;
+      });
+      console.log("filteredAnswerChoices:", filteredAnswerChoices);
+      const questionAnswerData = { log: logId, data: filteredAnswerChoices };
       await postData(API_FETCH_QUESTION_ANSWERS, questionAnswerData);
       // GENERATE SENTENCES
       const parsedAdditionalInfos = Object.keys(additionalInfo).map((key) => {

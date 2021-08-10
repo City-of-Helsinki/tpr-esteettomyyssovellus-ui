@@ -19,7 +19,7 @@ export interface GeneralState {
 export interface QuestionContainerProps {
   questionId?: number;
   questionBlockId?: number;
-  questionNumber: number;
+  questionNumber?: number;
   questionText: string;
   questionInfo?: string | undefined;
   children: JSX.Element;
@@ -89,6 +89,7 @@ export interface QuestionFormCtrlButtonsProps {
   hasSaveDraftButton?: boolean;
   hasPreviewButton?: boolean;
   visibleBlocks?: (JSX.Element | null)[] | null;
+  visibleQuestionChoices?: QuestionChoicesProps[] | undefined;
 }
 
 // todo: add type for questionlist

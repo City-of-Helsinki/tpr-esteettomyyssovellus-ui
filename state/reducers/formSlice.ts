@@ -143,6 +143,14 @@ export const formSlice = createSlice({
         contacts: { ...state.contacts, ["email"]: [action.payload, false] }
       };
     },
+    setWwwAddress: (state, action: PayloadAction<string>) => {
+      return {
+        ...state,
+        // Sets the email. The email is always valid at the start
+        // and changes to invalid if the validation fails
+        contacts: { ...state.contacts, ["www"]: [action.payload, false] }
+      };
+    },
     setStartDate: (state, action: PayloadAction<string>) => {
       return {
         ...state,
@@ -176,6 +184,15 @@ export const formSlice = createSlice({
         contacts: {
           ...state.contacts,
           ["email"]: [state.contacts["email"][0], action.payload]
+        }
+      };
+    },
+    changeWwwStatus: (state, action: PayloadAction<boolean>) => {
+      return {
+        ...state,
+        contacts: {
+          ...state.contacts,
+          ["www"]: [state.contacts["www"][0], action.payload]
         }
       };
     },
@@ -236,7 +253,9 @@ export const {
   unsetInvalid,
   initForm,
   setFormFinished,
-  unsetFormFinished
+  unsetFormFinished,
+  setWwwAddress,
+  changeWwwStatus
 } = formSlice.actions;
 
 export default formSlice.reducer;

@@ -76,7 +76,7 @@ export const postData = async (url: string, data: {}) => {
   };
   return fetch(url, postAnswerOptions)
     .then((response) => response.json())
-    .then((data) => console.log(data));
+    .then((data) => data);
 };
 
 export const getClientIp = async () =>
@@ -214,7 +214,6 @@ export const validateChecksum = (
   string: string,
   checksum: string | string[]
 ) => {
-  console.log(string);
   var crypto = require("crypto");
   const hash = crypto
     .createHash("sha256")
