@@ -38,6 +38,7 @@ export interface HeadlineQuestionContainerProps {
   children?: any;
   number?: number;
   isValid?: boolean;
+  id?: string;
 }
 
 export interface DropdownQuestionProps {
@@ -326,6 +327,7 @@ export interface PathTreeProps {
 
 export interface QuestionAdditionalInfoProps {
   questionId: number;
+  blockId?: number;
   canAddLocation?: boolean;
   canAddPhotoMaxCount?: number;
   canAddComment?: boolean;

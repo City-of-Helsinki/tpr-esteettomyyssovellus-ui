@@ -8,9 +8,10 @@ import QuestionAdditionalInformation from "./QuestionAdditionalInformation";
 import { i18n } from "../next.config";
 import { useI18n } from "next-localization";
 import Map from "./common/Map";
-import { useAppSelector } from "../state/hooks";
+import { useAppDispatch, useAppSelector } from "../state/hooks";
 import QuestionButton from "./QuestionButton";
 import { useRouter } from "next/router";
+import { setCurrentlyEditingBlock } from "../state/reducers/generalSlice";
 
 // used for wrapping question text and additional infos with question 'data component' e.g. dropdown
 const QuestionContainer = ({
@@ -30,6 +31,7 @@ const QuestionContainer = ({
 }: QuestionContainerProps): JSX.Element => {
   const i18n = useI18n();
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
   const curLocale: string = i18n.locale();
   const questionDepth = (questionNumber?.toString().split(".") || []).length;
@@ -60,14 +62,22 @@ const QuestionContainer = ({
         };
 
   const handleEditAddInfo = () => {
+    if (questionBlockId && questionBlockId !== undefined) {
+      dispatch(setCurrentlyEditingBlock(questionBlockId));
+    }
     // Use the shallow option to avoid a server-side render in order to preserve the state
     router.push(`/additionalInfo/${questionId ?? ""}`, undefined, {
       shallow: true
     });
+    // todo settaa täs statee se mitä editataan
   };
 
   return (
-    <div className={styles.maincontainer} style={questionStyle}>
+    <div
+      className={styles.maincontainer}
+      style={questionStyle}
+      id={`questionid-${questionId}`}
+    >
       <div className={styles.questioncontainer}>
         <div className={styles.maintext}>
           <p>
@@ -97,6 +107,7 @@ const QuestionContainer = ({
         {hasAdditionalInfo && questionId != undefined ? (
           <QuestionAdditionalInformation
             questionId={questionId}
+            blockId={questionBlockId}
             canAddLocation={canAddLocation}
             canAddPhotoMaxCount={canAddPhotoMaxCount}
             canAddComment={canAddComment}

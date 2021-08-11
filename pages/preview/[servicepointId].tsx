@@ -2,45 +2,42 @@ import React, { ReactElement } from "react";
 import { useI18n } from "next-localization";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
-import { StatusLabel, IconCrossCircle, IconQuestionCircle } from "hds-react";
+import { IconCrossCircle, IconQuestionCircle } from "hds-react";
 import Layout from "../../components/common/Layout";
 import { store } from "../../state/store";
 import i18nLoader from "../../utils/i18n";
-import ServicepointLandingSummary from "../../components/ServicepointLandingSummary";
 import styles from "./preview.module.scss";
-import ServicepointLandingSummaryCtrlButtons from "../../components/ServicepointLandingSummaryCtrlButtons";
 import QuestionInfo from "../../components/QuestionInfo";
 import ServicepointMainInfoContent from "../../components/ServicepointMainInfoContent";
 import PathTreeComponent from "../../components/PathTreeComponent";
-import { useAppDispatch, useAppSelector } from "../../state/hooks";
+import { useAppDispatch, useLoading } from "../../state/hooks";
 import {
   setServicepointId,
   setEntranceId,
-  setPhoneNumber,
-  setEmail
 } from "../../state/reducers/formSlice";
-import { getFinnishDate, filterByLanguage } from "../../utils/utilFunctions";
-import { setServicepointLocation } from "../../state/reducers/generalSlice";
+import { filterByLanguage } from "../../utils/utilFunctions";
 import {
   API_FETCH_ANSWER_LOGS,
   API_FETCH_ENTRANCES,
   API_FETCH_SENTENCE_LANGS,
   API_FETCH_SERVICEPOINTS,
-  API_URL_BASE
+  API_URL_BASE,
 } from "../../types/constants";
 import PreviewPageLandingSummary from "../../components/PreviewPageLandingSummary";
 import PreviewControlButtons from "../../components/PreviewControlButtons";
+import LoadSpinner from "../../components/common/LoadSpinner";
 
 const preview = ({
   servicepointData,
   accessibilityData,
-  entranceData
+  entranceData,
 }: any): ReactElement => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
+  const isLoading = useLoading();
   const treeItems = [
     servicepointData["servicepoint_name"],
-    "PH: Esteettömyystiedot"
+    "PH: Esteettömyystiedot",
   ];
 
   // Filter by language
@@ -76,45 +73,49 @@ const preview = ({
       <Head>
         <title>{i18n.t("notification.title")}</title>
       </Head>
-      <main id="content">
-        <div className={styles.maincontainer}>
-          <div className={styles.treecontainer}>
-            <PathTreeComponent treeItems={treeItems} />
+      {isLoading ? (
+        <LoadSpinner />
+      ) : (
+        <main id="content">
+          <div className={styles.maincontainer}>
+            <div className={styles.treecontainer}>
+              <PathTreeComponent treeItems={treeItems} />
+            </div>
+            <div className={styles.infocontainer}>
+              <QuestionInfo
+                openText={i18n.t("common.generalMainInfoIsClose")}
+                closeText={i18n.t("common.generalMainInfoIsOpen")}
+                openIcon={<IconQuestionCircle />}
+                closeIcon={<IconCrossCircle />}
+                textOnBottom
+              >
+                <ServicepointMainInfoContent />
+              </QuestionInfo>
+            </div>
+            <div className={styles.headingcontainer}>
+              <h1>{servicepointData.servicepoint_name}</h1>
+              <h2>
+                {i18n.t("common.mainEntrance")}
+                {": "}
+                {servicepointData.address_street_name}{" "}
+                {servicepointData.address_no}, {servicepointData.address_city}
+              </h2>
+            </div>
+            <div>
+              <PreviewControlButtons hasHeader={true} />
+            </div>
+            <div>
+              <PreviewPageLandingSummary
+                header={i18n.t("servicepoint.contactFormSummaryHeader")}
+                data={filteredAccessibilityData}
+              />
+            </div>
+            <div>
+              <PreviewControlButtons hasHeader={false} />
+            </div>
           </div>
-          <div className={styles.infocontainer}>
-            <QuestionInfo
-              openText={i18n.t("common.generalMainInfoIsClose")}
-              closeText={i18n.t("common.generalMainInfoIsOpen")}
-              openIcon={<IconQuestionCircle />}
-              closeIcon={<IconCrossCircle />}
-              textOnBottom
-            >
-              <ServicepointMainInfoContent />
-            </QuestionInfo>
-          </div>
-          <div className={styles.headingcontainer}>
-            <h1>{servicepointData.servicepoint_name}</h1>
-            <h2>
-              {i18n.t("common.mainEntrance")}
-              {": "}
-              {servicepointData.address_street_name}{" "}
-              {servicepointData.address_no}, {servicepointData.address_city}
-            </h2>
-          </div>
-          <div>
-            <PreviewControlButtons hasHeader={true} />
-          </div>
-          <div>
-            <PreviewPageLandingSummary
-              header={i18n.t("servicepoint.contactFormSummaryHeader")}
-              data={filteredAccessibilityData}
-            />
-          </div>
-          <div>
-            <PreviewControlButtons hasHeader={false} />
-          </div>
-        </div>
-      </main>
+        </main>
+      )}
     </Layout>
   );
 };
@@ -123,7 +124,7 @@ const preview = ({
 export const getServerSideProps: GetServerSideProps = async ({
   params,
   req,
-  locales
+  locales,
 }) => {
   const lngDict = await i18nLoader(locales);
 
@@ -202,8 +203,8 @@ export const getServerSideProps: GetServerSideProps = async ({
       accessibilityData,
       entranceData,
       hasExistingFormData,
-      isFinished
-    }
+      isFinished,
+    },
   };
 };
 
