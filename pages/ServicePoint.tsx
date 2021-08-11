@@ -70,7 +70,7 @@ const Servicepoints = ({
       await fetch(updateAddressUrl, updateAddressOptions)
         .then((response) => response.json())
         .then((data) => {
-          console.log("Success:", data);
+          //console.log(data);
         });
       const url = `details/${servicepointId}`;
       router.push(url);

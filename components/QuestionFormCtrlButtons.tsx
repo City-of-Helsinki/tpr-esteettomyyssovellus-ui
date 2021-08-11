@@ -10,6 +10,7 @@ import publicIp from "public-ip";
 import {
   API_FETCH_ANSWER_LOGS,
   API_FETCH_QUESTION_ANSWERS,
+  API_FETCH_SERVICEPOINTS,
   FRONT_URL_BASE
 } from "../types/constants";
 import {
@@ -64,6 +65,7 @@ const QuestionFormCtrlButtons = ({
     (state) => state.formReducer.isContinueClicked
   );
   const additionalInfo = useAppSelector((state) => state.additionalInfoReducer);
+  const contacts = useAppSelector((state) => state.formReducer.contacts);
 
   const handleCancel = (): void => {
     console.log("cancel clicked");
@@ -75,6 +77,32 @@ const QuestionFormCtrlButtons = ({
     window.location.href = url;
   };
   const isPreviewActive = curAnsweredChoices.length > 1;
+
+  const updateAccessibilityContacts = async (contacts: any) => {
+    const updateContactsOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        accessibility_phone: contacts["phoneNumber"][1]
+          ? contacts["phoneNumber"][0]
+          : null,
+        accessibility_email: contacts["email"][1] ? contacts["email"][0] : null,
+        accessibility_www: contacts["www"][1] ? contacts["www"][0] : null,
+        modified_by: "placeholder",
+        // TODO: Add user here
+        modified: getCurrentDate()
+      })
+    };
+    const updateContactsUrl = `${API_FETCH_SERVICEPOINTS}${curServicepointId}/update_accessibility_contacts/`;
+
+    await fetch(updateContactsUrl, updateContactsOptions)
+      .then((response) => response.json())
+      .then((data) => {
+        //console.log(data);
+      });
+  };
 
   // TODO: MAKE INTO SMALLER FUNCTIONS
   const saveDraft = async () => {
@@ -104,6 +132,7 @@ const QuestionFormCtrlButtons = ({
       })
     };
 
+    updateAccessibilityContacts(contacts);
     // POST TO AR_X_ANSWER_LOG. RETURNS NEW LOG_ID USED FOR OTHER POST REQUESTS
     await fetch(API_FETCH_ANSWER_LOGS, requestOptions)
       .then((response) => response.json())
@@ -124,7 +153,6 @@ const QuestionFormCtrlButtons = ({
         )
           return choice;
       });
-      console.log("filteredAnswerChoices:", filteredAnswerChoices);
       const questionAnswerData = { log: logId, data: filteredAnswerChoices };
       await postData(API_FETCH_QUESTION_ANSWERS, questionAnswerData);
       // GENERATE SENTENCES
@@ -160,6 +188,7 @@ const QuestionFormCtrlButtons = ({
       if (elem != null) {
         if (!finishedBlocks.includes(Number(elem?.key?.toString()))) {
           dispatch(setInvalid(Number(elem?.key?.toString())));
+          dispatch(unsetFormFinished());
         } else {
           dispatch(unsetInvalid(Number(elem?.key?.toString())));
         }
@@ -170,6 +199,7 @@ const QuestionFormCtrlButtons = ({
   const invalidBlocks = useAppSelector(
     (state) => state.formReducer.invalidBlocks
   );
+
   if (invalidBlocks.length == 0) {
     dispatch(setFormFinished());
   } else {

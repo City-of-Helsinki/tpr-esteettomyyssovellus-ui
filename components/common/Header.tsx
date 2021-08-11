@@ -130,7 +130,7 @@ const Header = ({
               label={i18n.t("common.header.login")}
               authenticated={true} /* Change to: currentUser?.authenticated} */
               userName={
-                "Placeholder"
+                "PLACEHOLDER"
               } /* Change to: currentUser?.first_name || currentUser?.email} */
               onSignIn={signIn}
             >

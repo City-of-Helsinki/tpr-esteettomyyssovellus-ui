@@ -9,6 +9,7 @@ import {
   API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS
 } from "../types/constants";
 import { AdditionalInfos } from "../types/general";
+
 export const getCurrentDate = () => {
   let today = new Date();
   const date =

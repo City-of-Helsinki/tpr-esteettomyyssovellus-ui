@@ -178,7 +178,7 @@ const ContactInformationQuestionContainer = ({
               };
 
         return (
-          <div style={questionStyle}>
+          <div style={questionStyle} key={question.question_code}>
             <QuestionContainer
               key={question.question_code}
               questionText={question.text}
@@ -186,6 +186,7 @@ const ContactInformationQuestionContainer = ({
               hasAdditionalInfo={false}
             >
               <TextInput
+                key={question.question_code}
                 className={styles.textInput}
                 id={question.question_id.toString()}
                 placeholder={question.placeholder}
