@@ -13,7 +13,7 @@ import {
   LoadingSpinner,
 } from "hds-react";
 import Layout from "../../components/common/Layout";
-import { store } from "../../state/store";
+import store from "../../state/store";
 import i18nLoader from "../../utils/i18n";
 import styles from "./additionalInfo.module.scss";
 import QuestionInfo from "../../components/QuestionInfo";

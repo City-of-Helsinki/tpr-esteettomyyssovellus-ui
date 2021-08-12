@@ -3,7 +3,7 @@ import { useI18n } from "next-localization";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
 import Layout from "../../components/common/Layout";
-import { store } from "../../state/store";
+import store from "../../state/store";
 import i18nLoader from "../../utils/i18n";
 import QuestionInfo from "../../components/QuestionInfo";
 import styles from "./accessibilityEdit.module.scss";
@@ -259,22 +259,9 @@ const AccessibilityEdit = ({
     });
   }
 
-  if (typeof window !== "undefined") {
-    window.onbeforeunload = (event: BeforeUnloadEvent) => {
-      const e = event || window.event;
-      // Cancel the event
-      e.preventDefault();
-      if (e) {
-        e.returnValue = ""; // Legacy method for cross browser support
-      }
-      return ""; // Legacy method for cross browser support
-    };
-  }
-
   // let curAnswers = useAppSelector(
   //   (state) => state.formReducer.answeredChoices
   // );
-  //console.log(curAnsweredChoices);
 
   // let curFinishedBlocks = useAppSelector((state) => state.formReducer.finishedBlocks);
   let nextBlock = 0;

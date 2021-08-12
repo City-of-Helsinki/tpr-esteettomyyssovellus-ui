@@ -20,6 +20,13 @@ export const generalSlice = createSlice({
   name: "generalSlice",
   initialState,
   reducers: {
+    // todo maybe remove this
+    clearGeneralState: (state) => {
+      return {
+        ...initialState,
+        user: state.user,
+      };
+    },
     // used to store question number to state when going/coming from addinfo page, to be able to init screen to correct place
     setCurrentlyEditingQuestion: (state, action: PayloadAction<number>) => {
       return {
@@ -51,6 +58,7 @@ export const generalSlice = createSlice({
 });
 
 export const {
+  clearGeneralState,
   setServicepointLocation,
   setCurrentlyEditingBlock,
   setUser,

@@ -42,6 +42,12 @@ export const additionalInfoSlice = createSlice({
   name: "additionalInfo",
   initialState: {} as AdditionalInfoProps,
   reducers: {
+    clearAddinfoState: (state) => {
+      const initState = {} as AdditionalInfoProps;
+      return {
+        ...initState,
+      };
+    },
     setInitAdditionalInfoFromDb: (
       state,
       action: PayloadAction<{
@@ -392,6 +398,7 @@ export const additionalInfoSlice = createSlice({
 });
 
 export const {
+  clearAddinfoState,
   setEditingInitialState,
   clearEditingInitialState,
   addLocation,
