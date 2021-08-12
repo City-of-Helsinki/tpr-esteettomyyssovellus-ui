@@ -12,7 +12,7 @@ import {
   setContinue,
   setFinished,
   unsetFinished,
-  unsetInvalid,
+  unsetInvalid
 } from "../state/reducers/formSlice";
 import { useI18n } from "next-localization";
 
@@ -21,7 +21,7 @@ const QuestionBlock = ({
   questions,
   answers,
   photoUrl,
-  photoText,
+  photoText
 }: QuestionBlockProps): JSX.Element => {
   const i18n = useI18n();
   const [showAdditionalInfo, setShowAdditionalInfo] = useState(false);
@@ -76,8 +76,8 @@ const QuestionBlock = ({
   }
 
   // Turn "<BR>" to linebreaks
-  const desc = description?.split("<BR>").map((elem) => {
-    return <p>{elem}</p>;
+  const desc = description?.split("<BR>").map((elem, index) => {
+    return <p key={index}>{elem}</p>;
   });
 
   return (

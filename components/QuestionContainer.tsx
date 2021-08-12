@@ -85,6 +85,7 @@ const QuestionContainer = ({
           </p>
           {questionInfo ? (
             <QuestionInfo
+              key={questionNumber}
               openText={i18n.t("accessibilityForm.whatDoesThisMean")}
               openIcon={<IconInfoCircle aria-hidden />}
               closeText={i18n.t("accessibilityForm.closeGuidance")}
@@ -92,8 +93,8 @@ const QuestionContainer = ({
               textOnBottom
             >
               <div className={styles.infoContainer}>
-                {questionInfos?.map((e) => {
-                  return <p>{e}</p>;
+                {questionInfos?.map((e, index) => {
+                  return <p key={index}>{e}</p>;
                 })}
                 {photoUrl != null ? (
                   <img src={photoUrl} className={styles.infoPicture}></img>
@@ -106,6 +107,7 @@ const QuestionContainer = ({
         <div className={styles.children}>{children}</div>
         {hasAdditionalInfo && questionId != undefined ? (
           <QuestionAdditionalInformation
+            key={questionNumber + "a"}
             questionId={questionId}
             blockId={questionBlockId}
             canAddLocation={canAddLocation}
@@ -144,7 +146,7 @@ const QuestionContainer = ({
                   </div>
                 ) : null}
                 {curQuestionAddinfos.pictures
-                  ? curQuestionAddinfos.pictures.map((pic) => {
+                  ? curQuestionAddinfos.pictures.map((pic, index) => {
                       return (
                         <div className={styles.addinfopreviewcontainer}>
                           <div
@@ -155,7 +157,7 @@ const QuestionContainer = ({
                             }}
                           />
 
-                          <p>
+                          <p key={pic.qNumber + "alt" + index}>
                             <span>
                               {i18n.t(
                                 "accessibilityForm.additionalInfoPreviewAltText"
@@ -164,7 +166,7 @@ const QuestionContainer = ({
                             {/* @ts-ignore */}
                             {pic[curLocale]}
                           </p>
-                          <p>
+                          <p key={pic.qNumber + "source" + index}>
                             <span>
                               {i18n.t(
                                 "accessibilityForm.additionalInfoPreviewSourceText"

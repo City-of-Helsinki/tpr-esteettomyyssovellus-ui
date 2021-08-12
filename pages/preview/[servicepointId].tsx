@@ -13,7 +13,7 @@ import PathTreeComponent from "../../components/PathTreeComponent";
 import { useAppDispatch, useLoading } from "../../state/hooks";
 import {
   setServicepointId,
-  setEntranceId,
+  setEntranceId
 } from "../../state/reducers/formSlice";
 import { filterByLanguage } from "../../utils/utilFunctions";
 import {
@@ -21,7 +21,7 @@ import {
   API_FETCH_ENTRANCES,
   API_FETCH_SENTENCE_LANGS,
   API_FETCH_SERVICEPOINTS,
-  API_URL_BASE,
+  API_URL_BASE
 } from "../../types/constants";
 import PreviewPageLandingSummary from "../../components/PreviewPageLandingSummary";
 import PreviewControlButtons from "../../components/PreviewControlButtons";
@@ -30,29 +30,26 @@ import LoadSpinner from "../../components/common/LoadSpinner";
 const preview = ({
   servicepointData,
   accessibilityData,
-  entranceData,
+  entranceData
 }: any): ReactElement => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
   const isLoading = useLoading();
   const treeItems = [
     servicepointData["servicepoint_name"],
-    "PH: Esteettömyystiedot",
+    "PH: Esteettömyystiedot"
   ];
 
   // Filter by language
   const filteredAccessibilityData: any = {};
   Object.keys(accessibilityData).map(function (key) {
     filteredAccessibilityData[key] = filterByLanguage(accessibilityData[key]);
-    console.log(filteredAccessibilityData[key]);
     filteredAccessibilityData[key] = filteredAccessibilityData[key].filter(
       (elem: any) => {
-        console.log(elem);
         return elem["form_submitted"] == "Y" || elem["form_submitted"] == "D";
       }
     );
   });
-  console.log(filteredAccessibilityData);
   // Update entranceId and servicepointId to redux state
   if (
     servicepointData &&
@@ -124,7 +121,7 @@ const preview = ({
 export const getServerSideProps: GetServerSideProps = async ({
   params,
   req,
-  locales,
+  locales
 }) => {
   const lngDict = await i18nLoader(locales);
 
@@ -203,8 +200,8 @@ export const getServerSideProps: GetServerSideProps = async ({
       accessibilityData,
       entranceData,
       hasExistingFormData,
-      isFinished,
-    },
+      isFinished
+    }
   };
 };
 
