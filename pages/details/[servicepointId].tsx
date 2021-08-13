@@ -4,7 +4,7 @@ import Head from "next/head";
 import { GetServerSideProps } from "next";
 import { StatusLabel, IconCrossCircle, IconQuestionCircle } from "hds-react";
 import Layout from "../../components/common/Layout";
-import { store } from "../../state/store";
+import store from "../../state/store";
 import i18nLoader from "../../utils/i18n";
 import ServicepointLandingSummary from "../../components/ServicepointLandingSummary";
 import styles from "./details.module.scss";
@@ -18,9 +18,13 @@ import {
   setEntranceId,
   setPhoneNumber,
   setEmail,
+  clearFormState,
 } from "../../state/reducers/formSlice";
 import { getFinnishDate, filterByLanguage } from "../../utils/utilFunctions";
-import { setServicepointLocation } from "../../state/reducers/generalSlice";
+import {
+  clearGeneralState,
+  setServicepointLocation,
+} from "../../state/reducers/generalSlice";
 import {
   API_FETCH_ANSWER_LOGS,
   API_FETCH_ENTRANCES,
@@ -28,6 +32,7 @@ import {
   API_FETCH_SERVICEPOINTS,
 } from "../../types/constants";
 import LoadSpinner from "../../components/common/LoadSpinner";
+import { clearAddinfoState } from "../../state/reducers/additionalInfoSlice";
 
 const details = ({
   servicepointData,
@@ -42,6 +47,13 @@ const details = ({
   const treeItems = [servicepointData.servicepoint_name];
   const finnishDate = getFinnishDate(servicepointData.modified);
   const formInited = useAppSelector((state) => state.formReducer.formInited);
+
+  // clear states, if more reducers added consider creating one clearing logic
+  // this done so for not many reducers and user needs to stay in state
+  dispatch(clearGeneralState());
+  dispatch(clearAddinfoState());
+  dispatch(clearFormState());
+
   const hasData =
     Object.keys(entranceData).length !== 0 ||
     Object.keys(servicepointData).length !== 0;

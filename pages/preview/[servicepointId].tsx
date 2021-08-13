@@ -4,7 +4,7 @@ import Head from "next/head";
 import { GetServerSideProps } from "next";
 import { IconCrossCircle, IconQuestionCircle } from "hds-react";
 import Layout from "../../components/common/Layout";
-import { store } from "../../state/store";
+import store from "../../state/store";
 import i18nLoader from "../../utils/i18n";
 import styles from "./preview.module.scss";
 import QuestionInfo from "../../components/QuestionInfo";

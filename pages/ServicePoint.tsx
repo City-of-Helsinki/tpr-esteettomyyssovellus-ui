@@ -3,7 +3,7 @@ import { useI18n } from "next-localization";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
 import Layout from "../components/common/Layout";
-import { store } from "../state/store";
+import store from "../state/store";
 import i18nLoader from "../utils/i18n";
 import router, { useRouter } from "next/router";
 import {
@@ -13,7 +13,7 @@ import {
   API_FETCH_SYSTEMS,
   FRONT_URL_BASE,
   API_FETCH_SYSTEM_FORMS,
-  API_FETCH_EXTERNAL_SERVICEPOINTS
+  API_FETCH_EXTERNAL_SERVICEPOINTS,
 } from "../types/constants";
 import { getPreciseDistance } from "geolib";
 import { ChangeProps } from "../types/general";
@@ -33,7 +33,7 @@ const Servicepoints = ({
   oldAddressNumber,
   newAddressCity,
   oldAddressCity,
-  user
+  user,
 }: ChangeProps): ReactElement => {
   const i18n = useI18n();
   const startState = "0";
@@ -55,15 +55,15 @@ const Servicepoints = ({
       const updateAddressOptions = {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           address_street_name: newAddress,
           address_no: newAddressNumber,
           address_city: newAddressCity,
           modified: getCurrentDate(),
-          modified_by: user
-        })
+          modified_by: user,
+        }),
       };
       const updateAddressUrl = `${API_FETCH_SERVICEPOINTS}${servicepointId}/update_address/`;
 
@@ -154,7 +154,7 @@ export const getServerSideProps: GetServerSideProps = async ({
   params,
   req,
   locales,
-  query
+  query,
 }) => {
   const lngDict = await i18nLoader(locales);
 
@@ -198,8 +198,8 @@ export const getServerSideProps: GetServerSideProps = async ({
       return {
         props: {
           initialReduxState,
-          lngDict
-        }
+          lngDict,
+        },
       };
     } else {
       try {
@@ -271,8 +271,8 @@ export const getServerSideProps: GetServerSideProps = async ({
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             address: query.streetAddress,
-            postOffice: query.postOffice
-          })
+            postOffice: query.postOffice,
+          }),
         };
         await fetch(API_CHOP_ADDRESS, addressRequestOptions)
           .then((response) => response.json())
@@ -330,8 +330,8 @@ export const getServerSideProps: GetServerSideProps = async ({
               loc_easting: query.easting,
               loc_northing: query.northing,
               location_id: null, // NULL according to mail
-              system: query.systemId
-            })
+              system: query.systemId,
+            }),
           };
 
           // POST TO ARSERVICEPOINT. RETURNS NEW SERVICEPOINTID USED FOR OTHER POST REQUESTS
@@ -350,8 +350,8 @@ export const getServerSideProps: GetServerSideProps = async ({
               created: date,
               created_by: query.user,
               system: query.systemId,
-              servicepoint: servicepointId
-            })
+              servicepoint: servicepointId,
+            }),
           };
 
           await fetch(
@@ -382,8 +382,8 @@ export const getServerSideProps: GetServerSideProps = async ({
               servicepoint: servicepointId,
               // TODO: HOW IS THIS DETERMINED? POSSIBLY 0 DUE TO THE FACT THAT THIS IS
               // THE MAIN ENTRANCE?
-              form: 0
-            })
+              form: 0,
+            }),
           };
 
           await fetch(API_FETCH_ENTRANCES, entranceRequestOptions)
@@ -415,7 +415,7 @@ export const getServerSideProps: GetServerSideProps = async ({
             { latitude: oldNorthing, longitude: oldEasting },
             {
               latitude: Number(query.northing),
-              longitude: Number(query.easting)
+              longitude: Number(query.easting),
             }
           );
 
@@ -439,8 +439,8 @@ export const getServerSideProps: GetServerSideProps = async ({
                 newAddress,
                 newAddressNumber,
                 newAddressCity,
-                user: query.user
-              }
+                user: query.user,
+              },
             };
           }
           // if (locationHasChanged) {
@@ -482,8 +482,8 @@ export const getServerSideProps: GetServerSideProps = async ({
         return {
           redirect: {
             permanent: false,
-            destination: FRONT_URL_BASE + "details/" + servicepointId
-          }
+            destination: FRONT_URL_BASE + "details/" + servicepointId,
+          },
         };
 
         //router.push(FRONT_URL_BASE + "details/" + params.servicePointId);
@@ -495,8 +495,8 @@ export const getServerSideProps: GetServerSideProps = async ({
   return {
     props: {
       initialReduxState,
-      lngDict
-    }
+      lngDict,
+    },
   };
 };
 

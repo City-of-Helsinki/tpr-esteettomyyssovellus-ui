@@ -5,8 +5,10 @@ import { AppProps } from "next/app";
 import { I18nProvider } from "next-localization";
 import { useRouter } from "next/router";
 import { defaultLocale } from "../utils/i18n";
-import { store } from "../state/store";
+import store, { persistor } from "../state/store";
 import "../styles/global.scss";
+
+import { PersistGate } from "redux-persist/integration/react";
 
 const App = ({ Component, pageProps }: AppProps): ReactElement => {
   // This function is called when doing both server-side and client-side rendering
@@ -23,7 +25,9 @@ const App = ({ Component, pageProps }: AppProps): ReactElement => {
   return (
     <I18nProvider lngDict={lngDict ? lngDict[locale] : {}} locale={locale}>
       <Provider store={store}>
-        <Component {...rest} />
+        <PersistGate loading={null} persistor={persistor}>
+          <Component {...rest} />
+        </PersistGate>
       </Provider>
     </I18nProvider>
   );
