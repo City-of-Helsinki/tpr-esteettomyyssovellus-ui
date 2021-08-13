@@ -27,7 +27,7 @@ const QuestionContainer = ({
   backgroundColor,
   canAddLocation,
   canAddPhotoMaxCount,
-  canAddComment
+  canAddComment,
 }: QuestionContainerProps): JSX.Element => {
   const i18n = useI18n();
   const router = useRouter();
@@ -54,11 +54,11 @@ const QuestionContainer = ({
           backgroundColor,
           marginBottom: "0.1rem",
           borderStyle: "solid",
-          borderColor: "#b01038"
+          borderColor: "#b01038",
         }
       : {
           paddingLeft,
-          backgroundColor
+          backgroundColor,
         };
 
   const handleEditAddInfo = () => {
@@ -67,7 +67,7 @@ const QuestionContainer = ({
     }
     // Use the shallow option to avoid a server-side render in order to preserve the state
     router.push(`/additionalInfo/${questionId ?? ""}`, undefined, {
-      shallow: true
+      shallow: true,
     });
     // todo settaa täs statee se mitä editataan
   };
@@ -153,7 +153,7 @@ const QuestionContainer = ({
                             className={styles.addinfopicturepreview}
                             style={{
                               backgroundImage:
-                                `url(` + `${pic.base ?? pic.url}` + `)`
+                                `url(` + `${pic.base ?? pic.url}` + `)`,
                             }}
                           />
 
@@ -180,7 +180,7 @@ const QuestionContainer = ({
                   : null}
                 {curQuestionAddinfos.locations &&
                 curQuestionAddinfos.locations.coordinates ? (
-                  <div>
+                  <div className={styles.mappreview}>
                     <Map
                       initCenter={curQuestionAddinfos.locations.coordinates!}
                       initLocation={curQuestionAddinfos.locations.coordinates!}

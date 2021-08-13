@@ -129,6 +129,7 @@ export interface MapProps {
   draggableMarker?: boolean;
   updateLocationHandler?: (location: LatLngExpression) => void;
   makeStatic?: boolean;
+  isPreview?: boolean;
 }
 
 // general for qnumber
