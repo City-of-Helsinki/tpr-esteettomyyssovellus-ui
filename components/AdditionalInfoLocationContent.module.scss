@@ -31,6 +31,9 @@
     .addressinput {
       width: 50%;
       margin-right: $spacing-s;
+      button {
+        border: 0 !important;
+      }
     }
   }
   .mapcontainer {

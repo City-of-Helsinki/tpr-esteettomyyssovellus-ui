@@ -6,7 +6,7 @@ import {
   API_FETCH_QUESTION_ANSWER_COMMENTS,
   API_FETCH_QUESTION_ANSWER_LOCATIONS,
   API_FETCH_QUESTION_ANSWER_PHOTOS,
-  API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS
+  API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS,
 } from "../types/constants";
 import { AdditionalInfos } from "../types/general";
 
@@ -45,7 +45,9 @@ export const filterByLanguage = (dict: Dictionary<any>) => {
 };
 
 // Helper function
-export const isLocationValid = (coordinates: [number, number]): boolean =>
+export const isLocationValid = (
+  coordinates: [number, number] | number[]
+): boolean =>
   coordinates &&
   coordinates.length === 2 &&
   coordinates[0] > 0 &&
@@ -63,8 +65,8 @@ proj4.defs(
 export const convertCoordinates = (
   fromProjection: string,
   toProjection: string,
-  coordinates: [number, number]
-): [number, number] => {
+  coordinates: [number, number] | number[]
+): [number, number] | number[] => {
   if (!isLocationValid(coordinates)) return [0, 0];
   return proj4(fromProjection, toProjection, coordinates);
 };
@@ -73,7 +75,7 @@ export const postData = async (url: string, data: {}) => {
   let postAnswerOptions = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data)
+    body: JSON.stringify(data),
   };
   return fetch(url, postAnswerOptions)
     .then((response) => response.json())
@@ -82,7 +84,7 @@ export const postData = async (url: string, data: {}) => {
 
 export const getClientIp = async () =>
   await publicIp.v4({
-    fallbackUrls: ["https://ifconfig.co/ip"]
+    fallbackUrls: ["https://ifconfig.co/ip"],
   });
 
 export const postAdditionalInfo = async (
@@ -119,7 +121,7 @@ export const postAdditionalInfo = async (
             comment: comment,
             log: logId,
             question: question[0],
-            language: language
+            language: language,
           };
           postData(url, commentData);
           console.log(
@@ -134,7 +136,7 @@ export const postAdditionalInfo = async (
           loc_easting: location["locEasting"],
           loc_northing: location["locNorthing"],
           log: logId,
-          question: question[0]
+          question: question[0],
         };
         postData(API_FETCH_QUESTION_ANSWER_LOCATIONS, locationData);
         console.log(
@@ -148,12 +150,12 @@ export const postAdditionalInfo = async (
           const pictureData = {
             photo_url: pic["url"],
             log: logId,
-            question: pic["qNumber"]
+            question: pic["qNumber"],
           };
           const requestOptions = {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(pictureData)
+            body: JSON.stringify(pictureData),
           };
           let responseData = null;
           await fetch(API_FETCH_QUESTION_ANSWER_PHOTOS, requestOptions)
@@ -177,7 +179,7 @@ export const postAdditionalInfo = async (
               const pictureTextData = {
                 photo_text: fiComment,
                 answer_photo: photoId,
-                language: 1
+                language: 1,
               };
               postData(API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS, pictureTextData);
               // console.log("Posted additionalinfo picture text in fi for question ", question[0]);
@@ -186,7 +188,7 @@ export const postAdditionalInfo = async (
               const pictureTextData = {
                 photo_text: svComment,
                 answer_photo: photoId,
-                language: 2
+                language: 2,
               };
               postData(API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS, pictureTextData);
               // console.log("Posted additionalinfo picture text in sv ");
@@ -195,7 +197,7 @@ export const postAdditionalInfo = async (
               const pictureTextData = {
                 photo_text: enComment,
                 answer_photo: photoId,
-                language: 3
+                language: 3,
               };
               postData(API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS, pictureTextData);
               // console.log("Posted additionalinfo picture text in en");

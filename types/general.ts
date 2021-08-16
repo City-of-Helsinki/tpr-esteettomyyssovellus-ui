@@ -123,9 +123,9 @@ export interface ServicepointLandingSummaryCtrlButtonsProps {
 
 export interface MapProps {
   questionId: number;
-  initCenter: [number, number];
+  initCenter: [number, number] | number[];
   initZoom: number;
-  initLocation: [number, number];
+  initLocation: [number, number] | number[];
   draggableMarker?: boolean;
   updateLocationHandler?: (location: LatLngExpression) => void;
   makeStatic?: boolean;
