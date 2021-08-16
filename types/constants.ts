@@ -7,6 +7,10 @@ export const ACCESSIBILITY_URL =
   "https://myhelsinki.fi/fi/saavutettavuusseloste/";
 export const CREATIVECOMMONS_URL = "creativecommons.org/licences/by/4.0";
 
+export const HKI_GEOCODING_URL =
+  "https://api.hel.fi/servicemap/v2/search/?format=json&type=address&input=";
+export const GEOCODING_PARAMS = "&language=fi&only=location";
+
 export const API_URL_BASE = "http://localhost:8000/api/";
 
 export const FRONT_URL_BASE = "http://localhost:3000/";
@@ -34,7 +38,7 @@ export const API_FETCH_EXTERNAL_SERVICEPOINTS = `${API_URL_BASE}ArExternalServic
 export enum LANGUAGE_LOCALES {
   fi = 1,
   sv = 2,
-  en = 3
+  en = 3,
 }
 
 export const PHONE_REGEX = /^[^a-zA-Z]+$/;

@@ -25,9 +25,9 @@ import { convertCoordinates, isLocationValid } from "../../utils/utilFunctions";
 
 interface MapWrapperProps {
   questionId: number;
-  initialCenter: [number, number];
+  initialCenter: [number, number] | number[];
   initialZoom: number;
-  initLocation: [number, number];
+  initLocation: [number, number] | number[];
   setLocation?: (initLocation: [number, number]) => void;
   setMapView?: (center: LatLngExpression, zoom: number) => void;
   setMapReady?: (ready: boolean) => void;
@@ -151,8 +151,13 @@ const MapWrapper = ({
         !makeStatic
       ) {
         map.setView(curLocation, 18);
+        map.invalidateSize();
       }
     }, [map]);
+
+    // useEffect(() => {
+    //   map.invalidateSize();
+    // }, []);
 
     // Store the map view in redux state, so that the same zoom can be used when changing pages
     // The map centre is stored if needed, but currently the map is always centred on the marker position
