@@ -13,7 +13,7 @@ import PathTreeComponent from "../../components/PathTreeComponent";
 import { useAppDispatch, useLoading } from "../../state/hooks";
 import {
   setServicepointId,
-  setEntranceId
+  setEntranceId,
 } from "../../state/reducers/formSlice";
 import { filterByLanguage } from "../../utils/utilFunctions";
 import {
@@ -21,23 +21,25 @@ import {
   API_FETCH_ENTRANCES,
   API_FETCH_SENTENCE_LANGS,
   API_FETCH_SERVICEPOINTS,
-  API_URL_BASE
+  API_URL_BASE,
 } from "../../types/constants";
 import PreviewPageLandingSummary from "../../components/PreviewPageLandingSummary";
 import PreviewControlButtons from "../../components/PreviewControlButtons";
 import LoadSpinner from "../../components/common/LoadSpinner";
+import ServicepointLandingSummaryContent from "../../components/ServicepointLandingSummaryContent";
+import MainEntranceLocationPicturesPreview from "../../components/MainEntranceLocationPicturesPreview";
 
 const preview = ({
   servicepointData,
   accessibilityData,
-  entranceData
+  entranceData,
 }: any): ReactElement => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
   const isLoading = useLoading();
   const treeItems = [
     servicepointData["servicepoint_name"],
-    "PH: Esteettömyystiedot"
+    "PH: Esteettömyystiedot",
   ];
 
   // Filter by language
@@ -102,6 +104,9 @@ const preview = ({
               <PreviewControlButtons hasHeader={true} />
             </div>
             <div>
+              <ServicepointLandingSummaryContent contentHeader="PH: Pääsisäänkäynnin sijainti">
+                <MainEntranceLocationPicturesPreview />
+              </ServicepointLandingSummaryContent>
               <PreviewPageLandingSummary
                 header={i18n.t("servicepoint.contactFormSummaryHeader")}
                 data={filteredAccessibilityData}
@@ -121,7 +126,7 @@ const preview = ({
 export const getServerSideProps: GetServerSideProps = async ({
   params,
   req,
-  locales
+  locales,
 }) => {
   const lngDict = await i18nLoader(locales);
 
@@ -200,8 +205,8 @@ export const getServerSideProps: GetServerSideProps = async ({
       accessibilityData,
       entranceData,
       hasExistingFormData,
-      isFinished
-    }
+      isFinished,
+    },
   };
 };
 

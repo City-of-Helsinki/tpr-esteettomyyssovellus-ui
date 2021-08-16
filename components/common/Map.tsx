@@ -10,12 +10,14 @@ const Map = ({
   initLocation,
   draggableMarker,
   makeStatic = false,
+  isPreview = false,
   updateLocationHandler,
 }: MapProps): JSX.Element => {
   const MapWrapper = dynamic(() => import("./MapWrapper"), { ssr: false });
 
   return (
     <div
+      style={isPreview ? { height: "20rem" } : {}}
       className={!makeStatic ? styles.mapcontainer : styles.mapstaticpreview}
     >
       <MapWrapper
