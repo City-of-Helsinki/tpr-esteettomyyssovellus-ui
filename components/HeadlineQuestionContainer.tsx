@@ -23,7 +23,7 @@ const HeadlineQuestionContainer = ({
   id = "",
 }: HeadlineQuestionContainerProps): JSX.Element => {
   // Handle accordion state with useAccordion hook
-  let { isOpen, buttonProps, contentProps } = useAccordion({
+  let { isOpen, buttonProps, contentProps, toggleAccordion } = useAccordion({
     initiallyOpen: initOpen,
   });
   let curFinishedBlocks = useAppSelector(
@@ -58,13 +58,19 @@ const HeadlineQuestionContainer = ({
       ? "danger"
       : buttonVariant;
 
-  const handleOnClick = () => {
+  const handleOnClickOnFirstAccordion = () => {
     console.log("CANT OPEN");
-
     router.reload();
   };
+
+  // for custom toggle and firing event resize for the leaflet maps to render properly
+  // if they are hidden and no rerender/window event is triggered they will render poorly
+  const handleOnClickAccordions = () => {
+    toggleAccordion();
+    window.dispatchEvent(new Event("resize"));
+  };
+
   return (
-    // TODO: define unique id (?)
     <div className={styles.headline} id={id}>
       {isContinueClicked && number == 0 ? (
         <Button
@@ -74,7 +80,7 @@ const HeadlineQuestionContainer = ({
           variant={buttonVariant}
           fullWidth
           className={styles.headlineButton}
-          onClick={() => handleOnClick()}
+          onClick={() => handleOnClickOnFirstAccordion()}
           style={buttonStyle}
         >
           <div className={styles.blockHeadline}>
@@ -90,7 +96,7 @@ const HeadlineQuestionContainer = ({
           fullWidth
           className={styles.headlineButton}
           style={buttonStyle}
-          //onClick={() => handleOnClick()}
+          onClick={() => handleOnClickAccordions()}
         >
           <div className={styles.blockHeadline}>
             <p className={styles.heading}>{text}</p>
