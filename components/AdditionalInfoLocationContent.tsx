@@ -49,47 +49,51 @@ const AdditionalInfoLocationContent = ({
     dispatch(removeLocation({ questionId }));
   };
 
-  const handleShowOnMap = async () => {
-    setAddressErrorText("");
-    const address =
-      addressRef && addressRef.current && addressRef.current !== null
-        ? //@ts-ignore
-          addressRef.current.value
-        : null;
-    if (!address || address === null) return;
-    const formattedAddress = address.replace(" ", "%");
-    const geocodeReq = `${HKI_GEOCODING_URL}${formattedAddress}${GEOCODING_PARAMS}`;
-    const geocodeResponse = await fetch(geocodeReq);
-    const data = await geocodeResponse.json();
+  // So this (geocoding) was doned but then decided to drop it out
+  // leaving it here for now for if the plans change
+  // if not neede -> delete
 
-    if (!data || data.count === 0) {
-      setAddressErrorText("ph: osoitetta ei löytynyt");
-      return;
-    }
-    if (data.count > 1) {
-      console.log("More than 1 address found...");
-    }
-    const geocodedCoordinates: [number, number] =
-      data.results[0]?.location?.coordinates;
+  // const handleShowOnMap = async () => {
+  //   setAddressErrorText("");
+  //   const address =
+  //     addressRef && addressRef.current && addressRef.current !== null
+  //       ? //@ts-ignore
+  //         addressRef.current.value
+  //       : null;
+  //   if (!address || address === null) return;
+  //   const formattedAddress = address.replace(" ", "%");
+  //   const geocodeReq = `${HKI_GEOCODING_URL}${formattedAddress}${GEOCODING_PARAMS}`;
+  //   const geocodeResponse = await fetch(geocodeReq);
+  //   const data = await geocodeResponse.json();
 
-    if (geocodedCoordinates && geocodedCoordinates.length === 2) {
-      console.log("setting coordinates", geocodedCoordinates);
-      // const reversedCoords = geocodedCoordinates;
-      const [locEas, locNor] = convertCoordinates(
-        "WGS84",
-        "EPSG:3067",
-        geocodedCoordinates
-      );
-      dispatch(
-        addLocation({
-          questionId: questionId,
-          coordinates: geocodedCoordinates.reverse(),
-          locNorthing: Math.round(locNor),
-          locEasting: Math.round(locEas),
-        })
-      );
-    }
-  };
+  //   if (!data || data.count === 0) {
+  //     setAddressErrorText("ph: osoitetta ei löytynyt");
+  //     return;
+  //   }
+  //   if (data.count > 1) {
+  //     console.log("More than 1 address found...");
+  //   }
+  //   const geocodedCoordinates: [number, number] =
+  //     data.results[0]?.location?.coordinates;
+
+  //   if (geocodedCoordinates && geocodedCoordinates.length === 2) {
+  //     console.log("setting coordinates", geocodedCoordinates);
+  //     // const reversedCoords = geocodedCoordinates;
+  //     const [locEas, locNor] = convertCoordinates(
+  //       "WGS84",
+  //       "EPSG:3067",
+  //       geocodedCoordinates
+  //     );
+  //     dispatch(
+  //       addLocation({
+  //         questionId: questionId,
+  //         coordinates: geocodedCoordinates.reverse(),
+  //         locNorthing: Math.round(locNor),
+  //         locEasting: Math.round(locEas),
+  //       })
+  //     );
+  //   }
+  // };
 
   // useMemo for preventing leaflet map rendering each time something updates on page
   const memoMap = useMemo(() => {
@@ -107,7 +111,8 @@ const AdditionalInfoLocationContent = ({
   return (
     <div className={styles.maincontainer}>
       <div className={styles.controlscontainer}>
-        <span className={styles.addressinput}>
+        {/* text input for geocoding, remove if not needed */}
+        {/* <span className={styles.addressinput}>
           <TextInput
             id={"1"}
             label={"ph: Syötä osoite"}
@@ -119,15 +124,16 @@ const AdditionalInfoLocationContent = ({
             tooltipText="ph: syöttäkää osoite suomeksi muodossa: osoite, kaupunki (esim. hämeentie 1, helsinki)"
             errorText={addressErrorText}
           />
-        </span>
+        </span> */}
 
-        <QuestionButton
+        {/* button for geocoding, remove if not needed */}
+        {/* <QuestionButton
           variant="secondary"
           iconRight={<IconLocation />}
           onClickHandler={() => handleShowOnMap()}
         >
           PH: Hae osoite kartalle
-        </QuestionButton>
+        </QuestionButton> */}
         <QuestionButton
           variant="secondary"
           iconRight={<IconCross />}
