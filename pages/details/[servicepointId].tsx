@@ -33,6 +33,7 @@ import {
 } from "../../types/constants";
 import LoadSpinner from "../../components/common/LoadSpinner";
 import { clearAddinfoState } from "../../state/reducers/additionalInfoSlice";
+import MainEntranceLocationPicturesPreview from "../../components/MainEntranceLocationPicturesPreview";
 
 const details = ({
   servicepointData,

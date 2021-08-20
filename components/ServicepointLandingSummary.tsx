@@ -10,10 +10,11 @@ import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { setStartDate } from "../state/reducers/formSlice";
 import { FRONT_URL_BASE } from "../types/constants";
 import { getCurrentDate } from "../utils/utilFunctions";
+import MainEntranceLocationPicturesPreview from "./MainEntranceLocationPicturesPreview";
 
 const ServicepointLandingSummary = ({
   header,
-  data
+  data,
 }: ServicepointLandingSummaryProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
@@ -45,7 +46,7 @@ const ServicepointLandingSummary = ({
     const keysToDisplay = [
       "accessibility_phone",
       "accessibility_email",
-      "accessibility_www"
+      "accessibility_www",
     ];
     let itemList: any = [];
     hasData = keysToDisplay.some((e) => data[e] != null);
@@ -100,11 +101,18 @@ const ServicepointLandingSummary = ({
       // Check if main entrance.
       if (key == "main") {
         mainEntrance.push(
-          <ServicepointLandingSummaryContent
-            contentHeader={i18n.t("common.mainEntrance")}
-          >
-            <ul>{itemList}</ul>
-          </ServicepointLandingSummaryContent>
+          <>
+            <ServicepointLandingSummaryContent
+              contentHeader={i18n.t("common.mainEntranceLocation")}
+            >
+              <MainEntranceLocationPicturesPreview />
+            </ServicepointLandingSummaryContent>
+            <ServicepointLandingSummaryContent
+              contentHeader={i18n.t("common.mainEntrance")}
+            >
+              <ul>{itemList}</ul>
+            </ServicepointLandingSummaryContent>
+          </>
         );
       } else {
         contents.push(
