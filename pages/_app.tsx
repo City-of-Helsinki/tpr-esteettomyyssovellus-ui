@@ -9,6 +9,7 @@ import store, { persistor } from "../state/store";
 import "../styles/global.scss";
 
 import { PersistGate } from "redux-persist/integration/react";
+import { ThemeProvider } from "@material-ui/core";
 
 const App = ({ Component, pageProps }: AppProps): ReactElement => {
   // This function is called when doing both server-side and client-side rendering
@@ -26,7 +27,11 @@ const App = ({ Component, pageProps }: AppProps): ReactElement => {
     <I18nProvider lngDict={lngDict ? lngDict[locale] : {}} locale={locale}>
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
-          <Component {...rest} />
+          {() => (
+            <ThemeProvider theme={{}}>
+              <Component {...rest} />
+            </ThemeProvider>
+          )}
         </PersistGate>
       </Provider>
     </I18nProvider>
