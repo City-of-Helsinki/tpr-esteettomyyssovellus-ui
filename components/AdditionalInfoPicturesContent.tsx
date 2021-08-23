@@ -23,6 +23,7 @@ import {
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { AdditionalContentProps } from "../types/general";
 import { CREATIVECOMMONS_URL } from "../types/constants";
+import { v4 as uuidv4 } from "uuid";
 
 const AdditionalInfoPicturesContent = ({
   questionId,
@@ -95,6 +96,7 @@ const AdditionalInfoPicturesContent = ({
         id: currentId,
         name: img.name,
         base: imgBase64,
+        uuid: uuidv4(),
         url: "",
         fi: "",
         sv: "",
@@ -110,7 +112,7 @@ const AdditionalInfoPicturesContent = ({
       } else if (imgBase64 !== "" || img.name === "") {
         handleAddInvalidValues(["url"]);
       }
-      // below for links (not upload)
+      // below for links component (not upload)
     } else {
       const isImage = await validateUrlIsImage(linkText);
       if (isImage) {

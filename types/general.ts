@@ -179,6 +179,7 @@ export interface PictureProps {
   qNumber: number;
   id: number;
   base?: string;
+  uuid?: string;
   url?: string;
   name?: string;
   source?: string;
