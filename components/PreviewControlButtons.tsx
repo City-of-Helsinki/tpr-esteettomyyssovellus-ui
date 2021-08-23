@@ -42,6 +42,9 @@ const PreviewControlButtons = ({ hasHeader }: any): JSX.Element => {
   const formFinished = useAppSelector(
     (state) => state.formReducer.formFinished
   );
+  const formSubmitted = useAppSelector(
+    (state) => state.formReducer.formSubmitted
+  );
   const additionalInfo = useAppSelector((state) => state.additionalInfoReducer);
   const handelContinueEditing = (): void => {
     console.log("cancel clicked");
@@ -146,9 +149,11 @@ const PreviewControlButtons = ({ hasHeader }: any): JSX.Element => {
         >
           {i18n.t("PreviewPage.continueEditing")}
         </Button>
-        <Button variant="secondary" onClickHandler={handleSaveDraftClick}>
-          {i18n.t("questionFormControlButtons.saveAsIncomplete")}
-        </Button>
+        {formSubmitted ? null : (
+          <Button variant="secondary" onClickHandler={handleSaveDraftClick}>
+            {i18n.t("questionFormControlButtons.saveAsIncomplete")}
+          </Button>
+        )}
         <Button
           variant="primary"
           disabled={!formFinished}

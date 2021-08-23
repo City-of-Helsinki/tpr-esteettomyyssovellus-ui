@@ -6,7 +6,7 @@ import {
   IconPlus,
   IconCheckCircleFill,
   Card,
-  IconAlertCircle,
+  IconAlertCircle
 } from "hds-react";
 import { HeadlineQuestionContainerProps } from "../types/general";
 import styles from "./HeadlineQuestionContainer.module.scss";
@@ -20,11 +20,11 @@ const HeadlineQuestionContainer = ({
   initOpen = false,
   children,
   isValid,
-  id = "",
+  id = ""
 }: HeadlineQuestionContainerProps): JSX.Element => {
   // Handle accordion state with useAccordion hook
   let { isOpen, buttonProps, contentProps, toggleAccordion } = useAccordion({
-    initiallyOpen: initOpen,
+    initiallyOpen: initOpen
   });
   let curFinishedBlocks = useAppSelector(
     (state) => state.formReducer.finishedBlocks
@@ -46,8 +46,9 @@ const HeadlineQuestionContainer = ({
         <IconAlertCircle aria-hidden color={"#b01038"}></IconAlertCircle>
       ))
     : iconLeft;
-  let buttonVariant: "primary" | "secondary" | "danger" =
-    isOpen && !(isContinueClicked && number == 0) ? "primary" : "secondary";
+  let buttonVariant: "primary" | "secondary" | "danger" = isOpen
+    ? "primary"
+    : "secondary";
 
   let buttonStyle =
     number != undefined && curInvalidBlocks.includes(number) && !isOpen
@@ -80,7 +81,7 @@ const HeadlineQuestionContainer = ({
           variant={buttonVariant}
           fullWidth
           className={styles.headlineButton}
-          onClick={() => handleOnClickOnFirstAccordion()}
+          onClick={() => handleOnClickAccordions()}
           style={buttonStyle}
         >
           <div className={styles.blockHeadline}>
@@ -104,7 +105,7 @@ const HeadlineQuestionContainer = ({
           </div>
         </Button>
       )}
-      {isContinueClicked && number == 0 ? null : (
+      {
         <Card
           aria-label="Advanced filters"
           {...contentProps}
@@ -112,7 +113,7 @@ const HeadlineQuestionContainer = ({
         >
           {children}
         </Card>
-      )}
+      }
     </div>
   );
 };

@@ -19,17 +19,20 @@ import {
   setPhoneNumber,
   setEmail,
   clearFormState,
+  setFormFinished,
+  setContinue,
+  setFormSubmitted
 } from "../../state/reducers/formSlice";
 import { getFinnishDate, filterByLanguage } from "../../utils/utilFunctions";
 import {
   clearGeneralState,
-  setServicepointLocation,
+  setServicepointLocation
 } from "../../state/reducers/generalSlice";
 import {
   API_FETCH_ANSWER_LOGS,
   API_FETCH_ENTRANCES,
   API_FETCH_SENTENCE_LANGS,
-  API_FETCH_SERVICEPOINTS,
+  API_FETCH_SERVICEPOINTS
 } from "../../types/constants";
 import LoadSpinner from "../../components/common/LoadSpinner";
 import { clearAddinfoState } from "../../state/reducers/additionalInfoSlice";
@@ -40,7 +43,7 @@ const details = ({
   accessibilityData,
   entranceData,
   hasExistingFormData,
-  isFinished,
+  isFinished
 }: any): ReactElement => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
@@ -70,7 +73,7 @@ const details = ({
     const coordinates: [number, number] = [easthing, northing];
     dispatch(
       setServicepointLocation({
-        coordinates,
+        coordinates
       })
     );
   }
@@ -90,6 +93,11 @@ const details = ({
     dispatch(setServicepointId(servicepointData.servicepoint_id));
     // TODO: Logic for when editing additional entrance vs main entrance
     dispatch(setEntranceId(accessibilityData["main"][0].entrance_id));
+    if (accessibilityData["main"][0].form_submitted == "Y") {
+      dispatch(setFormFinished());
+      dispatch(setContinue());
+      dispatch(setFormSubmitted());
+    }
   } else if (servicepointData && entranceData.results) {
     dispatch(setServicepointId(servicepointData.servicepoint_id));
     // TODO: Logic for when editing additional entrance vs main entrance
@@ -176,7 +184,7 @@ const details = ({
 export const getServerSideProps: GetServerSideProps = async ({
   params,
   req,
-  locales,
+  locales
 }) => {
   const lngDict = await i18nLoader(locales);
 
@@ -253,8 +261,8 @@ export const getServerSideProps: GetServerSideProps = async ({
       accessibilityData,
       entranceData,
       hasExistingFormData,
-      isFinished,
-    },
+      isFinished
+    }
   };
 };
 
