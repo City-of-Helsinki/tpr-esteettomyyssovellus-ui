@@ -3,7 +3,7 @@ import { GetServerSideProps } from "next";
 import Head from "next/head";
 import { useI18n } from "next-localization";
 import { makeStyles } from "@material-ui/core/styles";
-import { store } from "../state/store";
+import store from "../state/store";
 import i18nLoader from "../utils/i18n";
 import Layout from "../components/common/Layout";
 import styles from "./index.module.scss";
@@ -17,18 +17,18 @@ const useStyles = makeStyles((theme) => ({
   navi: {
     zIndex: 10000,
     fontFamily: "HelsinkiGrotesk",
-    fontSize: 16
+    fontSize: 16,
   },
   mainGrid: {
-    marginTop: theme.spacing(3)
+    marginTop: theme.spacing(3),
   },
   hero: (heroShallow: Boolean) => ({
-    height: heroShallow ? 360 : 550
+    height: heroShallow ? 360 : 550,
   }),
   main: {},
   paragraphs: {
-    marginTop: 56
-  }
+    marginTop: 56,
+  },
 }));
 
 const Main = ({ isMobile }: MainEntranceFormProps): ReactElement => {
@@ -83,7 +83,7 @@ const Main = ({ isMobile }: MainEntranceFormProps): ReactElement => {
 export const getServerSideProps: GetServerSideProps = async ({
   params,
   req,
-  locales
+  locales,
 }) => {
   const lngDict = await i18nLoader(locales);
 
@@ -102,13 +102,13 @@ export const getServerSideProps: GetServerSideProps = async ({
   return {
     props: {
       initialReduxState,
-      lngDict
-    }
+      lngDict,
+    },
   };
 };
 
 Main.defaultProps = {
-  isMobile: false
+  isMobile: false,
 };
 
 export default Main;

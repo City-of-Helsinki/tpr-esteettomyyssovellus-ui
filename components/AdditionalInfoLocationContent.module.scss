@@ -3,15 +3,17 @@
 
 .maincontainer {
   .controlscontainer {
+    width: 90%;
     display: flex;
     align-items: flex-end;
-    justify-content: flex-start;
+    justify-content: flex-end;
     margin: $spacing-3-xl 0 $spacing-xl 0;
     button {
       color: $color-bus !important;
       background-color: $color-white !important;
       border: 2px solid $color-bus !important;
       margin-bottom: 0 !important;
+      margin-right: 0 !important;
     }
     @include media(xs, s, m) {
       flex-direction: column;

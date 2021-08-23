@@ -44,6 +44,7 @@
       "returnNoSave": "Poistu tallentamatta"
     },
     "mainEntrance": "Pääsisäänkäynti",
+    "mainEntranceLocation": "Pääsisäänkäynnin sijainti",
     "additionalEntrance": "Lisäsisäänkäynti",
     "updated": "Päivitetty"
   },
