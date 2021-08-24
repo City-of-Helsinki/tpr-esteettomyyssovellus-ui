@@ -25,7 +25,10 @@ const QuestionBlock = ({
 }: QuestionBlockProps): JSX.Element => {
   const i18n = useI18n();
   const [showAdditionalInfo, setShowAdditionalInfo] = useState(false);
-  const [showContinue, setShowContinue] = useState(true);
+  const isContinueClicked = useAppSelector(
+    (state) => state.formReducer.isContinueClicked
+  );
+  const [showContinue, setShowContinue] = useState(!isContinueClicked);
   const handleAdditionalInfoToggle = () => {
     setShowAdditionalInfo(!showAdditionalInfo);
   };
@@ -37,6 +40,7 @@ const QuestionBlock = ({
     // TODO: route to main form
     // window.location.reload(false)
   };
+
   const blockId: number =
     questions != null && questions[0].question_block_id != undefined
       ? questions[0].question_block_id
