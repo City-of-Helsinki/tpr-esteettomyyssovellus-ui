@@ -2,15 +2,19 @@ import React from "react";
 import styles from "./MainEntranceLocationPicturesPreview.module.scss";
 import Map from "./common/Map";
 import { useAppSelector } from "../state/hooks";
+import { useI18n } from "next-localization";
 
+// usage: component for main location and pictures, used in details and preview pages
+// notes: todo: some parts might stille be placeholders e.g. pictures
 const MainEntranceLocationPicturesPreview = (): JSX.Element => {
+  const i18n = useI18n();
   const coordinates = useAppSelector(
     (state) => state.generalSlice.coordinates
   ) ?? [0, 0];
   return (
     <div className={styles.maincontainer}>
       <div className={styles.mapcontainer}>
-        <h4> ph: Pääsisäänkäynnin sijainti kartalla</h4>
+        <h4>{i18n.t("ContactInformation.mainEntranceLocationLabel")}</h4>
         <div className={styles.map}>
           <Map
             initCenter={coordinates!}
@@ -23,14 +27,15 @@ const MainEntranceLocationPicturesPreview = (): JSX.Element => {
           />
           {coordinates && coordinates.length === 2 ? (
             <p>
-              {" "}
-              {`PH: Koordinaatit: E ${coordinates[0]}, N ${coordinates[1]}`}{" "}
+              {`${i18n.t(
+                "ContactInformation.mainEntranceLocationCoordinatesLabel"
+              )}: E ${coordinates[0]}, N ${coordinates[1]}`}
             </p>
           ) : null}
         </div>
       </div>
       <div className={styles.picturescontainer}>
-        <h4> ph: Pääsisäänkäynnin valokuvat</h4>
+        <h4>{i18n.t("ContactInformation.mainEntrancePicturesLabel")}</h4>
         <div className={styles.pictures}>
           <div
             className={styles.picture}

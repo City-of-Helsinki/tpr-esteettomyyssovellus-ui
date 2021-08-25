@@ -4,12 +4,11 @@ import QuestionRadioButtons from "./QuestionRadioButtons";
 import QuestionContainer from "./QuestionContainer";
 import { QuestionsListProps } from "../types/general";
 
-// TODO: when data, get questions data as props and map to return
-// used to list multiple questions: <QContainer><QElement /></QC>
+// usage: list questions component, should be called once per question block
 const QuestionsList = ({
   additionalInfoVisible,
   questions,
-  answers
+  answers,
 }: QuestionsListProps): JSX.Element => {
   return (
     <>
@@ -19,7 +18,7 @@ const QuestionsList = ({
           .map((choice) => {
             return {
               label: choice.text,
-              value: choice.question_choice_id
+              value: choice.question_choice_id,
             };
           });
 

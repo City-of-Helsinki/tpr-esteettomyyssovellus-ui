@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { MapProps } from "../../types/general";
 import styles from "./Map.module.scss";
 import dynamic from "next/dynamic";
 
+// usage: container and middle-component for leaflet map (mapwrapper)
+// notes: dynamic import of MapWrapper is important for leaflet functionality
 const Map = ({
   questionId,
   initCenter,
@@ -11,7 +13,6 @@ const Map = ({
   draggableMarker,
   makeStatic = false,
   isPreview = false,
-  updateLocationHandler,
 }: MapProps): JSX.Element => {
   const MapWrapper = dynamic(() => import("./MapWrapper"), { ssr: false });
 
@@ -22,11 +23,9 @@ const Map = ({
     >
       <MapWrapper
         questionId={questionId}
-        initialCenter={initCenter}
         initialZoom={initZoom}
         initLocation={initLocation}
         draggableMarker={draggableMarker}
-        setMapView={updateLocationHandler}
         makeStatic={makeStatic}
       />
     </div>

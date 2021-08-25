@@ -12,6 +12,7 @@
       "maintenance": "Underhåll"
     },
     "footer": {
+      "logotext": "TPR-familj",
       "title": "Information om tillgänglighet",
       "backToTop": "Tillbaka upp",
       "contact": "Ta kontakt",
@@ -42,7 +43,18 @@
     "mainEntrance": "Huvudingången",
     "mainEntranceLocation": "Platsen för huvudentren",
     "additionalEntrance": "Alternativ ingång",
-    "updated": "Uppdaterad"
+    "updated": "Uppdaterad",
+    "search": "Sök",
+    "formFilledCorrectly": "Formuläret fyllt i korrekt",
+    "GoToAdditionalInfoEdit": "Lägg till mer information",
+    "questionBlockShowMoreMainEntrance": "Se mer om huvudingångsvägarna",
+    "hideInfo": "Minimera hjälp",
+    "editAddinfoText": "Redigera för mer information",
+    "missingAnswerValue": "Svar saknas",
+    "copyDataFromSameAddress": "kopiera uppgifterna om kontoret på samma adress",
+    "openInfoWhatIsThis": "Visa mig vad det här är",
+    "statusReady": "Färdiga",
+    "statusNotReady": "Inte färdig"
   },
   "buttons": {
     "saveAndReturn": "spara och returnera",
@@ -64,7 +76,11 @@
     "phoneNumber": "Telefonnummer",
     "email": "E-postadress",
     "www": "www-adress",
-    "noInfo": "(ingen information)"
+    "noInfo": "(ingen information)",
+
+    "mainEntranceLocationLabel" : "Ingångens läge på kartan",
+    "mainEntranceLocationCoordinatesLabel" : "Koordinater",
+    "mainEntrancePicturesLabel": "Foton från huvudentrén"
   },
   "questionFormControlButtons": {
     "quit": "Avbryta",
@@ -80,6 +96,8 @@
     "changePicture": "Byt bild",
     "chooseFromDevice": "Välj från enhet",
     "cancelPicture": "Avbryta bilden",
+    "cancelComment": "Avbryta kommentar",
+    "cancelLocation": "Avbryta plats",
     "pictureInput": "Bild fron enhet",
     "pictureInputLink": "Bild URL",
     "locationInstructions": "Instructions for creating LOCATION på svenska",
@@ -102,6 +120,25 @@
     "sharePictureLicense": "Creative Commons VY 4.0. -licens",
     "sourceTooltipText": "Fyll i instruktionerna för den här bildkällan",
     "sourceTooltipMainLabel": "BildKälla",
+    "commentMainHeader": "Du kan förfina tillgänglighetsinformationen med tilläggstext i fri form",
+    "addCommentFiErrorText": "Ange en beskrivning",
+    "commentFiHeader": "Ytterligare text",
+    "commentFiHeaderHelperText": "Du kan lägga till en beskrivning på finska",
+    "commentSvButtonText": "Lägg till en beskrivning på svenska",
+    "commentSvButtonLabel": "Beskrivning på svenska",
+    "commentSvButtonCloseText": "Dölj svensk beskrivning",
+    "commentSvButtonLabelHelper": "Berätta mer om tillgänglighet på svenska",
+    "commentAddEnButtonText": "Lägg till en beskrivning på engelska",
+    "commentAddEnButtonCloseText": "Dölj engelsk beskrivning",
+    "commentEnLabel": "Beskrivning på engelska",
+    "commentEnLabelHelper" : "Berätta mer om tillgänglighet på engelska",
+    "pictureLinkConfirmButton": "Bekräfta",
+    "picureLinkErrorText": "Ange en bildlänk",
+    "pictureTermsErrorText": "Godkänn villkoren",
+    "pictureTermsInfoText": "Villkoren måste accepteras, du kan läsa dem genom att klicka på texten från länken nedan",
+    "picureSourceErrorText": "Ange bildkällan",
+    "mainInfoText": "Du kan förfina tillgänglighetsinformation med tilläggstext i fri form, en bild eller platsinformation",
+
     "ctrlButtons": {
       "addNewComment": "Lägg kommentar",
       "addUploadImageFromDevice": "Ladda new bild från enhet",
@@ -134,13 +171,19 @@
     "personPlaceholder": "t.ex. vaktmästare eller Förnamn Efternamn",
     "phonePlaceholder": "t.ex. +358 50 123 4567",
     "emailPlaceholder": "t.ex. osoite@maili.fi",
-    "wwwPlaceholder": "Et.ex. www.address.fi"
+    "wwwPlaceholder": "Et.ex. www.address.fi",
+
+    "personValidationErrorText": "Ange en kontaktperson",
+    "phoneNumberValidationErrorText": "var vänlig skriv in ett giltigt nummer",
+    "emailValidationErrorText": "Ange ett giltigt mejl",
+    "wwwValidationErrorText": "Ange en webbadress"
   },
   "PreviewPage": {
     "continueEditing": "Fortsätt redigera",
     "saveAndSend": "Spara och skicka",
     "previewAccessibilityInformation": "Förhandsgranska tillgänglighetsinformation",
-    "errorNotice": "SV: Lomakkeen kaikkia pakollisia tietoja ei ole vielä täytetty. Palaa täydentämään tietoja."
+    "errorNotice": "All nödvändig information på formuläret har ännu inte fyllts i. Återgå för att slutföra informationen",
+    "mainEntranceLocationHeader": "Platsen för huvudentrén"
   },
   "AddressChangedPage": {
     "oldAddress": "Gammal adress",

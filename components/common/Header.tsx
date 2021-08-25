@@ -1,7 +1,6 @@
 // this files code from marketing project: needs editing or deleting
 
 import React, { ReactElement, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useI18n } from "next-localization";
@@ -9,7 +8,6 @@ import { Navigation, IconSignout } from "hds-react";
 import { defaultLocale } from "../../utils/i18n";
 import getOrigin from "../../utils/request";
 import styles from "./Header.module.scss";
-import { RootState } from "../../state/store";
 
 interface HeaderProps {
   includeLanguageSelector?: boolean;
@@ -26,7 +24,7 @@ const DynamicNavigation = dynamic(
 
 const Header = ({
   includeLanguageSelector,
-  children
+  children,
 }: HeaderProps): ReactElement => {
   const i18n = useI18n();
   const router = useRouter();
@@ -43,7 +41,7 @@ const Header = ({
   // this files code from marketing project: needs editing or deleting
   const signIn = () => {
     const {
-      location: { pathname }
+      location: { pathname },
     } = window;
 
     window.open(
@@ -89,7 +87,7 @@ const Header = ({
         skipTo="#content"
         skipToContentLabel={i18n.t("common.header.skipToContent")}
         theme={{
-          "--header-background-color": "var(--color-bus-medium-light)"
+          "--header-background-color": "var(--color-bus-medium-light)",
         }}
         className={styles.header}
       >
@@ -225,7 +223,7 @@ const Header = ({
 
 Header.defaultProps = {
   includeLanguageSelector: true,
-  children: []
+  children: [],
 };
 
 export default Header;

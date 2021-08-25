@@ -6,25 +6,25 @@ import {
   IconPlus,
   IconCheckCircleFill,
   Card,
-  IconAlertCircle
+  IconAlertCircle,
 } from "hds-react";
 import { HeadlineQuestionContainerProps } from "../types/general";
 import styles from "./HeadlineQuestionContainer.module.scss";
-import { useAppSelector, useAppDispatch } from "../state/hooks";
+import { useAppSelector } from "../state/hooks";
 import router from "next/router";
 
-// used for mainlevel blue accordions
+// usage: used for mainlevel (blue) accordions in form
 const HeadlineQuestionContainer = ({
   text,
   number,
   initOpen = false,
   children,
   isValid,
-  id = ""
+  id = "",
 }: HeadlineQuestionContainerProps): JSX.Element => {
   // Handle accordion state with useAccordion hook
   let { isOpen, buttonProps, contentProps, toggleAccordion } = useAccordion({
-    initiallyOpen: initOpen
+    initiallyOpen: initOpen,
   });
   let curFinishedBlocks = useAppSelector(
     (state) => state.formReducer.finishedBlocks
@@ -35,7 +35,6 @@ const HeadlineQuestionContainer = ({
   let curInvalidBlocks = useAppSelector(
     (state) => state.formReducer.invalidBlocks
   );
-  //let isFinished = curFinishedBlocks.includes(number);
   // Change icon based on accordion open state
   const icon = isOpen ? <IconMinus aria-hidden /> : <IconPlus aria-hidden />;
   let iconLeft = curFinishedBlocks.includes(Number(number)) ? (

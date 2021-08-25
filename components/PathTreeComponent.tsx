@@ -1,21 +1,11 @@
 import React from "react";
-import {
-  useAccordion,
-  Button,
-  IconMinus,
-  IconPlus,
-  IconCheckCircleFill,
-  Card
-} from "hds-react";
-import {
-  HeadlineQuestionContainerProps,
-  PathTreeProps
-} from "../types/general";
+import { PathTreeProps } from "../types/general";
 import styles from "./PathTreeComponent.module.scss";
-import { useAppSelector, useAppDispatch } from "../state/hooks";
+import { useAppSelector } from "../state/hooks";
 import { useI18n } from "next-localization";
 import { FRONT_URL_BASE } from "../types/constants";
 
+// usage: general breadcrumb component
 const PathTreeComponent = ({ treeItems }: PathTreeProps): JSX.Element => {
   const i18n = useI18n();
   const length = treeItems.length;
@@ -49,8 +39,8 @@ const PathTreeComponent = ({ treeItems }: PathTreeProps): JSX.Element => {
   return (
     <>
       <a href={FRONT_URL_BASE} className={styles.link}>
-        {"PH: Haku"}
-      </a>{" "}
+        {i18n.t("common.search")}
+      </a>
       {pathTree}
     </>
   );

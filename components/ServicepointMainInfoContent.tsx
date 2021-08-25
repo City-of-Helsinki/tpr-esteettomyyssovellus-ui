@@ -1,14 +1,25 @@
 import { useI18n } from "next-localization";
-import { IconClock, IconPenLine, IconPersonWheelchair, IconLinkExternal } from "hds-react";
+import {
+  IconClock,
+  IconPenLine,
+  IconPersonWheelchair,
+  IconLinkExternal,
+} from "hds-react";
 import styles from "./ServicepointMainInfoContent.module.scss";
 
+// usage: Servicepoint info component with dropdown
+// notes: replace the placeholder text with -> ? -> not sure if locales or db sentences
 const ServicepointMainInfoContent = (): JSX.Element => {
   const i18n = useI18n();
   return (
     <div className={styles.maincontainer}>
       <div className={styles.card}>
         <IconClock />
-        <p> PH: Kysymyksiin vastaaminen vie aikaa toimipisteestä ja sisäänkäynnistä riippuen oin 5-15 minuuttia</p>
+        <p>
+          {" "}
+          PH: Kysymyksiin vastaaminen vie aikaa toimipisteestä ja
+          sisäänkäynnistä riippuen oin 5-15 minuuttia
+        </p>
         <a href="google.com" target="_blank">
           PH: Täyttöohje
           <IconLinkExternal />
@@ -18,7 +29,8 @@ const ServicepointMainInfoContent = (): JSX.Element => {
         <IconPenLine />
         <p>
           {" "}
-          PH: Voit tallentaa uuden kohteen esteettömyystiedot keskeneräisenä ja jatkaa myöhemmin. Voit myös tutustua ennalta kaikkiin kysymyksiin
+          PH: Voit tallentaa uuden kohteen esteettömyystiedot keskeneräisenä ja
+          jatkaa myöhemmin. Voit myös tutustua ennalta kaikkiin kysymyksiin
         </p>
         <a href="google.com" target="_blank">
           PH: Tutustu kysymyksiin
@@ -27,7 +39,11 @@ const ServicepointMainInfoContent = (): JSX.Element => {
       </div>
       <div className={styles.card}>
         <IconPersonWheelchair />
-        <p> PH: Vastausten perusteella muodostuu esteettömyyslauseet suoeksi, ruotiksi ja englanniksi</p>
+        <p>
+          {" "}
+          PH: Vastausten perusteella muodostuu esteettömyyslauseet suoeksi,
+          ruotiksi ja englanniksi
+        </p>
         <a href="google.com" target="_blank">
           PH: Esteettömyysohje
           <IconLinkExternal />

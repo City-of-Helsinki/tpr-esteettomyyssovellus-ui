@@ -5,10 +5,10 @@ import { QuestionAdditionalInfoCtrlButtonProps } from "../types/general";
 import styles from "./QuestionAdditionalInfoCtrlButton.module.scss";
 import { useI18n } from "next-localization";
 
-// button ctrl to handle visibility of additional info buttons on questions
+// usage: button to handle visibility of additional info buttons on questions, this toggles those
 const QuestionAdditionalInfoCtrlButton = ({
   onClick,
-  curState
+  curState,
 }: QuestionAdditionalInfoCtrlButtonProps): JSX.Element => {
   const i18n = useI18n();
   return (

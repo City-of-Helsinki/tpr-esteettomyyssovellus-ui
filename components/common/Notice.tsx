@@ -13,7 +13,16 @@ interface NoticeProps {
   focusOnTitle?: boolean;
 }
 
-const Notice = ({ className, icon, titleKey, messageKey, button, focusOnTitle }: NoticeProps): ReactElement => {
+// usage: not yet used anywhere, todo: remove if not used
+// notes: imported from marketing project
+const Notice = ({
+  className,
+  icon,
+  titleKey,
+  messageKey,
+  button,
+  focusOnTitle,
+}: NoticeProps): ReactElement => {
   const i18n = useI18n();
   const ref = useRef<HTMLDivElement>(null);
 
@@ -29,7 +38,11 @@ const Notice = ({ className, icon, titleKey, messageKey, button, focusOnTitle }:
       <div className={styles.flexText}>
         <div className={styles.icon}>{icon}</div>
         <div className={styles.text}>
-          <div className={styles.title} ref={focusOnTitle ? ref : undefined} tabIndex={focusOnTitle ? -1 : undefined}>
+          <div
+            className={styles.title}
+            ref={focusOnTitle ? ref : undefined}
+            tabIndex={focusOnTitle ? -1 : undefined}
+          >
             {i18n.t(titleKey as string)}
           </div>
           <div className={styles.message}>{i18n.t(messageKey)}</div>
@@ -46,7 +59,7 @@ Notice.defaultProps = {
   className: undefined,
   titleKey: "",
   button: undefined,
-  focusOnTitle: false
+  focusOnTitle: false,
 };
 
 export default Notice;

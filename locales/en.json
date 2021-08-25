@@ -12,6 +12,7 @@
       "maintenance": "Maintenance"
     },
     "footer": {
+      "logotext": "TPR-family",
       "title": "Accessibility information",
       "backToTop": "Back to top",
       "contact": "Contact",
@@ -46,7 +47,18 @@
     "mainEntrance": "Main entrance",
     "mainEntranceLocation": "Mainentrance location",
     "additionalEntrance": "Additional entrance",
-    "updated": "Updated"
+    "updated": "Updated",
+    "search": "Search",
+    "formFilledCorrectly": "Form filled correctly",
+    "GoToAdditionalInfoEdit": "Add additionalinformation",
+    "questionBlockShowMoreMainEntrance": "See more about the main entrance routes",
+    "hideInfo": "Hide info",
+    "editAddinfoText": "Edit additional infos",
+    "missingAnswerValue": "Missing answer",
+    "copyDataFromSameAddress": "copy the details of the office at the same address",
+    "openInfoWhatIsThis": "Show me what this is",
+    "statusReady": "Finished",
+    "statusNotReady": "Not Finished"
   },
   "question": {
     "something": "something"
@@ -64,7 +76,11 @@
     "phoneNumber": "Phone number",
     "email": "Email address",
     "www": "Webpage",
-    "noInfo": "(no information)"
+    "noInfo": "(no information)",
+
+    "mainEntranceLocationLabel" : "Location of the entrance on the map",
+    "mainEntranceLocationCoordinatesLabel" : "Coordinates",
+    "mainEntrancePicturesLabel": "Photos of the main entrance"
   },
   "questionFormControlButtons": {
     "quit": "Quit",
@@ -80,6 +96,8 @@
     "changePicture": "Change picture",
     "chooseFromDevice": "Choose from device",
     "cancelPicture": "Cancel picture",
+    "cancelComment": "Cancel Comment",
+    "cancelLocation": "Cancel Location",
     "pictureInput": "Picture from device",
     "pictureInputLink": "Picture URL",
     "locationInstructions": "Instructions for creating LOCATION",
@@ -102,6 +120,25 @@
     "sharePictureLicense": "Creative Commons VY 4.0. -license",
     "sourceTooltipText": "Insert here instructions for picture source",
     "sourceTooltipMainLabel": "Picture source",
+    "commentMainHeader": "You can refine the accessibility information with additional text",
+    "addCommentFiErrorText": "Please enter a description",
+    "commentFiHeader": "Additional text",
+    "commentFiHeaderHelperText": "You can add an additional description in Finnish",
+    "commentSvButtonText": "Add a description in Swedish",
+    "commentSvButtonLabel": "Description in Swedish",
+    "commentSvButtonCloseText": "Hide Swedish description",
+    "commentSvButtonLabelHelper": "Tell us more about accessibility in Swedish",
+    "commentAddEnButtonText": "Add a description in English",
+    "commentAddEnButtonCloseText": "Hide English description",
+    "commentEnLabel": "Description in English",
+    "commentEnLabelHelper" : "Tell us more about accessibility in English",
+    "pictureLinkConfirmButton": "Confirm",
+    "picureLinkErrorText": "Please enter a picture link",
+    "pictureTermsErrorText": "Please accept the terms",
+    "pictureTermsInfoText": "The terms must be accepted, you can read them by clicking on the text from the link below",
+    "picureSourceErrorText": "Please enter the image source",
+    "mainInfoText": "You can refine accessibility information with additional text, an image, or location information",
+
     "ctrlButtons": {
       "addNewComment": "Add description",
       "addUploadImageFromDevice": "Upload picture from device",
@@ -134,13 +171,19 @@
     "personPlaceholder": "Eg. janitor",
     "phonePlaceholder": "Eg. +358 50 123 4567",
     "emailPlaceholder": "Eg. address@mail.com",
-    "wwwPlaceholder": "Eg. www.address.fi"
+    "wwwPlaceholder": "Eg. www.address.fi",
+
+    "personValidationErrorText": "Please enter a contact person",
+    "phoneNumberValidationErrorText": "Please enter a valid number",
+    "emailValidationErrorText": "Please enter a valid email",
+    "wwwValidationErrorText": "Please enter a web address"
   },
   "PreviewPage": {
     "continueEditing": "Continue editing",
     "saveAndSend": "Save and send",
     "previewAccessibilityInformation": "Preview accessibility information",
-    "errorNotice": "EN: Lomakkeen kaikkia pakollisia tietoja ei ole vielä täytetty. Palaa täydentämään tietoja."
+    "errorNotice": "All required information on the form has not yet been completed. Return to complete the information",
+    "mainEntranceLocationHeader": "Location of the main entrance"
   },
   "AddressChangedPage": {
     "oldAddress": "Old address",

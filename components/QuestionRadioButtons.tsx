@@ -1,20 +1,20 @@
 import { SelectionGroup, RadioButton } from "hds-react";
 import React, { useState } from "react";
-import { useI18n } from "next-localization";
 import { QuestionRadioButtonsProps } from "../types/general";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import {
   removeAnsweredChoice,
   setAnswer,
-  setAnsweredChoice
+  setAnsweredChoice,
 } from "../state/reducers/formSlice";
 
+// usage: general custom radiobutton from HDS
 const QuestionRadioButtons = ({
   mainLabel,
   firstButtonLabel = "",
   secondButtonLabel = "",
   options,
-  value
+  value,
 }: QuestionRadioButtonsProps): JSX.Element => {
   const dispatch = useAppDispatch();
   let curAnswers = useAppSelector((state) => state.formReducer.answers);

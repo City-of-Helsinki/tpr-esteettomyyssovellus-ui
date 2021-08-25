@@ -4,7 +4,6 @@ import Head from "next/head";
 import { GetServerSideProps } from "next";
 import { StatusLabel, IconCrossCircle, IconQuestionCircle } from "hds-react";
 import Layout from "../../components/common/Layout";
-import store from "../../state/store";
 import i18nLoader from "../../utils/i18n";
 import ServicepointLandingSummary from "../../components/ServicepointLandingSummary";
 import styles from "./details.module.scss";
@@ -21,29 +20,29 @@ import {
   clearFormState,
   setFormFinished,
   setContinue,
-  setFormSubmitted
+  setFormSubmitted,
 } from "../../state/reducers/formSlice";
 import { getFinnishDate, filterByLanguage } from "../../utils/utilFunctions";
 import {
   clearGeneralState,
-  setServicepointLocation
+  setServicepointLocation,
 } from "../../state/reducers/generalSlice";
 import {
   API_FETCH_ANSWER_LOGS,
   API_FETCH_ENTRANCES,
   API_FETCH_SENTENCE_LANGS,
-  API_FETCH_SERVICEPOINTS
+  API_FETCH_SERVICEPOINTS,
 } from "../../types/constants";
 import LoadSpinner from "../../components/common/LoadSpinner";
 import { clearAddinfoState } from "../../state/reducers/additionalInfoSlice";
-import MainEntranceLocationPicturesPreview from "../../components/MainEntranceLocationPicturesPreview";
 
+// usage: the details / landing page of servicepoint
 const details = ({
   servicepointData,
   accessibilityData,
   entranceData,
   hasExistingFormData,
-  isFinished
+  isFinished,
 }: any): ReactElement => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
@@ -73,11 +72,11 @@ const details = ({
     const coordinates: [number, number] = [easthing, northing];
     dispatch(
       setServicepointLocation({
-        coordinates
+        coordinates,
       })
     );
   }
-  //console.log(accessibilityData);
+
   // Filter by language
   const filteredAccessibilityData: any = {};
   Object.keys(accessibilityData).map(function (key, index) {
@@ -148,11 +147,16 @@ const details = ({
                 {servicepointData.address_no}, {servicepointData.address_city}
               </h2>
               <span className={styles.statuslabel}>
-                {/* TODO: change statuslabel with data respectively */}
                 {isFinished ? (
-                  <StatusLabel type="success"> PH: Valmis </StatusLabel>
+                  <StatusLabel type="success">
+                    {" "}
+                    {i18n.t("common.statusReady")}{" "}
+                  </StatusLabel>
                 ) : (
-                  <StatusLabel type="neutral"> PH: Kesken </StatusLabel>
+                  <StatusLabel type="neutral">
+                    {" "}
+                    {i18n.t("common.statusNotReady")}{" "}
+                  </StatusLabel>
                 )}
 
                 <p>
@@ -184,16 +188,23 @@ const details = ({
 export const getServerSideProps: GetServerSideProps = async ({
   params,
   req,
-  locales
+  locales,
 }) => {
   const lngDict = await i18nLoader(locales);
 
-  const reduxStore = store;
-  // reduxStore.dispatch({ type: CLEAR_STATE });
-  const initialReduxState = reduxStore.getState();
+  // todo: if user not checked here remove these
+  // also reduxStore and reduxStore.getState() need to be changed to redux-toolkit
+  // const reduxStore = store;
+  // const initialReduxState = reduxStore.getState();
 
-  // Try except to stop software crashes when developing without backend running
-  // TODO: Make this more reliable and change URLs and add to constants before production
+  // const user = await checkUser(req);
+  // if (!user) {
+  //   // Invalid user but login is not required
+  // }
+  // if (user && user.authenticated) {
+  //   initialReduxState.general.user = user;
+  // }
+
   let accessibilityData: any = {};
   let entranceData;
   let servicepointData;
@@ -245,24 +256,16 @@ export const getServerSideProps: GetServerSideProps = async ({
       entranceData = {};
     }
   }
-  // const user = await checkUser(req);
-  // if (!user) {
-  //   // Invalid user but login is not required
-  // }
-  // if (user && user.authenticated) {
-  //   initialReduxState.general.user = user;
-  // }
 
   return {
     props: {
-      initialReduxState,
       lngDict,
       servicepointData,
       accessibilityData,
       entranceData,
       hasExistingFormData,
-      isFinished
-    }
+      isFinished,
+    },
   };
 };
 

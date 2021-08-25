@@ -14,6 +14,8 @@ import {
   AdditionalInfoProps,
 } from "../types/general";
 
+// usage: save and return without saving buttons in additionalinfo page
+// notes: only save if save clicked, if return no save or back button (browser, mice etc) returns to old or emtpy value
 const AdditionalInfoCtrlButtons = ({
   questionId,
 }: AdditionalInfoCtrlButtonsProps): JSX.Element => {
@@ -32,7 +34,7 @@ const AdditionalInfoCtrlButtons = ({
   // also check if pageSaved (saved button clicked), if so then just return
   // otherwise set initStateAddinfo to current addinfo / remove all added answers -> for user didn't save
   useEffect(() => {
-    router.beforePopState(({ url, as, options }) => {
+    router.beforePopState(({}) => {
       if (pageSaved) {
         return true;
       }
@@ -49,9 +51,7 @@ const AdditionalInfoCtrlButtons = ({
   const handleSaveAndReturn = () => {
     setPageSaved(true);
     router.back();
-    // todo: if current router.back() approach not working:
-    //pass id of edit page and add it to URL e.g. and use router.push (doesn't go to beforePopState)
-    // router.push("FRONTURL/accessibilityEdit/2452/");
+    // todo: if current router.back() approach not working use e.g router.push and store page-edit id to state
   };
 
   const hasInvalidValidations = useAppSelector((state) =>

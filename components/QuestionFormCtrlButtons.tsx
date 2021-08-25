@@ -11,38 +11,34 @@ import {
   API_FETCH_ANSWER_LOGS,
   API_FETCH_QUESTION_ANSWERS,
   API_FETCH_SERVICEPOINTS,
-  FRONT_URL_BASE
+  FRONT_URL_BASE,
 } from "../types/constants";
 import {
   setFormFinished,
   setInvalid,
   unsetFormFinished,
-  unsetInvalid
+  unsetInvalid,
 } from "../state/reducers/formSlice";
 import {
   getCurrentDate,
   postData,
-  postAdditionalInfo
+  postAdditionalInfo,
 } from "../utils/utilFunctions";
 
 export const getClientIp = async () =>
   await publicIp.v4({
-    fallbackUrls: ["https://ifconfig.co/ip"]
+    fallbackUrls: ["https://ifconfig.co/ip"],
   });
 
+// usage: Form control buttons: return, save / draft, preview, validate
 const QuestionFormCtrlButtons = ({
   hasCancelButton,
   hasValidateButton,
   hasSaveDraftButton,
   hasPreviewButton,
   visibleBlocks,
-  visibleQuestionChoices
+  visibleQuestionChoices,
 }: QuestionFormCtrlButtonsProps): JSX.Element => {
-  // TODO: save button might need own component of Button
-  // also preview view should probably also have own component/buttons
-
-  // testing click handle, edit with real logic later
-  // also add handlers for all buttons respectively
   const i18n = useI18n();
   const dispatch = useAppDispatch();
 
@@ -68,7 +64,6 @@ const QuestionFormCtrlButtons = ({
   const contacts = useAppSelector((state) => state.formReducer.contacts);
 
   const handleCancel = (): void => {
-    console.log("cancel clicked");
     // TODO: Add errorpage
     const url =
       curServicepointId == -1
@@ -82,7 +77,7 @@ const QuestionFormCtrlButtons = ({
     const updateContactsOptions = {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         accessibility_phone: contacts["phoneNumber"][1]
@@ -92,21 +87,18 @@ const QuestionFormCtrlButtons = ({
         accessibility_www: contacts["www"][1] ? contacts["www"][0] : null,
         modified_by: "placeholder",
         // TODO: Add user here
-        modified: getCurrentDate()
-      })
+        modified: getCurrentDate(),
+      }),
     };
     const updateContactsUrl = `${API_FETCH_SERVICEPOINTS}${curServicepointId}/update_accessibility_contacts/`;
 
     await fetch(updateContactsUrl, updateContactsOptions)
       .then((response) => response.json())
-      .then((data) => {
-        //console.log(data);
-      });
+      .then((data) => {});
   };
 
   // TODO: MAKE INTO SMALLER FUNCTIONS
   const saveDraft = async () => {
-    console.log("save clicked");
     let logId: any;
 
     // DATE FOR FINISHED ANSWERING
@@ -128,8 +120,8 @@ const QuestionFormCtrlButtons = ({
         form_cancelled: "N",
         // TODO: GET CURRENT USER HERE
         accessibility_editor: "Leba",
-        entrance: curEntranceId
-      })
+        entrance: curEntranceId,
+      }),
     };
 
     updateAccessibilityContacts(contacts);
@@ -168,12 +160,8 @@ const QuestionFormCtrlButtons = ({
         generateData
       );
     } else {
-      console.log("log_id was not number");
       return -1;
     }
-
-    // TODO: CREATE SENTENCES WITH FUNCTION CALL
-    console.log("Posted to database new log entry with log_id=", logId);
   };
 
   const handleSaveDraftClick = () => {
@@ -181,8 +169,6 @@ const QuestionFormCtrlButtons = ({
   };
 
   const validateForm = () => {
-    console.log("Started validating.");
-
     // VALIDATE BLOCKS
     visibleBlocks?.forEach((elem) => {
       if (elem != null) {
@@ -207,17 +193,14 @@ const QuestionFormCtrlButtons = ({
   }
 
   const handleValidateClick = () => {
-    console.log("Validate clicked");
     validateForm();
   };
 
   const handlePreviewClick = async () => {
-    console.log("Validate clicked");
     validateForm();
     await saveDraft();
     // TODO: TÄSSÄ KOHTAA MAHDOLLISESTI PITÄÄ POSTATA TIEDOT APIIN/KANTAAN, ETTÄ PREVIEW SIVULLE
     // SAADAAN NÄKYMÄÄN JUURI TÄYTETYT TIEDOT.
-
     router.push("/preview/" + curServicepointId);
   };
 

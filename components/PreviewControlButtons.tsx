@@ -8,22 +8,18 @@ import { useI18n } from "next-localization";
 import {
   API_FETCH_ANSWER_LOGS,
   API_FETCH_QUESTION_ANSWERS,
-  FRONT_URL_BASE
+  FRONT_URL_BASE,
 } from "../types/constants";
 import { setContinue } from "../state/reducers/formSlice";
 import { getCurrentDate } from "../utils/utilFunctions";
 import {
   postData,
   getClientIp,
-  postAdditionalInfo
+  postAdditionalInfo,
 } from "../utils/utilFunctions";
 
+// usage: controls for preview page
 const PreviewControlButtons = ({ hasHeader }: any): JSX.Element => {
-  // TODO: save button might need own component of Button
-  // also preview view should probably also have own component/buttons
-
-  // testing click handle, edit with real logic later
-  // also add handlers for all buttons respectively
   const i18n = useI18n();
   const dispatch = useAppDispatch();
 
@@ -47,7 +43,6 @@ const PreviewControlButtons = ({ hasHeader }: any): JSX.Element => {
   );
   const additionalInfo = useAppSelector((state) => state.additionalInfoReducer);
   const handelContinueEditing = (): void => {
-    console.log("cancel clicked");
     dispatch(setContinue());
     // TODO: Add errorpage
     const url =
@@ -59,7 +54,6 @@ const PreviewControlButtons = ({ hasHeader }: any): JSX.Element => {
 
   // TODO: MAKE INTO SMALLER FUNCTIONS
   const handleSaveDraftClick = async () => {
-    console.log("save clicked");
     let logId: any;
 
     // DATE FOR FINISHED ANSWERING
@@ -82,8 +76,8 @@ const PreviewControlButtons = ({ hasHeader }: any): JSX.Element => {
         form_cancelled: "Y",
         // TODO: GET CURRENT USER HERE
         accessibility_editor: "Leba",
-        entrance: curEntranceId
-      })
+        entrance: curEntranceId,
+      }),
     };
 
     // POST TO AR_X_ANSWER_LOG. RETURNS NEW LOG_ID USED FOR OTHER POST REQUESTS
@@ -105,21 +99,20 @@ const PreviewControlButtons = ({ hasHeader }: any): JSX.Element => {
         postAdditionalInfo(logId, parsedAdditionalInfos);
       }
       const generateData = { entrance_id: curEntranceId };
+      // todo: change static localhost to const
       postData("http://localhost:8000/api/GenerateSentences/", generateData);
       window.location.href = FRONT_URL_BASE;
     } else {
-      console.log("log_id was not number");
       return -1;
     }
 
     // TODO: POST ALL ADDITIONAL INFO
-
     // TODO: CREATE SENTENCES WITH FUNCTION CALL
-    console.log("Posted to database new log entry with log_id=", logId);
   };
 
+  //todo: todo
   const handleSaveAndSend = () => {
-    console.log("Save and send clicked");
+    return true;
   };
 
   return (
@@ -129,7 +122,7 @@ const PreviewControlButtons = ({ hasHeader }: any): JSX.Element => {
           <h2>{i18n.t("PreviewPage.previewAccessibilityInformation")}</h2>
           {formFinished ? (
             <Notification label="Form done" type="success">
-              PH: Form filled correctly
+              {i18n.t("common.formFilledCorrectly")}
             </Notification>
           ) : (
             <Notification label="Missing information" type="error">

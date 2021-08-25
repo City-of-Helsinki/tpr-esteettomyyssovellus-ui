@@ -1,6 +1,4 @@
-// this files code from marketing project: needs editing or deleting
-
-import React, { ReactElement, useRef, useEffect, useState } from "react";
+import React, { ReactElement, useRef, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useI18n } from "next-localization";
 import {
@@ -10,12 +8,7 @@ import {
   useMap,
   useMapEvents,
 } from "react-leaflet";
-import L, {
-  Marker as LeafletMarker,
-  Icon,
-  LatLngExpression,
-  Point,
-} from "leaflet";
+import { Marker as LeafletMarker, Icon } from "leaflet";
 import getOrigin from "../../utils/request";
 import styles from "./MapWrapper.module.scss";
 import { useDispatch } from "react-redux";
@@ -25,21 +18,20 @@ import { convertCoordinates, isLocationValid } from "../../utils/utilFunctions";
 
 interface MapWrapperProps {
   questionId: number;
-  initialCenter: [number, number] | number[];
   initialZoom: number;
   initLocation: [number, number] | number[];
   setLocation?: (initLocation: [number, number]) => void;
-  setMapView?: (center: LatLngExpression, zoom: number) => void;
   setMapReady?: (ready: boolean) => void;
   draggableMarker?: boolean;
   makeStatic: boolean;
 }
 
+// usage: leaflet map used in the project
+// notes: editable in additionalinfo page, in form/details pages only static "preview"
+// gets the main location from state (fetched from db). User can either click the map or drag-n-drop marker for new location
 const MapWrapper = ({
   questionId,
-  initialCenter,
   initialZoom,
-  setMapView,
   setMapReady,
   draggableMarker,
   makeStatic,
@@ -127,10 +119,6 @@ const MapWrapper = ({
   const CustomMapHandler = () => {
     const map = useMap();
 
-    // Force a map update otherwise the map does not always render correctly after a page is first loaded
-    // this not apparently really working in the preview map in main form
-    map.invalidateSize();
-
     if (makeStatic) {
       map.dragging.disable();
       map.touchZoom.disable();
@@ -155,15 +143,10 @@ const MapWrapper = ({
       }
     }, [map]);
 
-    // useEffect(() => {
-    //   map.invalidateSize();
-    // }, []);
-
     // Store the map view in redux state, so that the same zoom can be used when changing pages
     // The map centre is stored if needed, but currently the map is always centred on the marker position
     // If there is no initLocation, allow a map click (or tap) to store the click initLocation in redux, which then causes the marker to be shown
     useMapEvents({
-      // moveend: () => {},
       click: (evt) => {
         if (isLocationValid(curLocation) && !makeStatic) {
           setLocation([evt.latlng.lat, evt.latlng.lng]);
@@ -215,7 +198,6 @@ const MapWrapper = ({
 
 MapWrapper.defaultProps = {
   setLocation: undefined,
-  setMapView: undefined,
   setMapReady: undefined,
 };
 

@@ -1,4 +1,3 @@
-// TODO: file might need to be renamed eg. like additionalinfo/[id] where id is the question (?)
 import React, { ReactElement, useEffect, useState } from "react";
 import { useI18n } from "next-localization";
 import Head from "next/head";
@@ -10,10 +9,8 @@ import {
   IconQuestionCircle,
   IconSpeechbubbleText,
   IconUpload,
-  LoadingSpinner,
 } from "hds-react";
 import Layout from "../../components/common/Layout";
-import store from "../../state/store";
 import i18nLoader from "../../utils/i18n";
 import styles from "./additionalInfo.module.scss";
 import QuestionInfo from "../../components/QuestionInfo";
@@ -43,13 +40,15 @@ import { Dictionary } from "@reduxjs/toolkit";
 import { setCurrentlyEditingQuestion } from "../../state/reducers/generalSlice";
 import LoadSpinner from "../../components/common/LoadSpinner";
 
-// TODO: need to know what page is e.g. picture, comment or location
+// usage: additional information page (per question)
 const AdditionalInfo = ({
   questionId,
   questionData,
 }: AdditionalInfoPageProps): ReactElement => {
   const i18n = useI18n();
   // todo: figure out better way to id (?)
+  // current checks biggest id from cur addinfo and increments, if no found start form zero
+  // init for current highest id is doned in useEffect [] 'highestElementId'
   const [increasingId, setIncreasingId] = useState(0);
   const isLoading = useLoading();
   const dispatch = useAppDispatch();
@@ -57,6 +56,8 @@ const AdditionalInfo = ({
     (state) => state.additionalInfoReducer[questionId] as AdditionalInfoProps
   );
 
+  // check/init addinfo can add comment / location and number of pictures able to add
+  // disable control buttons for adding these components respectively
   const canAddCommentCount =
     questionData && questionData[0].can_add_comment === "Y" ? 0 : -1;
   const photoMaxCount =
@@ -69,7 +70,7 @@ const AdditionalInfo = ({
   const filterByLanguage = (data: any) => {
     const i18n = useI18n();
     const curLocale: string = i18n.locale();
-    // @ts-ignore: TODO:
+    // @ts-ignore:
     const curLocaleId: number = LANGUAGE_LOCALES[curLocale];
     return data.filter((entry: any) => {
       return entry.language_id == curLocaleId;
@@ -78,6 +79,7 @@ const AdditionalInfo = ({
 
   const questionDataCurrentLanguage = filterByLanguage(questionData).pop();
 
+  // element counts for control buttons
   const [elementCounts, setElementCounts]: any = useState({
     comment: 0,
     upload: 0,
@@ -85,6 +87,7 @@ const AdditionalInfo = ({
     location: 0,
   });
 
+  // add element to addinfo page, increment elementCounts
   const handleAddElement = (type: string) => {
     setElementCounts((prevCounts: any) => ({
       ...prevCounts,
@@ -100,6 +103,7 @@ const AdditionalInfo = ({
     setIncreasingId(increasingId + 1);
   };
 
+  // remove component, decrease elementCount, remove invalid validations from that component
   const handleDelete = (deleteId: number, type: string) => {
     setElementCounts((prevCounts: any) => ({
       ...prevCounts,
@@ -109,7 +113,7 @@ const AdditionalInfo = ({
     dispatch(removeAllInvalids({ questionId: questionId, compId: deleteId }));
   };
 
-  // for saving current state obj initial state for if user edits and cancels without saving to return to init state of cur obj to state
+  // for saving current state obj initial state for if user edits and cancels without saving to return to old state or empty if no init addinfo
   useEffect(() => {
     dispatch(setCurrentlyEditingQuestion(questionId));
 
@@ -168,12 +172,6 @@ const AdditionalInfo = ({
                 <ServicepointMainInfoContent />
               </QuestionInfo>
             </div>
-            <div className={styles.headingcontainer}>
-              <h1>PH: Aitohoiva - Esteettömyystietojen yhteenveto</h1>
-              <h2>
-                {i18n.t("common.mainEntrance")} Katukatu 12, 00100 Helsinki
-              </h2>
-            </div>
             <div>
               <AdditionalInfoCtrlButtons questionId={questionId} />
               <div>
@@ -184,9 +182,7 @@ const AdditionalInfo = ({
                   </p>
                 </div>
                 <div className={styles.maininfoctrl}>
-                  {/* { infoButton ? <div className={styles.maininfocontent}>{infoButton}</div> : null}
-              <div className={styles.maininfocontent}>{infoText}</div> */}
-                  tähä infoa
+                  {i18n.t("additionalInfo.mainInfoText")}
                 </div>
               </div>
               <div className={styles.overrideheadlinestyles}>
@@ -321,25 +317,17 @@ const AdditionalInfo = ({
   );
 };
 
-// Server-side rendering
-// Todo: edit, get servicepoint data
+// NextJs Server-Side Rendering, HDS best practices (SSR)
 export const getServerSideProps: GetServerSideProps = async ({
   params,
   locales,
 }) => {
   const lngDict = await i18nLoader(locales);
 
-  const reduxStore = store;
-  // reduxStore.dispatch({ type: CLEAR_STATE });
-  const initialReduxState = reduxStore.getState();
-
-  const questionId = Number(params?.questionId) ?? null;
-
-  //e.g.
-  const questionDataReq = await fetch(
-    `${API_FETCH_BACKEND_QUESTIONS}?question_id=${questionId}&format=json`
-  );
-  const questionData = await questionDataReq.json();
+  // todo: if user not checked here remove these
+  // also reduxStore and reduxStore.getState() need to be changed to redux-toolkit
+  // const reduxStore = store;
+  // const initialReduxState = reduxStore.getState();
 
   // const user = await checkUser(req);
   // if (!user) {
@@ -349,11 +337,17 @@ export const getServerSideProps: GetServerSideProps = async ({
   //   initialReduxState.general.user = user;
   // }
 
+  const questionId = Number(params?.questionId) ?? null;
+
+  const questionDataReq = await fetch(
+    `${API_FETCH_BACKEND_QUESTIONS}?question_id=${questionId}&format=json`
+  );
+  const questionData = await questionDataReq.json();
+
   return {
     props: {
       questionId,
       questionData,
-      initialReduxState,
       lngDict,
     },
   };

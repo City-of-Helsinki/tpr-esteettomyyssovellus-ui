@@ -6,24 +6,25 @@ import styles from "./QuestionBlock.module.scss";
 import QuestionInfo from "./QuestionInfo";
 import QuestionsList from "./QuestionsList";
 import { QuestionBlockProps } from "../types/general";
-import router from "next/router";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
 import {
   setContinue,
   setFinished,
   unsetFinished,
-  unsetInvalid
 } from "../state/reducers/formSlice";
 import { useI18n } from "next-localization";
 
+// usage: in form groups up all questions under a single "question block" / accordion
+// notes: used under headlineQuestionContainer in main form
 const QuestionBlock = ({
   description,
   questions,
   answers,
   photoUrl,
-  photoText
+  photoText,
 }: QuestionBlockProps): JSX.Element => {
   const i18n = useI18n();
+  const dispatch = useAppDispatch();
   const [showAdditionalInfo, setShowAdditionalInfo] = useState(false);
   const isContinueClicked = useAppSelector(
     (state) => state.formReducer.isContinueClicked
@@ -32,9 +33,8 @@ const QuestionBlock = ({
   const handleAdditionalInfoToggle = () => {
     setShowAdditionalInfo(!showAdditionalInfo);
   };
-  const dispatch = useAppDispatch();
+  // todo: what is this onClick? Seems obsolete?
   const onClick = () => {
-    console.log("Continue clicked");
     dispatch(setContinue());
     setShowContinue(false);
     // TODO: route to main form
@@ -51,6 +51,7 @@ const QuestionBlock = ({
   );
   const continueActive = curAnsweredChoices.length != 0;
 
+  // filter questions to get only correct ones with curAnsweredChoices
   const filteredQuestions =
     questions != null
       ? questions.filter(
@@ -66,6 +67,7 @@ const QuestionBlock = ({
   let curAnswers = useAppSelector((state) => state.formReducer.answers);
   let keys = Object.keys(curAnswers);
 
+  // check if block is finished (all visible questions are answered), also used to display icon if finished and with validation
   const blockFinished = filteredQuestions?.every((element) => {
     return element.question_id
       ? keys.includes(element.question_id.toString())
@@ -73,7 +75,6 @@ const QuestionBlock = ({
   });
 
   if (blockFinished) {
-    console.log("BLOCK NUMBER " + blockId + " FINISHED");
     dispatch(setFinished(blockId));
   } else {
     dispatch(unsetFinished(blockId));
@@ -91,9 +92,9 @@ const QuestionBlock = ({
           <p>{desc ?? null}</p>
           {photoText == null && photoUrl == null ? null : (
             <QuestionInfo
-              openText="PH: näytä lisää pääsisäänkäynnin kulkureiteistä?"
+              openText={i18n.t("common.questionBlockShowMoreMainEntrance")}
               openIcon={<IconAngleDown aria-hidden />}
-              closeText="PH: pienennä ohje"
+              closeText={i18n.t("common.hideInfo")}
               closeIcon={<IconAngleUp aria-hidden />}
             >
               <div className={styles.infoContainer}>
@@ -120,13 +121,12 @@ const QuestionBlock = ({
         </div>
       ) : (
         <p>
-          {" "}
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
           minim veniam, quis nostrud exercitation ullamco laboris nisi ut
           aliquip ex ea commodo consequat. Duis aute irure dolor in
           reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur. Excepteur sint occaecat cupi{" "}
+          pariatur. Excepteur sint occaecat cupi
         </p>
       )}
       {/* QtionList loops the single question row(s) */}

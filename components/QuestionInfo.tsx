@@ -3,8 +3,15 @@ import { useState } from "react";
 import styles from "./QuestionInfo.module.scss";
 import { QuestionInfoProps } from "../types/general";
 
-// used to display info for each question respectively
-const QuestionInfo = ({ openText, openIcon, closeText, closeIcon, textOnBottom = false, children }: QuestionInfoProps): JSX.Element => {
+// usage: display info (dropdown) for each question respectively
+const QuestionInfo = ({
+  openText,
+  openIcon,
+  closeText,
+  closeIcon,
+  textOnBottom = false,
+  children,
+}: QuestionInfoProps): JSX.Element => {
   const i18n = useI18n();
 
   const [showContent, setShowContent] = useState(false);
@@ -22,10 +29,9 @@ const QuestionInfo = ({ openText, openIcon, closeText, closeIcon, textOnBottom =
             onKeyPress={handleToggleContent}
             role="button"
             tabIndex={0}
-            title="PH: näytä mikä tämä on"
+            title={i18n.t("common.openInfoWhatIsThis")}
           >
             {openIcon ?? null}
-            {/* {i18n.t("questions.singleQuestion.infotextshow")} */}
             {openText}
           </span>
         </>
@@ -42,10 +48,9 @@ const QuestionInfo = ({ openText, openIcon, closeText, closeIcon, textOnBottom =
             onKeyPress={handleToggleContent}
             role="button"
             tabIndex={0}
-            title="PH: sulje mikä tämä on"
+            title={i18n.t("common.generalMainInfoIsOpen")}
           >
             {closeIcon ?? null}
-            {/* {i18n.t("questions.singleQuestion.infotextclose")} */}
             {closeText}
           </span>
           {textOnBottom ? (

@@ -41,6 +41,16 @@ export enum LANGUAGE_LOCALES {
   en = 3,
 }
 
+// from marketing, all values might not be used/needed, also if Toast not used -> delete
+export enum Toast {
+  NotAuthenticated = "notAuthenticated",
+  ValidationFailed = "validationFailed",
+  SaveFailed = "saveFailed",
+  SaveSucceeded = "saveSucceeded",
+  RejectSucceeded = "rejectSucceeded",
+  DeleteSucceeded = "deleteSucceeded",
+}
+
 export const PHONE_REGEX = /^[^a-zA-Z]+$/;
 export const EMAIL_REGEX = /^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i;
 

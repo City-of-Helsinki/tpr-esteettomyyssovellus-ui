@@ -29,6 +29,7 @@ import LoadSpinner from "../../components/common/LoadSpinner";
 import ServicepointLandingSummaryContent from "../../components/ServicepointLandingSummaryContent";
 import MainEntranceLocationPicturesPreview from "../../components/MainEntranceLocationPicturesPreview";
 
+// usage: preview page of servicepoint, displayed before saving completed form
 const preview = ({
   servicepointData,
   accessibilityData,
@@ -39,7 +40,7 @@ const preview = ({
   const isLoading = useLoading();
   const treeItems = [
     servicepointData["servicepoint_name"],
-    "PH: Esteettömyystiedot",
+    i18n.t("common.header.title"),
   ];
 
   // Filter by language
@@ -104,7 +105,9 @@ const preview = ({
               <PreviewControlButtons hasHeader={true} />
             </div>
             <div>
-              <ServicepointLandingSummaryContent contentHeader="PH: Pääsisäänkäynnin sijainti">
+              <ServicepointLandingSummaryContent
+                contentHeader={i18n.t("PreviewPage.mainEntranceLocationHeader")}
+              >
                 <MainEntranceLocationPicturesPreview />
               </ServicepointLandingSummaryContent>
               <PreviewPageLandingSummary
@@ -130,9 +133,18 @@ export const getServerSideProps: GetServerSideProps = async ({
 }) => {
   const lngDict = await i18nLoader(locales);
 
-  const reduxStore = store;
-  // reduxStore.dispatch({ type: CLEAR_STATE });
-  const initialReduxState = reduxStore.getState();
+  // todo: if user not checked here remove these
+  // also reduxStore and reduxStore.getState() need to be changed to redux-toolkit
+  // const reduxStore = store;
+  // const initialReduxState = reduxStore.getState();
+
+  // const user = await checkUser(req);
+  // if (!user) {
+  //   // Invalid user but login is not required
+  // }
+  // if (user && user.authenticated) {
+  //   initialReduxState.general.user = user;
+  // }
 
   // Try except to stop software crashes when developing without backend running
   // TODO: Make this more reliable and change URLs and add to constants before production
@@ -177,7 +189,7 @@ export const getServerSideProps: GetServerSideProps = async ({
         );
         const logData = await LogResp.json();
 
-        // TODO: Should the this be true even if the form has not been submitted
+        // TODO: Should this be true even if the form has not been submitted
         hasExistingFormData = logData.some(
           (e: any) => e["form_submitted"] == "Y" || e["form_submitted"] == "D"
         );
@@ -189,17 +201,9 @@ export const getServerSideProps: GetServerSideProps = async ({
       entranceData = {};
     }
   }
-  // const user = await checkUser(req);
-  // if (!user) {
-  //   // Invalid user but login is not required
-  // }
-  // if (user && user.authenticated) {
-  //   initialReduxState.general.user = user;
-  // }
 
   return {
     props: {
-      initialReduxState,
       lngDict,
       servicepointData,
       accessibilityData,

@@ -48,8 +48,6 @@ const Main = ({ isMobile }: MainEntranceFormProps): ReactElement => {
 
   let heroTitle = i18n.t("common.landing.title");
   let heroText = "";
-  // let heroUrl = "https://i.stack.imgur.com/y9DpT.jpg";
-  // let heroUrl = "https://i.stack.imgur.com/y9DpT.jpg";
 
   const heroUrl = FRONT_URL_BASE + "homepagephoto.png";
 
@@ -87,9 +85,10 @@ export const getServerSideProps: GetServerSideProps = async ({
 }) => {
   const lngDict = await i18nLoader(locales);
 
-  const reduxStore = store;
-  // reduxStore.dispatch({ type: CLEAR_STATE });
-  const initialReduxState = reduxStore.getState();
+  // todo: if user not checked here remove these
+  // also reduxStore and reduxStore.getState() need to be changed to redux-toolkit
+  // const reduxStore = store;
+  // const initialReduxState = reduxStore.getState();
 
   // const user = await checkUser(req);
   // if (!user) {
@@ -101,7 +100,6 @@ export const getServerSideProps: GetServerSideProps = async ({
 
   return {
     props: {
-      initialReduxState,
       lngDict,
     },
   };
