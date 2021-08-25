@@ -1,14 +1,13 @@
 import { createSlice, Dictionary, PayloadAction } from "@reduxjs/toolkit";
-import type { RootState } from "../store";
 import {
   AdditionalInfoProps,
   AdditionalInfos,
   PictureProps,
 } from "../../types/general";
-import { LatLngExpression } from "leaflet";
 
-// TODO: wait for customer / designs then complete this state
+// TODO: maybe delete this before prod
 // notice: many [questionNumber] OR [qNumber] is actually questionId
+
 // const initialState = {
 //   initAddInfoFromDb: false,
 //   curEditingInitialState: null,

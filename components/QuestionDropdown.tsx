@@ -6,25 +6,27 @@ import { useAppSelector } from "../state/hooks";
 import {
   setAnsweredChoice,
   setAnswer,
-  removeAnsweredChoice
+  removeAnsweredChoice,
 } from "../state/reducers/formSlice";
-import formSlice from "../state/reducers/formSlice";
 import { useAppDispatch } from "../state/hooks";
 import { Dictionary } from "@reduxjs/toolkit";
 import { useI18n } from "next-localization";
 
-// used for Dropdown components
-// this component uses HDS Select, if 1) more than 8 options 2) needs filtering by typing create&use HDS Combobox
+// usage: general custom dropdown component form HDS
+// notes: this component uses HDS Select, HDS says:
+// if 1) more than 8 options 2) needs filtering by typing create&use HDS Combobox
+// this project doesn't yet have Combobox, maybe not needed also
 const QuestionDropdown = ({
   options,
   placeholder = "--Valitse--",
   label = "",
   questionNumber,
-  blockId
+  blockId,
 }: DropdownQuestionProps): JSX.Element => {
-  const dispatch = useAppDispatch();
   const i18n = useI18n();
+  const dispatch = useAppDispatch();
 
+  // handle add/remove answer from state
   const handleChange = (selected: Dictionary<string>) => {
     const answerString = selected["value"];
     const questionNumString = questionNumber;
@@ -55,7 +57,7 @@ const QuestionDropdown = ({
 
   const currentValue: Dictionary<string> = {
     label: currentLabel != undefined ? currentLabel["label"] : "",
-    value: value.toString()
+    value: value.toString(),
   };
 
   const isInvalid = value == "" && invalidBlocks.includes(blockId!);
@@ -72,7 +74,7 @@ const QuestionDropdown = ({
       options={options}
       onChange={handleChange}
       value={currentValue}
-      error="PH: Valinta puuttuu"
+      error={i18n.t("common.missingAnswerValue")}
       invalid={isInvalid}
     />
   );

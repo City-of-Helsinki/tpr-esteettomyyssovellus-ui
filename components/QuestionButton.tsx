@@ -2,7 +2,16 @@ import { Button } from "hds-react";
 import styles from "./QuestionButton.module.scss";
 import { QuestionButtonProps } from "../types/general";
 
-const QuestionButton = ({ children, variant, iconLeft, iconRight, disabled = false, onClickHandler, onChange }: QuestionButtonProps): JSX.Element => {
+// usage: general customized button from HDS
+const QuestionButton = ({
+  children,
+  variant,
+  iconLeft,
+  iconRight,
+  disabled = false,
+  onClickHandler,
+  onChange,
+}: QuestionButtonProps): JSX.Element => {
   return (
     <div>
       <Button

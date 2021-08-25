@@ -15,16 +15,21 @@ import {
   changeEmailStatus,
   setFinished,
   unsetFinished,
-  changeWwwStatus
+  changeWwwStatus,
 } from "../state/reducers/formSlice";
 import { EMAIL_REGEX, PHONE_REGEX } from "../types/constants";
 
+// usage: used for contactinfo container for these questions are not from db and the
+// structure is diffetent/static
+// notes: i guess if this info would be fetched from db this component could be removed(?)
+
 const ContactInformationQuestionContainer = ({
-  blockNumber
+  blockNumber,
 }: ContactInformationProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
 
+  // static questions for contacinformation
   const contactQuestions = [
     {
       placeholder: i18n.t("ContactInformation.personPlaceholder"),
@@ -32,7 +37,7 @@ const ContactInformationQuestionContainer = ({
       question_code: blockNumber + ".1",
       question_id: -1,
       question_level: 1,
-      text: i18n.t("ContactInformation.contactPerson")
+      text: i18n.t("ContactInformation.contactPerson"),
     },
     {
       placeholder: i18n.t("ContactInformation.phonePlaceholder"),
@@ -40,7 +45,7 @@ const ContactInformationQuestionContainer = ({
       question_code: blockNumber + ".2",
       question_id: -2,
       question_level: 1,
-      text: i18n.t("ContactInformation.phoneNumber")
+      text: i18n.t("ContactInformation.phoneNumber"),
     },
     {
       placeholder: i18n.t("ContactInformation.emailPlaceholder"),
@@ -48,7 +53,7 @@ const ContactInformationQuestionContainer = ({
       question_code: blockNumber + ".3",
       question_id: -3,
       question_level: 1,
-      text: i18n.t("ContactInformation.email")
+      text: i18n.t("ContactInformation.email"),
     },
     {
       placeholder: i18n.t("ContactInformation.wwwPlaceholder"),
@@ -56,10 +61,11 @@ const ContactInformationQuestionContainer = ({
       question_code: blockNumber + ".4",
       question_id: -4,
       question_level: 1,
-      text: i18n.t("ContactInformation.www")
-    }
+      text: i18n.t("ContactInformation.www"),
+    },
   ];
 
+  // general handler for contactinfo text inputs
   const handleChange = (event: any) => {
     // REGEXES FOR VALIDATING
     var phonePattern = new RegExp(PHONE_REGEX);
@@ -140,28 +146,36 @@ const ContactInformationQuestionContainer = ({
           case -1:
             value = contactPerson[0];
             isAnswered = contactPerson[1];
-            error = contactPerson[1] ? "" : "PH: Please input contactperson";
+            error = contactPerson[1]
+              ? ""
+              : i18n.t("ContactInformation.personValidationErrorText");
             break;
           case -2:
             value = phoneNumber[0];
             isAnswered = phoneNumber[1];
             // phoneNumber[1] is a boolean value indicating whether the phone number
             // is valid. If the phone number is invalid displays an error text
-            error = phoneNumber[1] ? "" : "PH: Please input valid phonenumber";
+            error = phoneNumber[1]
+              ? ""
+              : i18n.t("ContactInformation.phoneNumberValidationErrorText");
             break;
           case -3:
             value = email[0];
             isAnswered = email[1];
             // email[1] is a boolean value indicating whether the email
             // is valid. If the email is invalid displays an error text
-            error = email[1] ? "" : "PH: Please input valid email";
+            error = email[1]
+              ? ""
+              : i18n.t("ContactInformation.emailValidationErrorText");
             break;
           case -4:
             value = www[0];
             isAnswered = www[1];
             // email[1] is a boolean value indicating whether the email
             // is valid. If the email is invalid displays an error text
-            error = www[1] ? "" : "PH: Please input valid www-page";
+            error = www[1]
+              ? ""
+              : i18n.t("ContactInformation.wwwValidationErrorText");
             break;
         }
 
@@ -171,10 +185,10 @@ const ContactInformationQuestionContainer = ({
                 backgroundColor,
                 marginBottom: "0.1rem",
                 borderStyle: "solid",
-                borderColor: "#b01038"
+                borderColor: "#b01038",
               }
             : {
-                backgroundColor
+                backgroundColor,
               };
 
         return (

@@ -1,13 +1,12 @@
-import React, { ReactElement, useEffect, useState } from "react";
+import React, { ReactElement } from "react";
 import { useI18n } from "next-localization";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
 import Layout from "../../components/common/Layout";
-import store from "../../state/store";
 import i18nLoader from "../../utils/i18n";
 import QuestionInfo from "../../components/QuestionInfo";
 import styles from "./accessibilityEdit.module.scss";
-import { StatusLabel, IconCrossCircle, IconQuestionCircle } from "hds-react";
+import { IconCrossCircle, IconQuestionCircle } from "hds-react";
 import ServicepointMainInfoContent from "../../components/ServicepointMainInfoContent";
 import {
   API_FETCH_QUESTIONBLOCK_URL,
@@ -21,7 +20,7 @@ import {
   API_FETCH_QUESTION_ANSWER_COMMENTS,
   API_FETCH_QUESTION_ANSWER_LOCATIONS,
   API_FETCH_QUESTION_ANSWER_PHOTOS,
-  API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS
+  API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS,
 } from "../../types/constants";
 import { useAppSelector, useAppDispatch, useLoading } from "../../state/hooks";
 import QuestionBlock from "../../components/QuestionBlock";
@@ -29,7 +28,7 @@ import {
   AddInfoPhoto,
   AddInfoPhotoText,
   MainEntranceFormProps,
-  QuestionBlockProps
+  QuestionBlockProps,
 } from "../../types/general";
 import HeadlineQuestionContainer from "../../components/HeadlineQuestionContainer";
 import { LANGUAGE_LOCALES } from "../../types/constants";
@@ -47,7 +46,7 @@ import {
   changeEmailStatus,
   setEntranceId,
   setStartDate,
-  setWwwAddress
+  setWwwAddress,
 } from "../../state/reducers/formSlice";
 import ContactInformationQuestionContainer from "../../components/ContactInformationQuestionContainer";
 import {
@@ -56,18 +55,17 @@ import {
   addLocation,
   addPicture,
   clearEditingInitialState,
-  // removeImproperlySavedAddInfos,
   setAlt,
-  setInitAdditionalInfoFromDb
+  setInitAdditionalInfoFromDb,
 } from "../../state/reducers/additionalInfoSlice";
 import { getCurrentDate } from "../../utils/utilFunctions";
 import {
   setCurrentlyEditingBlock,
-  setCurrentlyEditingQuestion
+  setCurrentlyEditingQuestion,
 } from "../../state/reducers/generalSlice";
-import { useRouter } from "next/router";
 import LoadSpinner from "../../components/common/LoadSpinner";
 
+// usage: the main form / pääsisäänkäynti page
 const AccessibilityEdit = ({
   QuestionsData,
   QuestionChoicesData,
@@ -76,12 +74,11 @@ const AccessibilityEdit = ({
   ServicepointData,
   AdditionalInfosData,
   form_id,
-  entrance_id
+  entrance_id,
 }: MainEntranceFormProps): ReactElement => {
   const i18n = useI18n();
   const curLocale: string = i18n.locale();
   const dispatch = useAppDispatch();
-  const router = useRouter();
   // @ts-ignore: TODO:
   const curLocaleId: number = LANGUAGE_LOCALES[curLocale];
 
@@ -113,9 +110,10 @@ const AccessibilityEdit = ({
   );
   const treeItems = [
     ServicepointData["servicepoint_name"],
-    "PH: Esteettömyystiedot"
+    "PH: Esteettömyystiedot",
   ];
 
+  // validates contactinfo data and sets to state
   if (ServicepointData != undefined && !formInited) {
     const phoneNumber = ServicepointData["accessibility_phone"];
     const email = ServicepointData["accessibility_email"];
@@ -129,7 +127,6 @@ const AccessibilityEdit = ({
     dispatch(setWwwAddress(www));
     dispatch(setServicepointId(ServicepointData["servicepoint_id"]));
     dispatch(setEntranceId(Number(entrance_id!)));
-    // If page is refreshed so that all the information is lost updates the starting date
     if (startedAnswering == "") dispatch(setStartDate(getCurrentDate()));
 
     // VALIDATE PHONE
@@ -151,18 +148,18 @@ const AccessibilityEdit = ({
     dispatch(initForm());
   }
 
-  // loop additional info to state, only once if data found
+  // loop additional info to state if first landing to form page and if data found
   if (AdditionalInfosData && !additionalInfoInitedFromDb) {
     // dispatch(removeImproperlySavedAddInfos());
     dispatch(setInitAdditionalInfoFromDb({ isInited: true }));
     if (AdditionalInfosData.comments) {
-      AdditionalInfosData.comments.forEach((comment, ind) => {
+      AdditionalInfosData.comments.forEach((comment) => {
         const curLangStr = LANGUAGE_LOCALES[comment.language];
         dispatch(
           addComment({
             questionId: comment.question,
             language: curLangStr,
-            value: comment.comment
+            value: comment.comment,
           })
         );
         // little hacky, only add component for the 1st language => fi (mandatory) for not adding 3 components if all languages
@@ -171,7 +168,7 @@ const AccessibilityEdit = ({
             addComponent({
               questionId: comment.question,
               type: "comment",
-              id: comment.answer_comment_id
+              id: comment.answer_comment_id,
             })
           );
         }
@@ -184,14 +181,14 @@ const AccessibilityEdit = ({
             questionId: location.question,
             coordinates: [location.loc_northing, location.loc_easting],
             locNorthing: location.loc_northing,
-            locEasting: location.loc_easting
+            locEasting: location.loc_easting,
           })
         );
         dispatch(
           addComponent({
             questionId: location.question,
             type: "location",
-            id: location.answer_location_id
+            id: location.answer_location_id,
           })
         );
       });
@@ -206,7 +203,7 @@ const AccessibilityEdit = ({
           url: photo.photo_url,
           fi: "",
           sv: "",
-          en: ""
+          en: "",
         };
 
         dispatch(addPicture(picture));
@@ -214,7 +211,7 @@ const AccessibilityEdit = ({
           addComponent({
             questionId: photo.question,
             type: "link",
-            id: photo.answer_photo_id
+            id: photo.answer_photo_id,
           })
         );
 
@@ -230,7 +227,7 @@ const AccessibilityEdit = ({
                   questionId: photo.question,
                   language: curLangStr,
                   value: alt.photo_text,
-                  compId: photo.answer_photo_id
+                  compId: photo.answer_photo_id,
                 })
               );
             });
@@ -259,11 +256,7 @@ const AccessibilityEdit = ({
     });
   }
 
-  // let curAnswers = useAppSelector(
-  //   (state) => state.formReducer.answeredChoices
-  // );
-
-  // let curFinishedBlocks = useAppSelector((state) => state.formReducer.finishedBlocks);
+  // map visible blocks & questions & answers
   let nextBlock = 0;
   let lastBlockNumber = "";
   let visibleBlocks =
@@ -340,6 +333,7 @@ const AccessibilityEdit = ({
         })
       : null;
 
+  // special case for contact info block for it's not coming from db
   if (isContinueClicked) {
     visibleBlocks?.push(
       <HeadlineQuestionContainer
@@ -366,8 +360,10 @@ const AccessibilityEdit = ({
       return choice.question_choice_id;
     }
   });
+
   // if returning from additional info page -> init page to correct location / question
-  // when the w.l.hash is set -> set states of question and block numbers to -1 (useEffect [] didn't work for some reason)
+  // when the window.location.hash is set -> set states of question and block numbers to -1
+  // (useEffect [] didn't work for some reason)
   if (
     curEditingQuestionAddInfoNumber >= 0 &&
     curEditingBlockAddInfoNumber >= 0
@@ -431,16 +427,17 @@ const AccessibilityEdit = ({
   );
 };
 
+// NextJs Server-Side Rendering, HDS best practices (SSR)
 export const getServerSideProps: GetServerSideProps = async ({
   params,
-  req,
-  locales
+  locales,
 }) => {
   const lngDict = await i18nLoader(locales);
 
-  const reduxStore = store;
-  // reduxStore.dispatch({ type: CLEAR_STATE });
-  const initialReduxState = reduxStore.getState();
+  // todo: if user not checked here remove these
+  // also reduxStore and reduxStore.getState() need to be changed to redux-toolkit
+  // const reduxStore = store;
+  // const initialReduxState = reduxStore.getState();
 
   // const user = await checkUser(req);
   // if (!user) {
@@ -471,7 +468,6 @@ export const getServerSideProps: GetServerSideProps = async ({
       EntranceData = await EntranceResp.json();
       const servicepoint_id = EntranceData["servicepoint"];
       form_id = EntranceData["form"];
-      // todo: put urls in types/constants and get form_id from props
       const QuestionsResp = await fetch(API_FETCH_QUESTION_URL + form_id);
       const QuestionChoicesResp = await fetch(
         API_FETCH_QUESTIONCHOICES + form_id
@@ -523,12 +519,11 @@ export const getServerSideProps: GetServerSideProps = async ({
             comments: AddInfoCommentsData,
             locations: AddInfoLocationsData,
             photos: AddInfoPhotosData,
-            phototexts: AddInfoPhotoTextsData
+            phototexts: AddInfoPhotoTextsData,
           };
         }
       }
     } catch (e) {
-      console.log(e);
       QuestionsData = {};
       QuestionChoicesData = {};
       QuestionBlocksData = {};
@@ -540,7 +535,6 @@ export const getServerSideProps: GetServerSideProps = async ({
   }
   return {
     props: {
-      initialReduxState,
       form_id: form_id,
       QuestionsData: QuestionsData,
       QuestionChoicesData: QuestionChoicesData,
@@ -549,8 +543,8 @@ export const getServerSideProps: GetServerSideProps = async ({
       ServicepointData: ServicepointData,
       AdditionalInfosData: AdditionalInfosData,
       entrance_id,
-      lngDict
-    }
+      lngDict,
+    },
   };
 };
 

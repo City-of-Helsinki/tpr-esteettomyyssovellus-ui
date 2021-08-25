@@ -1,17 +1,17 @@
-import React, { ChangeEvent } from "react";
+import React from "react";
 import { IconSearch, IconAngleDown, TextInput } from "hds-react";
 import styles from "./SearchBoxWithButtons.module.scss";
 import Button from "./QuestionButton";
 
+// usage: not used / implemented atm, was designed to be used in the search page -> which will not be doned
+// todo: delete this component if not used
 const SearchBoxWithButtons = (): JSX.Element => {
   const submitSearch = () => {
     // TODO: functionality
-    console.log("Search");
   };
 
   const emptySearch = () => {
     // TODO: Add functionality
-    console.log("Empty search");
   };
 
   return (
@@ -20,7 +20,10 @@ const SearchBoxWithButtons = (): JSX.Element => {
         <div className={styles.search}>
           <p className={styles.searchText}> Hae toimipistettä</p>
           <div className={styles.input}>
-            <TextInput id="search" placeholder="Anna toimipisteen nimi tai joku muu hakusana" />
+            <TextInput
+              id="search"
+              placeholder="Anna toimipisteen nimi tai joku muu hakusana"
+            />
             <div>
               <a
                 // TODO: Add functionality
@@ -32,7 +35,11 @@ const SearchBoxWithButtons = (): JSX.Element => {
             </div>
           </div>
           <div className={styles.button}>
-            <Button variant="primary" iconLeft={<IconSearch />} onClickHandler={() => submitSearch()}>
+            <Button
+              variant="primary"
+              iconLeft={<IconSearch />}
+              onClickHandler={() => submitSearch()}
+            >
               Hae
             </Button>
           </div>

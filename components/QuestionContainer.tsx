@@ -2,10 +2,8 @@ import React from "react";
 import { IconInfoCircle, IconCrossCircle, IconAlertCircle } from "hds-react";
 import styles from "./QuestionContainer.module.scss";
 import { QuestionContainerProps } from "../types/general";
-import LANGUAGE_LOCALES from "../types/constants";
 import QuestionInfo from "./QuestionInfo";
 import QuestionAdditionalInformation from "./QuestionAdditionalInformation";
-import { i18n } from "../next.config";
 import { useI18n } from "next-localization";
 import Map from "./common/Map";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
@@ -13,7 +11,8 @@ import QuestionButton from "./QuestionButton";
 import { useRouter } from "next/router";
 import { setCurrentlyEditingBlock } from "../state/reducers/generalSlice";
 
-// used for wrapping question text and additional infos with question 'data component' e.g. dropdown
+// usage: container for single question row e.g. header/text, additional infos and dropdown/radiobutton
+// and possible addinfo previews if question has addinfos
 const QuestionContainer = ({
   questionId,
   questionBlockId,
@@ -47,6 +46,7 @@ const QuestionContainer = ({
   const curAnswers = useAppSelector((state) => state.formReducer.answers);
   const isInvalid = invalidBlocks.includes(questionBlockId!);
 
+  // set invalid style if validation errors
   const questionStyle =
     isInvalid && curAnswers[questionId!] == undefined
       ? {
@@ -69,7 +69,6 @@ const QuestionContainer = ({
     router.push(`/additionalInfo/${questionId ?? ""}`, undefined, {
       shallow: true,
     });
-    // todo settaa täs statee se mitä editataan
   };
 
   return (
@@ -122,6 +121,7 @@ const QuestionContainer = ({
           ></IconAlertCircle>
         ) : null}
       </div>
+      {/* code under loops additional infos to the form if question has addinfo */}
       {curQuestionAddinfos &&
       curQuestionAddinfos.components &&
       curQuestionAddinfos.components.length !== 0 ? (
@@ -198,7 +198,7 @@ const QuestionContainer = ({
                   variant="secondary"
                   onClickHandler={handleEditAddInfo}
                 >
-                  PH: Muokkaa lisätietoja
+                  {i18n.t("common.editAddinfoText")}
                 </QuestionButton>
               </div>
             </>

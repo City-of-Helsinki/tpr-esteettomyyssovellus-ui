@@ -25,6 +25,8 @@ import { AdditionalContentProps } from "../types/general";
 import { CREATIVECOMMONS_URL } from "../types/constants";
 import { v4 as uuidv4 } from "uuid";
 
+// usage: additionalinfo page picture components
+// notes: this component has both "upload" and "link/url" image components for they are such similar
 const AdditionalInfoPicturesContent = ({
   questionId,
   compId,
@@ -32,30 +34,28 @@ const AdditionalInfoPicturesContent = ({
   onDelete,
   initValue,
 }: AdditionalContentProps): JSX.Element => {
-  // also use filename for conditionally displaying buttons and alt-text & preview picture
+  const i18n = useI18n();
   const dispatch = useAppDispatch();
-
-  // TODO: change this it breaks if prev values
   const currentId = compId;
   const curAddInfo = useAppSelector(
     (state) => state.additionalInfoReducer[questionId]
   );
-  // initValue =
-  //   curAddInfo?.pictures?.filter((pic) => pic.id === currentId) ?? null;
   const curImage = curAddInfo?.pictures?.filter(
     (pic) => pic.id === currentId
   )[0];
   const [linkText, setLinkText] = useState("");
 
+  // get current invalid fields for validation
   const currentInvalids = useAppSelector((state) =>
     state.additionalInfoReducer[questionId].invalidValues?.find(
       (invs) => invs.id === compId
     )
   );
 
+  // hidden input field which is clicked after custom button is pressed
   const hiddenFileInput = useRef<HTMLInputElement>(null);
-  const i18n = useI18n();
-  // add picture to state
+
+  // click the hidden file input and remove previous image if present
   const handleAddImageToInput = (): void => {
     if (currentId) {
       handleRemoveImage();
@@ -66,6 +66,7 @@ const AdditionalInfoPicturesContent = ({
     }
   };
 
+  // remove validation values respectively
   const handleremoveInvalidValue = (remoTarget: string) => {
     dispatch(
       removeInvalidValues({
@@ -76,6 +77,7 @@ const AdditionalInfoPicturesContent = ({
     );
   };
 
+  // remove validation values respectively
   const handleAddInvalidValues = (answersToAdd: string[]) => {
     dispatch(
       addInvalidValues({
@@ -85,9 +87,11 @@ const AdditionalInfoPicturesContent = ({
       })
     );
   };
-  // add image to state, elseif -> when adding just the img link/url
+
+  // add image to state, in else when adding just the img link/url
   const handleImageAdded = async (e?: any) => {
     setTermsChecked(false);
+    // this if is for upload image component
     if (e && e.target.files && e.target.files.length > 0) {
       const img = e.target.files[0];
       const imgBase64 = window.URL.createObjectURL(img);
@@ -108,12 +112,13 @@ const AdditionalInfoPicturesContent = ({
       handleAddInvalidValues(["url", "fi", "source", "sharelicense"]);
       if ((imgBase64 && imgBase64 !== "") || (img.name && img.name !== "")) {
         handleremoveInvalidValue("url");
-        //  todo: what is this
+        //  todo: maybe add url === "" here
       } else if (imgBase64 !== "" || img.name === "") {
         handleAddInvalidValues(["url"]);
       }
-      // below for links component (not upload)
+      // below for links component (not the upload component)
     } else {
+      // validate url inputted has image
       const isImage = await validateUrlIsImage(linkText);
       if (isImage) {
         const payload = {
@@ -128,8 +133,6 @@ const AdditionalInfoPicturesContent = ({
           source: "",
         };
         dispatch(addPicture(payload));
-
-        // handleAddInvalidValues(["url"]);
         handleremoveInvalidValue("url");
       } else {
         handleAddInvalidValues(["url"]);
@@ -137,7 +140,7 @@ const AdditionalInfoPicturesContent = ({
     }
   };
 
-  //todo: maybe needs better solution / more refined and error message if not found image
+  //todo: maybe needs more refined error message if not found image (?)
   const validateUrlIsImage = async (url: string) => {
     const res = await fetch(url);
     if (res.status === 200) {
@@ -147,6 +150,7 @@ const AdditionalInfoPicturesContent = ({
     return false;
   };
 
+  // combined remove and add image
   const handleImageRemoveAndAdded = () => {
     handleRemoveImage();
     handleImageAdded();
@@ -155,8 +159,7 @@ const AdditionalInfoPicturesContent = ({
   // remove image from state
   const handleRemoveImage = () => {
     dispatch(removePicture({ questionId, currentId }));
-    // also add errors back for validation
-    // todo maybe add this dispatch back
+    // also adds errors back for validation
     handleAddInvalidValues(["url", "fi", "source", "sharelicense"]);
   };
 
@@ -166,7 +169,7 @@ const AdditionalInfoPicturesContent = ({
     onDelete ? onDelete() : null;
   };
 
-  // only update state after 1 sec from prev KeyDown, set Alt text with correct lang
+  // only update state after X (0.5) sec from prev KeyDown, set Alt text with correct lang
   let timer: NodeJS.Timeout;
   const handleAddAlt = (
     e: React.KeyboardEvent<HTMLTextAreaElement>,
@@ -187,7 +190,7 @@ const AdditionalInfoPicturesContent = ({
   };
 
   // logic for checkbox picture terms using HDS
-  // todo: this could be put in to state, or maybe not because only used for validation (?)
+  // todo: this could be put in to state, or maybe not because only used for validation so no need to save anywhere (?)
   const [termsChecked, setTermsChecked] = useState(false);
   const onCheckChange = (e: any) => {
     setTermsChecked(!termsChecked);
@@ -210,6 +213,7 @@ const AdditionalInfoPicturesContent = ({
     }
   };
 
+  // add or remove url validation errors
   const handleLinkText = (e: any) => {
     const value = e.currentTarget.value;
     value.length > 0 ? setLinkText(value) : null;
@@ -220,6 +224,7 @@ const AdditionalInfoPicturesContent = ({
     }
   };
 
+  // different buttons depending if upload component or link/url component
   const addFromDeviceButton = !onlyLink ? (
     <QuestionButton variant="secondary" onClickHandler={handleAddImageToInput}>
       {i18n.t("additionalInfo.chooseFromDevice")}
@@ -230,10 +235,11 @@ const AdditionalInfoPicturesContent = ({
       onClickHandler={() => handleImageRemoveAndAdded()}
       disabled={linkText ? false : true}
     >
-      ph: vahvista
+      {i18n.t("additionalInfo.pictureLinkConfirmButton")}
     </QuestionButton>
   );
 
+  // init validation errors if needed
   useEffect(() => {
     // if addinfo page with no curimage or initvalue add default validation errors
     if (!curImage || !initValue) {
@@ -271,7 +277,7 @@ const AdditionalInfoPicturesContent = ({
             }
             errorText={
               currentInvalids?.invalidAnswers?.includes("url")
-                ? "PH: olkaa hyvä ja syöttäkää kuvalinkki"
+                ? i18n.t("additionalInfo.picureLinkErrorText")
                 : ""
             }
           />
@@ -387,12 +393,12 @@ const AdditionalInfoPicturesContent = ({
                 onChange={onCheckChange}
                 errorText={
                   currentInvalids?.invalidAnswers?.includes("sharelicense")
-                    ? "PH: olkaa hyvä ja hyväksykää ehdot"
+                    ? i18n.t("additionalInfo.pictureTermsErrorText")
                     : ""
                 }
               />
             </SelectionGroup>
-            <Tooltip> PH: Tähän tooltip tekstiä </Tooltip>
+            <Tooltip> {i18n.t("additionalInfo.pictureTermsInfoText")} </Tooltip>
           </div>
           <div className={styles.picturesourcecontainer}>
             <TextInput
@@ -411,7 +417,7 @@ const AdditionalInfoPicturesContent = ({
               }
               errorText={
                 currentInvalids?.invalidAnswers?.includes("source")
-                  ? "PH: olkaa hyvä ja syöttäkää lähde"
+                  ? i18n.t("additionalInfo.picureSourceErrorText")
                   : ""
               }
             />

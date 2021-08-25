@@ -4,6 +4,7 @@ import { useI18n } from "next-localization";
 import ServicepointLandingSummaryContent from "./ServicepointLandingSummaryContent";
 import styles from "./PreviewPageLandingSummary.module.scss";
 
+// usage: summarizing preview page data component e.g. created sentences (list)
 const PreviewPageLandingSummary = ({ data }: any): JSX.Element => {
   const i18n = useI18n();
 

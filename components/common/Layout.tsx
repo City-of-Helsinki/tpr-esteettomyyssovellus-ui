@@ -10,6 +10,7 @@ interface LayoutProps {
   children: ReactNode;
 }
 
+// usage: general layout for including head, footer etc for all pages
 const Layout = ({ children }: LayoutProps): ReactElement => {
   const ref = useRef<HTMLDivElement>(null);
 

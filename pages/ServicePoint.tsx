@@ -3,9 +3,8 @@ import { useI18n } from "next-localization";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
 import Layout from "../components/common/Layout";
-import store from "../state/store";
 import i18nLoader from "../utils/i18n";
-import router, { useRouter } from "next/router";
+import router from "next/router";
 import {
   API_CHOP_ADDRESS,
   API_FETCH_ENTRANCES,
@@ -23,6 +22,7 @@ import { useState } from "react";
 import { getCurrentDate, validateChecksum } from "../utils/utilFunctions";
 import { checksumSecretTPRTesti } from "./checksumSecret";
 
+//usage: not sure if this is obsolete?
 const Servicepoints = ({
   changed,
   servicepointId,
@@ -158,15 +158,17 @@ export const getServerSideProps: GetServerSideProps = async ({
 }) => {
   const lngDict = await i18nLoader(locales);
 
-  const reduxStore = store;
-  // reduxStore.dispatch({ type: CLEAR_STATE });
-  const initialReduxState = reduxStore.getState();
+  // todo: if user not checked here remove these
+  // also reduxStore and reduxStore.getState() need to be changed to redux-toolkit
+  // const reduxStore = store;
+  // const initialReduxState = reduxStore.getState();
+
   // const user = await checkUser(req);
   // if (!user) {
   //   // Invalid user but login is not required
   // }
-  // if (query.user) {
-  //   initialReduxState.generalSlice.user = query.user;
+  // if (user && user.authenticated) {
+  //   initialReduxState.general.user = user;
   // }
 
   // systemId=e186251e-1fb6-4f21-901c-cb6820aee164     DONE
@@ -197,7 +199,6 @@ export const getServerSideProps: GetServerSideProps = async ({
     ) {
       return {
         props: {
-          initialReduxState,
           lngDict,
         },
       };
@@ -428,7 +429,6 @@ export const getServerSideProps: GetServerSideProps = async ({
             let changed = "address";
             return {
               props: {
-                initialReduxState,
                 lngDict,
                 changed,
                 servicepointId,
@@ -447,7 +447,6 @@ export const getServerSideProps: GetServerSideProps = async ({
           //   let changed = "location";
           //   return {
           //     props: {
-          //       initialReduxState,
           //       lngDict,
           //       changed,
           //       servicepointId
@@ -494,7 +493,6 @@ export const getServerSideProps: GetServerSideProps = async ({
   }
   return {
     props: {
-      initialReduxState,
       lngDict,
     },
   };

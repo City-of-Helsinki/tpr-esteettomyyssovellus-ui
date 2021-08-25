@@ -2,7 +2,6 @@
 
 import { Dictionary } from "@reduxjs/toolkit";
 import { LatLngExpression } from "leaflet";
-import { string } from "yup";
 
 export interface User {
   authenticated: boolean;

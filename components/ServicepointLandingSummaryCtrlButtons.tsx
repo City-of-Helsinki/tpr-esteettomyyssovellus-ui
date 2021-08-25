@@ -4,14 +4,21 @@ import QuestionButton from "./QuestionButton";
 import { ServicepointLandingSummaryCtrlButtonsProps } from "../types/general";
 import styles from "./ServicepointLandingSummaryCtrlButtons.module.scss";
 
-const ServicepointLandingSummaryCtrlButtons = ({ hasData }: ServicepointLandingSummaryCtrlButtonsProps): JSX.Element => {
+// usage: control buttons for ServicepointLandingSummary
+const ServicepointLandingSummaryCtrlButtons = ({
+  hasData,
+}: ServicepointLandingSummaryCtrlButtonsProps): JSX.Element => {
   const i18n = useI18n();
   return (
     <div className={styles.maincontainer}>
-      <QuestionButton variant="secondary">{i18n.t("servicepoint.buttons.mainCtrlReturn")}</QuestionButton>
+      <QuestionButton variant="secondary">
+        {i18n.t("servicepoint.buttons.mainCtrlReturn")}
+      </QuestionButton>
       {hasData ? (
         <>
-          <QuestionButton variant="primary">{i18n.t("servicepoint.buttons.editServicepoint")}</QuestionButton>
+          <QuestionButton variant="primary">
+            {i18n.t("servicepoint.buttons.editServicepoint")}
+          </QuestionButton>
           <QuestionButton variant="primary" iconLeft={<IconTrash />}>
             {i18n.t("servicepoint.buttons.mainCtrlDelete")}
           </QuestionButton>

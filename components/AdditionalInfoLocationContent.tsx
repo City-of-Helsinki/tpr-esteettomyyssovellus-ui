@@ -1,32 +1,24 @@
-import { IconCross, IconLocation, TextInput } from "hds-react";
-import { LatLngExpression } from "leaflet";
+import { IconCross } from "hds-react";
 import { useI18n } from "next-localization";
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { DateSchema } from "yup";
+import React, { useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
-import {
-  addLocation,
-  removeLocation,
-} from "../state/reducers/additionalInfoSlice";
-import { GEOCODING_PARAMS, HKI_GEOCODING_URL } from "../types/constants";
+import { removeLocation } from "../state/reducers/additionalInfoSlice";
 import { AdditionalContentProps } from "../types/general";
-import { convertCoordinates } from "../utils/utilFunctions";
 import styles from "./AdditionalInfoLocationContent.module.scss";
 import Map from "./common/Map";
 import QuestionButton from "./QuestionButton";
-import QuestionRadioButtons from "./QuestionRadioButtons";
 
+// usage: additionalinfo page location component
+// notes: remove geocoding if not needed
 const AdditionalInfoLocationContent = ({
   questionId,
   onDelete,
-  initValue,
 }: AdditionalContentProps): JSX.Element => {
-  //todo: get from initValue ->  url/servicepoint etc
   const i18n = useI18n();
   const dispatch = useAppDispatch();
-  const addressRef = useRef(null);
 
-  const [addressErrorText, setAddressErrorText] = useState("");
+  // geodocing related -> delete if not used in final production
+  //   const [addressErrorText, setAddressErrorText] = useState("");
 
   let coords: [number, number] = useAppSelector(
     (state) => state.additionalInfoReducer[questionId].locations?.coordinates
@@ -139,7 +131,7 @@ const AdditionalInfoLocationContent = ({
           iconRight={<IconCross />}
           onClickHandler={() => handleOnDelete()}
         >
-          PH: Peru sijainti
+          {i18n.t("additionalInfo.cancelLocation")}
         </QuestionButton>
       </div>
       <div className={styles.mapcontainer}>{memoMap}</div>

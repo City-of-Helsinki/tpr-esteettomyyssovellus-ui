@@ -1,12 +1,23 @@
+// Notes: this component was doned for the new servicepoint list/landing page, might be obsolete
+
 import React from "react";
 
-import { makeStyles, Typography, Container, Hidden, Card, CardMedia, CardContent, withStyles } from "@material-ui/core";
+import {
+  makeStyles,
+  Typography,
+  Container,
+  Hidden,
+  Card,
+  CardMedia,
+  CardContent,
+  withStyles,
+} from "@material-ui/core";
 import dynamic from "next/dynamic";
 
 const FiCard = withStyles({
   root: {
-    position: "relative"
-  }
+    position: "relative",
+  },
 })(Card);
 
 const FiCardMedia = withStyles({
@@ -15,19 +26,22 @@ const FiCardMedia = withStyles({
     top: 0,
     right: 0,
     height: 550,
-    width: "100%"
-  }
+    width: "100%",
+  },
 })(CardMedia);
 
 const FiCardContent = withStyles({
   root: {
     position: "relative",
-    backgroundColor: "transparent"
-  }
+    backgroundColor: "transparent",
+  },
 })(CardContent);
 
 // @ts-ignore: A dynamic import must be used to force client-side rendering regardless of the typescript errors
-const DynamicKoros = dynamic(() => import("hds-react").then((hds) => hds.Koros), { ssr: false });
+const DynamicKoros = dynamic(
+  () => import("hds-react").then((hds) => hds.Koros),
+  { ssr: false }
+);
 //import { drupalUrl } from "../config";
 
 const drupalUrl = process.env.REACT_APP_DRUPAL_URL;
@@ -37,13 +51,13 @@ const useStyles = makeStyles((theme) => ({
   container: {
     padding: 0,
     height: 550,
-    marginBottom: 32
+    marginBottom: 32,
   },
   card: {
-    backgroundColor: "#0000bf"
+    backgroundColor: "#0000bf",
   },
   media: {
-    height: 550
+    height: 550,
   },
   fiCardContent: {
     height: 510,
@@ -52,46 +66,46 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.only("xs")]: {
       top: 40,
       left: 50,
-      padding: 30
+      padding: 30,
     },
     [theme.breakpoints.only("sm")]: {
       top: 40,
       left: 50,
-      padding: 30
+      padding: 30,
     },
     [theme.breakpoints.only("md")]: {
       top: 40,
-      left: 40
+      left: 40,
     },
     [theme.breakpoints.only("lg")]: {
       top: 70,
-      left: 50
+      left: 50,
     },
     [theme.breakpoints.only("xl")]: {
       top: 100,
-      left: 120
-    }
+      left: 120,
+    },
   },
   title: {
     [theme.breakpoints.only("xs")]: {
       fontSize: 36,
       paddingLeft: 20,
-      paddingTop: 20
+      paddingTop: 20,
     },
     [theme.breakpoints.only("sm")]: {
       fontSize: 36,
       paddingLeft: 20,
-      paddingTop: 20
+      paddingTop: 20,
     },
     [theme.breakpoints.only("md")]: {
-      fontSize: 45
+      fontSize: 45,
     },
     [theme.breakpoints.only("lg")]: {
-      fontSize: 52
+      fontSize: 52,
     },
     [theme.breakpoints.only("xl")]: {
-      fontSize: 52
-    }
+      fontSize: 52,
+    },
   },
   fiCardContentTextSecondary: {
     color: "white",
@@ -101,31 +115,31 @@ const useStyles = makeStyles((theme) => ({
     fontWeigth: 400,
     [theme.breakpoints.only("xs")]: {
       paddingLeft: 20,
-      paddingTop: 20
-    }
+      paddingTop: 20,
+    },
   },
   mediaPic: {
     clipPath: "url(#koros)",
-    "-webkitClipPath": "url(#koros)"
+    "-webkitClipPath": "url(#koros)",
   },
   koro: {
     fill: "#0000bf",
     color: "#0000bf",
     background: "transparent",
-    marginTop: -40
+    marginTop: -40,
   },
   smallCard: {
     padding: 0,
-    marginTop: -30
+    marginTop: -30,
   },
   mobileContainer: {
     backgroundColor: "#0000bf",
     padding: 0,
-    marginBottom: 28
+    marginBottom: 28,
   },
   mobileCard: {
     padding: 0,
-    margin: 0
+    margin: 0,
   },
   mobileTitle: {
     backgroundColor: "#0000bf",
@@ -133,7 +147,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 0,
     fontSize: 36,
     paddingLeft: 20,
-    paddingTop: 40
+    paddingTop: 40,
   },
   mobileText: {
     backgroundColor: "#0000bf",
@@ -141,20 +155,20 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 20,
     fontWeigth: 400,
     paddingLeft: 20,
-    paddingRight: 20
+    paddingRight: 20,
   },
   shallowContainer: {
     height: 358,
     marginBottom: 32,
     marginTop: 32,
     maxWidth: 1440,
-    padding: 0
+    padding: 0,
   },
   shallowKoro: {
     fill: "#0000bf",
     color: "#0000bf",
-    marginTop: -40
-  }
+    marginTop: -40,
+  },
 }));
 
 interface HeroProps {
@@ -167,7 +181,10 @@ export function Hero(props: HeroProps) {
   const classes = useStyles();
   const { title, text, imageUrl } = props;
 
-  const imagePath = imageUrl && (imageUrl.startsWith("https") || imageUrl.startsWith("http")) ? imageUrl : drupalUrl + imageUrl;
+  const imagePath =
+    imageUrl && (imageUrl.startsWith("https") || imageUrl.startsWith("http"))
+      ? imageUrl
+      : drupalUrl + imageUrl;
 
   return (
     <>
@@ -175,12 +192,25 @@ export function Hero(props: HeroProps) {
         <Container maxWidth="xl" className={classes.container}>
           <FiCard className={classes.card}>
             <div>
-              <FiCardMedia className={classes.mediaPic} image={imagePath} title={title} />
+              <FiCardMedia
+                className={classes.mediaPic}
+                image={imagePath}
+                title={title}
+              />
               <FiCardContent className={classes.fiCardContent}>
-                <Typography gutterBottom variant="h2" component="h1" className={classes.title}>
+                <Typography
+                  gutterBottom
+                  variant="h2"
+                  component="h1"
+                  className={classes.title}
+                >
                   {title}
                 </Typography>
-                <Typography component="div" dangerouslySetInnerHTML={{ __html: text }} className={classes.fiCardContentTextSecondary}></Typography>
+                <Typography
+                  component="div"
+                  dangerouslySetInnerHTML={{ __html: text }}
+                  className={classes.fiCardContentTextSecondary}
+                ></Typography>
               </FiCardContent>
             </div>
           </FiCard>
@@ -204,10 +234,19 @@ export function Hero(props: HeroProps) {
       </Hidden>
       <Hidden mdUp>
         <Container maxWidth="lg" className={classes.mobileContainer}>
-          <Typography gutterBottom variant="h2" component="h1" className={classes.mobileTitle}>
+          <Typography
+            gutterBottom
+            variant="h2"
+            component="h1"
+            className={classes.mobileTitle}
+          >
             {title}
           </Typography>
-          <Typography className={classes.mobileText} component="div" dangerouslySetInnerHTML={{ __html: text }}></Typography>
+          <Typography
+            className={classes.mobileText}
+            component="div"
+            dangerouslySetInnerHTML={{ __html: text }}
+          ></Typography>
           <Card elevation={0} className={classes.mobileCard}>
             <div>
               <DynamicKoros
@@ -216,7 +255,14 @@ export function Hero(props: HeroProps) {
                 flipHorizontal
                 className={classes.koro}
               />
-              <CardMedia className={classes.smallCard} component="img" alt="picture" height="440" image={imagePath} title={title}></CardMedia>
+              <CardMedia
+                className={classes.smallCard}
+                component="img"
+                alt="picture"
+                height="440"
+                image={imagePath}
+                title={title}
+              ></CardMedia>
             </div>
           </Card>
         </Container>
@@ -234,7 +280,10 @@ export function HeroShallow(props: HeroShallowProps) {
   const classes = useStyles();
   const { title, imageUrl } = props;
 
-  const imagePath = imageUrl && (imageUrl.startsWith("https") || imageUrl.startsWith("http")) ? imageUrl : drupalUrl + imageUrl;
+  const imagePath =
+    imageUrl && (imageUrl.startsWith("https") || imageUrl.startsWith("http"))
+      ? imageUrl
+      : drupalUrl + imageUrl;
 
   return (
     <Container className={classes.shallowContainer}>

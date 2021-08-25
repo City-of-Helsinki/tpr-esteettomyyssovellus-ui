@@ -12,6 +12,7 @@
       "maintenance": "Ylläpito"
     },
     "footer": {
+      "logotext": "TPR-perhe",
       "title": "Esteettömyystiedot",
       "backToTop": "Takaisin ylös",
       "contact": "Ota yhteyttä",
@@ -33,7 +34,7 @@
     "opensInANewTab": "(aukeaa uuteen välilehteen)",
     "todo": "TODO - TEXT HERE",
     "landing": {
-      "title": "PH: Tervetuloa päivittämään esteettömyystietoja"
+      "title": "Tervetuloa päivittämään esteettömyystietoja"
     },
     "generalMainInfoIsOpen": "Sulje ohje",
     "generalMainInfoIsClose": "Ohje esteettömyystietojen antamiseen",
@@ -46,7 +47,18 @@
     "mainEntrance": "Pääsisäänkäynti",
     "mainEntranceLocation": "Pääsisäänkäynnin sijainti",
     "additionalEntrance": "Lisäsisäänkäynti",
-    "updated": "Päivitetty"
+    "updated": "Päivitetty",
+    "search": "Haku",
+    "formFilledCorrectly": "Lomake täytetty oikein",
+    "GoToAdditionalInfoEdit": "Lisää lisätieto",
+    "questionBlockShowMoreMainEntrance": "Näytä lisää pääsisäänkäynnin kulkureiteistä",
+    "hideInfo": "Pienennä ohje",
+    "editAddinfoText": "Muokkaa lisätietoja",
+    "missingAnswerValue": "Valinta puuttuu",
+    "copyDataFromSameAddress": "kopioi samassa osoitteessa olevan toimipisteen tiedot",
+    "openInfoWhatIsThis": "Näytä mikä tämä on",
+    "statusReady": "Valmis",
+    "statusNotReady": "Kesken"
   },
   "question": {
     "something": "something"
@@ -64,7 +76,11 @@
     "phoneNumber": "Puhelinnumero",
     "email": "Sähköpostiosoite",
     "www": "Nettisivu",
-    "noInfo": "(ei tietoa)"
+    "noInfo": "(ei tietoa)",
+
+    "mainEntranceLocationLabel" : "Pääsisäänkäynnin sijainti kartalla",
+    "mainEntranceLocationCoordinatesLabel" : "Koordinaatit",
+    "mainEntrancePicturesLabel": "Pääsisäänkäynnin valokuvat"
   },
   "questionFormControlButtons": {
     "quit": "Keskeytä",
@@ -80,6 +96,8 @@
     "changePicture": "Vaihda kuva",
     "chooseFromDevice": "Valitse laitteelta",
     "cancelPicture": "Peru kuva",
+    "cancelComment": "Peru kommentti",
+    "cancelLocation": "Peru Sijainti",
     "pictureInput": "Kuva laitteelta",
     "pictureInputLink": "Kuva linkki ",
     "locationInstructions": "Lisää tähän ohjeita LOKAATION lisäämiseen",
@@ -102,6 +120,25 @@
     "sharePictureLicense": "Creative Commons VY 4.0. -lisenssilä",
     "sourceTooltipText": "Täytä tähän ohjeet kuvalähde fin",
     "sourceTooltipMainLabel": "Kuvalähde",
+    "commentMainHeader": "Voit tarkentaa esteettömyystietoja vapaamuotoisella lisätekstillä",
+    "addCommentFiErrorText": "Olkaa hyvä ja syöttäkää kuvailu",
+    "commentFiHeader": "Lisäteksti",
+    "commentFiHeaderHelperText": "Voit lisätä halutessasi kuvailun suomeksi",
+    "commentSvButtonText": "Lisää kuvailu ruotsiksi",
+    "commentSvButtonLabel": "Kuvailu ruotsiksi",
+    "commentSvButtonCloseText": "Piilota ruotsinkielinen kuvailu",
+    "commentSvButtonLabelHelper": "Kerro lisää esteettömyydestä ruotsiksi",
+    "commentAddEnButtonText": "Lisää kuvailu englanniksi",
+    "commentAddEnButtonCloseText": "Piilota englanninkielinen kuvailu",
+    "commentEnLabel": "Kuvailu englanniksi",
+    "commentEnLabelHelper" : "Kerro lisää esteettömyydestä englanniksi",
+    "pictureLinkConfirmButton": "Vahvista",
+    "picureLinkErrorText": "Olkaa hyvä ja syöttäkää kuvalinkki",
+    "pictureTermsErrorText": "olkaa hyvä ja hyväksykää ehdot",
+    "pictureTermsInfoText": "Ehdot tulee hyväksyä, pääset lukemaan ne oheisesta linkistä tekstiä klikkaamalla",
+    "picureSourceErrorText": "Olkaa hyvä ja syöttäkää kuvalähde",
+    "mainInfoText": "Voit tarkentaa esteettömyystietoja vapaamuotoisella lisätekstillä, kuvalla tai sijaintitiedolla",
+
     "ctrlButtons": {
       "addNewComment": "Lisää tarkennusteksti",
       "addUploadImageFromDevice": "Lataa kuva laitteelta",
@@ -134,13 +171,20 @@
     "personPlaceholder": "Esim. vahtimestari tai Etunimi Sukunimi",
     "phonePlaceholder": "Esim. +358 50 123 4567",
     "emailPlaceholder": "Esim. osoite@maili.fi",
-    "wwwPlaceholder": "Esim. www.address.fi"
+    "wwwPlaceholder": "Esim. www.address.fi",
+
+    "personValidationErrorText": "Olkaa hyvä ja syöttäkää yhteyshenkilö",
+    "phoneNumberValidationErrorText": "Olkaa hyvä ja syöttäkää validi numero",
+    "emailValidationErrorText": "Olkaa hyvä ja syöttäkää validi sähköposti",
+    "wwwValidationErrorText": "Olkaa hyvä ja syöttäkää www-osoite"
   },
   "PreviewPage": {
     "continueEditing": "Jatka muokkaamista",
     "saveAndSend": "Tallenna ja lähetä",
     "previewAccessibilityInformation": "Esikatsele esteettömyystiedot",
-    "errorNotice": "Lomakkeen kaikkia pakollisia tietoja ei ole vielä täytetty. Palaa täydentämään tietoja."
+    "errorNotice": "Lomakkeen kaikkia pakollisia tietoja ei ole vielä täytetty. Palaa täydentämään tietoja.",
+    "mainEntranceLocationHeader": "Pääsisäänkäynnin sijainti"
+
   },
   "AddressChangedPage": {
     "oldAddress": "Vanha osoite",

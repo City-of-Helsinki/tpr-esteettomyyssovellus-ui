@@ -12,6 +12,8 @@ import { FRONT_URL_BASE } from "../types/constants";
 import { getCurrentDate } from "../utils/utilFunctions";
 import MainEntranceLocationPicturesPreview from "./MainEntranceLocationPicturesPreview";
 
+// usage: used in details/landing page to create a summary block of sentences etc
+// this component more like a container -> used with ServicepointLandingSummaryContent
 const ServicepointLandingSummary = ({
   header,
   data,
@@ -24,13 +26,12 @@ const ServicepointLandingSummary = ({
 
   const handleEditorAddPointData = () => {
     if (data) {
-      console.log("edit data clicked, todo create logic");
       const startedAnswering = getCurrentDate();
       dispatch(setStartDate(startedAnswering));
       const url = FRONT_URL_BASE + "accessibilityEdit/" + curEntranceId;
-      // TODO: This preserves the state. Not necessary.
       router.push(url);
     } else {
+      //todo: todo (?)
       console.log("create servicepoint data clicked, todo create logic");
     }
   };
