@@ -3,6 +3,7 @@ import QuestionDropdown from "./QuestionDropdown";
 import QuestionRadioButtons from "./QuestionRadioButtons";
 import QuestionContainer from "./QuestionContainer";
 import { QuestionsListProps } from "../types/general";
+import ContactInformationQuestionContainer from "./ContactInformationQuestionContainer";
 
 // usage: list questions component, should be called once per question block
 const QuestionsList = ({
@@ -24,48 +25,57 @@ const QuestionsList = ({
 
         const backgroundColor: string = ind % 2 === 0 ? "#f2f2fc" : "#ffffff";
         return (
-          <QuestionContainer
-            key={question.question_id}
-            questionId={question.question_id}
-            questionBlockId={question.question_block_id}
-            questionNumber={question.question_code}
-            questionText={question.text}
-            questionInfo={question.description ?? null}
-            hasAdditionalInfo={
-              additionalInfoVisible &&
-              (question.can_add_location == "Y" ||
-                question.can_add_comment == "Y" ||
-                question.can_add_photo_max_count != 0)
-            }
-            backgroundColor={backgroundColor}
-            canAddLocation={question.can_add_location == "Y"}
-            canAddComment={question.can_add_comment}
-            canAddPhotoMaxCount={question.can_add_photo_max_count}
-            photoText={question.photo_text}
-            photoUrl={question.photo_url}
-          >
-            {/* For checking if the component is yes_or_no question -> data from db */}
-            {question.yes_no_question === "Y" ? (
-              <>
-                <QuestionRadioButtons
-                  key={question.question_code}
-                  options={answerChoices}
-                  value={question.question_id}
-                  firstButtonLabel={answerChoices[0].label}
-                  secondButtonLabel={answerChoices[1].label}
-                />
-              </>
-            ) : (
-              <>
-                <QuestionDropdown
-                  key={question.question_id}
-                  options={answerChoices}
-                  questionNumber={question.question_id}
-                  blockId={question.question_block_id}
-                />
-              </>
-            )}
-          </QuestionContainer>
+          <>
+            {/* usage: when first block/main question list the contact infromation questions also
+                todo: maybe remove this after the contactinfo comes from db and/or logic changes
+            */}
+            {question.question_block_id === 0 ? (
+              <ContactInformationQuestionContainer key={99} blockNumber={99} />
+            ) : null}
+
+            <QuestionContainer
+              key={question.question_id}
+              questionId={question.question_id}
+              questionBlockId={question.question_block_id}
+              questionNumber={question.question_code}
+              questionText={question.text}
+              questionInfo={question.description ?? null}
+              hasAdditionalInfo={
+                additionalInfoVisible &&
+                (question.can_add_location == "Y" ||
+                  question.can_add_comment == "Y" ||
+                  question.can_add_photo_max_count != 0)
+              }
+              backgroundColor={backgroundColor}
+              canAddLocation={question.can_add_location == "Y"}
+              canAddComment={question.can_add_comment}
+              canAddPhotoMaxCount={question.can_add_photo_max_count}
+              photoText={question.photo_text}
+              photoUrl={question.photo_url}
+            >
+              {/* For checking if the component is yes_or_no question -> data from db */}
+              {question.yes_no_question === "Y" ? (
+                <>
+                  <QuestionRadioButtons
+                    key={question.question_code}
+                    options={answerChoices}
+                    value={question.question_id}
+                    firstButtonLabel={answerChoices[0].label}
+                    secondButtonLabel={answerChoices[1].label}
+                  />
+                </>
+              ) : (
+                <>
+                  <QuestionDropdown
+                    key={question.question_id}
+                    options={answerChoices}
+                    questionNumber={question.question_id}
+                    blockId={question.question_block_id}
+                  />
+                </>
+              )}
+            </QuestionContainer>
+          </>
         );
       })}
     </>

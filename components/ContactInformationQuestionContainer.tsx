@@ -22,6 +22,7 @@ import { EMAIL_REGEX, PHONE_REGEX } from "../types/constants";
 // usage: used for contactinfo container for these questions are not from db and the
 // structure is diffetent/static
 // notes: i guess if this info would be fetched from db this component could be removed(?)
+// todo: maybe remove this whole component if these come from db with dame logic as other questions
 
 const ContactInformationQuestionContainer = ({
   blockNumber,
