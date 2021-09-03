@@ -183,8 +183,12 @@
     "saveAndSend": "Tallenna ja lähetä",
     "previewAccessibilityInformation": "Esikatsele esteettömyystiedot",
     "errorNotice": "Lomakkeen kaikkia pakollisia tietoja ei ole vielä täytetty. Palaa täydentämään tietoja.",
-    "mainEntranceLocationHeader": "Pääsisäänkäynnin sijainti"
-
+    "mainEntranceLocationHeader": "Pääsisäänkäynnin sijainti",
+    "addNewEntranceLabel": "Täydennä tietoja: Muut sisäänkäynnit",
+    "addNewEntranceBody": "Onko kohteessa pääsisäänkäynnin lisäksi muita sisäänkäyntejä? Täydennä esteettömyystiedot lisäämällä kaikki muut sisäänkäynnit",
+    "addNewEntranceButton": "Lisää sisäänkäynti",
+    "addNewEntranceNoEntrances": "Ei ole muita sisäänkäyntejä",
+    "addNewEntranceContinueLater": "Jatkan myöhemmin"
   },
   "AddressChangedPage": {
     "oldAddress": "Vanha osoite",

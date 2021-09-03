@@ -359,3 +359,10 @@ export interface ChangeProps {
   oldAddressCity?: string;
   user?: string;
 }
+
+export interface NoticeProps {
+  icon: JSX.Element;
+  title: string;
+  text: string;
+  button?: JSX.Element;
+}
