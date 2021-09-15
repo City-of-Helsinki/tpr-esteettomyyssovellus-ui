@@ -183,7 +183,12 @@
     "saveAndSend": "Save and send",
     "previewAccessibilityInformation": "Preview accessibility information",
     "errorNotice": "All required information on the form has not yet been completed. Return to complete the information",
-    "mainEntranceLocationHeader": "Location of the main entrance"
+    "mainEntranceLocationHeader": "Location of the main entrance",
+    "addNewEntranceLabel": "Complete information: Other entrances",
+    "addNewEntranceBody": "Are there other entrances to the site in addition to the main entrance? Complete all accessibility information by adding all other entrances",
+    "addNewEntranceButton": "Add entrance",
+    "addNewEntranceNoEntrances": "There are no other entrances",
+    "addNewEntranceContinueLater": "I will continue later"
   },
   "AddressChangedPage": {
     "oldAddress": "Old address",

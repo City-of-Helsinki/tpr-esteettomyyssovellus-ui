@@ -1,5 +1,5 @@
 import React from "react";
-import { IconArrowLeft, Card, Notification } from "hds-react";
+import { IconArrowLeft, Card, Notification, IconSignin } from "hds-react";
 import Button from "./QuestionButton";
 import styles from "./PreviewControlButtons.module.scss";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
@@ -17,6 +17,7 @@ import {
   getClientIp,
   postAdditionalInfo,
 } from "../utils/utilFunctions";
+import AddNewEntranceNotice from "./common/AddNewEntranceNotice";
 
 // usage: controls for preview page
 const PreviewControlButtons = ({ hasHeader }: any): JSX.Element => {
@@ -121,13 +122,19 @@ const PreviewControlButtons = ({ hasHeader }: any): JSX.Element => {
         <div className={styles.previewButtonHeader}>
           <h2>{i18n.t("PreviewPage.previewAccessibilityInformation")}</h2>
           {formFinished ? (
-            <Notification label="Form done" type="success">
-              {i18n.t("common.formFilledCorrectly")}
-            </Notification>
+            <>
+              <Notification label="Form done" type="success">
+                {i18n.t("common.formFilledCorrectly")}
+              </Notification>
+              {/* todo: check that this functionality/workflow is correct */}
+            </>
           ) : (
-            <Notification label="Missing information" type="error">
-              {i18n.t("PreviewPage.errorNotice")}
-            </Notification>
+            <>
+              <Notification label="Missing information" type="error">
+                {i18n.t("PreviewPage.errorNotice")}
+              </Notification>
+              <AddNewEntranceNotice />
+            </>
           )}
         </div>
       ) : (

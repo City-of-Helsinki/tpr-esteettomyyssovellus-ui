@@ -183,7 +183,12 @@
     "saveAndSend": "Spara och skicka",
     "previewAccessibilityInformation": "Förhandsgranska tillgänglighetsinformation",
     "errorNotice": "All nödvändig information på formuläret har ännu inte fyllts i. Återgå för att slutföra informationen",
-    "mainEntranceLocationHeader": "Platsen för huvudentrén"
+    "mainEntranceLocationHeader": "Platsen för huvudentrén",
+    "addNewEntranceLabel": "Komplett information: Övriga ingångar",
+    "addNewEntranceBody": "Finns det andra ingångar till platsen utöver huvudentrén? Fyll i all tillgänglighetsinformation genom att lägga till alla andra ingångar",
+    "addNewEntranceButton": "Lägg till entré",
+    "addNewEntranceNoEntrances": "Det finns inga andra ingångar",
+    "addNewEntranceContinueLater": "Jag fortsätter senare"
   },
   "AddressChangedPage": {
     "oldAddress": "Gammal adress",
