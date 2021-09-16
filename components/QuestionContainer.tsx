@@ -141,14 +141,35 @@ const QuestionContainer = ({
                 {curQuestionAddinfos.comments &&
                 curQuestionAddinfos?.comments.fi !== "" ? (
                   <div className={styles.addinfopreviewcontainer}>
-                    {/* @ts-ignore */}
-                    <p>{curQuestionAddinfos.comments[curLocale]}</p>
+                    <p className={styles.nomargintop}>
+                      {/* @ts-ignore */}
+                      {curQuestionAddinfos.comments[curLocale]}
+                    </p>
                   </div>
                 ) : null}
                 {curQuestionAddinfos.pictures
                   ? curQuestionAddinfos.pictures.map((pic, index) => {
                       return (
                         <div className={styles.addinfopreviewcontainer}>
+                          <div className={styles.picturetextcontainer}>
+                            <p key={pic.qNumber + "alt" + index}>
+                              <span>
+                                {i18n.t(
+                                  "accessibilityForm.additionalInfoPreviewAltText"
+                                )}
+                              </span>
+                              {/* @ts-ignore */}
+                              {pic[curLocale]}
+                            </p>
+                            <p key={pic.qNumber + "source" + index}>
+                              <span>
+                                {i18n.t(
+                                  "accessibilityForm.additionalInfoPreviewSourceText"
+                                )}
+                              </span>
+                              {pic.source ? pic.source : null}
+                            </p>
+                          </div>
                           <div
                             className={styles.addinfopicturepreview}
                             style={{
@@ -156,39 +177,26 @@ const QuestionContainer = ({
                                 `url(` + `${pic.base ?? pic.url}` + `)`,
                             }}
                           />
-
-                          <p key={pic.qNumber + "alt" + index}>
-                            <span>
-                              {i18n.t(
-                                "accessibilityForm.additionalInfoPreviewAltText"
-                              )}
-                            </span>
-                            {/* @ts-ignore */}
-                            {pic[curLocale]}
-                          </p>
-                          <p key={pic.qNumber + "source" + index}>
-                            <span>
-                              {i18n.t(
-                                "accessibilityForm.additionalInfoPreviewSourceText"
-                              )}
-                            </span>
-                            {pic.source ? pic.source : null}
-                          </p>
                         </div>
                       );
                     })
                   : null}
                 {curQuestionAddinfos.locations &&
                 curQuestionAddinfos.locations.coordinates ? (
-                  <div className={styles.mappreview}>
-                    <Map
-                      initCenter={curQuestionAddinfos.locations.coordinates!}
-                      initLocation={curQuestionAddinfos.locations.coordinates!}
-                      initZoom={17}
-                      draggableMarker={false}
-                      questionId={questionId!}
-                      makeStatic={true}
-                    />
+                  <div className={styles.addinfopreviewcontainer}>
+                    <div className={styles.mapcontainerspacer}></div>
+                    <div className={styles.mappreview}>
+                      <Map
+                        initCenter={curQuestionAddinfos.locations.coordinates!}
+                        initLocation={
+                          curQuestionAddinfos.locations.coordinates!
+                        }
+                        initZoom={17}
+                        draggableMarker={false}
+                        questionId={questionId!}
+                        makeStatic={true}
+                      />
+                    </div>
                   </div>
                 ) : null}
               </div>

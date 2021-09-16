@@ -12,7 +12,7 @@
     padding: $spacing-l $spacing-s;
     @include media(xs, s) {
       flex-direction: column;
-      padding: $spacing-m 0;
+      padding: $spacing-m;
     }
     .infoContainer {
       display: flex;
@@ -33,7 +33,7 @@
     }
   }
   .maintext {
-    width: "70%";
+    width: 70%;
   }
   .children {
     flex: auto;
@@ -49,7 +49,7 @@
     border-top: 1px solid blue;
   }
   .addinfos {
-    padding: $spacing-m $spacing-s;
+    padding: 0 $spacing-s;
 
     p {
       word-wrap: break-word;
@@ -57,15 +57,35 @@
     }
 
     h4 {
-      padding: 0 0 $spacing-m 0;
+      padding: 0;
     }
 
     .addinfopreviewcontainer {
+      display: flex;
+      justify-content: space-between;
       border-bottom: 1px solid $color-black-40;
-      margin: $spacing-m 0;
-      max-width: 50%;
+      padding: $spacing-m 0;
+      @include media(xs, s) {
+        flex-direction: column;
+      }
+      .nomargintop {
+        margin-top: 0;
+      }
+      .picturetextcontainer {
+        min-width: 50%;
+        @include media(xs, s) {
+          width: 100%;
+        }
+      }
+      .mapcontainerspacer {
+        min-width: 50%;
+        @include media(xs, s) {
+          display: none;
+        }
+      }
       .addinfopicturepreview {
         padding: $spacing-s;
+        padding-right: $spacing-2-xl;
         @include media(xs, s) {
           padding: 0;
         }
@@ -75,13 +95,18 @@
         background-size: contain;
         background-position: left;
         @include media(xs, s) {
-          height: 10rem;
-          width: 10rem;
+          height: 12.5rem;
+          width: 12.5rem;
         }
       }
     }
     .mappreview {
-      width: 75%;
+      padding: $spacing-s $spacing-l;
+      width: 40%;
+      @include media(xs, s, m) {
+        padding: 0;
+        width: 70%;
+      }
     }
     .editaddinfobutton {
       margin-left: 0;
