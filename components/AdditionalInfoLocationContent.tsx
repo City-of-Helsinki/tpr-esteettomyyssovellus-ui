@@ -13,6 +13,8 @@ import QuestionButton from "./QuestionButton";
 const AdditionalInfoLocationContent = ({
   questionId,
   onDelete,
+  canDelete = true,
+  isMainLocPicComponent,
 }: AdditionalContentProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
@@ -96,6 +98,7 @@ const AdditionalInfoLocationContent = ({
         initZoom={14}
         draggableMarker={true}
         questionId={questionId}
+        isMainLocPicComponent={isMainLocPicComponent}
       />
     );
   }, [coords]);
@@ -117,7 +120,6 @@ const AdditionalInfoLocationContent = ({
             errorText={addressErrorText}
           />
         </span> */}
-
         {/* button for geocoding, remove if not needed */}
         {/* <QuestionButton
           variant="secondary"
@@ -126,13 +128,15 @@ const AdditionalInfoLocationContent = ({
         >
           PH: Hae osoite kartalle
         </QuestionButton> */}
-        <QuestionButton
-          variant="secondary"
-          iconRight={<IconCross />}
-          onClickHandler={() => handleOnDelete()}
-        >
-          {i18n.t("additionalInfo.cancelLocation")}
-        </QuestionButton>
+        {canDelete ? (
+          <QuestionButton
+            variant="secondary"
+            iconRight={<IconCross />}
+            onClickHandler={() => handleOnDelete()}
+          >
+            {i18n.t("additionalInfo.cancelLocation")}
+          </QuestionButton>
+        ) : null}
       </div>
       <div className={styles.mapcontainer}>{memoMap}</div>
     </div>

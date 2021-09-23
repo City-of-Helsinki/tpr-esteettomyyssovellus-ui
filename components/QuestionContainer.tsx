@@ -13,6 +13,7 @@ import { setCurrentlyEditingBlock } from "../state/reducers/generalSlice";
 
 // usage: container for single question row e.g. header/text, additional infos and dropdown/radiobutton
 // and possible addinfo previews if question has addinfos
+// note: MainLocationOrImage uses questionId as id and questionBlockId as caseid for location or image
 const QuestionContainer = ({
   questionId,
   questionBlockId,
@@ -27,6 +28,7 @@ const QuestionContainer = ({
   canAddLocation,
   canAddPhotoMaxCount,
   canAddComment,
+  isMainLocPicComponent,
 }: QuestionContainerProps): JSX.Element => {
   const i18n = useI18n();
   const router = useRouter();
@@ -61,12 +63,28 @@ const QuestionContainer = ({
           backgroundColor,
         };
 
+  if (isMainLocPicComponent) {
+    console.log("isMainLocPicComponent");
+    console.log(questionId);
+  }
+
   const handleEditAddInfo = () => {
-    if (questionBlockId && questionBlockId !== undefined) {
+    // todo: this is for the edit text to go to page -> edit to work
+
+    const pageUrl = isMainLocPicComponent
+      ? `/mainLocationOrImage/${questionId}/${questionBlockId}`
+      : `/additionalInfo/${questionId ?? ""}`;
+
+    if (
+      questionBlockId &&
+      questionBlockId !== undefined &&
+      !isMainLocPicComponent
+    ) {
       dispatch(setCurrentlyEditingBlock(questionBlockId));
     }
+
     // Use the shallow option to avoid a server-side render in order to preserve the state
-    router.push(`/additionalInfo/${questionId ?? ""}`, undefined, {
+    router.push(pageUrl, undefined, {
       shallow: true,
     });
   };
@@ -109,9 +127,10 @@ const QuestionContainer = ({
             key={questionNumber + "a"}
             questionId={questionId}
             blockId={questionBlockId}
-            canAddLocation={canAddLocation}
-            canAddPhotoMaxCount={canAddPhotoMaxCount}
-            canAddComment={canAddComment}
+            // canAddLocation={canAddLocation}
+            // canAddPhotoMaxCount={canAddPhotoMaxCount}
+            // canAddComment={canAddComment}
+            isMainLocPicComponent={isMainLocPicComponent}
           />
         ) : null}
         {isInvalid && curAnswers[questionId!] == undefined ? (

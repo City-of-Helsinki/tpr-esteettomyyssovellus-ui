@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { MainPicture, MainPictureProps } from "../../types/general";
 
 interface formState {
   currentServicepointId: number;
@@ -16,6 +17,9 @@ interface formState {
   formInited: boolean;
   formFinished: boolean;
   formSubmitted: boolean;
+  mainImageElement: string;
+  mainImageInvalidValues: string[];
+  mainImage?: MainPictureProps;
 }
 
 const initialState: formState = {
@@ -31,6 +35,9 @@ const initialState: formState = {
   formInited: false,
   formFinished: false,
   formSubmitted: false,
+  mainImageElement: "",
+  mainImageInvalidValues: [],
+  mainImage: {} as MainPictureProps,
 };
 
 export const formSlice = createSlice({
@@ -242,9 +249,79 @@ export const formSlice = createSlice({
         formSubmitted: true,
       };
     },
+    // for saving main Image (with location) element for can be upload or link
+    addMainImageElement: (state, action: PayloadAction<string>) => {
+      return {
+        ...state,
+        mainImageElement: action.payload,
+      };
+    },
+    // for removing above added element
+    removeMainImageElement: (state) => {
+      return {
+        ...state,
+        mainImageElement: "",
+      };
+    },
+    removeMainImageInvalidValue: (state, action: PayloadAction<string>) => {
+      const filteredInvalids = state.mainImageInvalidValues.filter(
+        (inv) => inv !== action.payload
+      );
+      return {
+        ...state,
+        mainImageInvalidValues: filteredInvalids,
+      };
+    },
+    addMainImageInvalidValue: (state, action: PayloadAction<string[]>) => {
+      // const updatedInvalids = [
+      //   state.mainImageInvalidValues,
+      //   ...action.payload,
+      // ];
+      return {
+        ...state,
+        mainImageInvalidValues: [
+          ...state.mainImageInvalidValues,
+          ...action.payload,
+        ],
+      };
+    },
+    addMainPicture: (state, action: PayloadAction<MainPictureProps>) => {
+      return {
+        ...state,
+        mainImage: action.payload,
+      };
+    },
+    removeMainPicture: (state) => {
+      return {
+        ...state,
+        mainImage: {} as MainPictureProps,
+      };
+    },
+    setMainPictureAlt: (
+      state,
+      action: PayloadAction<{ language: string; value: string }>
+    ) => {
+      const updatedMainPic = {
+        ...state.mainImage,
+        [action.payload.language]: action.payload.value,
+      } as MainPictureProps;
+      return {
+        ...state,
+        mainImage: updatedMainPic,
+      };
+    },
+    setMainPictureSource: (state, action: PayloadAction<string>) => {
+      const updatedMainImage = {
+        ...state.mainImage,
+        source: action.payload,
+      };
+      return {
+        ...state,
+        mainImage: updatedMainImage as MainPictureProps,
+      };
+    },
   },
 });
-
 export const {
   clearFormState,
   setServicepointId,
@@ -271,6 +348,14 @@ export const {
   setWwwAddress,
   changeWwwStatus,
   setFormSubmitted,
+  addMainImageElement,
+  removeMainImageElement,
+  removeMainImageInvalidValue,
+  addMainImageInvalidValue,
+  addMainPicture,
+  removeMainPicture,
+  setMainPictureAlt,
+  setMainPictureSource,
 } = formSlice.actions;
 
 export default formSlice.reducer;

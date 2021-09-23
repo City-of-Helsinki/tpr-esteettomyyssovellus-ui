@@ -1,4 +1,4 @@
-import React, { ReactElement, useRef, useEffect } from "react";
+import React, { ReactElement, useRef, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useI18n } from "next-localization";
 import {
@@ -15,6 +15,10 @@ import { useDispatch } from "react-redux";
 import { addLocation } from "../../state/reducers/additionalInfoSlice";
 import { useAppSelector } from "../../state/hooks";
 import { convertCoordinates, isLocationValid } from "../../utils/utilFunctions";
+import {
+  setServicepointLocation,
+  setServicepointLocationWGS84,
+} from "../../state/reducers/generalSlice";
 
 interface MapWrapperProps {
   questionId: number;
@@ -24,6 +28,7 @@ interface MapWrapperProps {
   setMapReady?: (ready: boolean) => void;
   draggableMarker?: boolean;
   makeStatic: boolean;
+  isMainLocPicComponent?: boolean;
 }
 
 // usage: leaflet map used in the project
@@ -35,6 +40,7 @@ const MapWrapper = ({
   setMapReady,
   draggableMarker,
   makeStatic,
+  isMainLocPicComponent,
 }: MapWrapperProps): ReactElement => {
   const i18n = useI18n();
   const router = useRouter();
@@ -80,14 +86,41 @@ const MapWrapper = ({
       );
     }
 
-    dispatch(
-      addLocation({
-        questionId: questionId,
-        coordinates: coordinates,
-        locNorthing: Math.round(locNor),
-        locEasting: Math.round(locEas),
-      })
-    );
+    // this case is for mainform mainlocation, questionId -1
+    if (isMainLocPicComponent && questionId === -1) {
+      // set state main location main form
+      const coordinates: [number, number] = [locEas, locNor];
+      //@ts-ignore: [number, number] != number[]
+      const coordinatesWGS84: [number, number] = convertCoordinates(
+        "EPSG:3067",
+        "WGS84",
+        coordinates
+      ).reverse();
+
+      dispatch(
+        setServicepointLocation({
+          coordinates,
+        })
+      );
+
+      dispatch(
+        setServicepointLocationWGS84({
+          coordinatesWGS84,
+        })
+      );
+    } else if (isMainLocPicComponent && questionId >= 0) {
+      // todo: state set state addentrance location
+    } else {
+      // for additionalinfo location adding
+      dispatch(
+        addLocation({
+          questionId: questionId,
+          coordinates: coordinates,
+          locNorthing: Math.round(locNor),
+          locEasting: Math.round(locEas),
+        })
+      );
+    }
   };
 
   // Use the icon images from the public folder
@@ -143,7 +176,6 @@ const MapWrapper = ({
       }
     }, [map]);
 
-    // Store the map view in redux state, so that the same zoom can be used when changing pages
     // The map centre is stored if needed, but currently the map is always centred on the marker position
     // If there is no initLocation, allow a map click (or tap) to store the click initLocation in redux, which then causes the marker to be shown
     useMapEvents({

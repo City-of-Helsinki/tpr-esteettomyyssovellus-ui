@@ -13,6 +13,7 @@ const Map = ({
   draggableMarker,
   makeStatic = false,
   isPreview = false,
+  isMainLocPicComponent,
 }: MapProps): JSX.Element => {
   const MapWrapper = dynamic(() => import("./MapWrapper"), { ssr: false });
 
@@ -27,6 +28,7 @@ const Map = ({
         initLocation={initLocation}
         draggableMarker={draggableMarker}
         makeStatic={makeStatic}
+        isMainLocPicComponent={isMainLocPicComponent}
       />
     </div>
   );

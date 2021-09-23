@@ -2,8 +2,10 @@ import React from "react";
 import QuestionDropdown from "./QuestionDropdown";
 import QuestionRadioButtons from "./QuestionRadioButtons";
 import QuestionContainer from "./QuestionContainer";
-import { QuestionsListProps } from "../types/general";
+import { QuestionProps, QuestionsListProps } from "../types/general";
 import ContactInformationQuestionContainer from "./ContactInformationQuestionContainer";
+import QuestionInfo from "./QuestionInfo";
+import BlockMainLocationPictureContent from "./BlockMainLocationPictureContent";
 
 // usage: list questions component, should be called once per question block
 const QuestionsList = ({
@@ -13,7 +15,7 @@ const QuestionsList = ({
 }: QuestionsListProps): JSX.Element => {
   return (
     <>
-      {questions?.map((question: any, ind: number) => {
+      {questions?.map((question: QuestionProps, ind: number) => {
         const answerChoices: any = answers
           ?.filter((answer) => answer.question_id === question.question_id)
           .map((choice) => {
@@ -33,6 +35,13 @@ const QuestionsList = ({
               <ContactInformationQuestionContainer key={99} blockNumber={99} />
             ) : null}
 
+            {/* for adding location and/or picture to block (basically this is the main location/picture) */}
+            {/* todo: check if possible to add location and/or picture (condition from block level) and add components respectively */}
+            {/* this ternary just placeholder */}
+            {question.question_block_id === 0 ? (
+              <BlockMainLocationPictureContent canAddLocation canAddPicture />
+            ) : null}
+
             <QuestionContainer
               key={question.question_id}
               questionId={question.question_id}
@@ -48,7 +57,7 @@ const QuestionsList = ({
               }
               backgroundColor={backgroundColor}
               canAddLocation={question.can_add_location == "Y"}
-              canAddComment={question.can_add_comment}
+              canAddComment={question.can_add_comment == "Y"}
               canAddPhotoMaxCount={question.can_add_photo_max_count}
               photoText={question.photo_text}
               photoUrl={question.photo_url}

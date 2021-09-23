@@ -17,10 +17,10 @@ export interface GeneralState {
 
 export interface QuestionContainerProps {
   questionId?: number;
-  questionBlockId?: number;
-  questionNumber?: number;
+  questionBlockId: number;
+  questionNumber: number | string;
   questionText: string;
-  questionInfo?: string | undefined;
+  questionInfo?: string | null;
   children: JSX.Element;
   hasAdditionalInfo: boolean;
   backgroundColor: string;
@@ -29,6 +29,7 @@ export interface QuestionContainerProps {
   canAddComment?: boolean;
   photoUrl?: string | null;
   photoText?: string | null;
+  isMainLocPicComponent?: boolean;
 }
 
 export interface HeadlineQuestionContainerProps {
@@ -129,6 +130,7 @@ export interface MapProps {
   updateLocationHandler?: (location: LatLngExpression) => void;
   makeStatic?: boolean;
   isPreview?: boolean;
+  isMainLocPicComponent?: boolean;
 }
 
 // general for qnumber
@@ -136,6 +138,15 @@ export interface AdditionalContentProps {
   onlyLink?: boolean;
   questionId: number;
   compId: number;
+  onDelete?: (id?: number, type?: string) => void;
+  canDelete?: boolean;
+  initValue?: any;
+  isMainLocPicComponent?: boolean;
+}
+
+export interface MainPictureContentProps {
+  onlyLink?: boolean;
+  pageId: number;
   onDelete?: (id?: number, type?: string) => void;
   initValue?: any;
 }
@@ -187,10 +198,26 @@ export interface PictureProps {
   sv?: string;
 }
 
+export interface MainPictureProps {
+  base?: string;
+  uuid?: string;
+  url?: string;
+  name?: string;
+  source?: string;
+  fi: string;
+  en?: string;
+  sv?: string;
+}
+
 export interface AdditionalInfoProps {
   initAddInfoFromDb: any;
   curEditingInitialState: object;
   [key: string]: AdditionalInfos;
+}
+
+export interface MainLocationOrImageProps {
+  pageId: number;
+  caseId: number;
 }
 
 // Common interfaces
@@ -258,19 +285,19 @@ export interface QuestionProps {
   can_add_location?: string;
   can_add_photo_max_count?: number;
   description?: string;
-  form_id?: number;
+  form_id: number;
   language_id: number;
   photo_text?: string | null;
   photo_url?: string | null;
-  question_block_id?: number;
-  question_code?: string;
-  question_id?: number;
-  question_level?: number;
-  question_order_text?: string;
-  technical_id?: string;
-  text?: string;
-  visible_if_question_choice?: string;
-  yes_no_question?: string;
+  question_block_id: number;
+  question_code: string;
+  question_id: number;
+  question_level: number;
+  question_order_text: string;
+  technical_id: string;
+  text: string;
+  visible_if_question_choice: string;
+  yes_no_question: string;
 }
 
 export interface QuestionBlockProps {
@@ -332,6 +359,7 @@ export interface QuestionAdditionalInfoProps {
   canAddLocation?: boolean;
   canAddPhotoMaxCount?: number;
   canAddComment?: boolean;
+  isMainLocPicComponent?: boolean;
 }
 
 export interface ContactInformationProps {
@@ -341,6 +369,10 @@ export interface ContactInformationProps {
 export interface AdditionalInfoPageProps {
   questionId: number;
   questionData?: QuestionProps[];
+}
+
+export interface MainLocationOrImageProps {
+  caseId: number;
 }
 
 export interface AdditionalInfoCtrlButtonsProps {
@@ -365,4 +397,9 @@ export interface NoticeProps {
   title: string;
   text: string;
   button?: JSX.Element;
+}
+
+export interface mainLocationAndPictureProps {
+  canAddLocation: boolean;
+  canAddPicture: boolean;
 }

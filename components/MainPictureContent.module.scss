@@ -1,0 +1,99 @@
+@import "~hds-design-tokens/lib/all.scss";
+@import "../styles/mixins.scss";
+
+// note: copied from addinfopicture, modify!
+
+.maincontainer {
+  padding: $spacing-m;
+  .inputcontainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    button {
+      margin: 0 $spacing-2-xs;
+      padding: 0.2rem 0.2rem;
+      background-color: $color-white !important;
+      border: 2px solid $color-bus !important;
+      &:disabled {
+        color: $color-black-40 !important;
+        border: 2px solid $color-black-40 !important;
+      }
+      @include media(xs, s) {
+        margin: $spacing-2-xs 0;
+      }
+    }
+    @include media(xs, s) {
+      display: block;
+    }
+    .inputfield {
+      width: 50%;
+      @include media(xs, s) {
+        width: 100%;
+      }
+    }
+    .hidden {
+      display: none;
+    }
+  }
+  .lowercontentcontainer {
+    margin: $spacing-xl 0;
+    width: 65%;
+    @include media(xs, s, m) {
+      flex-direction: column;
+      width: 100%;
+    }
+    .altcontainer {
+      label {
+        margin: $spacing-m 0;
+      }
+      button {
+        color: $color-black;
+        background-color: $color-white;
+      }
+      textArea {
+        height: $spacing-xl * 3;
+      }
+      .altLabel {
+        margin: $spacing-l 0;
+      }
+    }
+    .picrutepreviewcontainer {
+      padding: $spacing-s;
+      @include media(xs, s) {
+        padding: 0;
+      }
+      div {
+        height: 25rem;
+        width: 25rem;
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: left;
+        @include media(xs, s) {
+          height: 15rem;
+          width: 15rem;
+        }
+      }
+    }
+    .picturetermscontainer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: $spacing-xl 0;
+      button {
+        color: $color-black;
+        background-color: $color-white;
+      }
+    }
+    .picturesourcecontainer {
+      margin: $spacing-xl 0;
+      input {
+        margin: $spacing-s 0;
+      }
+      button {
+        color: $color-black;
+        background-color: $color-white;
+      }
+    }
+  }
+}

@@ -1,0 +1,13 @@
+@import "~hds-design-tokens/lib/all.scss";
+@import "../styles/mixins.scss";
+
+.mappreviewcontainer {
+  width: 28rem;
+  @include media(xs, s, m) {
+    width: 15rem;
+  }
+}
+
+.mappreview {
+  width: 100%;
+}

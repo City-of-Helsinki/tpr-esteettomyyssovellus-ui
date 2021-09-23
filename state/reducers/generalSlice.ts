@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface generalSliceProps {
   coordinates: [number, number];
+  coordinatesWGS84: [number, number];
   user: string | string[];
   currentlyEditingQuestionAddinfo: number;
   currentlyEditingBlockAddinfo: number;
@@ -10,6 +11,7 @@ interface generalSliceProps {
 // todo: get the initial location to here
 const initialState: generalSliceProps = {
   coordinates: [0, 0],
+  coordinatesWGS84: [0, 0],
   user: "",
   currentlyEditingQuestionAddinfo: -1,
   currentlyEditingBlockAddinfo: -1,
@@ -47,6 +49,14 @@ export const generalSlice = createSlice({
       const coordinates = action.payload.coordinates;
       return { ...state, coordinates };
     },
+    setServicepointLocationWGS84: (
+      state,
+      action: PayloadAction<{ coordinatesWGS84: [number, number] }>
+    ) => {
+      const coordinatesWGS84 = action.payload.coordinatesWGS84;
+      return { ...state, coordinatesWGS84 };
+    },
+
     setUser: (state, action: PayloadAction<string | string[]>) => {
       return {
         ...state,
@@ -59,6 +69,7 @@ export const generalSlice = createSlice({
 export const {
   clearGeneralState,
   setServicepointLocation,
+  setServicepointLocationWGS84,
   setCurrentlyEditingBlock,
   setUser,
   setCurrentlyEditingQuestion,
