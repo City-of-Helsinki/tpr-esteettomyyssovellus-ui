@@ -7,7 +7,6 @@ import dynamic from "next/dynamic";
 // notes: dynamic import of MapWrapper is important for leaflet functionality
 const Map = ({
   questionId,
-  initCenter,
   initZoom,
   initLocation,
   draggableMarker,

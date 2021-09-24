@@ -123,7 +123,7 @@ export interface ServicepointLandingSummaryCtrlButtonsProps {
 
 export interface MapProps {
   questionId: number;
-  initCenter: [number, number] | number[];
+  initCenter?: [number, number] | number[];
   initZoom: number;
   initLocation: [number, number] | number[];
   draggableMarker?: boolean;

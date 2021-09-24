@@ -23,7 +23,7 @@ import {
 interface MapWrapperProps {
   questionId: number;
   initialZoom: number;
-  initLocation: [number, number] | number[];
+  initLocation?: [number, number] | number[];
   setLocation?: (initLocation: [number, number]) => void;
   setMapReady?: (ready: boolean) => void;
   draggableMarker?: boolean;
@@ -40,7 +40,8 @@ const MapWrapper = ({
   setMapReady,
   draggableMarker,
   makeStatic,
-  isMainLocPicComponent,
+  initLocation,
+  isMainLocPicComponent = false,
 }: MapWrapperProps): ReactElement => {
   const i18n = useI18n();
   const router = useRouter();
@@ -48,19 +49,21 @@ const MapWrapper = ({
 
   const markerRef = useRef<LeafletMarker>(null);
 
+  // state location for addinfos for getting location from addinfo question state
   const stateLocation = useAppSelector(
     (state) => state.additionalInfoReducer[questionId]?.locations?.coordinates
   );
 
-  const initLocation = useAppSelector(
-    (state) => state.generalSlice.coordinates
-  );
+  // for setting initLocation or fallback getting it from state
+  const initGeneralLocation = initLocation
+    ? initLocation
+    : useAppSelector((state) => state.generalSlice.coordinatesWGS84);
 
   // @ts-ignore : ignore types because .reverse() returns number[]
   const curLocation: [number, number] =
-    stateLocation && stateLocation !== undefined
+    stateLocation && stateLocation !== undefined && !isMainLocPicComponent
       ? stateLocation
-      : convertCoordinates("EPSG:3067", "WGS84", initLocation).reverse();
+      : initGeneralLocation;
 
   const setLocation = (
     coordinates: [number, number],
@@ -195,7 +198,7 @@ const MapWrapper = ({
       setMapReady(true);
     }
     if (!stateLocation || stateLocation === undefined) {
-      setLocation(curLocation, initLocation[1], initLocation[0]);
+      setLocation(curLocation, curLocation[1], curLocation[0]);
     }
   };
 

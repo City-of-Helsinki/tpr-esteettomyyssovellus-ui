@@ -105,7 +105,9 @@ const MainLocationOrImage = ({
   const currentMainImage =
     useAppSelector((state) => state.formReducer.mainImage) ?? null;
 
-  const coordinates = useAppSelector((state) => state.generalSlice.coordinates);
+  const coordinates = useAppSelector(
+    (state) => state.generalSlice.coordinatesWGS84
+  );
   const handleAddComponent = (element: string) => {
     // if page is mainform, else add to additional Entrance
     if (pageId === -1) {
@@ -154,7 +156,7 @@ const MainLocationOrImage = ({
                 {isLocation ? (
                   <div className={styles.componentcontainer}>
                     <AdditionalInfoLocationContent
-                      key={`key_-1`}
+                      key={`key_${pageId}`}
                       questionId={pageId}
                       compId={caseId}
                       initValue={coordinates ?? null}

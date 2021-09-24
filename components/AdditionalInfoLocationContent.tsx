@@ -14,7 +14,8 @@ const AdditionalInfoLocationContent = ({
   questionId,
   onDelete,
   canDelete = true,
-  isMainLocPicComponent,
+  initValue,
+  isMainLocPicComponent = false,
 }: AdditionalContentProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
@@ -22,16 +23,17 @@ const AdditionalInfoLocationContent = ({
   // geodocing related -> delete if not used in final production
   //   const [addressErrorText, setAddressErrorText] = useState("");
 
-  let coords: [number, number] = useAppSelector(
-    (state) => state.additionalInfoReducer[questionId].locations?.coordinates
-  ) ?? [0, 0];
+  const fallbackLocation =
+    !initValue && !isMainLocPicComponent
+      ? useAppSelector((state) => state.generalSlice.coordinatesWGS84)
+      : initValue;
 
-  if (coords === [0, 0]) {
-    coords = useAppSelector((state) => state.generalSlice.coordinates) ?? [
-      0,
-      0,
-    ];
-  }
+  const coords: [number, number] = !isMainLocPicComponent
+    ? useAppSelector(
+        (state) =>
+          state.additionalInfoReducer[questionId].locations?.coordinates
+      )
+    : fallbackLocation;
 
   // on delete button clicked chain delete location from store and delete component cb
   const handleOnDelete = () => {

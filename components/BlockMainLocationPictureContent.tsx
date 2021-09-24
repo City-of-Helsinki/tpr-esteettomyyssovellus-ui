@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useAppSelector } from "../state/hooks";
 import { mainLocationAndPictureProps } from "../types/general";
 import Map from "./common/Map";
@@ -12,9 +12,10 @@ const BlockMainLocationPictureContent = ({
   // note: questionBlockId 1 === location, 2 === image
   // todo: edit this
   const backgroundColor: string = 1 % 2 === 0 ? "#f2f2fc" : "#ffffff";
-  const coordinatesWGS84 = useAppSelector(
+  let coordinatesWGS84 = useAppSelector(
     (state) => state.generalSlice.coordinatesWGS84
   );
+
   return (
     <>
       {canAddLocation ? (
@@ -23,8 +24,8 @@ const BlockMainLocationPictureContent = ({
           questionId={-1}
           questionBlockId={1}
           questionNumber={""}
-          questionText={"PH: tähän kannasta tekstit"}
-          questionInfo={"PH: tähän ehkä jotain infot"}
+          questionText={"PH: Pääsisäänkäynnin sijainti (teksti kannasta??)"}
+          questionInfo={"PH: tähän jotain info (teksti kannasta??)"}
           hasAdditionalInfo={true}
           backgroundColor={backgroundColor}
           canAddLocation={true}
@@ -37,12 +38,12 @@ const BlockMainLocationPictureContent = ({
           <div className={styles.mappreviewcontainer}>
             <div className={styles.mappreview}>
               <Map
-                initCenter={coordinatesWGS84}
                 initLocation={coordinatesWGS84}
                 initZoom={17}
                 draggableMarker={false}
                 questionId={-1}
                 makeStatic={true}
+                isMainLocPicComponent={true}
               />
             </div>
           </div>
@@ -54,7 +55,7 @@ const BlockMainLocationPictureContent = ({
           questionId={-1}
           questionBlockId={2}
           questionNumber={""}
-          questionText={"PH: tähän kannasta tekstit"}
+          questionText={"PH: Pääsisäänkäynnin kuva (teksti kannasta?)"}
           questionInfo={"PH: tähän ehkä jotain infot"}
           hasAdditionalInfo={true}
           backgroundColor={backgroundColor}
