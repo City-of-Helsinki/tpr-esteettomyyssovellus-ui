@@ -6,6 +6,8 @@ interface generalSliceProps {
   user: string | string[];
   currentlyEditingQuestionAddinfo: number;
   currentlyEditingBlockAddinfo: number;
+  coordinatesTemp?: [number, number];
+  coordinatesWGS84Temp?: [number, number];
 }
 
 // todo: get the initial location to here
@@ -15,6 +17,8 @@ const initialState: generalSliceProps = {
   user: "",
   currentlyEditingQuestionAddinfo: -1,
   currentlyEditingBlockAddinfo: -1,
+  coordinatesTemp: [0, 0],
+  coordinatesWGS84Temp: [0, 0],
 };
 
 export const generalSlice = createSlice({
@@ -63,6 +67,19 @@ export const generalSlice = createSlice({
         user: action.payload,
       };
     },
+    setCurEditingBothCoordinateTemps: (
+      state,
+      action: PayloadAction<{
+        coordinates: [number, number];
+        coordinatesWGS84: [number, number];
+      }>
+    ) => {
+      return {
+        ...state,
+        coordinatesTemp: action.payload.coordinates,
+        coordinatesWGS84Temp: action.payload.coordinatesWGS84,
+      };
+    },
   },
 });
 
@@ -73,6 +90,7 @@ export const {
   setCurrentlyEditingBlock,
   setUser,
   setCurrentlyEditingQuestion,
+  setCurEditingBothCoordinateTemps,
 } = generalSlice.actions;
 
 export default generalSlice.reducer;

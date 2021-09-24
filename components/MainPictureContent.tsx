@@ -99,12 +99,14 @@ const MainPictureContent = ({
       };
       dispatch(addMainPicture(payload));
       // remove or add mandatory url validation to state
-      addMainImageInvalidValue(["url", "fi", "source", "sharelicense"]);
+      dispatch(
+        addMainImageInvalidValue(["url", "fi", "source", "sharelicense"])
+      );
       if ((imgBase64 && imgBase64 !== "") || (img.name && img.name !== "")) {
-        removeMainImageInvalidValue("url");
+        dispatch(removeMainImageInvalidValue("url"));
         //  todo: maybe add url === "" here
       } else if (imgBase64 !== "" || img.name === "") {
-        addMainImageInvalidValue(["url"]);
+        dispatch(addMainImageInvalidValue(["url"]));
       }
       // below for links component (not the upload component)
     } else {
@@ -121,9 +123,9 @@ const MainPictureContent = ({
           source: "",
         };
         dispatch(addMainPicture(payload));
-        removeMainImageInvalidValue("url");
+        dispatch(removeMainImageInvalidValue("url"));
       } else {
-        addMainImageInvalidValue(["url"]);
+        dispatch(addMainImageInvalidValue(["url"]));
       }
     }
   };
@@ -148,7 +150,7 @@ const MainPictureContent = ({
   const handleRemoveImage = () => {
     dispatch(removeMainPicture());
     // also adds errors back for validation
-    addMainImageInvalidValue(["url", "fi", "source", "sharelicense"]);
+    dispatch(addMainImageInvalidValue(["url", "fi", "source", "sharelicense"]));
   };
 
   // on delete button clicked chain delete image from store and delete component cb
@@ -170,9 +172,9 @@ const MainPictureContent = ({
     }, 500);
     // remove or add mandatory alt fi validation to state
     if (value && value !== "") {
-      removeMainImageInvalidValue("fi");
+      dispatch(removeMainImageInvalidValue("fi"));
     } else if (value === "") {
-      addMainImageInvalidValue(["fi"]);
+      dispatch(addMainImageInvalidValue(["fi"]));
     }
   };
 
@@ -182,9 +184,9 @@ const MainPictureContent = ({
   const onCheckChange = (e: any) => {
     setTermsChecked(!termsChecked);
     if (!termsChecked) {
-      removeMainImageInvalidValue("sharelicense");
+      dispatch(removeMainImageInvalidValue("sharelicense"));
     } else {
-      addMainImageInvalidValue(["sharelicense"]);
+      dispatch(addMainImageInvalidValue(["sharelicense"]));
     }
   };
 
@@ -194,9 +196,9 @@ const MainPictureContent = ({
     dispatch(setMainPictureSource(source));
     // remove or add mandatory source validation to state
     if (source && source !== "") {
-      removeMainImageInvalidValue("source");
+      dispatch(removeMainImageInvalidValue("source"));
     } else if (source === "") {
-      addMainImageInvalidValue(["source"]);
+      dispatch(addMainImageInvalidValue(["source"]));
     }
   };
 
@@ -205,9 +207,9 @@ const MainPictureContent = ({
     const value = e.currentTarget.value;
     value.length > 0 ? setLinkText(value) : null;
     if (value && value !== "") {
-      removeMainImageInvalidValue("url");
+      dispatch(removeMainImageInvalidValue("url"));
     } else if (value === "") {
-      addMainImageInvalidValue(["url"]);
+      dispatch(addMainImageInvalidValue(["url"]));
     }
   };
 
@@ -230,7 +232,9 @@ const MainPictureContent = ({
   useEffect(() => {
     // if addinfo page with no curimage or initvalue add default validation errors
     if (!curImage || !initValue) {
-      handleAddInvalidValues(["url", "fi", "source", "sharelicense"]);
+      dispatch(
+        addMainImageInvalidValue(["url", "fi", "source", "sharelicense"])
+      );
     } else {
       // set terms checked if already validated image due to always checked otherwise cant save
       setTermsChecked(true);

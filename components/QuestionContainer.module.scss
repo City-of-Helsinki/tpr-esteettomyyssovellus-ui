@@ -10,7 +10,7 @@
     flex-wrap: nowrap;
     align-items: flex-start;
     padding: $spacing-l $spacing-s;
-    @include media(xs, s) {
+    @include media(xs, s, m) {
       flex-direction: column;
       padding: $spacing-m;
     }

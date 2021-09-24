@@ -10,11 +10,12 @@ const BlockMainLocationPictureContent = ({
   canAddPicture,
 }: mainLocationAndPictureProps): JSX.Element => {
   // note: questionBlockId 1 === location, 2 === image
-  // todo: edit this
-  const backgroundColor: string = 1 % 2 === 0 ? "#f2f2fc" : "#ffffff";
-  let coordinatesWGS84 = useAppSelector(
+
+  const coordinatesWGS84 = useAppSelector(
     (state) => state.generalSlice.coordinatesWGS84
   );
+
+  const mainImage = useAppSelector((state) => state.formReducer.mainImage);
 
   return (
     <>
@@ -27,7 +28,7 @@ const BlockMainLocationPictureContent = ({
           questionText={"PH: Pääsisäänkäynnin sijainti (teksti kannasta??)"}
           questionInfo={"PH: tähän jotain info (teksti kannasta??)"}
           hasAdditionalInfo={true}
-          backgroundColor={backgroundColor}
+          backgroundColor={"#f2f2fc"}
           canAddLocation={true}
           canAddComment={false}
           canAddPhotoMaxCount={0}
@@ -58,7 +59,7 @@ const BlockMainLocationPictureContent = ({
           questionText={"PH: Pääsisäänkäynnin kuva (teksti kannasta?)"}
           questionInfo={"PH: tähän ehkä jotain infot"}
           hasAdditionalInfo={true}
-          backgroundColor={backgroundColor}
+          backgroundColor={"#ffffff"}
           canAddLocation={false}
           canAddComment={false}
           canAddPhotoMaxCount={1}
@@ -66,7 +67,19 @@ const BlockMainLocationPictureContent = ({
           photoUrl={"ph: photo_url??"}
           isMainLocPicComponent={true}
         >
-          <p>KUVA TÄHÄN</p>
+          {mainImage ? (
+            <div className={styles.addinfopreviewcontainer}>
+              <div
+                className={styles.addinfopicturepreview}
+                style={{
+                  backgroundImage:
+                    `url(` + `${mainImage.base ?? mainImage.url}` + `)`,
+                }}
+              />
+            </div>
+          ) : (
+            <></>
+          )}
         </QuestionContainer>
       ) : null}
     </>

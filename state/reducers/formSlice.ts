@@ -20,6 +20,7 @@ interface formState {
   mainImageElement: string;
   mainImageInvalidValues: string[];
   mainImage?: MainPictureProps;
+  mainImageTemp?: MainPictureProps;
 }
 
 const initialState: formState = {
@@ -38,6 +39,7 @@ const initialState: formState = {
   mainImageElement: "",
   mainImageInvalidValues: [],
   mainImage: {} as MainPictureProps,
+  mainImageTemp: {} as MainPictureProps,
 };
 
 export const formSlice = createSlice({
@@ -273,16 +275,17 @@ export const formSlice = createSlice({
       };
     },
     addMainImageInvalidValue: (state, action: PayloadAction<string[]>) => {
-      // const updatedInvalids = [
-      //   state.mainImageInvalidValues,
-      //   ...action.payload,
-      // ];
+      const updatedInvalids = [
+        ...state.mainImageInvalidValues,
+        ...action.payload,
+      ];
+
+      // @ts-ignore
+      const removedDublicatesInvalids = [...new Set(updatedInvalids)];
+
       return {
         ...state,
-        mainImageInvalidValues: [
-          ...state.mainImageInvalidValues,
-          ...action.payload,
-        ],
+        mainImageInvalidValues: removedDublicatesInvalids,
       };
     },
     addMainPicture: (state, action: PayloadAction<MainPictureProps>) => {
@@ -318,6 +321,15 @@ export const formSlice = createSlice({
       return {
         ...state,
         mainImage: updatedMainImage as MainPictureProps,
+      };
+    },
+    setCurEditingMainEntranceImageTemp: (
+      state,
+      action: PayloadAction<MainPictureProps>
+    ) => {
+      return {
+        ...state,
+        mainImageTemp: action.payload,
       };
     },
   },
@@ -356,6 +368,7 @@ export const {
   removeMainPicture,
   setMainPictureAlt,
   setMainPictureSource,
+  setCurEditingMainEntranceImageTemp,
 } = formSlice.actions;
 
 export default formSlice.reducer;

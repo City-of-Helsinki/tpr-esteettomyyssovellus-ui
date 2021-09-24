@@ -43,14 +43,17 @@ import {
 } from "../../../types/constants";
 import { Dictionary } from "@reduxjs/toolkit";
 import generalSlice, {
+  setCurEditingBothCoordinateTemps,
   setCurrentlyEditingQuestion,
 } from "../../../state/reducers/generalSlice";
 import LoadSpinner from "../../../components/common/LoadSpinner";
 import {
   addMainImageElement,
   removeMainImageElement,
+  setCurEditingMainEntranceImageTemp,
 } from "../../../state/reducers/formSlice";
 import MainPictureContent from "../../../components/MainPictureContent";
+import MainLocationPictureCtrlButtons from "../../../components/MainLocationPictureCtrlButtons";
 
 // usage: additional information page (per question)
 const MainLocationOrImage = ({
@@ -60,7 +63,6 @@ const MainLocationOrImage = ({
   // note: pageId is -1 for mainForm and 1,2,n for additionalEntrance (used for state logic)
   // caseId 1 === location, caseId 2 === image
   const i18n = useI18n();
-  const [imageAdded, setImageAdded] = useState(false);
   // todo: figure out better way to id (?)
   // current checks biggest id from cur addinfo and increments, if no found start form zero
   // init for current highest id is doned in useEffect [] 'highestElementId'
@@ -86,14 +88,20 @@ const MainLocationOrImage = ({
   // for saving current state obj initial state for if user edits and cancels without saving to return to old state or empty if no init addinfo
   useEffect(() => {
     // todo: save init state or not
-    // if (curAdditionalInfo && Object.entries(curAdditionalInfo).length > 0) {
-    //   dispatch(
-    //     setEditingInitialState({
-    //       obj: curAdditionalInfo,
-    //     })
-    //   );
-    // }
+    if (currentMainImage) {
+      dispatch(setCurEditingMainEntranceImageTemp(currentMainImage));
+    }
+    dispatch(
+      setCurEditingBothCoordinateTemps({
+        coordinates: coordinates,
+        coordinatesWGS84: coordinatesWGS84,
+      })
+    );
   }, []);
+
+  const hasMainImage = useAppSelector(
+    (state) => state.formReducer.mainImageElement
+  );
 
   const handleDelete = () => {
     dispatch(removeMainImageElement());
@@ -105,9 +113,12 @@ const MainLocationOrImage = ({
   const currentMainImage =
     useAppSelector((state) => state.formReducer.mainImage) ?? null;
 
-  const coordinates = useAppSelector(
+  const coordinates = useAppSelector((state) => state.generalSlice.coordinates);
+
+  const coordinatesWGS84 = useAppSelector(
     (state) => state.generalSlice.coordinatesWGS84
   );
+
   const handleAddComponent = (element: string) => {
     // if page is mainform, else add to additional Entrance
     if (pageId === -1) {
@@ -140,6 +151,7 @@ const MainLocationOrImage = ({
               </QuestionInfo>
             </div>
             <div>
+              <MainLocationPictureCtrlButtons />
               {/* todo: mod or create new buttons */}
               {/* <AdditionalInfoCtrlButtons questionId={questionId} /> */}
               <div>
@@ -153,13 +165,14 @@ const MainLocationOrImage = ({
                 </div>
               </div>
               <div className={styles.overrideheadlinestyles}>
+                {/* todo: maybe make more beautiful  */}
                 {isLocation ? (
                   <div className={styles.componentcontainer}>
                     <AdditionalInfoLocationContent
                       key={`key_${pageId}`}
                       questionId={pageId}
                       compId={caseId}
-                      initValue={coordinates ?? null}
+                      initValue={coordinatesWGS84 ?? null}
                       canDelete={false}
                       isMainLocPicComponent={true}
                     />
@@ -199,7 +212,7 @@ const MainLocationOrImage = ({
                         variant="secondary"
                         iconRight={<IconUpload />}
                         onClickHandler={() => handleAddComponent("upload")}
-                        disabled={imageAdded ? true : false}
+                        disabled={hasMainImage ? true : false}
                       >
                         {i18n.t(
                           "additionalInfo.ctrlButtons.addUploadImageFromDevice"
@@ -209,7 +222,7 @@ const MainLocationOrImage = ({
                         variant="secondary"
                         iconRight={<IconLink />}
                         onClickHandler={() => handleAddComponent("link")}
-                        disabled={imageAdded ? true : false}
+                        disabled={hasMainImage ? true : false}
                       >
                         {i18n.t("additionalInfo.ctrlButtons.addPictureLink")}
                       </QuestionButton>

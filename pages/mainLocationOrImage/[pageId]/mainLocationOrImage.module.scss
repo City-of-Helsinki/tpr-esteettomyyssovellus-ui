@@ -26,13 +26,6 @@
       flex-direction: column;
     }
   }
-  .overrideheadlinestyles {
-    div button {
-      color: $color-bus;
-      background-color: $color-bus-medium-light;
-      border: 0;
-    }
-  }
   .editedelementsctrl {
     margin: $spacing-l 0;
     h3 {
@@ -41,6 +34,7 @@
     }
     .editedelementsctrlbuttons {
       display: flex;
+      color: $color-bus;
     }
   }
 
