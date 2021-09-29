@@ -15,6 +15,7 @@ const Map = ({
   isMainLocPicComponent,
 }: MapProps): JSX.Element => {
   const MapWrapper = dynamic(() => import("./MapWrapper"), { ssr: false });
+  console.log("in map yes");
 
   return (
     <div

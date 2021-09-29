@@ -77,7 +77,6 @@
     "email": "Sähköpostiosoite",
     "www": "Nettisivu",
     "noInfo": "(ei tietoa)",
-
     "mainEntranceLocationLabel" : "Pääsisäänkäynnin sijainti kartalla",
     "mainEntranceLocationCoordinatesLabel" : "Koordinaatit",
     "mainEntrancePicturesLabel": "Pääsisäänkäynnin valokuvat"

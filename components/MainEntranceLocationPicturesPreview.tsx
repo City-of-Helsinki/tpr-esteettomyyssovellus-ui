@@ -9,12 +9,12 @@ import { useI18n } from "next-localization";
 const MainEntranceLocationPicturesPreview = (): JSX.Element => {
   const i18n = useI18n();
   const coordinates = useAppSelector(
-    (state) => state.generalSlice.coordinates
-  ) ?? [0, 0];
+    (state) => state.generalSlice.coordinatesWGS84
+  ) ?? [60.1, 24.9];
   return (
     <div className={styles.maincontainer}>
       <div className={styles.mapcontainer}>
-        <h4>{i18n.t("ContactInformation.mainEntranceLocationLabel")}</h4>
+        <h4>{i18n.t("servicepoint.mainEntranceLocationLabel")}</h4>
         <div className={styles.map}>
           <Map
             initCenter={coordinates!}
@@ -28,14 +28,16 @@ const MainEntranceLocationPicturesPreview = (): JSX.Element => {
           {coordinates && coordinates.length === 2 ? (
             <p>
               {`${i18n.t(
-                "ContactInformation.mainEntranceLocationCoordinatesLabel"
-              )}: E ${coordinates[0]}, N ${coordinates[1]}`}
+                "servicepoint.mainEntranceLocationCoordinatesLabel"
+              )}: E ${coordinates[0].toFixed(2)}, N ${coordinates[1].toFixed(
+                2
+              )}`}
             </p>
           ) : null}
         </div>
       </div>
       <div className={styles.picturescontainer}>
-        <h4>{i18n.t("ContactInformation.mainEntrancePicturesLabel")}</h4>
+        <h4>{i18n.t("servicepoint.mainEntrancePicturesLabel")}</h4>
         <div className={styles.pictures}>
           <div
             className={styles.picture}

@@ -13,7 +13,10 @@ import {
   AdditionalInfoCtrlButtonsProps,
   AdditionalInfoProps,
 } from "../types/general";
-import { addMainPicture } from "../state/reducers/formSlice";
+import {
+  addMainImageElement,
+  addMainPicture,
+} from "../state/reducers/formSlice";
 import {
   setServicepointLocation,
   setServicepointLocationWGS84,
@@ -35,6 +38,10 @@ const MainLocationPictureCtrlButtons = ({ caseId }: any): JSX.Element => {
     (state) => state.formReducer.mainImageTemp
   );
 
+  const mainimageElementTemp = useAppSelector(
+    (state) => state.formReducer.mainImageTempElement
+  );
+
   const coordinatesTemp = useAppSelector(
     (state) => state.generalSlice.coordinatesTemp
   );
@@ -46,6 +53,7 @@ const MainLocationPictureCtrlButtons = ({ caseId }: any): JSX.Element => {
   // handle user clicking back button on browser / mouse ->
   // needs to remove the "saved" values same as clicking return no save
   // also check if pageSaved (saved button clicked), if so then just return
+  // sets temps (which are set when first entering the page) to the non-temp/values
   useEffect(() => {
     router.beforePopState(({}) => {
       if (pageSaved) {
@@ -53,6 +61,9 @@ const MainLocationPictureCtrlButtons = ({ caseId }: any): JSX.Element => {
       }
       if (mainimageTemp) {
         dispatch(addMainPicture(mainimageTemp));
+      }
+      if (mainimageElementTemp) {
+        dispatch(addMainImageElement(mainimageElementTemp));
       }
       if (coordinatesTemp) {
         dispatch(

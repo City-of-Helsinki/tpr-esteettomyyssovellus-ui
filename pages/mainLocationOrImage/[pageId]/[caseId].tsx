@@ -49,6 +49,7 @@ import generalSlice, {
 import LoadSpinner from "../../../components/common/LoadSpinner";
 import {
   addMainImageElement,
+  addMainImageTempElement,
   removeMainImageElement,
   setCurEditingMainEntranceImageTemp,
 } from "../../../state/reducers/formSlice";
@@ -72,6 +73,18 @@ const MainLocationOrImage = ({
   // if caseId is 1 then location page, if caseId 2 then image page
   const isLocation = caseId === 1 ? true : false;
 
+  const currentMainImageElement =
+    useAppSelector((state) => state.formReducer.mainImageElement) ?? null;
+
+  const currentMainImage =
+    useAppSelector((state) => state.formReducer.mainImage) ?? null;
+
+  const coordinates = useAppSelector((state) => state.generalSlice.coordinates);
+
+  const coordinatesWGS84 = useAppSelector(
+    (state) => state.generalSlice.coordinatesWGS84
+  );
+
   // todo: maybe obsolete
   // const filterByLanguage = (data: any) => {
   //   const i18n = useI18n();
@@ -90,6 +103,7 @@ const MainLocationOrImage = ({
     // todo: save init state or not
     if (currentMainImage) {
       dispatch(setCurEditingMainEntranceImageTemp(currentMainImage));
+      dispatch(addMainImageTempElement(currentMainImageElement));
     }
     dispatch(
       setCurEditingBothCoordinateTemps({
@@ -107,24 +121,12 @@ const MainLocationOrImage = ({
     dispatch(removeMainImageElement());
   };
 
-  const currentMainImageElement =
-    useAppSelector((state) => state.formReducer.mainImageElement) ?? null;
-
-  const currentMainImage =
-    useAppSelector((state) => state.formReducer.mainImage) ?? null;
-
-  const coordinates = useAppSelector((state) => state.generalSlice.coordinates);
-
-  const coordinatesWGS84 = useAppSelector(
-    (state) => state.generalSlice.coordinatesWGS84
-  );
-
   const handleAddComponent = (element: string) => {
     // if page is mainform, else add to additional Entrance
     if (pageId === -1) {
       dispatch(addMainImageElement(element));
     } else {
-      // todo: todo
+      // todo: todo example
       // dispatch(addAdditionalEntranceImageElement(type));
     }
   };

@@ -28,8 +28,10 @@ import {
 import { CREATIVECOMMONS_URL } from "../types/constants";
 import { v4 as uuidv4 } from "uuid";
 import {
+  addMainImageElement,
   addMainImageInvalidValue,
   addMainPicture,
+  removeAllMainImageInvalidValues,
   removeMainImageInvalidValue,
   removeMainPicture,
   setMainPictureAlt,
@@ -110,6 +112,9 @@ const MainPictureContent = ({
       }
       // below for links component (not the upload component)
     } else {
+      dispatch(
+        addMainImageInvalidValue(["url", "fi", "source", "sharelicense"])
+      );
       // validate url inputted has image
       const isImage = await validateUrlIsImage(linkText);
       if (isImage) {
@@ -150,7 +155,7 @@ const MainPictureContent = ({
   const handleRemoveImage = () => {
     dispatch(removeMainPicture());
     // also adds errors back for validation
-    dispatch(addMainImageInvalidValue(["url", "fi", "source", "sharelicense"]));
+    dispatch(removeAllMainImageInvalidValues());
   };
 
   // on delete button clicked chain delete image from store and delete component cb

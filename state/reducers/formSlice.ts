@@ -18,6 +18,7 @@ interface formState {
   formFinished: boolean;
   formSubmitted: boolean;
   mainImageElement: string;
+  mainImageTempElement?: string;
   mainImageInvalidValues: string[];
   mainImage?: MainPictureProps;
   mainImageTemp?: MainPictureProps;
@@ -37,6 +38,7 @@ const initialState: formState = {
   formFinished: false,
   formSubmitted: false,
   mainImageElement: "",
+  mainImageTempElement: "",
   mainImageInvalidValues: [],
   mainImage: {} as MainPictureProps,
   mainImageTemp: {} as MainPictureProps,
@@ -258,6 +260,13 @@ export const formSlice = createSlice({
         mainImageElement: action.payload,
       };
     },
+    // not the prettiest solution, for saving the element for mainpicture edit page
+    addMainImageTempElement: (state, action: PayloadAction<string>) => {
+      return {
+        ...state,
+        mainImageTempElement: action.payload,
+      };
+    },
     // for removing above added element
     removeMainImageElement: (state) => {
       return {
@@ -272,6 +281,12 @@ export const formSlice = createSlice({
       return {
         ...state,
         mainImageInvalidValues: filteredInvalids,
+      };
+    },
+    removeAllMainImageInvalidValues: (state) => {
+      return {
+        ...state,
+        mainImageInvalidValues: [],
       };
     },
     addMainImageInvalidValue: (state, action: PayloadAction<string[]>) => {
@@ -361,8 +376,10 @@ export const {
   changeWwwStatus,
   setFormSubmitted,
   addMainImageElement,
+  addMainImageTempElement,
   removeMainImageElement,
   removeMainImageInvalidValue,
+  removeAllMainImageInvalidValues,
   addMainImageInvalidValue,
   addMainPicture,
   removeMainPicture,
