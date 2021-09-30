@@ -65,50 +65,35 @@ const MapWrapper = ({
       ? stateLocation
       : initGeneralLocation;
 
-  const setLocation = (
-    coordinates: [number, number],
-    initNorthing?: number,
-    initEasting?: number
-  ) => {
+  const setLocation = (coordinates: [number, number]) => {
     let locNor, locEas;
     // transform coordinates to northing and easting for db
     const LonLatReverseCoordinates: [number, number] = [
       coordinates[1],
       coordinates[0],
     ];
-    // if init values are provided, set those to the state
-    // otherwise transform coordinates (reversed) from wgs84 to 3067 and set to state
-    if (initNorthing && initEasting) {
-      locNor = initNorthing;
-      locEas = initEasting;
-    } else {
-      [locEas, locNor] = convertCoordinates(
-        "WGS84",
-        "EPSG:3067",
-        LonLatReverseCoordinates
-      );
-    }
+
+    [locEas, locNor] = convertCoordinates(
+      "WGS84",
+      "EPSG:3067",
+      LonLatReverseCoordinates
+    );
 
     // this case is for mainform mainlocation, questionId -1
     if (isMainLocPicComponent && questionId === -1) {
       // set state main location main form
-      const coordinates: [number, number] = [locEas, locNor];
       //@ts-ignore: [number, number] != number[]
-      const coordinatesWGS84: [number, number] = convertCoordinates(
-        "EPSG:3067",
-        "WGS84",
-        coordinates
-      ).reverse();
+      const coordinatesEPSG: [number, number] = [locEas, locNor];
 
       dispatch(
         setServicepointLocation({
-          coordinates,
+          coordinates: coordinatesEPSG,
         })
       );
 
       dispatch(
         setServicepointLocationWGS84({
-          coordinatesWGS84,
+          coordinatesWGS84: coordinates,
         })
       );
     } else if (isMainLocPicComponent && questionId >= 0) {
@@ -198,7 +183,7 @@ const MapWrapper = ({
       setMapReady(true);
     }
     if (!stateLocation || stateLocation === undefined) {
-      setLocation(curLocation, curLocation[1], curLocation[0]);
+      setLocation(curLocation);
     }
   };
 

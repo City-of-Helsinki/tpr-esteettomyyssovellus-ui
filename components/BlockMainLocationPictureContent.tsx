@@ -13,7 +13,10 @@ const BlockMainLocationPictureContent = ({
 
   const coordinatesWGS84 = useAppSelector(
     (state) => state.generalSlice.coordinatesWGS84
-  );
+  ) ?? [60.1, 24.9];
+
+  console.log("coordinatesWGS84");
+  console.log(coordinatesWGS84);
 
   const mainImage = useAppSelector((state) => state.formReducer.mainImage);
 
@@ -40,6 +43,7 @@ const BlockMainLocationPictureContent = ({
             <div className={styles.mappreview}>
               <Map
                 initLocation={coordinatesWGS84}
+                initCenter={coordinatesWGS84}
                 initZoom={17}
                 draggableMarker={false}
                 questionId={-1}

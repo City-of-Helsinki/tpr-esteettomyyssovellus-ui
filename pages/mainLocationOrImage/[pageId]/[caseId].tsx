@@ -234,6 +234,7 @@ const MainLocationOrImage = ({
 
                 {/* <AdditionalInfoCtrlButtons questionId={questionId} /> */}
               </div>
+              <MainLocationPictureCtrlButtons />
             </div>
           </div>
         </main>
