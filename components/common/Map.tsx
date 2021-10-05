@@ -7,12 +7,12 @@ import dynamic from "next/dynamic";
 // notes: dynamic import of MapWrapper is important for leaflet functionality
 const Map = ({
   questionId,
-  initCenter,
   initZoom,
   initLocation,
   draggableMarker,
   makeStatic = false,
   isPreview = false,
+  isMainLocPicComponent,
 }: MapProps): JSX.Element => {
   const MapWrapper = dynamic(() => import("./MapWrapper"), { ssr: false });
 
@@ -27,6 +27,7 @@ const Map = ({
         initLocation={initLocation}
         draggableMarker={draggableMarker}
         makeStatic={makeStatic}
+        isMainLocPicComponent={isMainLocPicComponent}
       />
     </div>
   );

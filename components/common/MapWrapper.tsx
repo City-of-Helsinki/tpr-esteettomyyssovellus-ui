@@ -1,4 +1,4 @@
-import React, { ReactElement, useRef, useEffect } from "react";
+import React, { ReactElement, useRef, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useI18n } from "next-localization";
 import {
@@ -15,15 +15,20 @@ import { useDispatch } from "react-redux";
 import { addLocation } from "../../state/reducers/additionalInfoSlice";
 import { useAppSelector } from "../../state/hooks";
 import { convertCoordinates, isLocationValid } from "../../utils/utilFunctions";
+import {
+  setServicepointLocation,
+  setServicepointLocationWGS84,
+} from "../../state/reducers/generalSlice";
 
 interface MapWrapperProps {
   questionId: number;
   initialZoom: number;
-  initLocation: [number, number] | number[];
+  initLocation?: [number, number] | number[];
   setLocation?: (initLocation: [number, number]) => void;
   setMapReady?: (ready: boolean) => void;
   draggableMarker?: boolean;
   makeStatic: boolean;
+  isMainLocPicComponent?: boolean;
 }
 
 // usage: leaflet map used in the project
@@ -35,6 +40,8 @@ const MapWrapper = ({
   setMapReady,
   draggableMarker,
   makeStatic,
+  initLocation,
+  isMainLocPicComponent = false,
 }: MapWrapperProps): ReactElement => {
   const i18n = useI18n();
   const router = useRouter();
@@ -42,52 +49,66 @@ const MapWrapper = ({
 
   const markerRef = useRef<LeafletMarker>(null);
 
+  // state location for addinfos for getting location from addinfo question state
   const stateLocation = useAppSelector(
     (state) => state.additionalInfoReducer[questionId]?.locations?.coordinates
   );
 
-  const initLocation = useAppSelector(
-    (state) => state.generalSlice.coordinates
-  );
+  // for setting initLocation or fallback getting it from state
+  const initGeneralLocation = initLocation
+    ? initLocation
+    : useAppSelector((state) => state.generalSlice.coordinatesWGS84);
 
   // @ts-ignore : ignore types because .reverse() returns number[]
   const curLocation: [number, number] =
-    stateLocation && stateLocation !== undefined
+    stateLocation && stateLocation !== undefined && !isMainLocPicComponent
       ? stateLocation
-      : convertCoordinates("EPSG:3067", "WGS84", initLocation).reverse();
+      : initGeneralLocation;
 
-  const setLocation = (
-    coordinates: [number, number],
-    initNorthing?: number,
-    initEasting?: number
-  ) => {
+  const setLocation = (coordinates: [number, number]) => {
     let locNor, locEas;
     // transform coordinates to northing and easting for db
     const LonLatReverseCoordinates: [number, number] = [
       coordinates[1],
       coordinates[0],
     ];
-    // if init values are provided, set those to the state
-    // otherwise transform coordinates (reversed) from wgs84 to 3067 and set to state
-    if (initNorthing && initEasting) {
-      locNor = initNorthing;
-      locEas = initEasting;
+
+    [locEas, locNor] = convertCoordinates(
+      "WGS84",
+      "EPSG:3067",
+      LonLatReverseCoordinates
+    );
+
+    // this case is for mainform mainlocation, questionId -1
+    if (isMainLocPicComponent && questionId === -1) {
+      // set state main location main form
+      //@ts-ignore: [number, number] != number[]
+      const coordinatesEPSG: [number, number] = [locEas, locNor];
+
+      dispatch(
+        setServicepointLocation({
+          coordinates: coordinatesEPSG,
+        })
+      );
+
+      dispatch(
+        setServicepointLocationWGS84({
+          coordinatesWGS84: coordinates,
+        })
+      );
+    } else if (isMainLocPicComponent && questionId >= 0) {
+      // todo: state set state addentrance location
     } else {
-      [locEas, locNor] = convertCoordinates(
-        "WGS84",
-        "EPSG:3067",
-        LonLatReverseCoordinates
+      // for additionalinfo location adding
+      dispatch(
+        addLocation({
+          questionId: questionId,
+          coordinates: coordinates,
+          locNorthing: Math.round(locNor),
+          locEasting: Math.round(locEas),
+        })
       );
     }
-
-    dispatch(
-      addLocation({
-        questionId: questionId,
-        coordinates: coordinates,
-        locNorthing: Math.round(locNor),
-        locEasting: Math.round(locEas),
-      })
-    );
   };
 
   // Use the icon images from the public folder
@@ -143,7 +164,6 @@ const MapWrapper = ({
       }
     }, [map]);
 
-    // Store the map view in redux state, so that the same zoom can be used when changing pages
     // The map centre is stored if needed, but currently the map is always centred on the marker position
     // If there is no initLocation, allow a map click (or tap) to store the click initLocation in redux, which then causes the marker to be shown
     useMapEvents({
@@ -163,7 +183,7 @@ const MapWrapper = ({
       setMapReady(true);
     }
     if (!stateLocation || stateLocation === undefined) {
-      setLocation(curLocation, initLocation[1], initLocation[0]);
+      setLocation(curLocation);
     }
   };
 

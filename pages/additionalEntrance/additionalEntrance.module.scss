@@ -1,0 +1,45 @@
+@import "~hds-design-tokens/lib/all.scss";
+@import "../../styles/mixins.scss";
+
+// note: copied from accessibilityEdit page -> maybe edit
+
+.maincontainer {
+  width: 85%;
+  padding: $spacing-m;
+  .infocontainer {
+    margin: $spacing-m 0;
+  }
+  .treecontainer {
+    display: flex;
+    align-items: center;
+  }
+  .headingcontainer {
+    h1 {
+      font-size: $fontsize-heading-xl !important;
+      word-break: break-word;
+      @include media(xs, s) {
+        font-size: $fontsize-heading-l !important;
+      }
+    }
+    h2 {
+      font-size: $fontsize-heading-m !important;
+      @include media(xs, s) {
+        font-size: $fontsize-heading-s !important;
+      }
+    }
+    .statuslabel {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      flex-direction: row;
+      @include media(xs, s) {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      span {
+        padding: $spacing-2-xs;
+        margin-right: $spacing-s;
+      }
+    }
+  }
+}

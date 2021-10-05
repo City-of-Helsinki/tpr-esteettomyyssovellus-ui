@@ -22,10 +22,15 @@ import {
   setContinue,
   setFormSubmitted,
 } from "../../state/reducers/formSlice";
-import { getFinnishDate, filterByLanguage } from "../../utils/utilFunctions";
+import {
+  getFinnishDate,
+  filterByLanguage,
+  convertCoordinates,
+} from "../../utils/utilFunctions";
 import {
   clearGeneralState,
   setServicepointLocation,
+  setServicepointLocationWGS84,
 } from "../../state/reducers/generalSlice";
 import {
   API_FETCH_ANSWER_LOGS,
@@ -70,9 +75,21 @@ const details = ({
     const northing: number = servicepointData.loc_northing;
     const easthing: number = servicepointData.loc_easting;
     const coordinates: [number, number] = [easthing, northing];
+    // @ts-ignore : ignore types because .reverse() returns number[]
+    const coordinatesWGS84: [number, number] =
+      coordinates && coordinates !== undefined
+        ? convertCoordinates("EPSG:3067", "WGS84", coordinates).reverse()
+        : coordinates;
+
     dispatch(
       setServicepointLocation({
         coordinates,
+      })
+    );
+
+    dispatch(
+      setServicepointLocationWGS84({
+        coordinatesWGS84,
       })
     );
   }

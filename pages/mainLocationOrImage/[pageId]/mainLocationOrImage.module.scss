@@ -1,0 +1,45 @@
+@import "~hds-design-tokens/lib/all.scss";
+@import "../../../styles/mixins.scss";
+
+.maincontainer {
+  width: 85%;
+  padding: $spacing-m;
+  .infocontainer {
+    margin: $spacing-m 0;
+  }
+  .mainheader {
+    display: flex;
+    color: $color-white;
+    background-color: $color-bus;
+    padding: $spacing-xs $spacing-l;
+    margin: $spacing-m 0;
+    font-size: $fontsize-heading-m;
+    font-weight: bold;
+    .headerspacing {
+      margin-left: $spacing-s;
+    }
+  }
+  .maininfoctrl,
+  .maininfocontent {
+    display: flex;
+    @include media(xs, s, m) {
+      flex-direction: column;
+    }
+  }
+  .editedelementsctrl {
+    margin: $spacing-l 0;
+    h3 {
+      padding: $spacing-s;
+      color: $color-bus;
+    }
+    .editedelementsctrlbuttons {
+      display: flex;
+      color: $color-bus;
+    }
+  }
+
+  .componentcontainer {
+    padding: $spacing-l 0;
+    border-bottom: 3px solid $color-bus-medium-light;
+  }
+}

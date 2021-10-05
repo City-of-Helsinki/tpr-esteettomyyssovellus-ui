@@ -14,6 +14,7 @@ import { useAppDispatch } from "../state/hooks";
 const QuestionAdditionalInformation = ({
   questionId,
   blockId,
+  isMainLocPicComponent,
 }: QuestionAdditionalInfoProps): JSX.Element => {
   const i18n = useI18n();
   const router = useRouter();
@@ -21,12 +22,17 @@ const QuestionAdditionalInformation = ({
 
   // redirect to the corresponding addinfo edit page
   const handleToggleAdditionalInfo = () => {
-    if (blockId && blockId !== undefined) {
+    // note: set pageUrl correctly for addinfo or mainLocationorImage pages
+    const pageUrl = isMainLocPicComponent
+      ? `/mainLocationOrImage/${questionId}/${blockId}`
+      : `/additionalInfo/${questionId ?? ""}`;
+
+    if (blockId && blockId !== undefined && !isMainLocPicComponent) {
       dispatch(setCurrentlyEditingBlock(blockId));
     }
 
     // Use the shallow option to avoid a server-side render in order to preserve the state
-    router.push(`/additionalInfo/${questionId ?? ""}`, undefined, {
+    router.push(pageUrl, undefined, {
       shallow: true,
     });
   };
