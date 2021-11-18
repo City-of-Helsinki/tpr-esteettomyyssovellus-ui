@@ -11,10 +11,27 @@ export const useLoading = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const handleStart = (url: string) =>
-      url !== router.asPath && setLoading(true);
-    const handleComplete = (url: string) =>
-      url === router.asPath && setLoading(false);
+    const handleStart = (url: string) => {
+      var siteUrl = url;
+      if (
+        siteUrl.substring(0, 3) == "/en" ||
+        siteUrl.substring(0, 3) == "/sv"
+      ) {
+        siteUrl = url.substring(3);
+      }
+      siteUrl !== router.asPath && setLoading(true);
+    };
+
+    const handleComplete = (url: string) => {
+      var siteUrl = url;
+      if (
+        siteUrl.substring(0, 3) == "/en" ||
+        siteUrl.substring(0, 3) == "/sv"
+      ) {
+        siteUrl = url.substring(3);
+      }
+      siteUrl === router.asPath && setLoading(false);
+    };
 
     router.events.on("routeChangeStart", handleStart);
     router.events.on("routeChangeComplete", handleComplete);
