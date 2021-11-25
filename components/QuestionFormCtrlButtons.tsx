@@ -11,23 +11,23 @@ import {
   API_FETCH_ANSWER_LOGS,
   API_FETCH_QUESTION_ANSWERS,
   API_FETCH_SERVICEPOINTS,
-  FRONT_URL_BASE,
+  FRONT_URL_BASE
 } from "../types/constants";
 import {
   setFormFinished,
   setInvalid,
   unsetFormFinished,
-  unsetInvalid,
+  unsetInvalid
 } from "../state/reducers/formSlice";
 import {
   getCurrentDate,
   postData,
-  postAdditionalInfo,
+  postAdditionalInfo
 } from "../utils/utilFunctions";
 
 export const getClientIp = async () =>
   await publicIp.v4({
-    fallbackUrls: ["https://ifconfig.co/ip"],
+    fallbackUrls: ["https://ifconfig.co/ip"]
   });
 
 // usage: Form control buttons: return, save / draft, preview, validate
@@ -37,7 +37,7 @@ const QuestionFormCtrlButtons = ({
   hasSaveDraftButton,
   hasPreviewButton,
   visibleBlocks,
-  visibleQuestionChoices,
+  visibleQuestionChoices
 }: QuestionFormCtrlButtonsProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
@@ -68,7 +68,7 @@ const QuestionFormCtrlButtons = ({
     const url =
       curServicepointId == -1
         ? FRONT_URL_BASE
-        : FRONT_URL_BASE + "details/" + curServicepointId;
+        : FRONT_URL_BASE + i18n.locale() + "/details/" + curServicepointId;
     window.location.href = url;
   };
   const isPreviewActive = curAnsweredChoices.length > 1;
@@ -77,7 +77,7 @@ const QuestionFormCtrlButtons = ({
     const updateContactsOptions = {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": "application/json"
       },
       body: JSON.stringify({
         accessibility_phone: contacts["phoneNumber"][1]
@@ -87,8 +87,8 @@ const QuestionFormCtrlButtons = ({
         accessibility_www: contacts["www"][1] ? contacts["www"][0] : null,
         modified_by: "placeholder",
         // TODO: Add user here
-        modified: getCurrentDate(),
-      }),
+        modified: getCurrentDate()
+      })
     };
     const updateContactsUrl = `${API_FETCH_SERVICEPOINTS}${curServicepointId}/update_accessibility_contacts/`;
 
@@ -120,8 +120,8 @@ const QuestionFormCtrlButtons = ({
         form_cancelled: "N",
         // TODO: GET CURRENT USER HERE
         accessibility_editor: "Leba",
-        entrance: curEntranceId,
-      }),
+        entrance: curEntranceId
+      })
     };
 
     updateAccessibilityContacts(contacts);

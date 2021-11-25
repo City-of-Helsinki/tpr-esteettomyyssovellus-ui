@@ -26,7 +26,9 @@ const PathTreeComponent = ({ treeItems }: PathTreeProps): JSX.Element => {
           {" > "}
           <a
             className={styles.link}
-            href={FRONT_URL_BASE + "details/" + curServicepointId}
+            href={
+              FRONT_URL_BASE + i18n.locale() + "/details/" + curServicepointId
+            }
           >
             {elem}
           </a>
