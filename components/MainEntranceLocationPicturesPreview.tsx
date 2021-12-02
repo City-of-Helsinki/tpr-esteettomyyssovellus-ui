@@ -8,31 +8,15 @@ import { useAppSelector } from "../state/hooks";
 // notes: todo: some parts might stille be placeholders e.g. pictures
 const MainEntranceLocationPicturesPreview = (): JSX.Element => {
   const i18n = useI18n();
-  const coordinates = useAppSelector(
-    (state) => state.generalSlice.coordinatesWGS84
-  ) ?? [60.1, 24.9];
+  const coordinates = useAppSelector((state) => state.generalSlice.coordinatesWGS84) ?? [60.1, 24.9];
   return (
     <div className={styles.maincontainer}>
       <div className={styles.mapcontainer}>
         <h4>{i18n.t("servicepoint.mainEntranceLocationLabel")}</h4>
         <div className={styles.map}>
-          <Map
-            initCenter={coordinates!}
-            initLocation={coordinates}
-            initZoom={17}
-            draggableMarker={false}
-            questionId={-1}
-            makeStatic
-            isPreview
-          />
+          <Map initCenter={coordinates!} initLocation={coordinates} initZoom={17} draggableMarker={false} questionId={-1} makeStatic isPreview />
           {coordinates && coordinates.length === 2 ? (
-            <p>
-              {`${i18n.t(
-                "servicepoint.mainEntranceLocationCoordinatesLabel"
-              )}: E ${coordinates[0].toFixed(2)}, N ${coordinates[1].toFixed(
-                2
-              )}`}
-            </p>
+            <p>{`${i18n.t("servicepoint.mainEntranceLocationCoordinatesLabel")}: E ${coordinates[0].toFixed(2)}, N ${coordinates[1].toFixed(2)}`}</p>
           ) : null}
         </div>
       </div>

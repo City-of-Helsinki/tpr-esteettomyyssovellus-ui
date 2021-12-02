@@ -20,10 +20,7 @@ const SearchBoxWithButtons = (): JSX.Element => {
         <div className={styles.search}>
           <p className={styles.searchText}> Hae toimipistettä</p>
           <div className={styles.input}>
-            <TextInput
-              id="search"
-              placeholder="Anna toimipisteen nimi tai joku muu hakusana"
-            />
+            <TextInput id="search" placeholder="Anna toimipisteen nimi tai joku muu hakusana" />
             <div>
               <a
                 // TODO: Add functionality
@@ -35,11 +32,7 @@ const SearchBoxWithButtons = (): JSX.Element => {
             </div>
           </div>
           <div className={styles.button}>
-            <Button
-              variant="primary"
-              iconLeft={<IconSearch />}
-              onClickHandler={() => submitSearch()}
-            >
+            <Button variant="primary" iconLeft={<IconSearch />} onClickHandler={() => submitSearch()}>
               Hae
             </Button>
           </div>

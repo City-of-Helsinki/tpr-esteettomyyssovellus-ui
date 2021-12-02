@@ -23,16 +23,10 @@ const AdditionalInfoLocationContent = ({
   // geodocing related -> delete if not used in final production
   //   const [addressErrorText, setAddressErrorText] = useState("");
 
-  const fallbackLocation =
-    !initValue && !isMainLocPicComponent
-      ? useAppSelector((state) => state.generalSlice.coordinatesWGS84)
-      : initValue;
+  const fallbackLocation = !initValue && !isMainLocPicComponent ? useAppSelector((state) => state.generalSlice.coordinatesWGS84) : initValue;
 
   const coords: [number, number] = !isMainLocPicComponent
-    ? useAppSelector(
-        (state) =>
-          state.additionalInfoReducer[questionId].locations?.coordinates
-      )
+    ? useAppSelector((state) => state.additionalInfoReducer[questionId].locations?.coordinates)
     : fallbackLocation;
 
   // on delete button clicked chain delete location from store and delete component cb
@@ -131,11 +125,7 @@ const AdditionalInfoLocationContent = ({
           PH: Hae osoite kartalle
         </QuestionButton> */}
         {canDelete ? (
-          <QuestionButton
-            variant="secondary"
-            iconRight={<IconCross />}
-            onClickHandler={() => handleOnDelete()}
-          >
+          <QuestionButton variant="secondary" iconRight={<IconCross />} onClickHandler={() => handleOnDelete()}>
             {i18n.t("additionalInfo.cancelLocation")}
           </QuestionButton>
         ) : null}

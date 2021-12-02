@@ -2,16 +2,7 @@
 
 import React from "react";
 
-import {
-  makeStyles,
-  Typography,
-  Container,
-  Hidden,
-  Card,
-  CardMedia,
-  CardContent,
-  withStyles,
-} from "@material-ui/core";
+import { makeStyles, Typography, Container, Hidden, Card, CardMedia, CardContent, withStyles } from "@material-ui/core";
 import dynamic from "next/dynamic";
 
 const FiCard = withStyles({
@@ -38,10 +29,7 @@ const FiCardContent = withStyles({
 })(CardContent);
 
 // @ts-ignore: A dynamic import must be used to force client-side rendering regardless of the typescript errors
-const DynamicKoros = dynamic(
-  () => import("hds-react").then((hds) => hds.Koros),
-  { ssr: false }
-);
+const DynamicKoros = dynamic(() => import("hds-react").then((hds) => hds.Koros), { ssr: false });
 // import { drupalUrl } from "../config";
 
 const drupalUrl = process.env.REACT_APP_DRUPAL_URL;
@@ -181,10 +169,7 @@ export function Hero(props: HeroProps) {
   const classes = useStyles();
   const { title, text, imageUrl } = props;
 
-  const imagePath =
-    imageUrl && (imageUrl.startsWith("https") || imageUrl.startsWith("http"))
-      ? imageUrl
-      : drupalUrl + imageUrl;
+  const imagePath = imageUrl && (imageUrl.startsWith("https") || imageUrl.startsWith("http")) ? imageUrl : drupalUrl + imageUrl;
 
   return (
     <>
@@ -192,25 +177,12 @@ export function Hero(props: HeroProps) {
         <Container maxWidth="xl" className={classes.container}>
           <FiCard className={classes.card}>
             <div>
-              <FiCardMedia
-                className={classes.mediaPic}
-                image={imagePath}
-                title={title}
-              />
+              <FiCardMedia className={classes.mediaPic} image={imagePath} title={title} />
               <FiCardContent className={classes.fiCardContent}>
-                <Typography
-                  gutterBottom
-                  variant="h2"
-                  component="h1"
-                  className={classes.title}
-                >
+                <Typography gutterBottom variant="h2" component="h1" className={classes.title}>
                   {title}
                 </Typography>
-                <Typography
-                  component="div"
-                  dangerouslySetInnerHTML={{ __html: text }}
-                  className={classes.fiCardContentTextSecondary}
-                />
+                <Typography component="div" dangerouslySetInnerHTML={{ __html: text }} className={classes.fiCardContentTextSecondary} />
               </FiCardContent>
             </div>
           </FiCard>
@@ -234,19 +206,10 @@ export function Hero(props: HeroProps) {
       </Hidden>
       <Hidden mdUp>
         <Container maxWidth="lg" className={classes.mobileContainer}>
-          <Typography
-            gutterBottom
-            variant="h2"
-            component="h1"
-            className={classes.mobileTitle}
-          >
+          <Typography gutterBottom variant="h2" component="h1" className={classes.mobileTitle}>
             {title}
           </Typography>
-          <Typography
-            className={classes.mobileText}
-            component="div"
-            dangerouslySetInnerHTML={{ __html: text }}
-          />
+          <Typography className={classes.mobileText} component="div" dangerouslySetInnerHTML={{ __html: text }} />
           <Card elevation={0} className={classes.mobileCard}>
             <div>
               <DynamicKoros
@@ -255,14 +218,7 @@ export function Hero(props: HeroProps) {
                 flipHorizontal
                 className={classes.koro}
               />
-              <CardMedia
-                className={classes.smallCard}
-                component="img"
-                alt="picture"
-                height="440"
-                image={imagePath}
-                title={title}
-              />
+              <CardMedia className={classes.smallCard} component="img" alt="picture" height="440" image={imagePath} title={title} />
             </div>
           </Card>
         </Container>
@@ -280,10 +236,7 @@ export function HeroShallow(props: HeroShallowProps) {
   const classes = useStyles();
   const { title, imageUrl } = props;
 
-  const imagePath =
-    imageUrl && (imageUrl.startsWith("https") || imageUrl.startsWith("http"))
-      ? imageUrl
-      : drupalUrl + imageUrl;
+  const imagePath = imageUrl && (imageUrl.startsWith("https") || imageUrl.startsWith("http")) ? imageUrl : drupalUrl + imageUrl;
 
   return (
     <Container className={classes.shallowContainer}>

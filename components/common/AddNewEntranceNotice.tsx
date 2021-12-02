@@ -41,23 +41,13 @@ const AddNewEntranceNotice = (): ReactElement => {
         <p>{i18n.t("PreviewPage.addNewEntranceBody")}</p>
       </div>
       <div className={styles.flexButtonsContainer}>
-        <QuestionButton
-          variant="primary"
-          onClickHandler={handleAddAdditionalEntrance}
-          iconRight={<IconArrowRight size="l" aria-hidden />}
-        >
+        <QuestionButton variant="primary" onClickHandler={handleAddAdditionalEntrance} iconRight={<IconArrowRight size="l" aria-hidden />}>
           {i18n.t("PreviewPage.addNewEntranceButton")}
         </QuestionButton>
-        <QuestionButton
-          variant="secondary"
-          onClickHandler={handleReturnToDetailspage}
-        >
+        <QuestionButton variant="secondary" onClickHandler={handleReturnToDetailspage}>
           {i18n.t("PreviewPage.addNewEntranceNoEntrances")}
         </QuestionButton>
-        <QuestionButton
-          variant="secondary"
-          onClickHandler={handleReturnToDetailspage}
-        >
+        <QuestionButton variant="secondary" onClickHandler={handleReturnToDetailspage}>
           {i18n.t("PreviewPage.addNewEntranceContinueLater")}
         </QuestionButton>
       </div>

@@ -7,23 +7,9 @@ import Button from "./QuestionButton";
 import { QuestionFormCtrlButtonsProps } from "../types/general";
 import styles from "./QuestionFormCtrlButtons.module.scss";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
-import {
-  API_FETCH_ANSWER_LOGS,
-  API_FETCH_QUESTION_ANSWERS,
-  API_FETCH_SERVICEPOINTS,
-  FRONT_URL_BASE,
-} from "../types/constants";
-import {
-  setFormFinished,
-  setInvalid,
-  unsetFormFinished,
-  unsetInvalid,
-} from "../state/reducers/formSlice";
-import {
-  getCurrentDate,
-  postData,
-  postAdditionalInfo,
-} from "../utils/utilFunctions";
+import { API_FETCH_ANSWER_LOGS, API_FETCH_QUESTION_ANSWERS, API_FETCH_SERVICEPOINTS, FRONT_URL_BASE } from "../types/constants";
+import { setFormFinished, setInvalid, unsetFormFinished, unsetInvalid } from "../state/reducers/formSlice";
+import { getCurrentDate, postData, postAdditionalInfo } from "../utils/utilFunctions";
 
 export const getClientIp = async () =>
   publicIp.v4({
@@ -42,33 +28,18 @@ const QuestionFormCtrlButtons = ({
   const i18n = useI18n();
   const dispatch = useAppDispatch();
 
-  const curAnsweredChoices = useAppSelector(
-    (state) => state.formReducer.answeredChoices
-  );
-  const curServicepointId = useAppSelector(
-    (state) => state.formReducer.currentServicepointId
-  );
-  const startedAnswering = useAppSelector(
-    (state) => state.formReducer.startedAnswering
-  );
-  const curEntranceId = useAppSelector(
-    (state) => state.formReducer.currentEntranceId
-  );
-  const finishedBlocks = useAppSelector(
-    (state) => state.formReducer.finishedBlocks
-  );
-  const isContinueClicked = useAppSelector(
-    (state) => state.formReducer.isContinueClicked
-  );
+  const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
+  const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
+  const startedAnswering = useAppSelector((state) => state.formReducer.startedAnswering);
+  const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
+  const finishedBlocks = useAppSelector((state) => state.formReducer.finishedBlocks);
+  const isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
   const additionalInfo = useAppSelector((state) => state.additionalInfoReducer);
   const contacts = useAppSelector((state) => state.formReducer.contacts);
 
   const handleCancel = (): void => {
     // TODO: Add errorpage
-    const url =
-      curServicepointId === -1
-        ? FRONT_URL_BASE
-        : `${FRONT_URL_BASE + i18n.locale()}/details/${curServicepointId}`;
+    const url = curServicepointId === -1 ? FRONT_URL_BASE : `${FRONT_URL_BASE + i18n.locale()}/details/${curServicepointId}`;
     window.location.href = url;
   };
   const isPreviewActive = curAnsweredChoices.length > 1;
@@ -80,9 +51,7 @@ const QuestionFormCtrlButtons = ({
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        accessibility_phone: contacts.phoneNumber[1]
-          ? contacts.phoneNumber[0]
-          : null,
+        accessibility_phone: contacts.phoneNumber[1] ? contacts.phoneNumber[0] : null,
         accessibility_email: contacts.email[1] ? contacts.email[0] : null,
         accessibility_www: contacts.www[1] ? contacts.www[0] : null,
         modified_by: "placeholder",
@@ -155,10 +124,7 @@ const QuestionFormCtrlButtons = ({
         await postAdditionalInfo(logId, parsedAdditionalInfos);
       }
       const generateData = { entrance_id: curEntranceId, form_submitted: "D" };
-      await postData(
-        "http://localhost:8000/api/GenerateSentences/",
-        generateData
-      );
+      await postData("http://localhost:8000/api/GenerateSentences/", generateData);
     } else {
       return -1;
     }
@@ -182,9 +148,7 @@ const QuestionFormCtrlButtons = ({
     });
   };
 
-  const invalidBlocks = useAppSelector(
-    (state) => state.formReducer.invalidBlocks
-  );
+  const invalidBlocks = useAppSelector((state) => state.formReducer.invalidBlocks);
 
   if (invalidBlocks.length === 0) {
     dispatch(setFormFinished());
@@ -208,11 +172,7 @@ const QuestionFormCtrlButtons = ({
     <Card className={styles.container}>
       <div className={styles.left}>
         {hasCancelButton ? (
-          <Button
-            variant="secondary"
-            iconLeft={<IconArrowLeft />}
-            onClickHandler={handleCancel}
-          >
+          <Button variant="secondary" iconLeft={<IconArrowLeft />} onClickHandler={handleCancel}>
             {i18n.t("questionFormControlButtons.quit")}
           </Button>
         ) : null}

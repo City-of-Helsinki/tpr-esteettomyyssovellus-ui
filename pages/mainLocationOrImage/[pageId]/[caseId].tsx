@@ -2,14 +2,7 @@ import React, { ReactElement, useEffect, useState } from "react";
 import { useI18n } from "next-localization";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
-import {
-  IconCrossCircle,
-  IconLink,
-  IconLocation,
-  IconQuestionCircle,
-  IconSpeechbubbleText,
-  IconUpload,
-} from "hds-react";
+import { IconCrossCircle, IconLink, IconLocation, IconQuestionCircle, IconSpeechbubbleText, IconUpload } from "hds-react";
 import { Dictionary } from "@reduxjs/toolkit";
 import Layout from "../../../components/common/Layout";
 import i18nLoader from "../../../utils/i18n";
@@ -21,31 +14,11 @@ import QuestionButton from "../../../components/QuestionButton";
 import AdditionalInfoLocationContent from "../../../components/AdditionalInfoLocationContent";
 import AdditionalInfoPicturesContent from "../../../components/AdditionalInfoPicturesContent";
 import AdditionalInfoCommentContent from "../../../components/AdditionalInfoCommentContent";
-import {
-  addComponent,
-  removeAllInvalids,
-  removeComponent,
-  setEditingInitialState,
-} from "../../../state/reducers/additionalInfoSlice";
-import {
-  useAppSelector,
-  useAppDispatch,
-  useLoading,
-} from "../../../state/hooks";
-import {
-  AdditionalComponentProps,
-  AdditionalInfoPageProps,
-  AdditionalInfoProps,
-  MainLocationOrImageProps,
-} from "../../../types/general";
-import {
-  LANGUAGE_LOCALES,
-  API_FETCH_BACKEND_QUESTIONS,
-} from "../../../types/constants";
-import generalSlice, {
-  setCurEditingBothCoordinateTemps,
-  setCurrentlyEditingQuestion,
-} from "../../../state/reducers/generalSlice";
+import { addComponent, removeAllInvalids, removeComponent, setEditingInitialState } from "../../../state/reducers/additionalInfoSlice";
+import { useAppSelector, useAppDispatch, useLoading } from "../../../state/hooks";
+import { AdditionalComponentProps, AdditionalInfoPageProps, AdditionalInfoProps, MainLocationOrImageProps } from "../../../types/general";
+import { LANGUAGE_LOCALES, API_FETCH_BACKEND_QUESTIONS } from "../../../types/constants";
+import generalSlice, { setCurEditingBothCoordinateTemps, setCurrentlyEditingQuestion } from "../../../state/reducers/generalSlice";
 import LoadSpinner from "../../../components/common/LoadSpinner";
 import {
   addMainImageElement,
@@ -57,10 +30,7 @@ import MainPictureContent from "../../../components/MainPictureContent";
 import MainLocationPictureCtrlButtons from "../../../components/MainLocationPictureCtrlButtons";
 
 // usage: additional information page (per question)
-const MainLocationOrImage = ({
-  pageId,
-  caseId,
-}: MainLocationOrImageProps): ReactElement => {
+const MainLocationOrImage = ({ pageId, caseId }: MainLocationOrImageProps): ReactElement => {
   // note: pageId is -1 for mainForm and 1,2,n for additionalEntrance (used for state logic)
   // caseId 1 === location, caseId 2 === image
   const i18n = useI18n();
@@ -73,17 +43,13 @@ const MainLocationOrImage = ({
   // if caseId is 1 then location page, if caseId 2 then image page
   const isLocation = caseId === 1;
 
-  const currentMainImageElement =
-    useAppSelector((state) => state.formReducer.mainImageElement) ?? null;
+  const currentMainImageElement = useAppSelector((state) => state.formReducer.mainImageElement) ?? null;
 
-  const currentMainImage =
-    useAppSelector((state) => state.formReducer.mainImage) ?? null;
+  const currentMainImage = useAppSelector((state) => state.formReducer.mainImage) ?? null;
 
   const coordinates = useAppSelector((state) => state.generalSlice.coordinates);
 
-  const coordinatesWGS84 = useAppSelector(
-    (state) => state.generalSlice.coordinatesWGS84
-  );
+  const coordinatesWGS84 = useAppSelector((state) => state.generalSlice.coordinatesWGS84);
 
   // todo: maybe obsolete
   // const filterByLanguage = (data: any) => {
@@ -113,9 +79,7 @@ const MainLocationOrImage = ({
     );
   }, []);
 
-  const hasMainImage = useAppSelector(
-    (state) => state.formReducer.mainImageElement
-  );
+  const hasMainImage = useAppSelector((state) => state.formReducer.mainImageElement);
 
   const handleDelete = () => {
     dispatch(removeMainImageElement());
@@ -158,13 +122,9 @@ const MainLocationOrImage = ({
               {/* <AdditionalInfoCtrlButtons questionId={questionId} /> */}
               <div>
                 <div className={styles.mainheader}>
-                  <p className={styles.headerspacing}>
-                    ph: lisää jotain kuva tai loc käytä ternary
-                  </p>
+                  <p className={styles.headerspacing}>ph: lisää jotain kuva tai loc käytä ternary</p>
                 </div>
-                <div className={styles.maininfoctrl}>
-                  {i18n.t("additionalInfo.mainInfoText")}
-                </div>
+                <div className={styles.maininfoctrl}>{i18n.t("additionalInfo.mainInfoText")}</div>
               </div>
               <div className={styles.overrideheadlinestyles}>
                 {/* todo: maybe make more beautiful  */}
@@ -183,12 +143,7 @@ const MainLocationOrImage = ({
 
                 {currentMainImageElement === "upload" && !isLocation ? (
                   <div className={styles.componentcontainer}>
-                    <MainPictureContent
-                      pageId={pageId}
-                      key={`key_${caseId}`}
-                      onDelete={() => handleDelete()}
-                      initValue={currentMainImage || null}
-                    />
+                    <MainPictureContent pageId={pageId} key={`key_${caseId}`} onDelete={() => handleDelete()} initValue={currentMainImage || null} />
                   </div>
                 ) : null}
 
@@ -206,9 +161,7 @@ const MainLocationOrImage = ({
 
                 {!isLocation ? (
                   <div className={styles.editedelementsctrl}>
-                    <h3>
-                      {i18n.t("additionalInfo.elementsCtrlButtonsHeader")}
-                    </h3>
+                    <h3>{i18n.t("additionalInfo.elementsCtrlButtonsHeader")}</h3>
                     <div className={styles.editedelementsctrlbuttons}>
                       <QuestionButton
                         variant="secondary"
@@ -216,9 +169,7 @@ const MainLocationOrImage = ({
                         onClickHandler={() => handleAddComponent("upload")}
                         disabled={!!hasMainImage}
                       >
-                        {i18n.t(
-                          "additionalInfo.ctrlButtons.addUploadImageFromDevice"
-                        )}
+                        {i18n.t("additionalInfo.ctrlButtons.addUploadImageFromDevice")}
                       </QuestionButton>
                       <QuestionButton
                         variant="secondary"
@@ -244,10 +195,7 @@ const MainLocationOrImage = ({
 };
 
 // NextJs Server-Side Rendering, HDS best practices (SSR)
-export const getServerSideProps: GetServerSideProps = async ({
-  params,
-  locales,
-}) => {
+export const getServerSideProps: GetServerSideProps = async ({ params, locales }) => {
   const lngDict = await i18nLoader(locales);
 
   // todo: if user not checked here remove these

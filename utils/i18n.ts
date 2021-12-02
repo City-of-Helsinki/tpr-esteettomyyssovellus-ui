@@ -2,13 +2,8 @@
 
 export const defaultLocale = "fi";
 
-const i18nLoader = async (
-  locale: string,
-  isModeration?: boolean
-): Promise<{ [locale: string]: { [key: string]: unknown } }> => {
-  const { default: lngDict = {} } = await import(
-    `../locales/${locale || defaultLocale}.json`
-  );
+const i18nLoader = async (locale: string, isModeration?: boolean): Promise<{ [locale: string]: { [key: string]: unknown } }> => {
+  const { default: lngDict = {} } = await import(`../locales/${locale || defaultLocale}.json`);
 
   return {
     [locale]: {
@@ -26,10 +21,7 @@ const i18nLoader = async (
   };
 };
 
-export const i18nLoaderMultiple = async (
-  locales?: string[],
-  isModeration?: boolean
-): Promise<{ [locale: string]: { [key: string]: unknown } }> => {
+export const i18nLoaderMultiple = async (locales?: string[], isModeration?: boolean): Promise<{ [locale: string]: { [key: string]: unknown } }> => {
   if (locales && locales.length > 0) {
     const promises = Promise.all(
       locales.map((locale) => {

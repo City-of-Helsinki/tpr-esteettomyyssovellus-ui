@@ -22,10 +22,7 @@ const DynamicNavigation = dynamic(
   { ssr: false }
 );
 
-const Header = ({
-  includeLanguageSelector,
-  children,
-}: HeaderProps): ReactElement => {
+const Header = ({ includeLanguageSelector, children }: HeaderProps): ReactElement => {
   const i18n = useI18n();
   const router = useRouter();
 
@@ -44,10 +41,7 @@ const Header = ({
       location: { pathname },
     } = window;
 
-    window.open(
-      `${getOrigin(router)}/helauth/login/?next=${pathname}`,
-      "_self"
-    );
+    window.open(`${getOrigin(router)}/helauth/login/?next=${pathname}`, "_self");
   };
 
   const signOut = async () => {
@@ -107,10 +101,7 @@ const Header = ({
                 as="a"
                 label={i18n.t("common.header.servicepoints")}
                 href={`${router.basePath}/${router.locale}/servicepoints`}
-                active={
-                  router.pathname.includes("servicepoint") ||
-                  router.pathname.includes("accessibilityEdit")
-                }
+                active={router.pathname.includes("servicepoint") || router.pathname.includes("accessibilityEdit")}
               />
               <Navigation.Item
                 role="button"
@@ -135,9 +126,7 @@ const Header = ({
                 href="#"
                 variant="supplementary"
                 className={includeLanguageSelector ? "" : styles.logout}
-                icon={
-                  !includeLanguageSelector ? "" : <IconSignout aria-hidden />
-                }
+                icon={!includeLanguageSelector ? "" : <IconSignout aria-hidden />}
                 label={i18n.t("common.header.logout")}
                 onClick={signOut}
               />
@@ -145,9 +134,7 @@ const Header = ({
           }
 
           {includeLanguageSelector && (
-            <Navigation.LanguageSelector
-              label={(router.locale || defaultLocale).toUpperCase()}
-            >
+            <Navigation.LanguageSelector label={(router.locale || defaultLocale).toUpperCase()}>
               <Navigation.Item
                 role="button"
                 id="fi"
@@ -182,9 +169,7 @@ const Header = ({
                 role="button"
                 id="fim"
                 tabIndex={0}
-                className={
-                  router.locale === "fi" ? styles.chosen : styles.unchosen
-                }
+                className={router.locale === "fi" ? styles.chosen : styles.unchosen}
                 label="Suomeksi (FI)"
                 onKeyPress={(e: any) => handleKeyPress(e, "fim")}
                 onClick={() => changeLanguage("fi")}
@@ -193,9 +178,7 @@ const Header = ({
                 role="button"
                 id="svm"
                 tabIndex={0}
-                className={
-                  router.locale === "sv" ? styles.chosen : styles.unchosen
-                }
+                className={router.locale === "sv" ? styles.chosen : styles.unchosen}
                 label="På svenska (SV)"
                 onKeyPress={(e: any) => handleKeyPress(e, "svm")}
                 onClick={() => changeLanguage("sv")}
@@ -204,9 +187,7 @@ const Header = ({
                 role="button"
                 id="enm"
                 tabIndex={0}
-                className={
-                  router.locale === "en" ? styles.chosen : styles.unchosen
-                }
+                className={router.locale === "en" ? styles.chosen : styles.unchosen}
                 label="In English (EN)"
                 onKeyPress={(e: any) => handleKeyPress(e, "enm")}
                 onClick={() => changeLanguage("en")}

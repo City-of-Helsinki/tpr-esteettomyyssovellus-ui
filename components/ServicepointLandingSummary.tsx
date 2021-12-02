@@ -14,15 +14,10 @@ import MainEntranceLocationPicturesPreview from "./MainEntranceLocationPicturesP
 
 // usage: used in details/landing page to create a summary block of sentences etc
 // this component more like a container -> used with ServicepointLandingSummaryContent
-const ServicepointLandingSummary = ({
-  header,
-  data,
-}: ServicepointLandingSummaryProps): JSX.Element => {
+const ServicepointLandingSummary = ({ header, data }: ServicepointLandingSummaryProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
-  const curEntranceId = useAppSelector(
-    (state) => state.formReducer.currentEntranceId
-  );
+  const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
 
   const handleEditorAddPointData = () => {
     if (data) {
@@ -44,11 +39,7 @@ const ServicepointLandingSummary = ({
   // If the data is of type servicePointData
   if (data && "servicepoint_id" in data) {
     // Keys of accessibility data values
-    const keysToDisplay = [
-      "accessibility_phone",
-      "accessibility_email",
-      "accessibility_www",
-    ];
+    const keysToDisplay = ["accessibility_phone", "accessibility_email", "accessibility_www"];
     const itemList: any = [];
     hasData = keysToDisplay.some((e) => data[e] !== null);
     keysToDisplay.map((key) => {
@@ -91,9 +82,7 @@ const ServicepointLandingSummary = ({
           if (x.sentence_group_name !== currentTitle) {
             currentTitle = x.sentence_group_name;
             // Add h3 titles in the container
-            itemList.push(
-              <h3 className={styles.sentenceGroupName}>{currentTitle}</h3>
-            );
+            itemList.push(<h3 className={styles.sentenceGroupName}>{currentTitle}</h3>);
           }
           itemList.push(<li>{x.sentence}</li>);
         });
@@ -103,23 +92,17 @@ const ServicepointLandingSummary = ({
       if (key === "main") {
         mainEntrance.push(
           <>
-            <ServicepointLandingSummaryContent
-              contentHeader={i18n.t("common.mainEntranceLocation")}
-            >
+            <ServicepointLandingSummaryContent contentHeader={i18n.t("common.mainEntranceLocation")}>
               <MainEntranceLocationPicturesPreview />
             </ServicepointLandingSummaryContent>
-            <ServicepointLandingSummaryContent
-              contentHeader={i18n.t("common.mainEntrance")}
-            >
+            <ServicepointLandingSummaryContent contentHeader={i18n.t("common.mainEntrance")}>
               <ul>{itemList}</ul>
             </ServicepointLandingSummaryContent>
           </>
         );
       } else {
         contents.push(
-          <ServicepointLandingSummaryContent
-            contentHeader={i18n.t("common.additionalEntrance")}
-          >
+          <ServicepointLandingSummaryContent contentHeader={i18n.t("common.additionalEntrance")}>
             <ul>{itemList}</ul>
           </ServicepointLandingSummaryContent>
         );
@@ -131,9 +114,7 @@ const ServicepointLandingSummary = ({
   contents = mainEntrance.concat(contents);
 
   // If has no data buttons should say create servicepoint otherwise edit servicepoint
-  const buttonText = !hasData
-    ? i18n.t("servicepoint.buttons.createServicepoint")
-    : i18n.t("servicepoint.buttons.editServicepoint");
+  const buttonText = !hasData ? i18n.t("servicepoint.buttons.createServicepoint") : i18n.t("servicepoint.buttons.editServicepoint");
 
   return (
     <div className={styles.maincontainer}>

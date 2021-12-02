@@ -25,9 +25,7 @@ const PreviewPageLandingSummary = ({ data }: any): JSX.Element => {
           if (x.sentence_group_name !== currentTitle) {
             currentTitle = x.sentence_group_name;
             // Add h3 titles in the container
-            itemList.push(
-              <h3 className={styles.sentenceGroupName}>{currentTitle}</h3>
-            );
+            itemList.push(<h3 className={styles.sentenceGroupName}>{currentTitle}</h3>);
           }
           itemList.push(<li>{x.sentence}</li>);
         });
@@ -36,17 +34,13 @@ const PreviewPageLandingSummary = ({ data }: any): JSX.Element => {
       // Check if main entrance.
       if (key === "main") {
         mainEntrance.push(
-          <ServicepointLandingSummaryContent
-            contentHeader={i18n.t("common.mainEntrance")}
-          >
+          <ServicepointLandingSummaryContent contentHeader={i18n.t("common.mainEntrance")}>
             <ul>{itemList}</ul>
           </ServicepointLandingSummaryContent>
         );
       } else {
         contents.push(
-          <ServicepointLandingSummaryContent
-            contentHeader={i18n.t("common.additionalEntrance")}
-          >
+          <ServicepointLandingSummaryContent contentHeader={i18n.t("common.additionalEntrance")}>
             <ul>{itemList}</ul>
           </ServicepointLandingSummaryContent>
         );

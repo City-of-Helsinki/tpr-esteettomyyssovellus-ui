@@ -24,9 +24,7 @@ import { EMAIL_REGEX, PHONE_REGEX } from "../types/constants";
 // notes: i guess if this info would be fetched from db this component could be removed(?)
 // todo: maybe remove this whole component if these come from db with dame logic as other questions
 
-const ContactInformationQuestionContainer = ({
-  blockNumber,
-}: ContactInformationProps): JSX.Element => {
+const ContactInformationQuestionContainer = ({ blockNumber }: ContactInformationProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
 
@@ -118,9 +116,7 @@ const ContactInformationQuestionContainer = ({
     dispatch(unsetFinished(99));
   }
 
-  const invalidBlocks = useAppSelector(
-    (state) => state.formReducer.invalidBlocks
-  );
+  const invalidBlocks = useAppSelector((state) => state.formReducer.invalidBlocks);
   const isInvalid = invalidBlocks.includes(99);
 
   return (
@@ -147,36 +143,28 @@ const ContactInformationQuestionContainer = ({
           case -1:
             value = contactPerson[0];
             isAnswered = contactPerson[1];
-            error = contactPerson[1]
-              ? ""
-              : i18n.t("ContactInformation.personValidationErrorText");
+            error = contactPerson[1] ? "" : i18n.t("ContactInformation.personValidationErrorText");
             break;
           case -2:
             value = phoneNumber[0];
             isAnswered = phoneNumber[1];
             // phoneNumber[1] is a boolean value indicating whether the phone number
             // is valid. If the phone number is invalid displays an error text
-            error = phoneNumber[1]
-              ? ""
-              : i18n.t("ContactInformation.phoneNumberValidationErrorText");
+            error = phoneNumber[1] ? "" : i18n.t("ContactInformation.phoneNumberValidationErrorText");
             break;
           case -3:
             value = email[0];
             isAnswered = email[1];
             // email[1] is a boolean value indicating whether the email
             // is valid. If the email is invalid displays an error text
-            error = email[1]
-              ? ""
-              : i18n.t("ContactInformation.emailValidationErrorText");
+            error = email[1] ? "" : i18n.t("ContactInformation.emailValidationErrorText");
             break;
           case -4:
             value = www[0];
             isAnswered = www[1];
             // email[1] is a boolean value indicating whether the email
             // is valid. If the email is invalid displays an error text
-            error = www[1]
-              ? ""
-              : i18n.t("ContactInformation.wwwValidationErrorText");
+            error = www[1] ? "" : i18n.t("ContactInformation.wwwValidationErrorText");
             break;
         }
 
@@ -194,12 +182,7 @@ const ContactInformationQuestionContainer = ({
 
         return (
           <div style={questionStyle} key={question.question_code}>
-            <QuestionContainer
-              key={question.question_code}
-              questionText={question.text}
-              backgroundColor={backgroundColor}
-              hasAdditionalInfo={false}
-            >
+            <QuestionContainer key={question.question_code} questionText={question.text} backgroundColor={backgroundColor} hasAdditionalInfo={false}>
               <TextInput
                 key={question.question_code}
                 className={styles.textInput}

@@ -5,23 +5,13 @@ import { useI18n } from "next-localization";
 import { DropdownQuestionProps } from "../types/general";
 import style from "./QuestionDropdown.module.scss";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
-import {
-  setAnsweredChoice,
-  setAnswer,
-  removeAnsweredChoice,
-} from "../state/reducers/formSlice";
+import { setAnsweredChoice, setAnswer, removeAnsweredChoice } from "../state/reducers/formSlice";
 
 // usage: general custom dropdown component form HDS
 // notes: this component uses HDS Select, HDS says:
 // if 1) more than 8 options 2) needs filtering by typing create&use HDS Combobox
 // this project doesn't yet have Combobox, maybe not needed also
-const QuestionDropdown = ({
-  options,
-  placeholder = "--Valitse--",
-  label = "",
-  questionNumber,
-  blockId,
-}: DropdownQuestionProps): JSX.Element => {
+const QuestionDropdown = ({ options, placeholder = "--Valitse--", label = "", questionNumber, blockId }: DropdownQuestionProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
 
@@ -31,9 +21,7 @@ const QuestionDropdown = ({
     const questionNumString = questionNumber;
     if (answerString !== undefined && questionNumber !== undefined) {
       options.map((element: Dictionary<string>) => {
-        element.value !== undefined
-          ? dispatch(removeAnsweredChoice(element.value))
-          : null;
+        element.value !== undefined ? dispatch(removeAnsweredChoice(element.value)) : null;
       });
       const answer = Number(answerString);
       const questionNumber = Number(questionNumString);
@@ -45,11 +33,7 @@ const QuestionDropdown = ({
   const currentValues = useAppSelector((state) => state.formReducer);
   const { invalidBlocks } = currentValues;
 
-  const value =
-    questionNumber !== undefined &&
-    currentValues.answers[questionNumber] !== undefined
-      ? currentValues.answers[questionNumber]
-      : "";
+  const value = questionNumber !== undefined && currentValues.answers[questionNumber] !== undefined ? currentValues.answers[questionNumber] : "";
   const currentLabel = options.find((element) => {
     return element.value === value;
   });
@@ -65,11 +49,7 @@ const QuestionDropdown = ({
     <Select
       className={style.selectDropdown}
       label={label}
-      placeholder={
-        placeholder === "--Valitse--"
-          ? i18n.t("accessibilityForm.choose")
-          : placeholder
-      }
+      placeholder={placeholder === "--Valitse--" ? i18n.t("accessibilityForm.choose") : placeholder}
       options={options}
       onChange={handleChange}
       value={currentValue}

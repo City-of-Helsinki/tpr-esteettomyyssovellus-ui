@@ -22,33 +22,14 @@ import {
   setContinue,
   setFormSubmitted,
 } from "../../state/reducers/formSlice";
-import {
-  getFinnishDate,
-  filterByLanguage,
-  convertCoordinates,
-} from "../../utils/utilFunctions";
-import {
-  clearGeneralState,
-  setServicepointLocation,
-  setServicepointLocationWGS84,
-} from "../../state/reducers/generalSlice";
-import {
-  API_FETCH_ANSWER_LOGS,
-  API_FETCH_ENTRANCES,
-  API_FETCH_SENTENCE_LANGS,
-  API_FETCH_SERVICEPOINTS,
-} from "../../types/constants";
+import { getFinnishDate, filterByLanguage, convertCoordinates } from "../../utils/utilFunctions";
+import { clearGeneralState, setServicepointLocation, setServicepointLocationWGS84 } from "../../state/reducers/generalSlice";
+import { API_FETCH_ANSWER_LOGS, API_FETCH_ENTRANCES, API_FETCH_SENTENCE_LANGS, API_FETCH_SERVICEPOINTS } from "../../types/constants";
 import LoadSpinner from "../../components/common/LoadSpinner";
 import { clearAddinfoState } from "../../state/reducers/additionalInfoSlice";
 
 // usage: the details / landing page of servicepoint
-const details = ({
-  servicepointData,
-  accessibilityData,
-  entranceData,
-  hasExistingFormData,
-  isFinished,
-}: any): ReactElement => {
+const details = ({ servicepointData, accessibilityData, entranceData, hasExistingFormData, isFinished }: any): ReactElement => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
   const isLoading = useLoading();
@@ -62,24 +43,16 @@ const details = ({
   dispatch(clearAddinfoState());
   dispatch(clearFormState());
 
-  const hasData =
-    Object.keys(entranceData).length !== 0 ||
-    Object.keys(servicepointData).length !== 0;
+  const hasData = Object.keys(entranceData).length !== 0 || Object.keys(servicepointData).length !== 0;
 
   // set coordinates from data to state gerenalSlice for e.g. leafletmaps
-  if (
-    servicepointData &&
-    servicepointData.loc_northing &&
-    servicepointData.loc_easting
-  ) {
+  if (servicepointData && servicepointData.loc_northing && servicepointData.loc_easting) {
     const northing: number = servicepointData.loc_northing;
     const easthing: number = servicepointData.loc_easting;
     const coordinates: [number, number] = [easthing, northing];
     // @ts-ignore : ignore types because .reverse() returns number[]
     const coordinatesWGS84: [number, number] =
-      coordinates && coordinates !== undefined
-        ? convertCoordinates("EPSG:3067", "WGS84", coordinates).reverse()
-        : coordinates;
+      coordinates && coordinates !== undefined ? convertCoordinates("EPSG:3067", "WGS84", coordinates).reverse() : coordinates;
 
     dispatch(
       setServicepointLocation({
@@ -101,11 +74,7 @@ const details = ({
   });
 
   // Update entranceId and servicepointId to redux state
-  if (
-    servicepointData &&
-    entranceData.results &&
-    accessibilityData.main.length !== 0
-  ) {
+  if (servicepointData && entranceData.results && accessibilityData.main.length !== 0) {
     dispatch(setServicepointId(servicepointData.servicepoint_id));
     // TODO: Logic for when editing additional entrance vs main entrance
     dispatch(setEntranceId(accessibilityData.main[0].entrance_id));
@@ -160,20 +129,13 @@ const details = ({
               <h2>
                 {i18n.t("common.mainEntrance")}
                 {": "}
-                {servicepointData.address_street_name}{" "}
-                {servicepointData.address_no}, {servicepointData.address_city}
+                {servicepointData.address_street_name} {servicepointData.address_no}, {servicepointData.address_city}
               </h2>
               <span className={styles.statuslabel}>
                 {isFinished ? (
-                  <StatusLabel type="success">
-                    {" "}
-                    {i18n.t("common.statusReady")}{" "}
-                  </StatusLabel>
+                  <StatusLabel type="success"> {i18n.t("common.statusReady")} </StatusLabel>
                 ) : (
-                  <StatusLabel type="neutral">
-                    {" "}
-                    {i18n.t("common.statusNotReady")}{" "}
-                  </StatusLabel>
+                  <StatusLabel type="neutral"> {i18n.t("common.statusNotReady")} </StatusLabel>
                 )}
 
                 <p>
@@ -182,18 +144,10 @@ const details = ({
               </span>
             </div>
             <div>
-              <ServicepointLandingSummary
-                header={i18n.t("servicepoint.contactInfoHeader")}
-                data={servicepointData}
-              />
-              <ServicepointLandingSummary
-                header={i18n.t("servicepoint.contactFormSummaryHeader")}
-                data={filteredAccessibilityData}
-              />
+              <ServicepointLandingSummary header={i18n.t("servicepoint.contactInfoHeader")} data={servicepointData} />
+              <ServicepointLandingSummary header={i18n.t("servicepoint.contactFormSummaryHeader")} data={filteredAccessibilityData} />
             </div>
-            <ServicepointLandingSummaryCtrlButtons
-              hasData={hasExistingFormData}
-            />
+            <ServicepointLandingSummaryCtrlButtons hasData={hasExistingFormData} />
           </div>
         </main>
       )}
@@ -202,11 +156,7 @@ const details = ({
 };
 
 // Server-side rendering
-export const getServerSideProps: GetServerSideProps = async ({
-  params,
-  req,
-  locales,
-}) => {
+export const getServerSideProps: GetServerSideProps = async ({ params, req, locales }) => {
   const lngDict = await i18nLoader(locales);
 
   // todo: if user not checked here remove these
@@ -229,23 +179,17 @@ export const getServerSideProps: GetServerSideProps = async ({
   let isFinished = false;
   if (params !== undefined) {
     try {
-      const ServicepointResp = await fetch(
-        `${API_FETCH_SERVICEPOINTS}${params.servicepointId}/?format=json`
-      );
+      const ServicepointResp = await fetch(`${API_FETCH_SERVICEPOINTS}${params.servicepointId}/?format=json`);
       servicepointData = await ServicepointResp.json();
 
-      const EntranceResp = await fetch(
-        `${API_FETCH_ENTRANCES}?servicepoint=${servicepointData.servicepoint_id}&format=json`
-      );
+      const EntranceResp = await fetch(`${API_FETCH_ENTRANCES}?servicepoint=${servicepointData.servicepoint_id}&format=json`);
       entranceData = await EntranceResp.json();
       let i = 0;
       let j = 1;
       let mainEntranceId = 0;
       // Use while, because map function does not work with await
       while (i < entranceData.results.length) {
-        const SentenceResp = await fetch(
-          `${API_FETCH_SENTENCE_LANGS}?entrance_id=${entranceData.results[i].entrance_id}&format=json`
-        );
+        const SentenceResp = await fetch(`${API_FETCH_SENTENCE_LANGS}?entrance_id=${entranceData.results[i].entrance_id}&format=json`);
         const sentenceData = await SentenceResp.json();
         if (entranceData.results[i].is_main_entrance === "Y") {
           accessibilityData.main = sentenceData;
@@ -258,9 +202,7 @@ export const getServerSideProps: GetServerSideProps = async ({
       }
 
       if (entranceData.results.length !== 0) {
-        const LogResp = await fetch(
-          `${API_FETCH_ANSWER_LOGS}?entrance=${mainEntranceId}`
-        );
+        const LogResp = await fetch(`${API_FETCH_ANSWER_LOGS}?entrance=${mainEntranceId}`);
         const logData = await LogResp.json();
 
         // TODO: Should the this be true even if the form has not been submitted

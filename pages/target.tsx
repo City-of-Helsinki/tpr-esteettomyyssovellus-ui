@@ -25,12 +25,7 @@ const Target = (): ReactElement => {
 };
 
 // Server-side rendering
-export const getServerSideProps: GetServerSideProps = async ({
-  req,
-  locales,
-  params,
-  query,
-}) => {
+export const getServerSideProps: GetServerSideProps = async ({ req, locales, params, query }) => {
   const lngDict = await i18nLoader(locales);
 
   const reduxStore = store;

@@ -74,17 +74,10 @@ export const formSlice = createSlice({
     removeAnsweredChoice: (state, action: PayloadAction<string>) => {
       return {
         ...state,
-        answeredChoices: [
-          ...(state.answeredChoices?.filter(
-            (elem) => elem !== action.payload
-          ) ?? []),
-        ],
+        answeredChoices: [...(state.answeredChoices?.filter((elem) => elem !== action.payload) ?? [])],
       };
     },
-    setAnswer: (
-      state,
-      action: PayloadAction<{ questionNumber: number; answer: number }>
-    ) => {
+    setAnswer: (state, action: PayloadAction<{ questionNumber: number; answer: number }>) => {
       const qNumber = action.payload.questionNumber;
       const a = action.payload.answer;
       return {
@@ -124,10 +117,7 @@ export const formSlice = createSlice({
     unsetFinished: (state, action: PayloadAction<number>) => {
       return {
         ...state,
-        finishedBlocks: [
-          ...(state.finishedBlocks?.filter((elem) => elem !== action.payload) ??
-            []),
-        ],
+        finishedBlocks: [...(state.finishedBlocks?.filter((elem) => elem !== action.payload) ?? [])],
       };
     },
     setContactPerson: (state, action: PayloadAction<string>) => {
@@ -225,10 +215,7 @@ export const formSlice = createSlice({
     unsetInvalid: (state, action: PayloadAction<number>) => {
       return {
         ...state,
-        invalidBlocks: [
-          ...(state.invalidBlocks?.filter((elem) => elem !== action.payload) ??
-            []),
-        ],
+        invalidBlocks: [...(state.invalidBlocks?.filter((elem) => elem !== action.payload) ?? [])],
       };
     },
     setFormFinished: (state) => {
@@ -271,9 +258,7 @@ export const formSlice = createSlice({
       };
     },
     removeMainImageInvalidValue: (state, action: PayloadAction<string>) => {
-      const filteredInvalids = state.mainImageInvalidValues.filter(
-        (inv) => inv !== action.payload
-      );
+      const filteredInvalids = state.mainImageInvalidValues.filter((inv) => inv !== action.payload);
       return {
         ...state,
         mainImageInvalidValues: filteredInvalids,
@@ -286,10 +271,7 @@ export const formSlice = createSlice({
       };
     },
     addMainImageInvalidValue: (state, action: PayloadAction<string[]>) => {
-      const updatedInvalids = [
-        ...state.mainImageInvalidValues,
-        ...action.payload,
-      ];
+      const updatedInvalids = [...state.mainImageInvalidValues, ...action.payload];
 
       // @ts-ignore
       const removedDublicatesInvalids = [...new Set(updatedInvalids)];
@@ -311,10 +293,7 @@ export const formSlice = createSlice({
         mainImage: {} as MainPictureProps,
       };
     },
-    setMainPictureAlt: (
-      state,
-      action: PayloadAction<{ language: string; value: string }>
-    ) => {
+    setMainPictureAlt: (state, action: PayloadAction<{ language: string; value: string }>) => {
       const updatedMainPic = {
         ...state.mainImage,
         [action.payload.language]: action.payload.value,
@@ -334,10 +313,7 @@ export const formSlice = createSlice({
         mainImage: updatedMainImage as MainPictureProps,
       };
     },
-    setCurEditingMainEntranceImageTemp: (
-      state,
-      action: PayloadAction<MainPictureProps>
-    ) => {
+    setCurEditingMainEntranceImageTemp: (state, action: PayloadAction<MainPictureProps>) => {
       return {
         ...state,
         mainImageTemp: action.payload,

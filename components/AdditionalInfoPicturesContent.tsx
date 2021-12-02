@@ -1,56 +1,27 @@
 import React, { useEffect, useRef, useState } from "react";
-import {
-  IconPlus,
-  IconMinus,
-  TextArea,
-  TextInput,
-  Checkbox,
-  Tooltip,
-  SelectionGroup,
-} from "hds-react";
+import { IconPlus, IconMinus, TextArea, TextInput, Checkbox, Tooltip, SelectionGroup } from "hds-react";
 import { useI18n } from "next-localization";
 import { v4 as uuidv4 } from "uuid";
 import styles from "./AdditionalInfoPicturesContent.module.scss";
 import QuestionButton from "./QuestionButton";
 import QuestionInfo from "./QuestionInfo";
-import {
-  addInvalidValues,
-  addPicture,
-  removeInvalidValues,
-  removePicture,
-  setAlt,
-  setPictureSource,
-} from "../state/reducers/additionalInfoSlice";
+import { addInvalidValues, addPicture, removeInvalidValues, removePicture, setAlt, setPictureSource } from "../state/reducers/additionalInfoSlice";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { AdditionalContentProps } from "../types/general";
 import { CREATIVECOMMONS_URL } from "../types/constants";
 
 // usage: additionalinfo page picture components
 // notes: this component has both "upload" and "link/url" image components for they are such similar
-const AdditionalInfoPicturesContent = ({
-  questionId,
-  compId,
-  onlyLink = false,
-  onDelete,
-  initValue,
-}: AdditionalContentProps): JSX.Element => {
+const AdditionalInfoPicturesContent = ({ questionId, compId, onlyLink = false, onDelete, initValue }: AdditionalContentProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
   const currentId = compId;
-  const curAddInfo = useAppSelector(
-    (state) => state.additionalInfoReducer[questionId]
-  );
-  const curImage = curAddInfo?.pictures?.filter(
-    (pic) => pic.id === currentId
-  )[0];
+  const curAddInfo = useAppSelector((state) => state.additionalInfoReducer[questionId]);
+  const curImage = curAddInfo?.pictures?.filter((pic) => pic.id === currentId)[0];
   const [linkText, setLinkText] = useState("");
 
   // get current invalid fields for validation
-  const currentInvalids = useAppSelector((state) =>
-    state.additionalInfoReducer[questionId].invalidValues?.find(
-      (invs) => invs.id === compId
-    )
-  );
+  const currentInvalids = useAppSelector((state) => state.additionalInfoReducer[questionId].invalidValues?.find((invs) => invs.id === compId));
 
   // hidden input field which is clicked after custom button is pressed
   const hiddenFileInput = useRef<HTMLInputElement>(null);
@@ -171,11 +142,7 @@ const AdditionalInfoPicturesContent = ({
 
   // only update state after X (0.5) sec from prev KeyDown, set Alt text with correct lang
   let timer: NodeJS.Timeout;
-  const handleAddAlt = (
-    e: React.KeyboardEvent<HTMLTextAreaElement>,
-    language: string,
-    compId: number
-  ) => {
+  const handleAddAlt = (e: React.KeyboardEvent<HTMLTextAreaElement>, language: string, compId: number) => {
     const { value } = e.currentTarget;
     clearTimeout(timer);
     timer = setTimeout(() => {
@@ -230,11 +197,7 @@ const AdditionalInfoPicturesContent = ({
       {i18n.t("additionalInfo.chooseFromDevice")}
     </QuestionButton>
   ) : (
-    <QuestionButton
-      variant="secondary"
-      onClickHandler={() => handleImageRemoveAndAdded()}
-      disabled={!linkText}
-    >
+    <QuestionButton variant="secondary" onClickHandler={() => handleImageRemoveAndAdded()} disabled={!linkText}>
       {i18n.t("additionalInfo.pictureLinkConfirmButton")}
     </QuestionButton>
   );
@@ -254,65 +217,38 @@ const AdditionalInfoPicturesContent = ({
     <div className={styles.maincontainer}>
       <div
         className={styles.inputcontainer}
-        style={
-          currentInvalids?.invalidAnswers?.includes("url")
-            ? { alignItems: "center" }
-            : { alignItems: "flex-end" }
-        }
+        style={currentInvalids?.invalidAnswers?.includes("url") ? { alignItems: "center" } : { alignItems: "flex-end" }}
       >
         <span className={styles.inputfield}>
           <TextInput
             id="{`chooseimg-${currentId}`}"
-            label={
-              onlyLink
-                ? i18n.t("additionalInfo.pictureInputLink")
-                : i18n.t("additionalInfo.pictureInput")
-            }
+            label={onlyLink ? i18n.t("additionalInfo.pictureInputLink") : i18n.t("additionalInfo.pictureInput")}
             placeholder={curImage?.name}
             disabled={!onlyLink}
             onChange={(e) => handleLinkText(e)}
             defaultValue={curImage?.url ? curImage.url : ""}
             invalid={!!currentInvalids?.invalidAnswers?.includes("url")}
-            errorText={
-              currentInvalids?.invalidAnswers?.includes("url")
-                ? i18n.t("additionalInfo.picureLinkErrorText")
-                : ""
-            }
+            errorText={currentInvalids?.invalidAnswers?.includes("url") ? i18n.t("additionalInfo.picureLinkErrorText") : ""}
           />
         </span>
 
         {curImage?.base && !onlyLink ? (
-          <QuestionButton
-            variant="secondary"
-            onClickHandler={handleAddImageToInput}
-          >
+          <QuestionButton variant="secondary" onClickHandler={handleAddImageToInput}>
             {i18n.t("additionalInfo.changePicture")}
           </QuestionButton>
         ) : (
           addFromDeviceButton
         )}
-        <QuestionButton
-          variant="secondary"
-          onClickHandler={() => handleOnDelete()}
-        >
+        <QuestionButton variant="secondary" onClickHandler={() => handleOnDelete()}>
           {i18n.t("additionalInfo.cancelPicture")}
         </QuestionButton>
-        {onlyLink ? null : (
-          <input
-            type="file"
-            className={styles.hidden}
-            ref={hiddenFileInput}
-            onChange={handleImageAdded}
-          />
-        )}
+        {onlyLink ? null : <input type="file" className={styles.hidden} ref={hiddenFileInput} onChange={handleImageAdded} />}
       </div>
       {/* todo: maybe remove base and use url -> need url for upload from ~Azure */}
       {curImage?.base || curImage?.url ? (
         <div className={styles.lowercontentcontainer}>
           <div className={styles.picrutepreviewcontainer}>
-            <div
-              style={{ backgroundImage: `url(` + `${curImage?.base}` + `)` }}
-            />
+            <div style={{ backgroundImage: `url(` + `${curImage?.base}` + `)` }} />
           </div>
           <div className={styles.altcontainer}>
             <TextArea
@@ -320,21 +256,13 @@ const AdditionalInfoPicturesContent = ({
               label={i18n.t("additionalInfo.pictureLabel")}
               helperText={i18n.t("additionalInfo.pictureHelperText")}
               required
-              tooltipButtonLabel={i18n.t(
-                "additionalInfo.generalTooptipButtonLabel"
-              )}
+              tooltipButtonLabel={i18n.t("additionalInfo.generalTooptipButtonLabel")}
               tooltipLabel={i18n.t("additionalInfo.generalTooptipLabel")}
               tooltipText={i18n.t("additionalInfo.altToolTipContent")}
-              onKeyUp={(e: React.KeyboardEvent<HTMLTextAreaElement>) =>
-                handleAddAlt(e, "fi", compId)
-              }
+              onKeyUp={(e: React.KeyboardEvent<HTMLTextAreaElement>) => handleAddAlt(e, "fi", compId)}
               defaultValue={curImage?.fi ?? null}
               invalid={!!currentInvalids?.invalidAnswers?.includes("fi")}
-              errorText={
-                currentInvalids?.invalidAnswers?.includes("fi")
-                  ? "PH: olkaa hyvä ja syöttäkää kuvateksti"
-                  : ""
-              }
+              errorText={currentInvalids?.invalidAnswers?.includes("fi") ? "PH: olkaa hyvä ja syöttäkää kuvateksti" : ""}
             />
             <div className={styles.altLabel}>
               <QuestionInfo
@@ -348,9 +276,7 @@ const AdditionalInfoPicturesContent = ({
                   id={`text-sv-${currentId}`}
                   label={i18n.t("additionalInfo.pictureLabelSwe")}
                   helperText={i18n.t("additionalInfo.pictureHelperTextSwe")}
-                  onKeyUp={(e: React.KeyboardEvent<HTMLTextAreaElement>) =>
-                    handleAddAlt(e, "sv", compId)
-                  }
+                  onKeyUp={(e: React.KeyboardEvent<HTMLTextAreaElement>) => handleAddAlt(e, "sv", compId)}
                   defaultValue={curImage?.sv ? curImage.sv : ""}
                 />
               </QuestionInfo>
@@ -367,31 +293,21 @@ const AdditionalInfoPicturesContent = ({
                   id={`text-eng-${currentId}`}
                   label={i18n.t("additionalInfo.pictureLabelEng")}
                   helperText={i18n.t("additionalInfo.pictureHelperTextEng")}
-                  onKeyUp={(e: React.KeyboardEvent<HTMLTextAreaElement>) =>
-                    handleAddAlt(e, "en", compId)
-                  }
+                  onKeyUp={(e: React.KeyboardEvent<HTMLTextAreaElement>) => handleAddAlt(e, "en", compId)}
                   defaultValue={curImage?.en ? curImage.en : ""}
                 />
               </QuestionInfo>
             </div>
           </div>
           <div className={styles.picturetermscontainer}>
-            <SelectionGroup
-              label={i18n.t("additionalInfo.sharePictureLicenseLabel")}
-            >
+            <SelectionGroup label={i18n.t("additionalInfo.sharePictureLicenseLabel")}>
               <Checkbox
                 id={`picture-license-${currentId}`}
-                label={`${i18n.t(
-                  "additionalInfo.sharePictureLicenseText"
-                )} ${i18n.t("additionalInfo.sharePictureLicense")}}`}
+                label={`${i18n.t("additionalInfo.sharePictureLicenseText")} ${i18n.t("additionalInfo.sharePictureLicense")}}`}
                 name="agreeToPictureTerms"
                 checked={termsChecked}
                 onChange={onCheckChange}
-                errorText={
-                  currentInvalids?.invalidAnswers?.includes("sharelicense")
-                    ? i18n.t("additionalInfo.pictureTermsErrorText")
-                    : ""
-                }
+                errorText={currentInvalids?.invalidAnswers?.includes("sharelicense") ? i18n.t("additionalInfo.pictureTermsErrorText") : ""}
               />
             </SelectionGroup>
             <Tooltip> {i18n.t("additionalInfo.pictureTermsInfoText")} </Tooltip>
@@ -407,11 +323,7 @@ const AdditionalInfoPicturesContent = ({
               required
               defaultValue={curImage?.source ? curImage?.source : ""}
               invalid={!!currentInvalids?.invalidAnswers?.includes("source")}
-              errorText={
-                currentInvalids?.invalidAnswers?.includes("source")
-                  ? i18n.t("additionalInfo.picureSourceErrorText")
-                  : ""
-              }
+              errorText={currentInvalids?.invalidAnswers?.includes("source") ? i18n.t("additionalInfo.picureSourceErrorText") : ""}
             />
           </div>
         </div>

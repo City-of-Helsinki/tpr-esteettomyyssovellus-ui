@@ -11,10 +11,7 @@ const SearchBoxWithButtonsMobile = (): JSX.Element => {
       <div className={styles.container}>
         <p className={styles.searchText}> Hae toimipistettä</p>
         <div className={styles.input}>
-          <TextInput
-            id="search"
-            placeholder="Anna toimipisteen nimi tai joku muu hakusana"
-          />
+          <TextInput id="search" placeholder="Anna toimipisteen nimi tai joku muu hakusana" />
         </div>
         <div className={styles.buttons}>
           <div className={styles.button}>

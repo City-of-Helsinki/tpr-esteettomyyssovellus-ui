@@ -2,14 +2,7 @@ import React, { ReactElement, useEffect, useState } from "react";
 import { useI18n } from "next-localization";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
-import {
-  IconCrossCircle,
-  IconLink,
-  IconLocation,
-  IconQuestionCircle,
-  IconSpeechbubbleText,
-  IconUpload,
-} from "hds-react";
+import { IconCrossCircle, IconLink, IconLocation, IconQuestionCircle, IconSpeechbubbleText, IconUpload } from "hds-react";
 import { Dictionary } from "@reduxjs/toolkit";
 import Layout from "../../components/common/Layout";
 import i18nLoader from "../../utils/i18n";
@@ -21,30 +14,15 @@ import QuestionButton from "../../components/QuestionButton";
 import AdditionalInfoLocationContent from "../../components/AdditionalInfoLocationContent";
 import AdditionalInfoPicturesContent from "../../components/AdditionalInfoPicturesContent";
 import AdditionalInfoCommentContent from "../../components/AdditionalInfoCommentContent";
-import {
-  addComponent,
-  removeAllInvalids,
-  removeComponent,
-  setEditingInitialState,
-} from "../../state/reducers/additionalInfoSlice";
+import { addComponent, removeAllInvalids, removeComponent, setEditingInitialState } from "../../state/reducers/additionalInfoSlice";
 import { useAppSelector, useAppDispatch, useLoading } from "../../state/hooks";
-import {
-  AdditionalComponentProps,
-  AdditionalInfoPageProps,
-  AdditionalInfoProps,
-} from "../../types/general";
-import {
-  LANGUAGE_LOCALES,
-  API_FETCH_BACKEND_QUESTIONS,
-} from "../../types/constants";
+import { AdditionalComponentProps, AdditionalInfoPageProps, AdditionalInfoProps } from "../../types/general";
+import { LANGUAGE_LOCALES, API_FETCH_BACKEND_QUESTIONS } from "../../types/constants";
 import { setCurrentlyEditingQuestion } from "../../state/reducers/generalSlice";
 import LoadSpinner from "../../components/common/LoadSpinner";
 
 // usage: additional information page (per question)
-const AdditionalInfo = ({
-  questionId,
-  questionData,
-}: AdditionalInfoPageProps): ReactElement => {
+const AdditionalInfo = ({ questionId, questionData }: AdditionalInfoPageProps): ReactElement => {
   const i18n = useI18n();
   // todo: figure out better way to id (?)
   // current checks biggest id from cur addinfo and increments, if no found start form zero
@@ -52,20 +30,13 @@ const AdditionalInfo = ({
   const [increasingId, setIncreasingId] = useState(0);
   const isLoading = useLoading();
   const dispatch = useAppDispatch();
-  const curAdditionalInfo: any = useAppSelector(
-    (state) => state.additionalInfoReducer[questionId] as AdditionalInfoProps
-  );
+  const curAdditionalInfo: any = useAppSelector((state) => state.additionalInfoReducer[questionId] as AdditionalInfoProps);
 
   // check/init addinfo can add comment / location and number of pictures able to add
   // disable control buttons for adding these components respectively
-  const canAddCommentCount =
-    questionData && questionData[0].can_add_comment === "Y" ? 0 : -1;
-  const photoMaxCount =
-    questionData && questionData[0].can_add_photo_max_count
-      ? questionData[0]?.can_add_photo_max_count
-      : -1;
-  const canAddLocationCount =
-    questionData && questionData[0].can_add_location === "Y" ? 0 : -1;
+  const canAddCommentCount = questionData && questionData[0].can_add_comment === "Y" ? 0 : -1;
+  const photoMaxCount = questionData && questionData[0].can_add_photo_max_count ? questionData[0]?.can_add_photo_max_count : -1;
+  const canAddLocationCount = questionData && questionData[0].can_add_location === "Y" ? 0 : -1;
 
   const filterByLanguage = (data: any) => {
     const i18n = useI18n();
@@ -122,15 +93,9 @@ const AdditionalInfo = ({
       curAdditionalInfo?.components?.map((comp: any) => comp.id)
     );
 
-    const highestExistingId = curAdditionalInfo?.components
-      ? curAdditionalInfo.components.length + highestIdState
-      : highestIdState;
+    const highestExistingId = curAdditionalInfo?.components ? curAdditionalInfo.components.length + highestIdState : highestIdState;
 
-    if (
-      highestExistingId &&
-      typeof highestExistingId === "number" &&
-      highestExistingId > -1
-    ) {
+    if (highestExistingId && typeof highestExistingId === "number" && highestExistingId > -1) {
       setIncreasingId(highestExistingId + 1);
     }
 
@@ -177,82 +142,68 @@ const AdditionalInfo = ({
               <div>
                 <div className={styles.mainheader}>
                   <p>{questionDataCurrentLanguage.question_code ?? null}</p>
-                  <p className={styles.headerspacing}>
-                    {questionDataCurrentLanguage.text ?? null}
-                  </p>
+                  <p className={styles.headerspacing}>{questionDataCurrentLanguage.text ?? null}</p>
                 </div>
-                <div className={styles.maininfoctrl}>
-                  {i18n.t("additionalInfo.mainInfoText")}
-                </div>
+                <div className={styles.maininfoctrl}>{i18n.t("additionalInfo.mainInfoText")}</div>
               </div>
               <div className={styles.overrideheadlinestyles}>
-                {curAdditionalInfo?.components?.map(
-                  (component: AdditionalComponentProps) => {
-                    const { id } = component;
-                    const { type } = component;
-                    if (type === "upload") {
-                      return (
-                        <div className={styles.componentcontainer}>
-                          <AdditionalInfoPicturesContent
-                            key={`key_${id}`}
-                            questionId={questionId}
-                            compId={id}
-                            onDelete={() => handleDelete(id, "upload")}
-                            initValue={
-                              curAdditionalInfo?.pictures
-                                ? curAdditionalInfo?.pictures
-                                : null
-                            }
-                          />
-                        </div>
-                      );
-                    }
-                    if (type === "link") {
-                      return (
-                        <div className={styles.componentcontainer}>
-                          <AdditionalInfoPicturesContent
-                            onlyLink
-                            key={`key_${id}`}
-                            questionId={questionId}
-                            compId={id}
-                            onDelete={() => handleDelete(id, "link")}
-                            initValue={
-                              curAdditionalInfo?.pictures
-                                ? curAdditionalInfo?.pictures
-                                : null
-                            }
-                          />
-                        </div>
-                      );
-                    }
-                    if (type === "comment") {
-                      return (
-                        <div className={styles.componentcontainer}>
-                          <AdditionalInfoCommentContent
-                            key={`key_${id}`}
-                            questionId={questionId}
-                            compId={id}
-                            onDelete={() => handleDelete(id, "comment")}
-                            initValue={curAdditionalInfo.comments ?? null}
-                          />
-                        </div>
-                      );
-                    }
-                    if (type === "location") {
-                      return (
-                        <div className={styles.componentcontainer}>
-                          <AdditionalInfoLocationContent
-                            key={`key_${id}`}
-                            questionId={questionId}
-                            compId={id}
-                            onDelete={() => handleDelete(id, "location")}
-                            initValue={curAdditionalInfo.location ?? null}
-                          />
-                        </div>
-                      );
-                    }
+                {curAdditionalInfo?.components?.map((component: AdditionalComponentProps) => {
+                  const { id } = component;
+                  const { type } = component;
+                  if (type === "upload") {
+                    return (
+                      <div className={styles.componentcontainer}>
+                        <AdditionalInfoPicturesContent
+                          key={`key_${id}`}
+                          questionId={questionId}
+                          compId={id}
+                          onDelete={() => handleDelete(id, "upload")}
+                          initValue={curAdditionalInfo?.pictures ? curAdditionalInfo?.pictures : null}
+                        />
+                      </div>
+                    );
                   }
-                )}
+                  if (type === "link") {
+                    return (
+                      <div className={styles.componentcontainer}>
+                        <AdditionalInfoPicturesContent
+                          onlyLink
+                          key={`key_${id}`}
+                          questionId={questionId}
+                          compId={id}
+                          onDelete={() => handleDelete(id, "link")}
+                          initValue={curAdditionalInfo?.pictures ? curAdditionalInfo?.pictures : null}
+                        />
+                      </div>
+                    );
+                  }
+                  if (type === "comment") {
+                    return (
+                      <div className={styles.componentcontainer}>
+                        <AdditionalInfoCommentContent
+                          key={`key_${id}`}
+                          questionId={questionId}
+                          compId={id}
+                          onDelete={() => handleDelete(id, "comment")}
+                          initValue={curAdditionalInfo.comments ?? null}
+                        />
+                      </div>
+                    );
+                  }
+                  if (type === "location") {
+                    return (
+                      <div className={styles.componentcontainer}>
+                        <AdditionalInfoLocationContent
+                          key={`key_${id}`}
+                          questionId={questionId}
+                          compId={id}
+                          onDelete={() => handleDelete(id, "location")}
+                          initValue={curAdditionalInfo.location ?? null}
+                        />
+                      </div>
+                    );
+                  }
+                })}
               </div>
               <div className={styles.editedelementsctrl}>
                 <h3>{i18n.t("additionalInfo.elementsCtrlButtonsHeader")}</h3>
@@ -269,21 +220,15 @@ const AdditionalInfo = ({
                     variant="secondary"
                     iconRight={<IconUpload />}
                     onClickHandler={() => handleAddElement("upload")}
-                    disabled={
-                      elementCounts.upload + elementCounts.link >= photoMaxCount
-                    }
+                    disabled={elementCounts.upload + elementCounts.link >= photoMaxCount}
                   >
-                    {i18n.t(
-                      "additionalInfo.ctrlButtons.addUploadImageFromDevice"
-                    )}
+                    {i18n.t("additionalInfo.ctrlButtons.addUploadImageFromDevice")}
                   </QuestionButton>
                   <QuestionButton
                     variant="secondary"
                     iconRight={<IconLink />}
                     onClickHandler={() => handleAddElement("link")}
-                    disabled={
-                      elementCounts.upload + elementCounts.link >= photoMaxCount
-                    }
+                    disabled={elementCounts.upload + elementCounts.link >= photoMaxCount}
                   >
                     {i18n.t("additionalInfo.ctrlButtons.addPictureLink")}
                   </QuestionButton>
@@ -307,10 +252,7 @@ const AdditionalInfo = ({
 };
 
 // NextJs Server-Side Rendering, HDS best practices (SSR)
-export const getServerSideProps: GetServerSideProps = async ({
-  params,
-  locales,
-}) => {
+export const getServerSideProps: GetServerSideProps = async ({ params, locales }) => {
   const lngDict = await i18nLoader(locales);
 
   // todo: if user not checked here remove these
@@ -328,9 +270,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 
   const questionId = Number(params?.questionId) ?? null;
 
-  const questionDataReq = await fetch(
-    `${API_FETCH_BACKEND_QUESTIONS}?question_id=${questionId}&format=json`
-  );
+  const questionDataReq = await fetch(`${API_FETCH_BACKEND_QUESTIONS}?question_id=${questionId}&format=json`);
   const questionData = await questionDataReq.json();
 
   return {

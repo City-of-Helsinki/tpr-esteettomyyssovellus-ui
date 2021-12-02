@@ -25,12 +25,7 @@ import {
 } from "../../types/constants";
 import { useAppSelector, useAppDispatch, useLoading } from "../../state/hooks";
 import QuestionBlock from "../../components/QuestionBlock";
-import {
-  AddInfoPhoto,
-  AddInfoPhotoText,
-  MainEntranceFormProps,
-  QuestionBlockProps,
-} from "../../types/general";
+import { AddInfoPhoto, AddInfoPhotoText, MainEntranceFormProps, QuestionBlockProps } from "../../types/general";
 import HeadlineQuestionContainer from "../../components/HeadlineQuestionContainer";
 
 import QuestionFormCtrlButtons from "../../components/QuestionFormCtrlButtons";
@@ -60,10 +55,7 @@ import {
   setInitAdditionalInfoFromDb,
 } from "../../state/reducers/additionalInfoSlice";
 import { getCurrentDate } from "../../utils/utilFunctions";
-import {
-  setCurrentlyEditingBlock,
-  setCurrentlyEditingQuestion,
-} from "../../state/reducers/generalSlice";
+import { setCurrentlyEditingBlock, setCurrentlyEditingQuestion } from "../../state/reducers/generalSlice";
 import LoadSpinner from "../../components/common/LoadSpinner";
 
 // usage: the main form / pääsisäänkäynti page
@@ -85,34 +77,17 @@ const AccessibilityEdit = ({
 
   const isLoading = useLoading();
 
-  const curEditingQuestionAddInfoNumber = useAppSelector(
-    (state) => state.generalSlice.currentlyEditingQuestionAddinfo
-  );
+  const curEditingQuestionAddInfoNumber = useAppSelector((state) => state.generalSlice.currentlyEditingQuestionAddinfo);
 
-  const curEditingBlockAddInfoNumber = useAppSelector(
-    (state) => state.generalSlice.currentlyEditingBlockAddinfo
-  );
+  const curEditingBlockAddInfoNumber = useAppSelector((state) => state.generalSlice.currentlyEditingBlockAddinfo);
 
-  const curAnsweredChoices = useAppSelector(
-    (state) => state.formReducer.answeredChoices
-  );
-  const curInvalidBlocks = useAppSelector(
-    (state) => state.formReducer.invalidBlocks
-  );
+  const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
+  const curInvalidBlocks = useAppSelector((state) => state.formReducer.invalidBlocks);
   const formInited = useAppSelector((state) => state.formReducer.formInited);
-  const additionalInfoInitedFromDb = useAppSelector(
-    (state) => state.additionalInfoReducer.initAddInfoFromDb
-  );
-  const isContinueClicked = useAppSelector(
-    (state) => state.formReducer.isContinueClicked
-  );
-  const startedAnswering = useAppSelector(
-    (state) => state.formReducer.startedAnswering
-  );
-  const treeItems = [
-    ServicepointData.servicepoint_name,
-    "PH: Esteettömyystiedot",
-  ];
+  const additionalInfoInitedFromDb = useAppSelector((state) => state.additionalInfoReducer.initAddInfoFromDb);
+  const isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
+  const startedAnswering = useAppSelector((state) => state.formReducer.startedAnswering);
+  const treeItems = [ServicepointData.servicepoint_name, "PH: Esteettömyystiedot"];
 
   // validates contactinfo data and sets to state
   if (ServicepointData !== undefined && !formInited) {
@@ -217,9 +192,7 @@ const AccessibilityEdit = ({
         );
 
         if (AdditionalInfosData.phototexts) {
-          const curPhotoAlts = AdditionalInfosData.phototexts.filter(
-            (phototext) => phototext.answer_photo === photo.answer_photo_id
-          );
+          const curPhotoAlts = AdditionalInfosData.phototexts.filter((phototext) => phototext.answer_photo === photo.answer_photo_id);
           if (curPhotoAlts) {
             curPhotoAlts.forEach((alt: AddInfoPhotoText) => {
               const curLangStr = LANGUAGE_LOCALES[alt.language];
@@ -247,10 +220,7 @@ const AccessibilityEdit = ({
       const questionNumber = a.question_id;
       const answer = a.question_choice_id;
       const answerString = answer;
-      if (
-        !curAnsweredChoices.includes(answer) &&
-        curAnswers[questionNumber] === undefined
-      ) {
+      if (!curAnsweredChoices.includes(answer) && curAnswers[questionNumber] === undefined) {
         dispatch(setAnsweredChoice(answerString));
         dispatch(setAnswer({ questionNumber, answer }));
       }
@@ -274,48 +244,27 @@ const AccessibilityEdit = ({
             : false;
 
           const isVisible =
-            (block.visible_if_question_choice === null &&
-              block.language_id === curLocaleId) ||
-            (answersIncludeAllVisibleQuestions &&
-              block.language_id === curLocaleId &&
-              isContinueClicked);
+            (block.visible_if_question_choice === null && block.language_id === curLocaleId) ||
+            (answersIncludeAllVisibleQuestions && block.language_id === curLocaleId && isContinueClicked);
 
           const blockQuestions = isVisible
-            ? QuestionsData.filter(
-                (question) =>
-                  question.question_block_id === block.question_block_id &&
-                  question.language_id === curLocaleId
-              )
+            ? QuestionsData.filter((question) => question.question_block_id === block.question_block_id && question.language_id === curLocaleId)
             : null;
 
           const answerChoices = isVisible
-            ? QuestionChoicesData.filter(
-                (choice) =>
-                  choice.question_block_id === block.question_block_id &&
-                  choice.language_id === curLocaleId
-              )
+            ? QuestionChoicesData.filter((choice) => choice.question_block_id === block.question_block_id && choice.language_id === curLocaleId)
             : null;
 
-          if (
-            isVisible &&
-            blockQuestions &&
-            answerChoices &&
-            block.question_block_code !== undefined
-          )
-            lastBlockNumber = block.question_block_code;
+          if (isVisible && blockQuestions && answerChoices && block.question_block_code !== undefined) lastBlockNumber = block.question_block_code;
 
-          return isVisible &&
-            blockQuestions &&
-            answerChoices &&
-            block.question_block_id !== undefined ? (
+          return isVisible && blockQuestions && answerChoices && block.question_block_id !== undefined ? (
             <HeadlineQuestionContainer
               key={block.question_block_id}
               number={block.question_block_id}
               text={`${block.question_block_code} ${block.text}`}
               id={`questionblockid-${block.question_block_id}`}
               initOpen={
-                curEditingBlockAddInfoNumber &&
-                curEditingBlockAddInfoNumber === block.question_block_id
+                curEditingBlockAddInfoNumber && curEditingBlockAddInfoNumber === block.question_block_id
                   ? true
                   : block.question_block_id === nextBlock
               }
@@ -356,11 +305,7 @@ const AccessibilityEdit = ({
   // }
 
   const visibleQuestionChoices = QuestionChoicesData?.filter((choice) => {
-    if (
-      visibleBlocks
-        ?.map((elem) => Number(elem?.key))
-        .includes(choice.question_block_id!)
-    ) {
+    if (visibleBlocks?.map((elem) => Number(elem?.key)).includes(choice.question_block_id!)) {
       return choice.question_choice_id;
     }
   });
@@ -368,18 +313,13 @@ const AccessibilityEdit = ({
   // if returning from additional info page -> init page to correct location / question
   // when the window.location.hash is set -> set states of question and block numbers to -1
   // (useEffect [] didn't work for some reason)
-  if (
-    curEditingQuestionAddInfoNumber >= 0 &&
-    curEditingBlockAddInfoNumber >= 0
-  ) {
+  if (curEditingQuestionAddInfoNumber >= 0 && curEditingBlockAddInfoNumber >= 0) {
     window.location.hash = `questionid-${curEditingQuestionAddInfoNumber}`;
     dispatch(setCurrentlyEditingQuestion(-1));
     dispatch(setCurrentlyEditingBlock(-1));
   }
 
-  const formSubmitted = useAppSelector(
-    (state) => state.formReducer.formSubmitted
-  );
+  const formSubmitted = useAppSelector((state) => state.formReducer.formSubmitted);
 
   return (
     <Layout>
@@ -407,11 +347,7 @@ const AccessibilityEdit = ({
             </div>
             <div className={styles.headingcontainer}>
               <h1>{ServicepointData.servicepoint_name}</h1>
-              <h2>
-                {form_id === 0
-                  ? i18n.t("common.mainEntrance")
-                  : i18n.t("common.additionalEntrance")}
-              </h2>
+              <h2>{form_id === 0 ? i18n.t("common.mainEntrance") : i18n.t("common.additionalEntrance")}</h2>
             </div>
             <div>
               {visibleBlocks}
@@ -432,10 +368,7 @@ const AccessibilityEdit = ({
 };
 
 // NextJs Server-Side Rendering, HDS best practices (SSR)
-export const getServerSideProps: GetServerSideProps = async ({
-  params,
-  locales,
-}) => {
+export const getServerSideProps: GetServerSideProps = async ({ params, locales }) => {
   const lngDict = await i18nLoader(locales);
 
   // todo: if user not checked here remove these
@@ -466,26 +399,16 @@ export const getServerSideProps: GetServerSideProps = async ({
   if (params !== undefined) {
     try {
       entrance_id = params.entranceId;
-      const EntranceResp = await fetch(
-        `${API_FETCH_ENTRANCES}${entrance_id}/?format=json`
-      );
+      const EntranceResp = await fetch(`${API_FETCH_ENTRANCES}${entrance_id}/?format=json`);
       EntranceData = await EntranceResp.json();
       const servicepoint_id = EntranceData.servicepoint;
       form_id = EntranceData.form;
       const QuestionsResp = await fetch(API_FETCH_QUESTION_URL + form_id);
-      const QuestionChoicesResp = await fetch(
-        API_FETCH_QUESTIONCHOICES + form_id
-      );
-      const QuestionBlocksResp = await fetch(
-        API_FETCH_QUESTIONBLOCK_URL + form_id
-      );
-      const QuestionAnswersResp = await fetch(
-        `${API_FETCH_BACKEND_ENTRANCE_ANSWERS}?entrance_id=${entrance_id}&format=json`
-      );
+      const QuestionChoicesResp = await fetch(API_FETCH_QUESTIONCHOICES + form_id);
+      const QuestionBlocksResp = await fetch(API_FETCH_QUESTIONBLOCK_URL + form_id);
+      const QuestionAnswersResp = await fetch(`${API_FETCH_BACKEND_ENTRANCE_ANSWERS}?entrance_id=${entrance_id}&format=json`);
 
-      const ServicepointResp = await fetch(
-        `${API_FETCH_SERVICEPOINTS}${servicepoint_id}/?format=json`
-      );
+      const ServicepointResp = await fetch(`${API_FETCH_SERVICEPOINTS}${servicepoint_id}/?format=json`);
       QuestionsData = await QuestionsResp.json();
       QuestionChoicesData = await QuestionChoicesResp.json();
       QuestionBlocksData = await QuestionBlocksResp.json();
@@ -498,21 +421,13 @@ export const getServerSideProps: GetServerSideProps = async ({
           })[0].log_id) ?? -1;
 
         if (logId && logId >= 0) {
-          const AddInfoComments = await fetch(
-            `${API_FETCH_QUESTION_ANSWER_COMMENTS}?log=${logId}`
-          );
+          const AddInfoComments = await fetch(`${API_FETCH_QUESTION_ANSWER_COMMENTS}?log=${logId}`);
 
-          const AddInfoLocations = await fetch(
-            `${API_FETCH_QUESTION_ANSWER_LOCATIONS}?log=${logId}`
-          );
+          const AddInfoLocations = await fetch(`${API_FETCH_QUESTION_ANSWER_LOCATIONS}?log=${logId}`);
 
-          const AddInfoPhotos = await fetch(
-            `${API_FETCH_QUESTION_ANSWER_PHOTOS}?log=${logId}`
-          );
+          const AddInfoPhotos = await fetch(`${API_FETCH_QUESTION_ANSWER_PHOTOS}?log=${logId}`);
 
-          const AddInfoPhotoTexts = await fetch(
-            `${API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS}?log=${logId}`
-          );
+          const AddInfoPhotoTexts = await fetch(`${API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS}?log=${logId}`);
 
           AddInfoCommentsData = await AddInfoComments.json();
           AddInfoLocationsData = await AddInfoLocations.json();

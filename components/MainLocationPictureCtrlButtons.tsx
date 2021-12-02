@@ -5,22 +5,10 @@ import { useRouter } from "next/router";
 import styles from "./AdditionalInfoCtrlButtons.module.scss";
 import QuestionButton from "./QuestionButton";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
-import {
-  removeSingleQuestionAdditionalinfo,
-  setPreviousInitStateAdditionalinfo,
-} from "../state/reducers/additionalInfoSlice";
-import {
-  AdditionalInfoCtrlButtonsProps,
-  AdditionalInfoProps,
-} from "../types/general";
-import {
-  addMainImageElement,
-  addMainPicture,
-} from "../state/reducers/formSlice";
-import {
-  setServicepointLocation,
-  setServicepointLocationWGS84,
-} from "../state/reducers/generalSlice";
+import { removeSingleQuestionAdditionalinfo, setPreviousInitStateAdditionalinfo } from "../state/reducers/additionalInfoSlice";
+import { AdditionalInfoCtrlButtonsProps, AdditionalInfoProps } from "../types/general";
+import { addMainImageElement, addMainPicture } from "../state/reducers/formSlice";
+import { setServicepointLocation, setServicepointLocationWGS84 } from "../state/reducers/generalSlice";
 
 // usage: save and return without saving buttons in additionalinfo page
 // notes: only save if save clicked, if return no save or back button (browser, mice etc) returns to old or emtpy value
@@ -30,25 +18,15 @@ const MainLocationPictureCtrlButtons = ({ caseId }: any): JSX.Element => {
   const dispatch = useAppDispatch();
   const [pageSaved, setPageSaved] = useState(false);
 
-  const hasInvalidValidations = useAppSelector(
-    (state) => state.formReducer.mainImageInvalidValues
-  );
+  const hasInvalidValidations = useAppSelector((state) => state.formReducer.mainImageInvalidValues);
 
-  const mainimageTemp = useAppSelector(
-    (state) => state.formReducer.mainImageTemp
-  );
+  const mainimageTemp = useAppSelector((state) => state.formReducer.mainImageTemp);
 
-  const mainimageElementTemp = useAppSelector(
-    (state) => state.formReducer.mainImageTempElement
-  );
+  const mainimageElementTemp = useAppSelector((state) => state.formReducer.mainImageTempElement);
 
-  const coordinatesTemp = useAppSelector(
-    (state) => state.generalSlice.coordinatesTemp
-  );
+  const coordinatesTemp = useAppSelector((state) => state.generalSlice.coordinatesTemp);
 
-  const coordinatesWGS84Temp = useAppSelector(
-    (state) => state.generalSlice.coordinatesWGS84Temp
-  );
+  const coordinatesWGS84Temp = useAppSelector((state) => state.generalSlice.coordinatesWGS84Temp);
 
   // handle user clicking back button on browser / mouse ->
   // needs to remove the "saved" values same as clicking return no save
@@ -114,10 +92,7 @@ const MainLocationPictureCtrlButtons = ({ caseId }: any): JSX.Element => {
         {i18n.t("common.buttons.saveAndReturn")}
       </QuestionButton>
       <span className={styles.noborderbutton}>
-        <QuestionButton
-          variant="secondary"
-          onClickHandler={() => handleReturnNoSave()}
-        >
+        <QuestionButton variant="secondary" onClickHandler={() => handleReturnNoSave()}>
           {i18n.t("common.buttons.returnNoSave")}
         </QuestionButton>
       </span>

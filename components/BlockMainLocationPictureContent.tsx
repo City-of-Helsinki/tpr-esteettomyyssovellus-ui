@@ -5,15 +5,10 @@ import Map from "./common/Map";
 import QuestionContainer from "./QuestionContainer";
 import styles from "./BlockMainLocationPictureContent.module.scss";
 
-const BlockMainLocationPictureContent = ({
-  canAddLocation,
-  canAddPicture,
-}: mainLocationAndPictureProps): JSX.Element => {
+const BlockMainLocationPictureContent = ({ canAddLocation, canAddPicture }: mainLocationAndPictureProps): JSX.Element => {
   // note: questionBlockId 1 === location, 2 === image
 
-  const coordinatesWGS84 = useAppSelector(
-    (state) => state.generalSlice.coordinatesWGS84
-  ) ?? [60.1, 24.9];
+  const coordinatesWGS84 = useAppSelector((state) => state.generalSlice.coordinatesWGS84) ?? [60.1, 24.9];
 
   console.log("coordinatesWGS84");
   console.log(coordinatesWGS84);
@@ -76,8 +71,7 @@ const BlockMainLocationPictureContent = ({
               <div
                 className={styles.addinfopicturepreview}
                 style={{
-                  backgroundImage:
-                    `url(` + `${mainImage.base ?? mainImage.url}` + `)`,
+                  backgroundImage: `url(` + `${mainImage.base ?? mainImage.url}` + `)`,
                 }}
               />
             </div>

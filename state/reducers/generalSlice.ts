@@ -46,17 +46,11 @@ export const generalSlice = createSlice({
         currentlyEditingBlockAddinfo: action.payload,
       };
     },
-    setServicepointLocation: (
-      state,
-      action: PayloadAction<{ coordinates: [number, number] }>
-    ) => {
+    setServicepointLocation: (state, action: PayloadAction<{ coordinates: [number, number] }>) => {
       const { coordinates } = action.payload;
       return { ...state, coordinates };
     },
-    setServicepointLocationWGS84: (
-      state,
-      action: PayloadAction<{ coordinatesWGS84: [number, number] }>
-    ) => {
+    setServicepointLocationWGS84: (state, action: PayloadAction<{ coordinatesWGS84: [number, number] }>) => {
       const { coordinatesWGS84 } = action.payload;
       return { ...state, coordinatesWGS84 };
     },

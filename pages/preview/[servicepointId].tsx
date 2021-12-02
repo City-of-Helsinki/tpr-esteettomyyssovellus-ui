@@ -11,18 +11,9 @@ import QuestionInfo from "../../components/QuestionInfo";
 import ServicepointMainInfoContent from "../../components/ServicepointMainInfoContent";
 import PathTreeComponent from "../../components/PathTreeComponent";
 import { useAppDispatch, useLoading } from "../../state/hooks";
-import {
-  setServicepointId,
-  setEntranceId,
-} from "../../state/reducers/formSlice";
+import { setServicepointId, setEntranceId } from "../../state/reducers/formSlice";
 import { filterByLanguage } from "../../utils/utilFunctions";
-import {
-  API_FETCH_ANSWER_LOGS,
-  API_FETCH_ENTRANCES,
-  API_FETCH_SENTENCE_LANGS,
-  API_FETCH_SERVICEPOINTS,
-  API_URL_BASE,
-} from "../../types/constants";
+import { API_FETCH_ANSWER_LOGS, API_FETCH_ENTRANCES, API_FETCH_SENTENCE_LANGS, API_FETCH_SERVICEPOINTS, API_URL_BASE } from "../../types/constants";
 import PreviewPageLandingSummary from "../../components/PreviewPageLandingSummary";
 import PreviewControlButtons from "../../components/PreviewControlButtons";
 import LoadSpinner from "../../components/common/LoadSpinner";
@@ -30,35 +21,22 @@ import ServicepointLandingSummaryContent from "../../components/ServicepointLand
 import MainEntranceLocationPicturesPreview from "../../components/MainEntranceLocationPicturesPreview";
 
 // usage: preview page of servicepoint, displayed before saving completed form
-const preview = ({
-  servicepointData,
-  accessibilityData,
-  entranceData,
-}: any): ReactElement => {
+const preview = ({ servicepointData, accessibilityData, entranceData }: any): ReactElement => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
   const isLoading = useLoading();
-  const treeItems = [
-    servicepointData.servicepoint_name,
-    i18n.t("common.header.title"),
-  ];
+  const treeItems = [servicepointData.servicepoint_name, i18n.t("common.header.title")];
 
   // Filter by language
   const filteredAccessibilityData: any = {};
   Object.keys(accessibilityData).map(function (key) {
     filteredAccessibilityData[key] = filterByLanguage(accessibilityData[key]);
-    filteredAccessibilityData[key] = filteredAccessibilityData[key].filter(
-      (elem: any) => {
-        return elem.form_submitted === "Y" || elem.form_submitted === "D";
-      }
-    );
+    filteredAccessibilityData[key] = filteredAccessibilityData[key].filter((elem: any) => {
+      return elem.form_submitted === "Y" || elem.form_submitted === "D";
+    });
   });
   // Update entranceId and servicepointId to redux state
-  if (
-    servicepointData &&
-    entranceData.results &&
-    accessibilityData.main.length !== 0
-  ) {
+  if (servicepointData && entranceData.results && accessibilityData.main.length !== 0) {
     dispatch(setServicepointId(servicepointData.servicepoint_id));
     // TODO: Logic for when editing additional entrance vs main entrance
     dispatch(setEntranceId(accessibilityData.main[0].entrance_id));
@@ -97,23 +75,17 @@ const preview = ({
               <h2>
                 {i18n.t("common.mainEntrance")}
                 {": "}
-                {servicepointData.address_street_name}{" "}
-                {servicepointData.address_no}, {servicepointData.address_city}
+                {servicepointData.address_street_name} {servicepointData.address_no}, {servicepointData.address_city}
               </h2>
             </div>
             <div>
               <PreviewControlButtons hasHeader />
             </div>
             <div>
-              <ServicepointLandingSummaryContent
-                contentHeader={i18n.t("PreviewPage.mainEntranceLocationHeader")}
-              >
+              <ServicepointLandingSummaryContent contentHeader={i18n.t("PreviewPage.mainEntranceLocationHeader")}>
                 <MainEntranceLocationPicturesPreview />
               </ServicepointLandingSummaryContent>
-              <PreviewPageLandingSummary
-                header={i18n.t("servicepoint.contactFormSummaryHeader")}
-                data={filteredAccessibilityData}
-              />
+              <PreviewPageLandingSummary header={i18n.t("servicepoint.contactFormSummaryHeader")} data={filteredAccessibilityData} />
             </div>
             <div>
               <PreviewControlButtons hasHeader={false} />
@@ -126,11 +98,7 @@ const preview = ({
 };
 
 // Server-side rendering
-export const getServerSideProps: GetServerSideProps = async ({
-  params,
-  req,
-  locales,
-}) => {
+export const getServerSideProps: GetServerSideProps = async ({ params, req, locales }) => {
   const lngDict = await i18nLoader(locales);
 
   // todo: if user not checked here remove these
@@ -155,23 +123,17 @@ export const getServerSideProps: GetServerSideProps = async ({
   let isFinished = false;
   if (params !== undefined) {
     try {
-      const ServicepointResp = await fetch(
-        `${API_FETCH_SERVICEPOINTS}${params.servicepointId}/?format=json`
-      );
+      const ServicepointResp = await fetch(`${API_FETCH_SERVICEPOINTS}${params.servicepointId}/?format=json`);
       servicepointData = await ServicepointResp.json();
 
-      const EntranceResp = await fetch(
-        `${API_FETCH_ENTRANCES}?servicepoint=${servicepointData.servicepoint_id}&format=json`
-      );
+      const EntranceResp = await fetch(`${API_FETCH_ENTRANCES}?servicepoint=${servicepointData.servicepoint_id}&format=json`);
       entranceData = await EntranceResp.json();
       let i = 0;
       let j = 1;
       let mainEntranceId = 0;
       // Use while, because map function does not work with await
       while (i < entranceData.results.length) {
-        const SentenceResp = await fetch(
-          `${API_FETCH_SENTENCE_LANGS}?entrance_id=${entranceData.results[i].entrance_id}&format=json`
-        );
+        const SentenceResp = await fetch(`${API_FETCH_SENTENCE_LANGS}?entrance_id=${entranceData.results[i].entrance_id}&format=json`);
         const sentenceData = await SentenceResp.json();
         if (entranceData.results[i].is_main_entrance === "Y") {
           accessibilityData.main = sentenceData;
@@ -184,15 +146,11 @@ export const getServerSideProps: GetServerSideProps = async ({
       }
 
       if (entranceData.results.length !== 0) {
-        const LogResp = await fetch(
-          `${API_FETCH_ANSWER_LOGS}?entrance=${mainEntranceId}`
-        );
+        const LogResp = await fetch(`${API_FETCH_ANSWER_LOGS}?entrance=${mainEntranceId}`);
         const logData = await LogResp.json();
 
         // TODO: Should this be true even if the form has not been submitted
-        hasExistingFormData = logData.some(
-          (e: any) => e.form_submitted === "Y" || e.form_submitted === "D"
-        );
+        hasExistingFormData = logData.some((e: any) => e.form_submitted === "Y" || e.form_submitted === "D");
         isFinished = logData.some((e: any) => e.form_submitted === "Y");
       }
     } catch (err) {

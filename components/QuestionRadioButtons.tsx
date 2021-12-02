@@ -2,11 +2,7 @@ import { SelectionGroup, RadioButton } from "hds-react";
 import React, { useState } from "react";
 import { QuestionRadioButtonsProps } from "../types/general";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
-import {
-  removeAnsweredChoice,
-  setAnswer,
-  setAnsweredChoice,
-} from "../state/reducers/formSlice";
+import { removeAnsweredChoice, setAnswer, setAnsweredChoice } from "../state/reducers/formSlice";
 
 // usage: general custom radiobutton from HDS
 const QuestionRadioButtons = ({
@@ -19,10 +15,7 @@ const QuestionRadioButtons = ({
   const dispatch = useAppDispatch();
   const curAnswers = useAppSelector((state) => state.formReducer.answers);
 
-  const startState =
-    value !== undefined && curAnswers[value] !== undefined
-      ? curAnswers[value].toString()
-      : "0";
+  const startState = value !== undefined && curAnswers[value] !== undefined ? curAnswers[value].toString() : "0";
 
   const [selectedRadioItem, setSelectedRadioItem] = useState(startState);
 

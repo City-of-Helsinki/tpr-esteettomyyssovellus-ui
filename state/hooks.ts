@@ -13,10 +13,7 @@ export const useLoading = () => {
   useEffect(() => {
     const handleStart = (url: string) => {
       let siteUrl = url;
-      if (
-        siteUrl.substring(0, 3) === "/en" ||
-        siteUrl.substring(0, 3) === "/sv"
-      ) {
+      if (siteUrl.substring(0, 3) === "/en" || siteUrl.substring(0, 3) === "/sv") {
         siteUrl = url.substring(3);
       }
       siteUrl !== router.asPath && setLoading(true);
@@ -24,10 +21,7 @@ export const useLoading = () => {
 
     const handleComplete = (url: string) => {
       let siteUrl = url;
-      if (
-        siteUrl.substring(0, 3) === "/en" ||
-        siteUrl.substring(0, 3) === "/sv"
-      ) {
+      if (siteUrl.substring(0, 3) === "/en" || siteUrl.substring(0, 3) === "/sv") {
         siteUrl = url.substring(3);
       }
       siteUrl === router.asPath && setLoading(false);

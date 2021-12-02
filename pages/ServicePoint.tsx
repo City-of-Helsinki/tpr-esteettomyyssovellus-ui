@@ -94,20 +94,14 @@ const Servicepoints = ({
               </h1>
               <div className={styles.addressBlock}>
                 <p>{i18n.t("AddressChangedPage.oldAddress")}:</p>
-                <h4 className={styles.address}>
-                  {`${oldAddress} ${oldAddressNumber}, ${oldAddressCity}`}
-                </h4>
+                <h4 className={styles.address}>{`${oldAddress} ${oldAddressNumber}, ${oldAddressCity}`}</h4>
               </div>
               <div className={styles.addressBlock}>
                 <p>{i18n.t("AddressChangedPage.oldAddress")}:</p>
-                <h4 className={styles.address}>
-                  {`${newAddress} ${newAddressNumber}, ${newAddressCity}`}
-                </h4>
+                <h4 className={styles.address}>{`${newAddress} ${newAddressNumber}, ${newAddressCity}`}</h4>
               </div>
               <div className={styles.radioButtonDiv}>
-                <SelectionGroup
-                  label={i18n.t("AddressChangedPage.hasServicepointMoved")}
-                >
+                <SelectionGroup label={i18n.t("AddressChangedPage.hasServicepointMoved")}>
                   <RadioButton
                     id="v-radio1"
                     name="v-radio"
@@ -126,12 +120,7 @@ const Servicepoints = ({
                   />
                 </SelectionGroup>
               </div>
-              <Button
-                id="continueButton"
-                variant="primary"
-                disabled={selectedRadioItem === startState}
-                onClick={handleContinueClick}
-              >
+              <Button id="continueButton" variant="primary" disabled={selectedRadioItem === startState} onClick={handleContinueClick}>
                 {i18n.t("accessibilityForm.continue")}
               </Button>
               {
@@ -150,12 +139,7 @@ const Servicepoints = ({
 };
 
 // Server-side rendering
-export const getServerSideProps: GetServerSideProps = async ({
-  params,
-  req,
-  locales,
-  query,
-}) => {
+export const getServerSideProps: GetServerSideProps = async ({ params, req, locales, query }) => {
   const lngDict = await i18nLoader(locales);
 
   // todo: if user not checked here remove these
@@ -207,9 +191,7 @@ export const getServerSideProps: GetServerSideProps = async ({
       let isNewServicepoint: boolean;
       let servicepointId = 0;
       const SystemResp = await fetch(API_FETCH_SYSTEMS + query.systemId);
-      const ServicepointResp = await fetch(
-        `${API_FETCH_SERVICEPOINTS}?format=json&ext_servicepoint_id=${query.servicePointId}`
-      );
+      const ServicepointResp = await fetch(`${API_FETCH_SERVICEPOINTS}?format=json&ext_servicepoint_id=${query.servicePointId}`);
       SystemData = await SystemResp.json();
       ServicepointData = await ServicepointResp.json();
 
@@ -248,18 +230,13 @@ export const getServerSideProps: GetServerSideProps = async ({
       let canUseForm = false;
 
       SystemFormData.map((system: any) => {
-        if (
-          system.system === query.systemId &&
-          (system.form === 0 || system.form === 1)
-        ) {
+        if (system.system === query.systemId && (system.form === 0 || system.form === 1)) {
           canUseForm = true;
         }
       });
 
       if (!canUseForm) {
-        throw new Error(
-          "A servicepoint with this systemId cannot use form 0 or 1"
-        );
+        throw new Error("A servicepoint with this systemId cannot use form 0 or 1");
       }
 
       let addressData: any[] = [];
@@ -352,10 +329,7 @@ export const getServerSideProps: GetServerSideProps = async ({
           }),
         };
 
-        await fetch(
-          API_FETCH_EXTERNAL_SERVICEPOINTS,
-          externalServicepointOptions
-        )
+        await fetch(API_FETCH_EXTERNAL_SERVICEPOINTS, externalServicepointOptions)
           .then((response) => response.json())
           .then((data) => {
             console.log("Created new external servicepoint");
@@ -404,10 +378,7 @@ export const getServerSideProps: GetServerSideProps = async ({
         const newAddressCity = choppedPostOffice;
         const servicepointName = query.name;
 
-        const addressHasChanged =
-          oldAddress !== choppedAddress ||
-          oldAddressNumber !== choppedAddressNumber ||
-          oldAddressCity !== choppedPostOffice;
+        const addressHasChanged = oldAddress !== choppedAddress || oldAddressNumber !== choppedAddressNumber || oldAddressCity !== choppedPostOffice;
 
         const preciseDistance = getPreciseDistance(
           { latitude: oldNorthing, longitude: oldEasting },

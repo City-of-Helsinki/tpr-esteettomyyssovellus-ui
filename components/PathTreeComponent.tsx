@@ -9,9 +9,7 @@ import { FRONT_URL_BASE } from "../types/constants";
 const PathTreeComponent = ({ treeItems }: PathTreeProps): JSX.Element => {
   const i18n = useI18n();
   const { length } = treeItems;
-  const curServicepointId = useAppSelector(
-    (state) => state.formReducer.currentServicepointId
-  );
+  const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
   const pathTree = treeItems.map((elem, index) => {
     const treeItem =
       treeItems.indexOf(elem) === length - 1 ? (
@@ -24,12 +22,7 @@ const PathTreeComponent = ({ treeItems }: PathTreeProps): JSX.Element => {
       ) : (
         <div key={index}>
           {" > "}
-          <a
-            className={styles.link}
-            href={`${
-              FRONT_URL_BASE + i18n.locale()
-            }/details/${curServicepointId}`}
-          >
+          <a className={styles.link} href={`${FRONT_URL_BASE + i18n.locale()}/details/${curServicepointId}`}>
             {elem}
           </a>
         </div>

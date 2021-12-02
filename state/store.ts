@@ -4,16 +4,7 @@ import { combineReducers } from "redux";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import {
-  FLUSH,
-  PAUSE,
-  PERSIST,
-  persistReducer,
-  persistStore,
-  PURGE,
-  REGISTER,
-  REHYDRATE,
-} from "redux-persist";
+import { FLUSH, PAUSE, PERSIST, persistReducer, persistStore, PURGE, REGISTER, REHYDRATE } from "redux-persist";
 import storage from "redux-persist/es/storage";
 import generalSlice from "./reducers/generalSlice";
 import formReducer from "./reducers/formSlice";

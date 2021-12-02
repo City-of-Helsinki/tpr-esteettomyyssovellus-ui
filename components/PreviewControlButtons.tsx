@@ -5,18 +5,9 @@ import { useI18n } from "next-localization";
 import Button from "./QuestionButton";
 import styles from "./PreviewControlButtons.module.scss";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
-import {
-  API_FETCH_ANSWER_LOGS,
-  API_FETCH_QUESTION_ANSWERS,
-  FRONT_URL_BASE,
-} from "../types/constants";
+import { API_FETCH_ANSWER_LOGS, API_FETCH_QUESTION_ANSWERS, FRONT_URL_BASE } from "../types/constants";
 import { setContinue } from "../state/reducers/formSlice";
-import {
-  getCurrentDate,
-  postData,
-  getClientIp,
-  postAdditionalInfo,
-} from "../utils/utilFunctions";
+import { getCurrentDate, postData, getClientIp, postAdditionalInfo } from "../utils/utilFunctions";
 
 import AddNewEntranceNotice from "./common/AddNewEntranceNotice";
 
@@ -25,32 +16,17 @@ const PreviewControlButtons = ({ hasHeader }: any): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
 
-  const curAnsweredChoices = useAppSelector(
-    (state) => state.formReducer.answeredChoices
-  );
-  const curServicepointId = useAppSelector(
-    (state) => state.formReducer.currentServicepointId
-  );
-  const startedAnswering = useAppSelector(
-    (state) => state.formReducer.startedAnswering
-  );
-  const curEntranceId = useAppSelector(
-    (state) => state.formReducer.currentEntranceId
-  );
-  const formFinished = useAppSelector(
-    (state) => state.formReducer.formFinished
-  );
-  const formSubmitted = useAppSelector(
-    (state) => state.formReducer.formSubmitted
-  );
+  const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
+  const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
+  const startedAnswering = useAppSelector((state) => state.formReducer.startedAnswering);
+  const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
+  const formFinished = useAppSelector((state) => state.formReducer.formFinished);
+  const formSubmitted = useAppSelector((state) => state.formReducer.formSubmitted);
   const additionalInfo = useAppSelector((state) => state.additionalInfoReducer);
   const handelContinueEditing = (): void => {
     dispatch(setContinue());
     // TODO: Add errorpage
-    const url =
-      curServicepointId === -1
-        ? FRONT_URL_BASE
-        : `${FRONT_URL_BASE}accessibilityEdit/${curEntranceId}`;
+    const url = curServicepointId === -1 ? FRONT_URL_BASE : `${FRONT_URL_BASE}accessibilityEdit/${curEntranceId}`;
     router.push(url);
   };
 
@@ -143,11 +119,7 @@ const PreviewControlButtons = ({ hasHeader }: any): JSX.Element => {
       )}
 
       <div className={styles.previewControlButtons}>
-        <Button
-          variant="primary"
-          iconLeft={<IconArrowLeft />}
-          onClickHandler={handelContinueEditing}
-        >
+        <Button variant="primary" iconLeft={<IconArrowLeft />} onClickHandler={handelContinueEditing}>
           {i18n.t("PreviewPage.continueEditing")}
         </Button>
         {formSubmitted ? null : (
@@ -155,11 +127,7 @@ const PreviewControlButtons = ({ hasHeader }: any): JSX.Element => {
             {i18n.t("questionFormControlButtons.saveAsIncomplete")}
           </Button>
         )}
-        <Button
-          variant="primary"
-          disabled={!formFinished}
-          onClickHandler={handleSaveAndSend}
-        >
+        <Button variant="primary" disabled={!formFinished} onClickHandler={handleSaveAndSend}>
           {i18n.t("PreviewPage.saveAndSend")}
         </Button>
       </div>

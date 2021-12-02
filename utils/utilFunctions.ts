@@ -12,9 +12,7 @@ import { AdditionalInfos } from "../types/general";
 
 export const getCurrentDate = () => {
   const today = new Date();
-  const date = `${today.getFullYear()}-${
-    today.getMonth() + 1
-  }-${today.getDate()}T${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}Z`;
+  const date = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}T${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}Z`;
   return date;
 };
 
@@ -35,19 +33,11 @@ export const filterByLanguage = (dict: Dictionary<any>) => {
 };
 
 // Helper function
-export const isLocationValid = (
-  coordinates: [number, number] | number[]
-): boolean =>
-  coordinates &&
-  coordinates.length === 2 &&
-  coordinates[0] > 0 &&
-  coordinates[1] > 0;
+export const isLocationValid = (coordinates: [number, number] | number[]): boolean =>
+  coordinates && coordinates.length === 2 && coordinates[0] > 0 && coordinates[1] > 0;
 
 // define CRS's here, can be made as a list, need to add named crs here to be able to use it's name in conversion
-proj4.defs(
-  "EPSG:3067",
-  "+title=EPSG:3067 +proj=utm +zone=35 +ellps=GRS80 +datum=ETRS89 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs"
-);
+proj4.defs("EPSG:3067", "+title=EPSG:3067 +proj=utm +zone=35 +ellps=GRS80 +datum=ETRS89 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs");
 
 // convert coordinates from proj to another proj
 // returns coordinates in [x, y] / [lon, lat] / [pituus, leveys]
@@ -77,19 +67,13 @@ export const getClientIp = async () =>
     fallbackUrls: ["https://ifconfig.co/ip"],
   });
 
-export const postAdditionalInfo = async (
-  logId: number,
-  data: ((string | AdditionalInfos)[] | undefined)[]
-) => {
+export const postAdditionalInfo = async (logId: number, data: ((string | AdditionalInfos)[] | undefined)[]) => {
   console.log("Started posting additional info");
   data.map((question: any) => {
     if (question !== undefined) {
-      const comments =
-        question[1].comments !== undefined ? question[1].comments : null;
-      const pictures =
-        question[1].pictures !== undefined ? question[1].pictures : null;
-      const location =
-        question[1].locations !== undefined ? question[1].locations : null;
+      const comments = question[1].comments !== undefined ? question[1].comments : null;
+      const pictures = question[1].pictures !== undefined ? question[1].pictures : null;
+      const location = question[1].locations !== undefined ? question[1].locations : null;
       // COMMENTS
       if (comments !== null) {
         Object.keys(comments).map((key) => {
@@ -114,10 +98,7 @@ export const postAdditionalInfo = async (
             language,
           };
           postData(url, commentData);
-          console.log(
-            "Posted additionalinfo comments for question ",
-            question[0]
-          );
+          console.log("Posted additionalinfo comments for question ", question[0]);
         });
       }
       // LOCATION
@@ -129,10 +110,7 @@ export const postAdditionalInfo = async (
           question: question[0],
         };
         postData(API_FETCH_QUESTION_ANSWER_LOCATIONS, locationData);
-        console.log(
-          "Posted additionalinfo location for question ",
-          question[0]
-        );
+        console.log("Posted additionalinfo location for question ", question[0]);
       }
       // PICTURES
       if (pictures !== null) {
@@ -154,12 +132,8 @@ export const postAdditionalInfo = async (
               responseData = data;
               // console.log(responseData);
             });
-          console.log(
-            "Posted additionalinfo pictures for question ",
-            question[0]
-          );
-          const photoId =
-            responseData !== null ? responseData.answer_photo_id : null;
+          console.log("Posted additionalinfo pictures for question ", question[0]);
+          const photoId = responseData !== null ? responseData.answer_photo_id : null;
 
           const fiComment = pic.fi;
           const svComment = pic.sv;
@@ -192,10 +166,7 @@ export const postAdditionalInfo = async (
               postData(API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS, pictureTextData);
               // console.log("Posted additionalinfo picture text in en");
             }
-            console.log(
-              "Posted additionalinfo picture texts for question ",
-              question[0]
-            );
+            console.log("Posted additionalinfo picture texts for question ", question[0]);
           }
         });
       }
@@ -203,15 +174,8 @@ export const postAdditionalInfo = async (
   });
 };
 
-export const validateChecksum = (
-  string: string,
-  checksum: string | string[]
-) => {
+export const validateChecksum = (string: string, checksum: string | string[]) => {
   const crypto = require("crypto");
-  const hash = crypto
-    .createHash("sha256")
-    .update(string)
-    .digest("hex")
-    .toUpperCase();
+  const hash = crypto.createHash("sha256").update(string).digest("hex").toUpperCase();
   return hash === checksum;
 };

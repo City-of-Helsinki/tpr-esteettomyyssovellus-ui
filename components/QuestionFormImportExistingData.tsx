@@ -8,24 +8,13 @@ import styles from "./QuestionFormImportExistingData.module.scss";
 const QuestionFormImportExistingData = (): JSX.Element => {
   const i18n = useI18n();
   // todo: get real data from somewhere
-  const mockOptions = [
-    { label: "toimipiste 1" },
-    { label: "toimipiste 2" },
-    { label: "jne ..." },
-  ];
+  const mockOptions = [{ label: "toimipiste 1" }, { label: "toimipiste 2" }, { label: "jne ..." }];
   return (
     <div className={styles.mainContainer}>
       <p>{i18n.t("common.copyDataFromSameAddress")}</p>
       <div className={styles.inputContainer}>
-        <QuestionDropdown
-          options={mockOptions}
-          placeholder={i18n.t(
-            "QuestionFormImportExistingData.chooseServicepoint"
-          )}
-        />
-        <Button variant="secondary">
-          {i18n.t("QuestionFormImportExistingData.bringInformation")}
-        </Button>
+        <QuestionDropdown options={mockOptions} placeholder={i18n.t("QuestionFormImportExistingData.chooseServicepoint")} />
+        <Button variant="secondary">{i18n.t("QuestionFormImportExistingData.bringInformation")}</Button>
       </div>
     </div>
   );

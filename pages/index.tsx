@@ -63,26 +63,16 @@ const Main = ({ isMobile }: MainEntranceFormProps): ReactElement => {
       </Head>
       <main id="content" className={styles.content}>
         <div className={classes.hero}>
-          {heroShallow ? (
-            <HeroShallow title={heroTitle} imageUrl={heroUrl} />
-          ) : (
-            <Hero title={heroTitle} text={heroText} imageUrl={heroUrl} />
-          )}
+          {heroShallow ? <HeroShallow title={heroTitle} imageUrl={heroUrl} /> : <Hero title={heroTitle} text={heroText} imageUrl={heroUrl} />}
         </div>
-        <div>
-          {isMobile ? <SearchBoxWithButtonsMobile /> : <SearchBoxWithButtons />}
-        </div>
+        <div>{isMobile ? <SearchBoxWithButtonsMobile /> : <SearchBoxWithButtons />}</div>
       </main>
     </Layout>
   );
 };
 
 // Server-side rendering
-export const getServerSideProps: GetServerSideProps = async ({
-  params,
-  req,
-  locales,
-}) => {
+export const getServerSideProps: GetServerSideProps = async ({ params, req, locales }) => {
   const lngDict = await i18nLoader(locales);
 
   // todo: if user not checked here remove these
