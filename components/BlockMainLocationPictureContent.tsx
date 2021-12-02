@@ -27,17 +27,17 @@ const BlockMainLocationPictureContent = ({
           key={123456789}
           questionId={-1}
           questionBlockId={1}
-          questionNumber={""}
-          questionText={"PH: Pääsisäänkäynnin sijainti (teksti kannasta??)"}
-          questionInfo={"PH: tähän jotain info (teksti kannasta??)"}
-          hasAdditionalInfo={true}
-          backgroundColor={"#f2f2fc"}
-          canAddLocation={true}
+          questionNumber=""
+          questionText="PH: Pääsisäänkäynnin sijainti (teksti kannasta??)"
+          questionInfo="PH: tähän jotain info (teksti kannasta??)"
+          hasAdditionalInfo
+          backgroundColor="#f2f2fc"
+          canAddLocation
           canAddComment={false}
           canAddPhotoMaxCount={0}
-          photoText={"ph: photo text"}
-          photoUrl={"ph: photo_url"}
-          isMainLocPicComponent={true}
+          photoText="ph: photo text"
+          photoUrl="ph: photo_url"
+          isMainLocPicComponent
         >
           <div className={styles.mappreviewcontainer}>
             <div className={styles.mappreview}>
@@ -47,8 +47,8 @@ const BlockMainLocationPictureContent = ({
                 initZoom={17}
                 draggableMarker={false}
                 questionId={-1}
-                makeStatic={true}
-                isMainLocPicComponent={true}
+                makeStatic
+                isMainLocPicComponent
               />
             </div>
           </div>
@@ -59,17 +59,17 @@ const BlockMainLocationPictureContent = ({
           key={987654321}
           questionId={-1}
           questionBlockId={2}
-          questionNumber={""}
-          questionText={"PH: Pääsisäänkäynnin kuva (teksti kannasta?)"}
-          questionInfo={"PH: tähän ehkä jotain infot"}
-          hasAdditionalInfo={true}
-          backgroundColor={"#ffffff"}
+          questionNumber=""
+          questionText="PH: Pääsisäänkäynnin kuva (teksti kannasta?)"
+          questionInfo="PH: tähän ehkä jotain infot"
+          hasAdditionalInfo
+          backgroundColor="#ffffff"
           canAddLocation={false}
           canAddComment={false}
           canAddPhotoMaxCount={1}
-          photoText={"ph: photo text??"}
-          photoUrl={"ph: photo_url??"}
-          isMainLocPicComponent={true}
+          photoText="ph: photo text??"
+          photoUrl="ph: photo_url??"
+          isMainLocPicComponent
         >
           {mainImage ? (
             <div className={styles.addinfopreviewcontainer}>

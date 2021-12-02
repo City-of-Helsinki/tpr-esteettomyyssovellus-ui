@@ -50,14 +50,14 @@ export const generalSlice = createSlice({
       state,
       action: PayloadAction<{ coordinates: [number, number] }>
     ) => {
-      const coordinates = action.payload.coordinates;
+      const { coordinates } = action.payload;
       return { ...state, coordinates };
     },
     setServicepointLocationWGS84: (
       state,
       action: PayloadAction<{ coordinatesWGS84: [number, number] }>
     ) => {
-      const coordinatesWGS84 = action.payload.coordinatesWGS84;
+      const { coordinatesWGS84 } = action.payload;
       return { ...state, coordinatesWGS84 };
     },
 

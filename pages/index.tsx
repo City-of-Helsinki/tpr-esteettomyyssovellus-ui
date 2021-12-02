@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
   mainGrid: {
     marginTop: theme.spacing(3),
   },
-  hero: (heroShallow: Boolean) => ({
+  hero: (heroShallow: boolean) => ({
     height: heroShallow ? 360 : 550,
   }),
   main: {},
@@ -46,10 +46,10 @@ const Main = ({ isMobile }: MainEntranceFormProps): ReactElement => {
     isMobile = width < 768;
   }
 
-  let heroTitle = i18n.t("common.landing.title");
-  let heroText = "";
+  const heroTitle = i18n.t("common.landing.title");
+  const heroText = "";
 
-  const heroUrl = FRONT_URL_BASE + "homepagephoto.png";
+  const heroUrl = `${FRONT_URL_BASE}homepagephoto.png`;
 
   // TODO: isHero variable can be removed if the hero component is placed directly to index.tsx. If it is placed into a page templ
   // let isHero = true;

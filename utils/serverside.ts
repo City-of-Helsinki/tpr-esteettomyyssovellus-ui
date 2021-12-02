@@ -11,26 +11,32 @@ export const getOriginServerSide = (): string => {
   return "http://0.0.0.0:8000";
 };
 
-export const redirectToLogin = (resolvedUrl: string): { redirect: Redirect } => {
+export const redirectToLogin = (
+  resolvedUrl: string
+): { redirect: Redirect } => {
   // The server-side needs to redirect the client-side, so don't use getOriginServerSide here
   // The base path is needed to make sure the login page redirects work correctly in the server environment
   return {
     redirect: {
       destination: `${process.env.BASE_PATH}/helauth/login/?next=${process.env.BASE_PATH}${resolvedUrl}`,
-      permanent: false
-    }
+      permanent: false,
+    },
   };
 };
 
-export const checkUser = async (req: IncomingMessage): Promise<User | undefined> => {
+export const checkUser = async (
+  req: IncomingMessage
+): Promise<User | undefined> => {
   // Check the current user
   // TODO: define how a moderator user is identified
 
   // PLACEHOLDER **********
-  const userResponse = await fetch(`https://www.hel.fi/api/user/?format=json`, { headers: { cookie: req.headers.cookie as string } });
+  const userResponse = await fetch(`https://www.hel.fi/api/user/?format=json`, {
+    headers: { cookie: req.headers.cookie as string },
+  });
 
   // UNCOMMENT THIS
-  //const userResponse = await fetch(`${getOriginServerSide()}/api/user/?format=json`, { headers: { cookie: req.headers.cookie as string } });
+  // const userResponse = await fetch(`${getOriginServerSide()}/api/user/?format=json`, { headers: { cookie: req.headers.cookie as string } });
 
   if (!userResponse.ok) {
     // Invalid user

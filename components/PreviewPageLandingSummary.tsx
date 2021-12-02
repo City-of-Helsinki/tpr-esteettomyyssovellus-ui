@@ -10,19 +10,19 @@ const PreviewPageLandingSummary = ({ data }: any): JSX.Element => {
 
   // Add React components to these arrays.
   let contents: any = [];
-  let mainEntrance: any = [];
+  const mainEntrance: any = [];
   let hasData = false;
 
   if (data) {
-    hasData = data != undefined && data["main"].length != 0;
+    hasData = data !== undefined && data.main.length !== 0;
 
-    let keys = Object.keys(data);
+    const keys = Object.keys(data);
     keys.map((key) => {
-      let itemList: any = [];
+      const itemList: any = [];
       let currentTitle = "";
       if (data[key]) {
         data[key].map((x: any) => {
-          if (x.sentence_group_name != currentTitle) {
+          if (x.sentence_group_name !== currentTitle) {
             currentTitle = x.sentence_group_name;
             // Add h3 titles in the container
             itemList.push(
@@ -34,7 +34,7 @@ const PreviewPageLandingSummary = ({ data }: any): JSX.Element => {
       }
 
       // Check if main entrance.
-      if (key == "main") {
+      if (key === "main") {
         mainEntrance.push(
           <ServicepointLandingSummaryContent
             contentHeader={i18n.t("common.mainEntrance")}

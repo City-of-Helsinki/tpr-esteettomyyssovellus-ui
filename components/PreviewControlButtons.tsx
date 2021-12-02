@@ -1,22 +1,23 @@
 import React from "react";
 import { IconArrowLeft, Card, Notification, IconSignin } from "hds-react";
+import router from "next/router";
+import { useI18n } from "next-localization";
 import Button from "./QuestionButton";
 import styles from "./PreviewControlButtons.module.scss";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
-import router from "next/router";
-import { useI18n } from "next-localization";
 import {
   API_FETCH_ANSWER_LOGS,
   API_FETCH_QUESTION_ANSWERS,
   FRONT_URL_BASE,
 } from "../types/constants";
 import { setContinue } from "../state/reducers/formSlice";
-import { getCurrentDate } from "../utils/utilFunctions";
 import {
+  getCurrentDate,
   postData,
   getClientIp,
   postAdditionalInfo,
 } from "../utils/utilFunctions";
+
 import AddNewEntranceNotice from "./common/AddNewEntranceNotice";
 
 // usage: controls for preview page
@@ -24,10 +25,10 @@ const PreviewControlButtons = ({ hasHeader }: any): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
 
-  let curAnsweredChoices = useAppSelector(
+  const curAnsweredChoices = useAppSelector(
     (state) => state.formReducer.answeredChoices
   );
-  let curServicepointId = useAppSelector(
+  const curServicepointId = useAppSelector(
     (state) => state.formReducer.currentServicepointId
   );
   const startedAnswering = useAppSelector(
@@ -47,7 +48,7 @@ const PreviewControlButtons = ({ hasHeader }: any): JSX.Element => {
     dispatch(setContinue());
     // TODO: Add errorpage
     const url =
-      curServicepointId == -1
+      curServicepointId === -1
         ? FRONT_URL_BASE
         : `${FRONT_URL_BASE}accessibilityEdit/${curEntranceId}`;
     router.push(url);
@@ -96,7 +97,7 @@ const PreviewControlButtons = ({ hasHeader }: any): JSX.Element => {
       const parsedAdditionalInfos = Object.keys(additionalInfo).map((key) => {
         if (!isNaN(Number(key))) return [key, additionalInfo[key]];
       });
-      if (parsedAdditionalInfos != undefined) {
+      if (parsedAdditionalInfos !== undefined) {
         postAdditionalInfo(logId, parsedAdditionalInfos);
       }
       const generateData = { entrance_id: curEntranceId };
@@ -111,7 +112,7 @@ const PreviewControlButtons = ({ hasHeader }: any): JSX.Element => {
     // TODO: CREATE SENTENCES WITH FUNCTION CALL
   };
 
-  //todo: todo
+  // todo: todo
   const handleSaveAndSend = () => {
     return true;
   };

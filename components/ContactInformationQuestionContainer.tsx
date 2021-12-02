@@ -1,8 +1,8 @@
+import { useI18n } from "next-localization";
+import { TextInput } from "hds-react";
 import QuestionFormImportExistingData from "./QuestionFormImportExistingData";
 import styles from "./ContactInformationQuestionContainer.module.scss";
-import { useI18n } from "next-localization";
 import QuestionContainer from "./QuestionContainer";
-import { TextInput } from "hds-react";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { ContactInformationProps } from "../types/general";
 import {
@@ -35,7 +35,7 @@ const ContactInformationQuestionContainer = ({
     {
       placeholder: i18n.t("ContactInformation.personPlaceholder"),
       question_block_id: blockNumber,
-      question_code: blockNumber + ".1",
+      question_code: `${blockNumber}.1`,
       question_id: -1,
       question_level: 1,
       text: i18n.t("ContactInformation.contactPerson"),
@@ -43,7 +43,7 @@ const ContactInformationQuestionContainer = ({
     {
       placeholder: i18n.t("ContactInformation.phonePlaceholder"),
       question_block_id: blockNumber,
-      question_code: blockNumber + ".2",
+      question_code: `${blockNumber}.2`,
       question_id: -2,
       question_level: 1,
       text: i18n.t("ContactInformation.phoneNumber"),
@@ -51,7 +51,7 @@ const ContactInformationQuestionContainer = ({
     {
       placeholder: i18n.t("ContactInformation.emailPlaceholder"),
       question_block_id: blockNumber,
-      question_code: blockNumber + ".3",
+      question_code: `${blockNumber}.3`,
       question_id: -3,
       question_level: 1,
       text: i18n.t("ContactInformation.email"),
@@ -59,7 +59,7 @@ const ContactInformationQuestionContainer = ({
     {
       placeholder: i18n.t("ContactInformation.wwwPlaceholder"),
       question_block_id: blockNumber,
-      question_code: blockNumber + ".4",
+      question_code: `${blockNumber}.4`,
       question_id: -4,
       question_level: 1,
       text: i18n.t("ContactInformation.www"),
@@ -69,8 +69,8 @@ const ContactInformationQuestionContainer = ({
   // general handler for contactinfo text inputs
   const handleChange = (event: any) => {
     // REGEXES FOR VALIDATING
-    var phonePattern = new RegExp(PHONE_REGEX);
-    var emailPattern = new RegExp(EMAIL_REGEX);
+    const phonePattern = new RegExp(PHONE_REGEX);
+    const emailPattern = new RegExp(EMAIL_REGEX);
 
     switch (event.target.id) {
       case "-1":
@@ -112,7 +112,7 @@ const ContactInformationQuestionContainer = ({
 
   // CHECK IF THE BLOCK IS FINISHED
   const contacts = useAppSelector((state) => state.formReducer.contacts);
-  if (Object.values(contacts).every((e) => e[1] == true)) {
+  if (Object.values(contacts).every((e) => e[1] === true)) {
     dispatch(setFinished(99));
   } else {
     dispatch(unsetFinished(99));
@@ -127,17 +127,17 @@ const ContactInformationQuestionContainer = ({
     <>
       <div className={styles.mainInfo}>
         <p>{i18n.t("ContactInformation.contactInformationText")}</p>
-        <div className={styles.infoContainer}></div>
+        <div className={styles.infoContainer} />
       </div>
       <div className={styles.importAddinfoContainer}>
         <QuestionFormImportExistingData />
       </div>
       {contactQuestions.map((question, ind: number) => {
         const contacts = useAppSelector((state) => state.formReducer.contacts);
-        const phoneNumber = contacts["phoneNumber"];
-        const email = contacts["email"];
-        const contactPerson = contacts["contactPerson"];
-        const www = contacts["www"];
+        const { phoneNumber } = contacts;
+        const { email } = contacts;
+        const { contactPerson } = contacts;
+        const { www } = contacts;
         let value = "";
         let error = "";
         let isAnswered = false;
@@ -206,7 +206,7 @@ const ContactInformationQuestionContainer = ({
                 id={question.question_id.toString()}
                 placeholder={question.placeholder}
                 onChange={handleChange}
-                value={value ? value : undefined}
+                value={value || undefined}
                 errorText={error}
               />
             </QuestionContainer>

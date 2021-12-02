@@ -50,7 +50,7 @@ export const additionalInfoSlice = createSlice({
     setInitAdditionalInfoFromDb: (
       state,
       action: PayloadAction<{
-        //should be boolean
+        // should be boolean
         isInited: any;
       }>
     ) => {
@@ -65,7 +65,7 @@ export const additionalInfoSlice = createSlice({
         obj: any;
       }>
     ) => {
-      const obj = action.payload.obj;
+      const { obj } = action.payload;
       return {
         ...state,
         curEditingInitialState: obj,
@@ -88,9 +88,9 @@ export const additionalInfoSlice = createSlice({
     ) => {
       // TODO: set state and change payload (?)
       const qId = action.payload.questionId;
-      const coordinates = action.payload.coordinates;
-      const locNorthing = action.payload.locNorthing;
-      const locEasting = action.payload.locEasting;
+      const { coordinates } = action.payload;
+      const { locNorthing } = action.payload;
+      const { locEasting } = action.payload;
       return {
         ...state,
         [qId]: {
@@ -119,7 +119,7 @@ export const additionalInfoSlice = createSlice({
       };
     },
     addPicture: (state, action: PayloadAction<PictureProps>) => {
-      const qNumber = action.payload.qNumber;
+      const { qNumber } = action.payload;
       return {
         ...state,
         [qNumber]: {
@@ -167,7 +167,7 @@ export const additionalInfoSlice = createSlice({
     ) => {
       const qNumber = action.payload.questionId;
       const lang = action.payload.language;
-      const value = action.payload.value;
+      const { value } = action.payload;
 
       return {
         ...state,
@@ -186,16 +186,13 @@ export const additionalInfoSlice = createSlice({
       }>
     ) => {
       const qNumber = action.payload.questionId;
-      const type = action.payload.type;
-      const id = action.payload.id;
+      const { type } = action.payload;
+      const { id } = action.payload;
       return {
         ...state,
         [qNumber]: {
           ...state[qNumber],
-          components: [
-            ...(state[qNumber]?.components ?? []),
-            { id: id, type: type },
-          ],
+          components: [...(state[qNumber]?.components ?? []), { id, type }],
         },
       };
     },
@@ -227,7 +224,7 @@ export const additionalInfoSlice = createSlice({
     ) => {
       const qNumber = action.payload.questionId;
       const lang = action.payload.language;
-      const value = action.payload.value;
+      const { value } = action.payload;
       const id = action.payload.compId;
 
       let targetPic = state[qNumber]?.pictures?.find((pic) => pic.id === id);
@@ -258,7 +255,7 @@ export const additionalInfoSlice = createSlice({
       }>
     ) => {
       const qNumber = action.payload.questionId;
-      const source = action.payload.source;
+      const { source } = action.payload;
       const id = action.payload.compId;
 
       let targetPic = state[qNumber]?.pictures?.find((pic) => pic.id === id);
@@ -267,7 +264,7 @@ export const additionalInfoSlice = createSlice({
         return { ...state };
       }
 
-      targetPic = { ...targetPic, source: source };
+      targetPic = { ...targetPic, source };
 
       return {
         ...state,
@@ -298,7 +295,7 @@ export const additionalInfoSlice = createSlice({
       }>
     ) => {
       const qNumber = action.payload.questionId;
-      const prevState = action.payload.prevState;
+      const { prevState } = action.payload;
       return {
         ...state,
         [qNumber]: prevState,
@@ -313,7 +310,7 @@ export const additionalInfoSlice = createSlice({
       }>
     ) => {
       const qId = action.payload.questionId;
-      const compId = action.payload.compId;
+      const { compId } = action.payload;
       const values = action.payload.invalidAnswers;
 
       const targetInvalid = state[qId]?.invalidValues?.find(
@@ -327,7 +324,7 @@ export const additionalInfoSlice = createSlice({
           ? targetInvalid?.invalidAnswers?.concat(values)
           : values;
 
-      //@ts-ignore
+      // @ts-ignore
       const newInvaRemoveDublicates = [...new Set(invalidInitDublicates)];
 
       return {
@@ -352,7 +349,7 @@ export const additionalInfoSlice = createSlice({
       }>
     ) => {
       const qId = action.payload.questionId;
-      const compId = action.payload.compId;
+      const { compId } = action.payload;
       const remoTarget = action.payload.removeTarget;
       const targetInvalid = state[qId]?.invalidValues?.find(
         (invalids) => invalids.id === compId
@@ -381,7 +378,7 @@ export const additionalInfoSlice = createSlice({
       }>
     ) => {
       const qId = action.payload.questionId;
-      const compId = action.payload.compId;
+      const { compId } = action.payload;
       const invalidTargetRemoved = state[qId]?.invalidValues?.filter(
         (invalids) => invalids.id !== compId
       );

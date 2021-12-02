@@ -51,13 +51,13 @@ const QuestionsList = ({
               questionInfo={question.description ?? null}
               hasAdditionalInfo={
                 additionalInfoVisible &&
-                (question.can_add_location == "Y" ||
-                  question.can_add_comment == "Y" ||
-                  question.can_add_photo_max_count != 0)
+                (question.can_add_location === "Y" ||
+                  question.can_add_comment === "Y" ||
+                  question.can_add_photo_max_count !== 0)
               }
               backgroundColor={backgroundColor}
-              canAddLocation={question.can_add_location == "Y"}
-              canAddComment={question.can_add_comment == "Y"}
+              canAddLocation={question.can_add_location === "Y"}
+              canAddComment={question.can_add_comment === "Y"}
               canAddPhotoMaxCount={question.can_add_photo_max_count}
               photoText={question.photo_text}
               photoUrl={question.photo_url}

@@ -17,10 +17,10 @@ const QuestionRadioButtons = ({
   value,
 }: QuestionRadioButtonsProps): JSX.Element => {
   const dispatch = useAppDispatch();
-  let curAnswers = useAppSelector((state) => state.formReducer.answers);
+  const curAnswers = useAppSelector((state) => state.formReducer.answers);
 
-  let startState =
-    value != undefined && curAnswers[value] != undefined
+  const startState =
+    value !== undefined && curAnswers[value] !== undefined
       ? curAnswers[value].toString()
       : "0";
 
@@ -28,11 +28,11 @@ const QuestionRadioButtons = ({
 
   const handleRadioClick = (e: any) => {
     setSelectedRadioItem(e.target.value);
-    const questionNumber = value ? value : -1;
+    const questionNumber = value || -1;
 
     if (value && options) {
       const answer = Number(e.target.value);
-      if (curAnswers[questionNumber] != undefined) {
+      if (curAnswers[questionNumber] !== undefined) {
         dispatch(removeAnsweredChoice(curAnswers[questionNumber].toString()));
       }
       // @ts-ignore: this is weird
@@ -43,10 +43,10 @@ const QuestionRadioButtons = ({
 
   // Add values to radiobuttons. The Y and N makes them uniques which then can also be used
   // to collect the answer.
-  const firstValue = options != undefined ? options[0].value?.toString() : "";
-  const secondValue = options != undefined ? options[1].value?.toString() : "";
-  const firstId = "v-radio" + firstValue;
-  const secondId = "v-radio" + secondValue;
+  const firstValue = options !== undefined ? options[0].value?.toString() : "";
+  const secondValue = options !== undefined ? options[1].value?.toString() : "";
+  const firstId = `v-radio${firstValue}`;
+  const secondId = `v-radio${secondValue}`;
 
   return (
     <SelectionGroup direction="horizontal" label={mainLabel}>

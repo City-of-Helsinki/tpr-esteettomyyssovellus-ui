@@ -1,9 +1,9 @@
 import React from "react";
 import { IconPlusCircle } from "hds-react";
 import { useI18n } from "next-localization";
+import { useRouter } from "next/router";
 import styles from "./QuestionAdditionalInformation.module.scss";
 import { QuestionAdditionalInfoProps } from "../types/general";
-import { useRouter } from "next/router";
 import { setCurrentlyEditingBlock } from "../state/reducers/generalSlice";
 import { useAppDispatch } from "../state/hooks";
 

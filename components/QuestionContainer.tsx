@@ -1,14 +1,14 @@
 import React from "react";
 import { IconInfoCircle, IconCrossCircle, IconAlertCircle } from "hds-react";
+import { useI18n } from "next-localization";
+import { useRouter } from "next/router";
 import styles from "./QuestionContainer.module.scss";
 import { QuestionContainerProps } from "../types/general";
 import QuestionInfo from "./QuestionInfo";
 import QuestionAdditionalInformation from "./QuestionAdditionalInformation";
-import { useI18n } from "next-localization";
 import Map from "./common/Map";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import QuestionButton from "./QuestionButton";
-import { useRouter } from "next/router";
 import { setCurrentlyEditingBlock } from "../state/reducers/generalSlice";
 
 // usage: container for single question row e.g. header/text, additional infos and dropdown/radiobutton
@@ -36,7 +36,7 @@ const QuestionContainer = ({
 
   const curLocale: string = i18n.locale();
   const questionDepth = (questionNumber?.toString().split(".") || []).length;
-  const paddingLeft: string = (questionDepth - 2) * 5 + "rem";
+  const paddingLeft = `${(questionDepth - 2) * 5}rem`;
   const photoTexts = photoText?.split("<BR>");
   const questionInfos = questionInfo?.split("<BR><BR>");
   const invalidBlocks = useAppSelector(
@@ -50,7 +50,7 @@ const QuestionContainer = ({
 
   // set invalid style if validation errors
   const questionStyle =
-    isInvalid && curAnswers[questionId!] == undefined
+    isInvalid && curAnswers[questionId!] === undefined
       ? {
           paddingLeft,
           backgroundColor,
@@ -113,8 +113,8 @@ const QuestionContainer = ({
                 {questionInfos?.map((e, index) => {
                   return <p key={index}>{e}</p>;
                 })}
-                {photoUrl != null ? (
-                  <img src={photoUrl} className={styles.infoPicture}></img>
+                {photoUrl !== null ? (
+                  <img src={photoUrl} className={styles.infoPicture} />
                 ) : null}
                 <p>{photoTexts}</p>
               </div>
@@ -122,9 +122,9 @@ const QuestionContainer = ({
           ) : null}
         </div>
         <div className={styles.children}>{children}</div>
-        {hasAdditionalInfo && questionId != undefined ? (
+        {hasAdditionalInfo && questionId !== undefined ? (
           <QuestionAdditionalInformation
-            key={questionNumber + "a"}
+            key={`${questionNumber}a`}
             questionId={questionId}
             blockId={questionBlockId}
             // canAddLocation={canAddLocation}
@@ -133,27 +133,18 @@ const QuestionContainer = ({
             isMainLocPicComponent={isMainLocPicComponent}
           />
         ) : null}
-        {isInvalid && curAnswers[questionId!] == undefined ? (
-          <IconAlertCircle
-            className={styles.alertCircle}
-            aria-hidden
-          ></IconAlertCircle>
+        {isInvalid && curAnswers[questionId!] === undefined ? (
+          <IconAlertCircle className={styles.alertCircle} aria-hidden />
         ) : null}
       </div>
       {/* code under loops additional infos to the form if question has addinfo */}
       {curQuestionAddinfos &&
       curQuestionAddinfos.components &&
       curQuestionAddinfos.components.length !== 0 ? (
-        <div
-          className={styles.addinfos}
-          style={{ backgroundColor: backgroundColor }}
-        >
+        <div className={styles.addinfos} style={{ backgroundColor }}>
           {
             <>
-              <div
-                className={styles.addinfos}
-                style={{ backgroundColor: backgroundColor }}
-              >
+              <div className={styles.addinfos} style={{ backgroundColor }}>
                 <h4>
                   {i18n.t("accessibilityForm.additionalInfoPreviewHeader")}
                 </h4>
@@ -171,7 +162,7 @@ const QuestionContainer = ({
                       return (
                         <div className={styles.addinfopreviewcontainer}>
                           <div className={styles.picturetextcontainer}>
-                            <p key={pic.qNumber + "alt" + index}>
+                            <p key={`${pic.qNumber}alt${index}`}>
                               <span>
                                 {i18n.t(
                                   "accessibilityForm.additionalInfoPreviewAltText"
@@ -180,7 +171,7 @@ const QuestionContainer = ({
                               {/* @ts-ignore */}
                               {pic[curLocale]}
                             </p>
-                            <p key={pic.qNumber + "source" + index}>
+                            <p key={`${pic.qNumber}source${index}`}>
                               <span>
                                 {i18n.t(
                                   "accessibilityForm.additionalInfoPreviewSourceText"
@@ -203,7 +194,7 @@ const QuestionContainer = ({
                 {curQuestionAddinfos.locations &&
                 curQuestionAddinfos.locations.coordinates ? (
                   <div className={styles.addinfopreviewcontainer}>
-                    <div className={styles.mapcontainerspacer}></div>
+                    <div className={styles.mapcontainerspacer} />
                     <div className={styles.mappreview}>
                       <Map
                         initCenter={curQuestionAddinfos.locations.coordinates!}
@@ -213,7 +204,7 @@ const QuestionContainer = ({
                         initZoom={17}
                         draggableMarker={false}
                         questionId={questionId!}
-                        makeStatic={true}
+                        makeStatic
                       />
                     </div>
                   </div>

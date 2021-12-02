@@ -9,6 +9,7 @@ import {
   SelectionGroup,
 } from "hds-react";
 import { useI18n } from "next-localization";
+import { v4 as uuidv4 } from "uuid";
 import styles from "./AdditionalInfoPicturesContent.module.scss";
 import QuestionButton from "./QuestionButton";
 import QuestionInfo from "./QuestionInfo";
@@ -23,7 +24,6 @@ import {
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { AdditionalContentProps } from "../types/general";
 import { CREATIVECOMMONS_URL } from "../types/constants";
-import { v4 as uuidv4 } from "uuid";
 
 // usage: additionalinfo page picture components
 // notes: this component has both "upload" and "link/url" image components for they are such similar
@@ -70,7 +70,7 @@ const AdditionalInfoPicturesContent = ({
   const handleremoveInvalidValue = (remoTarget: string) => {
     dispatch(
       removeInvalidValues({
-        questionId: questionId,
+        questionId,
         compId: currentId,
         removeTarget: remoTarget,
       })
@@ -81,7 +81,7 @@ const AdditionalInfoPicturesContent = ({
   const handleAddInvalidValues = (answersToAdd: string[]) => {
     dispatch(
       addInvalidValues({
-        questionId: questionId,
+        questionId,
         compId: currentId,
         invalidAnswers: answersToAdd,
       })
@@ -140,7 +140,7 @@ const AdditionalInfoPicturesContent = ({
     }
   };
 
-  //todo: maybe needs more refined error message if not found image (?)
+  // todo: maybe needs more refined error message if not found image (?)
   const validateUrlIsImage = async (url: string) => {
     const res = await fetch(url);
     if (res.status === 200) {
@@ -176,7 +176,7 @@ const AdditionalInfoPicturesContent = ({
     language: string,
     compId: number
   ) => {
-    const value: string = e.currentTarget.value;
+    const { value } = e.currentTarget;
     clearTimeout(timer);
     timer = setTimeout(() => {
       dispatch(setAlt({ questionId, language, value, compId }));
@@ -201,7 +201,7 @@ const AdditionalInfoPicturesContent = ({
     }
   };
 
-  //update source on state
+  // update source on state
   const onSourceChange = (e: any) => {
     const source = e.currentTarget.value;
     dispatch(setPictureSource({ questionId, source, compId }));
@@ -215,7 +215,7 @@ const AdditionalInfoPicturesContent = ({
 
   // add or remove url validation errors
   const handleLinkText = (e: any) => {
-    const value = e.currentTarget.value;
+    const { value } = e.currentTarget;
     value.length > 0 ? setLinkText(value) : null;
     if (value && value !== "") {
       handleremoveInvalidValue("url");
@@ -233,7 +233,7 @@ const AdditionalInfoPicturesContent = ({
     <QuestionButton
       variant="secondary"
       onClickHandler={() => handleImageRemoveAndAdded()}
-      disabled={linkText ? false : true}
+      disabled={!linkText}
     >
       {i18n.t("additionalInfo.pictureLinkConfirmButton")}
     </QuestionButton>
@@ -269,12 +269,10 @@ const AdditionalInfoPicturesContent = ({
                 : i18n.t("additionalInfo.pictureInput")
             }
             placeholder={curImage?.name}
-            disabled={onlyLink ? false : true}
+            disabled={!onlyLink}
             onChange={(e) => handleLinkText(e)}
             defaultValue={curImage?.url ? curImage.url : ""}
-            invalid={
-              currentInvalids?.invalidAnswers?.includes("url") ? true : false
-            }
+            invalid={!!currentInvalids?.invalidAnswers?.includes("url")}
             errorText={
               currentInvalids?.invalidAnswers?.includes("url")
                 ? i18n.t("additionalInfo.picureLinkErrorText")
@@ -305,7 +303,7 @@ const AdditionalInfoPicturesContent = ({
             className={styles.hidden}
             ref={hiddenFileInput}
             onChange={handleImageAdded}
-          ></input>
+          />
         )}
       </div>
       {/* todo: maybe remove base and use url -> need url for upload from ~Azure */}
@@ -331,9 +329,7 @@ const AdditionalInfoPicturesContent = ({
                 handleAddAlt(e, "fi", compId)
               }
               defaultValue={curImage?.fi ?? null}
-              invalid={
-                currentInvalids?.invalidAnswers?.includes("fi") ? true : false
-              }
+              invalid={!!currentInvalids?.invalidAnswers?.includes("fi")}
               errorText={
                 currentInvalids?.invalidAnswers?.includes("fi")
                   ? "PH: olkaa hyvä ja syöttäkää kuvateksti"
@@ -410,11 +406,7 @@ const AdditionalInfoPicturesContent = ({
               onChange={onSourceChange}
               required
               defaultValue={curImage?.source ? curImage?.source : ""}
-              invalid={
-                currentInvalids?.invalidAnswers?.includes("source")
-                  ? true
-                  : false
-              }
+              invalid={!!currentInvalids?.invalidAnswers?.includes("source")}
               errorText={
                 currentInvalids?.invalidAnswers?.includes("source")
                   ? i18n.t("additionalInfo.picureSourceErrorText")

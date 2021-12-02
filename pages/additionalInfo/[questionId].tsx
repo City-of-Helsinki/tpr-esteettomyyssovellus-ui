@@ -10,6 +10,7 @@ import {
   IconSpeechbubbleText,
   IconUpload,
 } from "hds-react";
+import { Dictionary } from "@reduxjs/toolkit";
 import Layout from "../../components/common/Layout";
 import i18nLoader from "../../utils/i18n";
 import styles from "./additionalInfo.module.scss";
@@ -36,7 +37,6 @@ import {
   LANGUAGE_LOCALES,
   API_FETCH_BACKEND_QUESTIONS,
 } from "../../types/constants";
-import { Dictionary } from "@reduxjs/toolkit";
 import { setCurrentlyEditingQuestion } from "../../state/reducers/generalSlice";
 import LoadSpinner from "../../components/common/LoadSpinner";
 
@@ -52,7 +52,7 @@ const AdditionalInfo = ({
   const [increasingId, setIncreasingId] = useState(0);
   const isLoading = useLoading();
   const dispatch = useAppDispatch();
-  let curAdditionalInfo: any = useAppSelector(
+  const curAdditionalInfo: any = useAppSelector(
     (state) => state.additionalInfoReducer[questionId] as AdditionalInfoProps
   );
 
@@ -73,7 +73,7 @@ const AdditionalInfo = ({
     // @ts-ignore:
     const curLocaleId: number = LANGUAGE_LOCALES[curLocale];
     return data.filter((entry: any) => {
-      return entry.language_id == curLocaleId;
+      return entry.language_id === curLocaleId;
     });
   };
 
@@ -95,8 +95,8 @@ const AdditionalInfo = ({
     }));
     dispatch(
       addComponent({
-        questionId: questionId,
-        type: type,
+        questionId,
+        type,
         id: increasingId,
       })
     );
@@ -109,8 +109,8 @@ const AdditionalInfo = ({
       ...prevCounts,
       [type]: elementCounts[type] - 1,
     }));
-    dispatch(removeComponent({ questionId: questionId, delId: deleteId }));
-    dispatch(removeAllInvalids({ questionId: questionId, compId: deleteId }));
+    dispatch(removeComponent({ questionId, delId: deleteId }));
+    dispatch(removeAllInvalids({ questionId, compId: deleteId }));
   };
 
   // for saving current state obj initial state for if user edits and cancels without saving to return to old state or empty if no init addinfo
@@ -188,8 +188,8 @@ const AdditionalInfo = ({
               <div className={styles.overrideheadlinestyles}>
                 {curAdditionalInfo?.components?.map(
                   (component: AdditionalComponentProps) => {
-                    const id = component.id;
-                    const type = component.type;
+                    const { id } = component;
+                    const { type } = component;
                     if (type === "upload") {
                       return (
                         <div className={styles.componentcontainer}>
@@ -206,7 +206,8 @@ const AdditionalInfo = ({
                           />
                         </div>
                       );
-                    } else if (type === "link") {
+                    }
+                    if (type === "link") {
                       return (
                         <div className={styles.componentcontainer}>
                           <AdditionalInfoPicturesContent
@@ -223,7 +224,8 @@ const AdditionalInfo = ({
                           />
                         </div>
                       );
-                    } else if (type === "comment") {
+                    }
+                    if (type === "comment") {
                       return (
                         <div className={styles.componentcontainer}>
                           <AdditionalInfoCommentContent
@@ -235,7 +237,8 @@ const AdditionalInfo = ({
                           />
                         </div>
                       );
-                    } else if (type === "location") {
+                    }
+                    if (type === "location") {
                       return (
                         <div className={styles.componentcontainer}>
                           <AdditionalInfoLocationContent
@@ -258,11 +261,7 @@ const AdditionalInfo = ({
                     variant="secondary"
                     iconRight={<IconSpeechbubbleText />}
                     onClickHandler={() => handleAddElement("comment")}
-                    disabled={
-                      elementCounts["comment"] > canAddCommentCount
-                        ? true
-                        : false
-                    }
+                    disabled={elementCounts.comment > canAddCommentCount}
                   >
                     {i18n.t("additionalInfo.ctrlButtons.addNewComment")}
                   </QuestionButton>
@@ -271,10 +270,7 @@ const AdditionalInfo = ({
                     iconRight={<IconUpload />}
                     onClickHandler={() => handleAddElement("upload")}
                     disabled={
-                      elementCounts["upload"] + elementCounts["link"] >=
-                      photoMaxCount
-                        ? true
-                        : false
+                      elementCounts.upload + elementCounts.link >= photoMaxCount
                     }
                   >
                     {i18n.t(
@@ -286,10 +282,7 @@ const AdditionalInfo = ({
                     iconRight={<IconLink />}
                     onClickHandler={() => handleAddElement("link")}
                     disabled={
-                      elementCounts["upload"] + elementCounts["link"] >=
-                      photoMaxCount
-                        ? true
-                        : false
+                      elementCounts.upload + elementCounts.link >= photoMaxCount
                     }
                   >
                     {i18n.t("additionalInfo.ctrlButtons.addPictureLink")}
@@ -298,11 +291,7 @@ const AdditionalInfo = ({
                     variant="secondary"
                     iconRight={<IconLocation />}
                     onClickHandler={() => handleAddElement("location")}
-                    disabled={
-                      elementCounts["location"] > canAddLocationCount
-                        ? true
-                        : false
-                    }
+                    disabled={elementCounts.location > canAddLocationCount}
                   >
                     {i18n.t("additionalInfo.ctrlButtons.addNewLocation")}
                   </QuestionButton>

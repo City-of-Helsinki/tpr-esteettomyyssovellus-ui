@@ -9,6 +9,7 @@ import {
   SelectionGroup,
 } from "hds-react";
 import { useI18n } from "next-localization";
+import { v4 as uuidv4 } from "uuid";
 import styles from "./AdditionalInfoPicturesContent.module.scss";
 import QuestionButton from "./QuestionButton";
 import QuestionInfo from "./QuestionInfo";
@@ -26,7 +27,6 @@ import {
   MainPictureContentProps,
 } from "../types/general";
 import { CREATIVECOMMONS_URL } from "../types/constants";
-import { v4 as uuidv4 } from "uuid";
 import {
   addMainImageElement,
   addMainImageInvalidValue,
@@ -135,7 +135,7 @@ const MainPictureContent = ({
     }
   };
 
-  //todo: maybe needs more refined error message if not found image (?)
+  // todo: maybe needs more refined error message if not found image (?)
   const validateUrlIsImage = async (url: string) => {
     const res = await fetch(url);
     if (res.status === 200) {
@@ -170,7 +170,7 @@ const MainPictureContent = ({
     e: React.KeyboardEvent<HTMLTextAreaElement>,
     language: string
   ) => {
-    const value: string = e.currentTarget.value;
+    const { value } = e.currentTarget;
     clearTimeout(timer);
     timer = setTimeout(() => {
       dispatch(setMainPictureAlt({ language, value }));
@@ -195,7 +195,7 @@ const MainPictureContent = ({
     }
   };
 
-  //update source on state
+  // update source on state
   const onSourceChange = (e: any) => {
     const source = e.currentTarget.value;
     dispatch(setMainPictureSource(source));
@@ -209,7 +209,7 @@ const MainPictureContent = ({
 
   // add or remove url validation errors
   const handleLinkText = (e: any) => {
-    const value = e.currentTarget.value;
+    const { value } = e.currentTarget;
     value.length > 0 ? setLinkText(value) : null;
     if (value && value !== "") {
       dispatch(removeMainImageInvalidValue("url"));
@@ -227,7 +227,7 @@ const MainPictureContent = ({
     <QuestionButton
       variant="secondary"
       onClickHandler={() => handleImageRemoveAndAdded()}
-      disabled={linkText ? false : true}
+      disabled={!linkText}
     >
       {i18n.t("additionalInfo.pictureLinkConfirmButton")}
     </QuestionButton>
@@ -265,10 +265,10 @@ const MainPictureContent = ({
                 : i18n.t("additionalInfo.pictureInput")
             }
             placeholder={curImage?.name}
-            disabled={onlyLink ? false : true}
+            disabled={!onlyLink}
             onChange={(e) => handleLinkText(e)}
             defaultValue={curImage?.url ? curImage.url : ""}
-            invalid={currentInvalids?.includes("url") ? true : false}
+            invalid={!!currentInvalids?.includes("url")}
             errorText={
               currentInvalids?.includes("url")
                 ? i18n.t("additionalInfo.picureLinkErrorText")
@@ -299,7 +299,7 @@ const MainPictureContent = ({
             className={styles.hidden}
             ref={hiddenFileInput}
             onChange={handleImageAdded}
-          ></input>
+          />
         )}
       </div>
       {/* todo: maybe remove base and use url -> need url for upload from ~Azure */}
@@ -325,7 +325,7 @@ const MainPictureContent = ({
                 handleAddAlt(e, "fi")
               }
               defaultValue={curImage?.fi ?? null}
-              invalid={currentInvalids?.includes("fi") ? true : false}
+              invalid={!!currentInvalids?.includes("fi")}
               errorText={
                 currentInvalids?.includes("fi")
                   ? "PH: olkaa hyvä ja syöttäkää kuvateksti"
@@ -402,7 +402,7 @@ const MainPictureContent = ({
               onChange={onSourceChange}
               required
               defaultValue={curImage?.source ? curImage?.source : ""}
-              invalid={currentInvalids?.includes("source") ? true : false}
+              invalid={!!currentInvalids?.includes("source")}
               errorText={
                 currentInvalids?.includes("source")
                   ? i18n.t("additionalInfo.picureSourceErrorText")

@@ -8,10 +8,10 @@ import {
   Card,
   IconAlertCircle,
 } from "hds-react";
+import router from "next/router";
 import { HeadlineQuestionContainerProps } from "../types/general";
 import styles from "./HeadlineQuestionContainer.module.scss";
 import { useAppSelector } from "../state/hooks";
-import router from "next/router";
 
 // usage: used for mainlevel (blue) accordions in form
 const HeadlineQuestionContainer = ({
@@ -23,16 +23,16 @@ const HeadlineQuestionContainer = ({
   id = "",
 }: HeadlineQuestionContainerProps): JSX.Element => {
   // Handle accordion state with useAccordion hook
-  let { isOpen, buttonProps, contentProps, toggleAccordion } = useAccordion({
+  const { isOpen, buttonProps, contentProps, toggleAccordion } = useAccordion({
     initiallyOpen: initOpen,
   });
-  let curFinishedBlocks = useAppSelector(
+  const curFinishedBlocks = useAppSelector(
     (state) => state.formReducer.finishedBlocks
   );
-  let isContinueClicked = useAppSelector(
+  const isContinueClicked = useAppSelector(
     (state) => state.formReducer.isContinueClicked
   );
-  let curInvalidBlocks = useAppSelector(
+  const curInvalidBlocks = useAppSelector(
     (state) => state.formReducer.invalidBlocks
   );
   // Change icon based on accordion open state
@@ -41,20 +41,18 @@ const HeadlineQuestionContainer = ({
     <IconCheckCircleFill aria-hidden />
   ) : null;
   !isValid
-    ? (iconLeft = (
-        <IconAlertCircle aria-hidden color={"#b01038"}></IconAlertCircle>
-      ))
+    ? (iconLeft = <IconAlertCircle aria-hidden color="#b01038" />)
     : iconLeft;
   let buttonVariant: "primary" | "secondary" | "danger" = isOpen
     ? "primary"
     : "secondary";
 
-  let buttonStyle =
-    number != undefined && curInvalidBlocks.includes(number) && !isOpen
+  const buttonStyle =
+    number !== undefined && curInvalidBlocks.includes(number) && !isOpen
       ? { borderColor: "#b01038", borderWidth: "0.2rem" }
       : {};
   buttonVariant =
-    number != undefined && curInvalidBlocks.includes(number) && isOpen
+    number !== undefined && curInvalidBlocks.includes(number) && isOpen
       ? "danger"
       : buttonVariant;
 
@@ -72,7 +70,7 @@ const HeadlineQuestionContainer = ({
 
   return (
     <div className={styles.headline} id={id}>
-      {isContinueClicked && number == 0 ? (
+      {isContinueClicked && number === 0 ? (
         <Button
           id="headlineButton"
           {...buttonProps}
@@ -104,15 +102,13 @@ const HeadlineQuestionContainer = ({
           </div>
         </Button>
       )}
-      {
-        <Card
-          aria-label="Advanced filters"
-          {...contentProps}
-          className={styles.card}
-        >
-          {children}
-        </Card>
-      }
+      <Card
+        aria-label="Advanced filters"
+        {...contentProps}
+        className={styles.card}
+      >
+        {children}
+      </Card>
     </div>
   );
 };

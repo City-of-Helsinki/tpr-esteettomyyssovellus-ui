@@ -1,7 +1,4 @@
 import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
-import additionalInfoReducer from "./reducers/additionalInfoSlice";
-import formReducer from "./reducers/formSlice";
-import generalSlice from "./reducers/generalSlice";
 
 import { combineReducers } from "redux";
 
@@ -18,6 +15,9 @@ import {
   REHYDRATE,
 } from "redux-persist";
 import storage from "redux-persist/es/storage";
+import generalSlice from "./reducers/generalSlice";
+import formReducer from "./reducers/formSlice";
+import additionalInfoReducer from "./reducers/additionalInfoSlice";
 
 // need to use combineReducers ref: https://saurabhshah23.medium.com/redux-persist-redux-toolkit-implementation-made-easy-for-react-native-and-react-js-831ee1e3f22b#88aa
 const rootReducers = combineReducers({

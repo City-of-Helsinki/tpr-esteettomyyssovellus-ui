@@ -2,11 +2,11 @@ import React, { ReactElement } from "react";
 import { useI18n } from "next-localization";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
+import { IconCrossCircle, IconQuestionCircle } from "hds-react";
 import Layout from "../../components/common/Layout";
 import i18nLoader from "../../utils/i18n";
 import QuestionInfo from "../../components/QuestionInfo";
 import styles from "./accessibilityEdit.module.scss";
-import { IconCrossCircle, IconQuestionCircle } from "hds-react";
 import ServicepointMainInfoContent from "../../components/ServicepointMainInfoContent";
 import {
   API_FETCH_QUESTIONBLOCK_URL,
@@ -21,6 +21,7 @@ import {
   API_FETCH_QUESTION_ANSWER_LOCATIONS,
   API_FETCH_QUESTION_ANSWER_PHOTOS,
   API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS,
+  LANGUAGE_LOCALES,
 } from "../../types/constants";
 import { useAppSelector, useAppDispatch, useLoading } from "../../state/hooks";
 import QuestionBlock from "../../components/QuestionBlock";
@@ -31,7 +32,7 @@ import {
   QuestionBlockProps,
 } from "../../types/general";
 import HeadlineQuestionContainer from "../../components/HeadlineQuestionContainer";
-import { LANGUAGE_LOCALES } from "../../types/constants";
+
 import QuestionFormCtrlButtons from "../../components/QuestionFormCtrlButtons";
 import PathTreeComponent from "../../components/PathTreeComponent";
 import {
@@ -92,42 +93,42 @@ const AccessibilityEdit = ({
     (state) => state.generalSlice.currentlyEditingBlockAddinfo
   );
 
-  let curAnsweredChoices = useAppSelector(
+  const curAnsweredChoices = useAppSelector(
     (state) => state.formReducer.answeredChoices
   );
-  let curInvalidBlocks = useAppSelector(
+  const curInvalidBlocks = useAppSelector(
     (state) => state.formReducer.invalidBlocks
   );
-  let formInited = useAppSelector((state) => state.formReducer.formInited);
+  const formInited = useAppSelector((state) => state.formReducer.formInited);
   const additionalInfoInitedFromDb = useAppSelector(
     (state) => state.additionalInfoReducer.initAddInfoFromDb
   );
-  let isContinueClicked = useAppSelector(
+  const isContinueClicked = useAppSelector(
     (state) => state.formReducer.isContinueClicked
   );
-  let startedAnswering = useAppSelector(
+  const startedAnswering = useAppSelector(
     (state) => state.formReducer.startedAnswering
   );
   const treeItems = [
-    ServicepointData["servicepoint_name"],
+    ServicepointData.servicepoint_name,
     "PH: Esteettömyystiedot",
   ];
 
   // validates contactinfo data and sets to state
-  if (ServicepointData != undefined && !formInited) {
-    const phoneNumber = ServicepointData["accessibility_phone"];
-    const email = ServicepointData["accessibility_email"];
-    const www = ServicepointData["accessibility_www"];
+  if (ServicepointData !== undefined && !formInited) {
+    const phoneNumber = ServicepointData.accessibility_phone;
+    const email = ServicepointData.accessibility_email;
+    const www = ServicepointData.accessibility_www;
 
-    var phonePattern = new RegExp(PHONE_REGEX);
-    var emailPattern = new RegExp(EMAIL_REGEX);
+    const phonePattern = new RegExp(PHONE_REGEX);
+    const emailPattern = new RegExp(EMAIL_REGEX);
 
     dispatch(setPhoneNumber(phoneNumber));
     dispatch(setEmail(email));
     dispatch(setWwwAddress(www));
-    dispatch(setServicepointId(ServicepointData["servicepoint_id"]));
+    dispatch(setServicepointId(ServicepointData.servicepoint_id));
     dispatch(setEntranceId(Number(entrance_id!)));
-    if (startedAnswering == "") dispatch(setStartDate(getCurrentDate()));
+    if (startedAnswering === "") dispatch(setStartDate(getCurrentDate()));
 
     // VALIDATE PHONE
     if (!phonePattern.test(phoneNumber)) {
@@ -241,14 +242,14 @@ const AccessibilityEdit = ({
   dispatch(clearEditingInitialState());
 
   if (Object.keys(QuestionAnswerData).length !== 0) {
-    let curAnswers = useAppSelector((state) => state.formReducer.answers);
+    const curAnswers = useAppSelector((state) => state.formReducer.answers);
     QuestionAnswerData.map((a: any) => {
       const questionNumber = a.question_id;
       const answer = a.question_choice_id;
       const answerString = answer;
       if (
         !curAnsweredChoices.includes(answer) &&
-        curAnswers[questionNumber] == undefined
+        curAnswers[questionNumber] === undefined
       ) {
         dispatch(setAnsweredChoice(answerString));
         dispatch(setAnswer({ questionNumber, answer }));
@@ -257,9 +258,9 @@ const AccessibilityEdit = ({
   }
 
   // map visible blocks & questions & answers
-  let nextBlock = 0;
+  const nextBlock = 0;
   let lastBlockNumber = "";
-  let visibleBlocks =
+  const visibleBlocks =
     QuestionBlocksData && QuestionsData && QuestionChoicesData
       ? QuestionBlocksData.map((block: QuestionBlockProps) => {
           // The visible_if_question_choice is sometimes of form "1231+1231+12313+etc"
@@ -273,17 +274,17 @@ const AccessibilityEdit = ({
             : false;
 
           const isVisible =
-            (block.visible_if_question_choice == null &&
-              block.language_id == curLocaleId) ||
+            (block.visible_if_question_choice === null &&
+              block.language_id === curLocaleId) ||
             (answersIncludeAllVisibleQuestions &&
-              block.language_id == curLocaleId &&
+              block.language_id === curLocaleId &&
               isContinueClicked);
 
           const blockQuestions = isVisible
             ? QuestionsData.filter(
                 (question) =>
                   question.question_block_id === block.question_block_id &&
-                  question.language_id == curLocaleId
+                  question.language_id === curLocaleId
               )
             : null;
 
@@ -291,7 +292,7 @@ const AccessibilityEdit = ({
             ? QuestionChoicesData.filter(
                 (choice) =>
                   choice.question_block_id === block.question_block_id &&
-                  choice.language_id == curLocaleId
+                  choice.language_id === curLocaleId
               )
             : null;
 
@@ -299,24 +300,24 @@ const AccessibilityEdit = ({
             isVisible &&
             blockQuestions &&
             answerChoices &&
-            block.question_block_code != undefined
+            block.question_block_code !== undefined
           )
             lastBlockNumber = block.question_block_code;
 
           return isVisible &&
             blockQuestions &&
             answerChoices &&
-            block.question_block_id != undefined ? (
+            block.question_block_id !== undefined ? (
             <HeadlineQuestionContainer
               key={block.question_block_id}
               number={block.question_block_id}
-              text={block.question_block_code + " " + block.text}
+              text={`${block.question_block_code} ${block.text}`}
               id={`questionblockid-${block.question_block_id}`}
               initOpen={
                 curEditingBlockAddInfoNumber &&
                 curEditingBlockAddInfoNumber === block.question_block_id
                   ? true
-                  : block.question_block_id == nextBlock
+                  : block.question_block_id === nextBlock
               }
               isValid={!curInvalidBlocks.includes(block.question_block_id)}
             >
@@ -405,9 +406,9 @@ const AccessibilityEdit = ({
               </QuestionInfo>
             </div>
             <div className={styles.headingcontainer}>
-              <h1>{ServicepointData["servicepoint_name"]}</h1>
+              <h1>{ServicepointData.servicepoint_name}</h1>
               <h2>
-                {form_id == 0
+                {form_id === 0
                   ? i18n.t("common.mainEntrance")
                   : i18n.t("common.additionalEntrance")}
               </h2>
@@ -462,15 +463,15 @@ export const getServerSideProps: GetServerSideProps = async ({
   let AddInfoPhotoTextsData;
   let form_id = 0;
   let entrance_id: string | string[] | undefined = "";
-  if (params != undefined) {
+  if (params !== undefined) {
     try {
       entrance_id = params.entranceId;
       const EntranceResp = await fetch(
         `${API_FETCH_ENTRANCES}${entrance_id}/?format=json`
       );
       EntranceData = await EntranceResp.json();
-      const servicepoint_id = EntranceData["servicepoint"];
-      form_id = EntranceData["form"];
+      const servicepoint_id = EntranceData.servicepoint;
+      form_id = EntranceData.form;
       const QuestionsResp = await fetch(API_FETCH_QUESTION_URL + form_id);
       const QuestionChoicesResp = await fetch(
         API_FETCH_QUESTIONCHOICES + form_id
@@ -490,7 +491,7 @@ export const getServerSideProps: GetServerSideProps = async ({
       QuestionBlocksData = await QuestionBlocksResp.json();
       QuestionAnswerData = await QuestionAnswersResp.json();
       ServicepointData = await ServicepointResp.json();
-      if (QuestionAnswerData.length != 0) {
+      if (QuestionAnswerData.length !== 0) {
         const logId =
           (await QuestionAnswerData.sort((a: any, b: any) => {
             return b.log_id - a.log_id;
@@ -538,13 +539,13 @@ export const getServerSideProps: GetServerSideProps = async ({
   }
   return {
     props: {
-      form_id: form_id,
-      QuestionsData: QuestionsData,
-      QuestionChoicesData: QuestionChoicesData,
-      QuestionBlocksData: QuestionBlocksData,
-      QuestionAnswerData: QuestionAnswerData,
-      ServicepointData: ServicepointData,
-      AdditionalInfosData: AdditionalInfosData,
+      form_id,
+      QuestionsData,
+      QuestionChoicesData,
+      QuestionBlocksData,
+      QuestionAnswerData,
+      ServicepointData,
+      AdditionalInfosData,
       entrance_id,
       lngDict,
     },

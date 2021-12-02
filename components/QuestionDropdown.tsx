@@ -1,16 +1,15 @@
 import React from "react";
 import { Select } from "hds-react";
+import { Dictionary } from "@reduxjs/toolkit";
+import { useI18n } from "next-localization";
 import { DropdownQuestionProps } from "../types/general";
 import style from "./QuestionDropdown.module.scss";
-import { useAppSelector } from "../state/hooks";
+import { useAppSelector, useAppDispatch } from "../state/hooks";
 import {
   setAnsweredChoice,
   setAnswer,
   removeAnsweredChoice,
 } from "../state/reducers/formSlice";
-import { useAppDispatch } from "../state/hooks";
-import { Dictionary } from "@reduxjs/toolkit";
-import { useI18n } from "next-localization";
 
 // usage: general custom dropdown component form HDS
 // notes: this component uses HDS Select, HDS says:
@@ -28,12 +27,12 @@ const QuestionDropdown = ({
 
   // handle add/remove answer from state
   const handleChange = (selected: Dictionary<string>) => {
-    const answerString = selected["value"];
+    const answerString = selected.value;
     const questionNumString = questionNumber;
-    if (answerString != undefined && questionNumber != undefined) {
+    if (answerString !== undefined && questionNumber !== undefined) {
       options.map((element: Dictionary<string>) => {
-        element["value"] != undefined
-          ? dispatch(removeAnsweredChoice(element["value"]))
+        element.value !== undefined
+          ? dispatch(removeAnsweredChoice(element.value))
           : null;
       });
       const answer = Number(answerString);
@@ -44,30 +43,30 @@ const QuestionDropdown = ({
   };
 
   const currentValues = useAppSelector((state) => state.formReducer);
-  const invalidBlocks = currentValues.invalidBlocks;
+  const { invalidBlocks } = currentValues;
 
   const value =
-    questionNumber != undefined &&
-    currentValues.answers[questionNumber] != undefined
+    questionNumber !== undefined &&
+    currentValues.answers[questionNumber] !== undefined
       ? currentValues.answers[questionNumber]
       : "";
-  let currentLabel = options.find((element) => {
-    return element["value"] === value;
+  const currentLabel = options.find((element) => {
+    return element.value === value;
   });
 
   const currentValue: Dictionary<string> = {
-    label: currentLabel != undefined ? currentLabel["label"] : "",
+    label: currentLabel !== undefined ? currentLabel.label : "",
     value: value.toString(),
   };
 
-  const isInvalid = value == "" && invalidBlocks.includes(blockId!);
+  const isInvalid = value === "" && invalidBlocks.includes(blockId!);
 
   return (
     <Select
       className={style.selectDropdown}
       label={label}
       placeholder={
-        placeholder == "--Valitse--"
+        placeholder === "--Valitse--"
           ? i18n.t("accessibilityForm.choose")
           : placeholder
       }

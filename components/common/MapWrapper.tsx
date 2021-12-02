@@ -9,9 +9,9 @@ import {
   useMapEvents,
 } from "react-leaflet";
 import { Marker as LeafletMarker, Icon } from "leaflet";
+import { useDispatch } from "react-redux";
 import getOrigin from "../../utils/request";
 import styles from "./MapWrapper.module.scss";
-import { useDispatch } from "react-redux";
 import { addLocation } from "../../state/reducers/additionalInfoSlice";
 import { useAppSelector } from "../../state/hooks";
 import { convertCoordinates, isLocationValid } from "../../utils/utilFunctions";
@@ -82,7 +82,7 @@ const MapWrapper = ({
     // this case is for mainform mainlocation, questionId -1
     if (isMainLocPicComponent && questionId === -1) {
       // set state main location main form
-      //@ts-ignore: [number, number] != number[]
+      // @ts-ignore: [number, number] !== number[]
       const coordinatesEPSG: [number, number] = [locEas, locNor];
 
       dispatch(
@@ -102,8 +102,8 @@ const MapWrapper = ({
       // for additionalinfo location adding
       dispatch(
         addLocation({
-          questionId: questionId,
-          coordinates: coordinates,
+          questionId,
+          coordinates,
           locNorthing: Math.round(locNor),
           locEasting: Math.round(locEas),
         })

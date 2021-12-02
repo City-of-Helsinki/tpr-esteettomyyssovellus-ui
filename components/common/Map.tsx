@@ -1,7 +1,7 @@
 import React from "react";
+import dynamic from "next/dynamic";
 import { MapProps } from "../../types/general";
 import styles from "./Map.module.scss";
-import dynamic from "next/dynamic";
 
 // usage: container and middle-component for leaflet map (mapwrapper)
 // notes: dynamic import of MapWrapper is important for leaflet functionality

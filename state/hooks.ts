@@ -12,10 +12,10 @@ export const useLoading = () => {
 
   useEffect(() => {
     const handleStart = (url: string) => {
-      var siteUrl = url;
+      let siteUrl = url;
       if (
-        siteUrl.substring(0, 3) == "/en" ||
-        siteUrl.substring(0, 3) == "/sv"
+        siteUrl.substring(0, 3) === "/en" ||
+        siteUrl.substring(0, 3) === "/sv"
       ) {
         siteUrl = url.substring(3);
       }
@@ -23,10 +23,10 @@ export const useLoading = () => {
     };
 
     const handleComplete = (url: string) => {
-      var siteUrl = url;
+      let siteUrl = url;
       if (
-        siteUrl.substring(0, 3) == "/en" ||
-        siteUrl.substring(0, 3) == "/sv"
+        siteUrl.substring(0, 3) === "/en" ||
+        siteUrl.substring(0, 3) === "/sv"
       ) {
         siteUrl = url.substring(3);
       }

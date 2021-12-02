@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
-import { IconPlus, IconMinus, IconCross } from "hds-react";
+import { IconPlus, IconMinus, IconCross, TextArea } from "hds-react";
 import { useI18n } from "next-localization";
 import styles from "./AdditionalInfoCommentContent.module.scss";
-import { TextArea } from "hds-react";
+
 import QuestionInfo from "./QuestionInfo";
 import { AdditionalContentProps } from "../types/general";
 import {
@@ -46,7 +46,7 @@ const AdditionalInfoCommentContent = ({
     e: React.KeyboardEvent<HTMLTextAreaElement>,
     language: string
   ) => {
-    const value: string = e.currentTarget.value;
+    const { value } = e.currentTarget;
     clearTimeout(timer);
     timer = setTimeout(() => {
       dispatch(addComment({ questionId, language, value }));
@@ -55,16 +55,16 @@ const AdditionalInfoCommentContent = ({
     if (value && value !== "" && language === "fi") {
       dispatch(
         removeInvalidValues({
-          questionId: questionId,
-          compId: compId,
+          questionId,
+          compId,
           removeTarget: "fi",
         })
       );
     } else if (value === "" && language === "fi") {
       dispatch(
         addInvalidValues({
-          questionId: questionId,
-          compId: compId,
+          questionId,
+          compId,
           invalidAnswers: ["fi"],
         })
       );
@@ -75,8 +75,8 @@ const AdditionalInfoCommentContent = ({
     if (!initValue?.fi || initValue?.fi === "") {
       dispatch(
         addInvalidValues({
-          questionId: questionId,
-          compId: compId,
+          questionId,
+          compId,
           invalidAnswers: ["fi"],
         })
       );
@@ -106,9 +106,7 @@ const AdditionalInfoCommentContent = ({
               }
               onLoad={() => handleAddComment(initValue?.fi, "fi")}
               defaultValue={initValue?.fi ?? null}
-              invalid={
-                currentInvalids?.invalidAnswers?.includes("fi") ? true : false
-              }
+              invalid={!!currentInvalids?.invalidAnswers?.includes("fi")}
               errorText={
                 currentInvalids?.invalidAnswers?.includes("fi")
                   ? i18n.t("additionalInfo.addCommentFiErrorText")

@@ -98,7 +98,7 @@ const AdditionalInfoLocationContent = ({
         initCenter={coords}
         initLocation={coords}
         initZoom={14}
-        draggableMarker={true}
+        draggableMarker
         questionId={questionId}
         isMainLocPicComponent={isMainLocPicComponent}
       />

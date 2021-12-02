@@ -10,6 +10,7 @@ import {
   IconSpeechbubbleText,
   IconUpload,
 } from "hds-react";
+import { Dictionary } from "@reduxjs/toolkit";
 import Layout from "../../../components/common/Layout";
 import i18nLoader from "../../../utils/i18n";
 import styles from "./mainLocationOrImage.module.scss";
@@ -41,7 +42,6 @@ import {
   LANGUAGE_LOCALES,
   API_FETCH_BACKEND_QUESTIONS,
 } from "../../../types/constants";
-import { Dictionary } from "@reduxjs/toolkit";
 import generalSlice, {
   setCurEditingBothCoordinateTemps,
   setCurrentlyEditingQuestion,
@@ -71,7 +71,7 @@ const MainLocationOrImage = ({
   const dispatch = useAppDispatch();
 
   // if caseId is 1 then location page, if caseId 2 then image page
-  const isLocation = caseId === 1 ? true : false;
+  const isLocation = caseId === 1;
 
   const currentMainImageElement =
     useAppSelector((state) => state.formReducer.mainImageElement) ?? null;
@@ -92,7 +92,7 @@ const MainLocationOrImage = ({
   //   // @ts-ignore:
   //   const curLocaleId: number = LANGUAGE_LOCALES[curLocale];
   //   return data.filter((entry: any) => {
-  //     return entry.language_id == curLocaleId;
+  //     return entry.language_id === curLocaleId;
   //   });
   // };
 
@@ -107,8 +107,8 @@ const MainLocationOrImage = ({
     }
     dispatch(
       setCurEditingBothCoordinateTemps({
-        coordinates: coordinates,
-        coordinatesWGS84: coordinatesWGS84,
+        coordinates,
+        coordinatesWGS84,
       })
     );
   }, []);
@@ -159,7 +159,7 @@ const MainLocationOrImage = ({
               <div>
                 <div className={styles.mainheader}>
                   <p className={styles.headerspacing}>
-                    {"ph: lisää jotain kuva tai loc käytä ternary"}
+                    ph: lisää jotain kuva tai loc käytä ternary
                   </p>
                 </div>
                 <div className={styles.maininfoctrl}>
@@ -176,7 +176,7 @@ const MainLocationOrImage = ({
                       compId={caseId}
                       initValue={coordinatesWGS84 ?? null}
                       canDelete={false}
-                      isMainLocPicComponent={true}
+                      isMainLocPicComponent
                     />
                   </div>
                 ) : null}
@@ -187,7 +187,7 @@ const MainLocationOrImage = ({
                       pageId={pageId}
                       key={`key_${caseId}`}
                       onDelete={() => handleDelete()}
-                      initValue={currentMainImage ? currentMainImage : null}
+                      initValue={currentMainImage || null}
                     />
                   </div>
                 ) : null}
@@ -199,7 +199,7 @@ const MainLocationOrImage = ({
                       onlyLink
                       key={`key_${caseId}`}
                       onDelete={() => handleDelete()}
-                      initValue={currentMainImage ? currentMainImage : null}
+                      initValue={currentMainImage || null}
                     />
                   </div>
                 ) : null}
@@ -214,7 +214,7 @@ const MainLocationOrImage = ({
                         variant="secondary"
                         iconRight={<IconUpload />}
                         onClickHandler={() => handleAddComponent("upload")}
-                        disabled={hasMainImage ? true : false}
+                        disabled={!!hasMainImage}
                       >
                         {i18n.t(
                           "additionalInfo.ctrlButtons.addUploadImageFromDevice"
@@ -224,7 +224,7 @@ const MainLocationOrImage = ({
                         variant="secondary"
                         iconRight={<IconLink />}
                         onClickHandler={() => handleAddComponent("link")}
-                        disabled={hasMainImage ? true : false}
+                        disabled={!!hasMainImage}
                       >
                         {i18n.t("additionalInfo.ctrlButtons.addPictureLink")}
                       </QuestionButton>

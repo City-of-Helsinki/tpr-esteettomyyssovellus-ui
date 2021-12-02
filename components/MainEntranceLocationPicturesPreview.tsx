@@ -1,8 +1,8 @@
 import React from "react";
+import { useI18n } from "next-localization";
 import styles from "./MainEntranceLocationPicturesPreview.module.scss";
 import Map from "./common/Map";
 import { useAppSelector } from "../state/hooks";
-import { useI18n } from "next-localization";
 
 // usage: component for main location and pictures, used in details and preview pages
 // notes: todo: some parts might stille be placeholders e.g. pictures
@@ -22,8 +22,8 @@ const MainEntranceLocationPicturesPreview = (): JSX.Element => {
             initZoom={17}
             draggableMarker={false}
             questionId={-1}
-            makeStatic={true}
-            isPreview={true}
+            makeStatic
+            isPreview
           />
           {coordinates && coordinates.length === 2 ? (
             <p>
@@ -47,7 +47,7 @@ const MainEntranceLocationPicturesPreview = (): JSX.Element => {
                 `https://images.unsplash.com/photo-1531989417401-0f85f7e673f8?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80}` +
                 `)`,
             }}
-          ></div>
+          />
           <div
             className={styles.picture}
             style={{
@@ -56,7 +56,7 @@ const MainEntranceLocationPicturesPreview = (): JSX.Element => {
                 `https://images.unsplash.com/photo-1531989417401-0f85f7e673f8?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80}` +
                 `)`,
             }}
-          ></div>
+          />
           <div
             className={styles.picture}
             style={{
@@ -65,7 +65,7 @@ const MainEntranceLocationPicturesPreview = (): JSX.Element => {
                 `https://images.unsplash.com/photo-1531989417401-0f85f7e673f8?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80}` +
                 `)`,
             }}
-          ></div>
+          />
         </div>
       </div>
     </div>

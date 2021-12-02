@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { IconArrowLeft } from "hds-react";
-import styles from "./AdditionalInfoCtrlButtons.module.scss";
-import QuestionButton from "./QuestionButton";
 import { useI18n } from "next-localization";
 import { useRouter } from "next/router";
+import styles from "./AdditionalInfoCtrlButtons.module.scss";
+import QuestionButton from "./QuestionButton";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import {
   removeSingleQuestionAdditionalinfo,
@@ -109,11 +109,7 @@ const MainLocationPictureCtrlButtons = ({ caseId }: any): JSX.Element => {
         variant="secondary"
         iconLeft={<IconArrowLeft />}
         onClickHandler={handleSaveAndReturn}
-        disabled={
-          hasInvalidValidations && hasInvalidValidations.length > 0
-            ? true
-            : false
-        }
+        disabled={!!(hasInvalidValidations && hasInvalidValidations.length > 0)}
       >
         {i18n.t("common.buttons.saveAndReturn")}
       </QuestionButton>

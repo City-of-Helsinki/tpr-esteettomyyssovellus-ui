@@ -1,5 +1,6 @@
 import { Button, IconAngleDown, IconAngleUp, IconArrowRight } from "hds-react";
 import React, { useState } from "react";
+import { useI18n } from "next-localization";
 import QuestionAdditionalInfoCtrlButton from "./QuestionAdditionalInfoCtrlButton";
 import QuestionFormImportExistingData from "./QuestionFormImportExistingData";
 import styles from "./QuestionBlock.module.scss";
@@ -12,7 +13,6 @@ import {
   setFinished,
   unsetFinished,
 } from "../state/reducers/formSlice";
-import { useI18n } from "next-localization";
 
 // usage: in form groups up all questions under a single "question block" / accordion
 // notes: used under headlineQuestionContainer in main form
@@ -42,21 +42,21 @@ const QuestionBlock = ({
   };
 
   const blockId: number =
-    questions != null && questions[0].question_block_id != undefined
+    questions !== null && questions[0].question_block_id !== undefined
       ? questions[0].question_block_id
       : -1;
-  const hasInfoAndButtons = questions != null ? blockId != 0 : true;
-  let curAnsweredChoices = useAppSelector(
+  const hasInfoAndButtons = questions !== null ? blockId !== 0 : true;
+  const curAnsweredChoices = useAppSelector(
     (state) => state.formReducer.answeredChoices
   );
-  const continueActive = curAnsweredChoices.length != 0;
+  const continueActive = curAnsweredChoices.length !== 0;
 
   // filter questions to get only correct ones with curAnsweredChoices
   const filteredQuestions =
-    questions != null
+    questions !== null
       ? questions.filter(
           (question) =>
-            question.visible_if_question_choice == null ||
+            question.visible_if_question_choice === null ||
             question.visible_if_question_choice
               ?.split("+")
               // @ts-ignore: TODO:
@@ -64,8 +64,8 @@ const QuestionBlock = ({
         )
       : null;
 
-  let curAnswers = useAppSelector((state) => state.formReducer.answers);
-  let keys = Object.keys(curAnswers);
+  const curAnswers = useAppSelector((state) => state.formReducer.answers);
+  const keys = Object.keys(curAnswers);
 
   // check if block is finished (all visible questions are answered), also used to display icon if finished and with validation
   const blockFinished = filteredQuestions?.every((element) => {
@@ -90,7 +90,7 @@ const QuestionBlock = ({
       {hasInfoAndButtons ? (
         <div className={styles.mainInfo}>
           <p>{desc ?? null}</p>
-          {photoText == null && photoUrl == null ? null : (
+          {photoText === null && photoUrl === null ? null : (
             <QuestionInfo
               openText={i18n.t("common.questionBlockShowMoreMainEntrance")}
               openIcon={<IconAngleDown aria-hidden />}
@@ -98,13 +98,13 @@ const QuestionBlock = ({
               closeIcon={<IconAngleUp aria-hidden />}
             >
               <div className={styles.infoContainer}>
-                {photoText != null ? photoText : null}
-                {photoUrl != null ? (
+                {photoText !== null ? photoText : null}
+                {photoUrl !== null ? (
                   <img
                     alt="wheelchair parking"
                     src={photoUrl}
                     className={styles.infoPicture}
-                  ></img>
+                  />
                 ) : null}
               </div>
             </QuestionInfo>

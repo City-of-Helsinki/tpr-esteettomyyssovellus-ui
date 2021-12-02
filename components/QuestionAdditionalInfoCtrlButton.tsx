@@ -1,9 +1,9 @@
 import React from "react";
 import { IconPlusCircle, IconCrossCircle } from "hds-react";
+import { useI18n } from "next-localization";
 import Button from "./QuestionButton";
 import { QuestionAdditionalInfoCtrlButtonProps } from "../types/general";
 import styles from "./QuestionAdditionalInfoCtrlButton.module.scss";
-import { useI18n } from "next-localization";
 
 // usage: button to handle visibility of additional info buttons on questions, this toggles those
 const QuestionAdditionalInfoCtrlButton = ({

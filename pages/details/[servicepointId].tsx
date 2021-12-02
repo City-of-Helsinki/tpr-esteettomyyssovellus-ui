@@ -104,12 +104,12 @@ const details = ({
   if (
     servicepointData &&
     entranceData.results &&
-    accessibilityData["main"].length != 0
+    accessibilityData.main.length !== 0
   ) {
     dispatch(setServicepointId(servicepointData.servicepoint_id));
     // TODO: Logic for when editing additional entrance vs main entrance
-    dispatch(setEntranceId(accessibilityData["main"][0].entrance_id));
-    if (accessibilityData["main"][0].form_submitted == "Y") {
+    dispatch(setEntranceId(accessibilityData.main[0].entrance_id));
+    if (accessibilityData.main[0].form_submitted === "Y") {
       dispatch(setFormFinished());
       dispatch(setContinue());
       dispatch(setFormSubmitted());
@@ -121,13 +121,13 @@ const details = ({
   }
 
   if (hasData && !formInited) {
-    if (servicepointData["accessibility_phone"] != undefined) {
+    if (servicepointData.accessibility_phone !== undefined) {
       // TODO: POSSIBLY VALIDATE THESE STRAIGHT AWAY
-      dispatch(setPhoneNumber(servicepointData["accessibility_phone"]));
+      dispatch(setPhoneNumber(servicepointData.accessibility_phone));
     }
-    if (servicepointData["accessibility_email"] != undefined) {
+    if (servicepointData.accessibility_email !== undefined) {
       // TODO: POSSIBLY VALIDATE THESE STRAIGHT AWAY
-      dispatch(setEmail(servicepointData["accessibility_email"]));
+      dispatch(setEmail(servicepointData.accessibility_email));
     }
   }
 
@@ -227,7 +227,7 @@ export const getServerSideProps: GetServerSideProps = async ({
   let servicepointData;
   let hasExistingFormData = false;
   let isFinished = false;
-  if (params != undefined) {
+  if (params !== undefined) {
     try {
       const ServicepointResp = await fetch(
         `${API_FETCH_SERVICEPOINTS}${params.servicepointId}/?format=json`
@@ -247,25 +247,25 @@ export const getServerSideProps: GetServerSideProps = async ({
           `${API_FETCH_SENTENCE_LANGS}?entrance_id=${entranceData.results[i].entrance_id}&format=json`
         );
         const sentenceData = await SentenceResp.json();
-        if (entranceData.results[i].is_main_entrance == "Y") {
-          accessibilityData["main"] = sentenceData;
+        if (entranceData.results[i].is_main_entrance === "Y") {
+          accessibilityData.main = sentenceData;
           mainEntranceId = entranceData.results[i].entrance_id;
         } else {
-          accessibilityData["side" + j] = sentenceData;
+          accessibilityData[`side${j}`] = sentenceData;
           j++;
         }
         i++;
       }
 
-      if (entranceData.results.length != 0) {
+      if (entranceData.results.length !== 0) {
         const LogResp = await fetch(
           `${API_FETCH_ANSWER_LOGS}?entrance=${mainEntranceId}`
         );
         const logData = await LogResp.json();
 
         // TODO: Should the this be true even if the form has not been submitted
-        hasExistingFormData = logData.length != 0;
-        isFinished = logData.some((e: any) => e["form_submitted"] == "Y");
+        hasExistingFormData = logData.length !== 0;
+        isFinished = logData.some((e: any) => e.form_submitted === "Y");
       }
     } catch (err) {
       servicepointData = {};

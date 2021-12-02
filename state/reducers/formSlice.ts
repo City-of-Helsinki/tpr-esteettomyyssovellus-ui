@@ -75,8 +75,9 @@ export const formSlice = createSlice({
       return {
         ...state,
         answeredChoices: [
-          ...(state.answeredChoices?.filter((elem) => elem != action.payload) ??
-            []),
+          ...(state.answeredChoices?.filter(
+            (elem) => elem !== action.payload
+          ) ?? []),
         ],
       };
     },
@@ -115,17 +116,16 @@ export const formSlice = createSlice({
           ...state,
           finishedBlocks: [...state.finishedBlocks, action.payload],
         };
-      } else {
-        return {
-          ...state,
-        };
       }
+      return {
+        ...state,
+      };
     },
     unsetFinished: (state, action: PayloadAction<number>) => {
       return {
         ...state,
         finishedBlocks: [
-          ...(state.finishedBlocks?.filter((elem) => elem != action.payload) ??
+          ...(state.finishedBlocks?.filter((elem) => elem !== action.payload) ??
             []),
         ],
       };
@@ -137,7 +137,7 @@ export const formSlice = createSlice({
           ...state.contacts,
           // Sets the contact person. The contact person is always valid at the start
           // and changes to invalid if the validation fails
-          ["contactPerson"]: [action.payload, false],
+          contactPerson: [action.payload, false],
         },
       };
     },
@@ -149,7 +149,7 @@ export const formSlice = createSlice({
           // Sets the phone number. The phone number is always valid at the start
           // and changes to invalid if the validation fails. TODO: POSSIBLY VALIDATE
           // WHEN SET
-          ["phoneNumber"]: [action.payload, false],
+          phoneNumber: [action.payload, false],
         },
       };
     },
@@ -158,7 +158,7 @@ export const formSlice = createSlice({
         ...state,
         // Sets the email. The email is always valid at the start
         // and changes to invalid if the validation fails
-        contacts: { ...state.contacts, ["email"]: [action.payload, false] },
+        contacts: { ...state.contacts, email: [action.payload, false] },
       };
     },
     setWwwAddress: (state, action: PayloadAction<string>) => {
@@ -166,7 +166,7 @@ export const formSlice = createSlice({
         ...state,
         // Sets the email. The email is always valid at the start
         // and changes to invalid if the validation fails
-        contacts: { ...state.contacts, ["www"]: [action.payload, false] },
+        contacts: { ...state.contacts, www: [action.payload, false] },
       };
     },
     setStartDate: (state, action: PayloadAction<string>) => {
@@ -180,10 +180,7 @@ export const formSlice = createSlice({
         ...state,
         contacts: {
           ...state.contacts,
-          ["contactPerson"]: [
-            state.contacts["contactPerson"][0],
-            action.payload,
-          ],
+          contactPerson: [state.contacts.contactPerson[0], action.payload],
         },
       };
     },
@@ -192,7 +189,7 @@ export const formSlice = createSlice({
         ...state,
         contacts: {
           ...state.contacts,
-          ["phoneNumber"]: [state.contacts["phoneNumber"][0], action.payload],
+          phoneNumber: [state.contacts.phoneNumber[0], action.payload],
         },
       };
     },
@@ -201,7 +198,7 @@ export const formSlice = createSlice({
         ...state,
         contacts: {
           ...state.contacts,
-          ["email"]: [state.contacts["email"][0], action.payload],
+          email: [state.contacts.email[0], action.payload],
         },
       };
     },
@@ -210,7 +207,7 @@ export const formSlice = createSlice({
         ...state,
         contacts: {
           ...state.contacts,
-          ["www"]: [state.contacts["www"][0], action.payload],
+          www: [state.contacts.www[0], action.payload],
         },
       };
     },
@@ -220,17 +217,16 @@ export const formSlice = createSlice({
           ...state,
           invalidBlocks: [...state.invalidBlocks, action.payload],
         };
-      } else {
-        return {
-          ...state,
-        };
       }
+      return {
+        ...state,
+      };
     },
     unsetInvalid: (state, action: PayloadAction<number>) => {
       return {
         ...state,
         invalidBlocks: [
-          ...(state.invalidBlocks?.filter((elem) => elem != action.payload) ??
+          ...(state.invalidBlocks?.filter((elem) => elem !== action.payload) ??
             []),
         ],
       };

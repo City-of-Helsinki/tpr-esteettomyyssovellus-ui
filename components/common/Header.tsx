@@ -57,8 +57,8 @@ const Header = ({
   };
 
   const handleKeyPress = (e: Event, id: string) => {
-    let evt = e as KeyboardEvent;
-    if (evt.code == "Enter") {
+    const evt = e as KeyboardEvent;
+    if (evt.code === "Enter") {
       document.getElementById(id)?.click();
     }
   };
@@ -72,8 +72,8 @@ const Header = ({
         window.removeEventListener("resize", () => setWidth(window.innerWidth));
       };
     }, []);
-    let isMobile: boolean = width < 768;
-    includeLanguageSelector = isMobile ? false : true;
+    const isMobile: boolean = width < 768;
+    includeLanguageSelector = !isMobile;
   }
 
   return (
@@ -126,10 +126,8 @@ const Header = ({
           {
             <Navigation.User
               label={i18n.t("common.header.login")}
-              authenticated={true} /* Change to: currentUser?.authenticated} */
-              userName={
-                "PLACEHOLDER"
-              } /* Change to: currentUser?.first_name || currentUser?.email} */
+              authenticated /* Change to: currentUser?.authenticated} */
+              userName="PLACEHOLDER" /* Change to: currentUser?.first_name || currentUser?.email} */
               onSignIn={signIn}
             >
               <Navigation.Item
@@ -185,7 +183,7 @@ const Header = ({
                 id="fim"
                 tabIndex={0}
                 className={
-                  router.locale == "fi" ? styles.chosen : styles.unchosen
+                  router.locale === "fi" ? styles.chosen : styles.unchosen
                 }
                 label="Suomeksi (FI)"
                 onKeyPress={(e: any) => handleKeyPress(e, "fim")}
@@ -196,7 +194,7 @@ const Header = ({
                 id="svm"
                 tabIndex={0}
                 className={
-                  router.locale == "sv" ? styles.chosen : styles.unchosen
+                  router.locale === "sv" ? styles.chosen : styles.unchosen
                 }
                 label="På svenska (SV)"
                 onKeyPress={(e: any) => handleKeyPress(e, "svm")}
@@ -207,7 +205,7 @@ const Header = ({
                 id="enm"
                 tabIndex={0}
                 className={
-                  router.locale == "en" ? styles.chosen : styles.unchosen
+                  router.locale === "en" ? styles.chosen : styles.unchosen
                 }
                 label="In English (EN)"
                 onKeyPress={(e: any) => handleKeyPress(e, "enm")}

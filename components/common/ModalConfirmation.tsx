@@ -1,8 +1,8 @@
 import React, { ReactElement } from "react";
 import { useI18n } from "next-localization";
 import { Button } from "hds-react";
-import styles from "./ModalConfirmation.module.scss";
 import { Dialog } from "@material-ui/core";
+import styles from "./ModalConfirmation.module.scss";
 
 interface ModalConfirmationProps {
   open: boolean;

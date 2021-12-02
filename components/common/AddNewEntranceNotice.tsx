@@ -2,10 +2,10 @@
 
 import React, { ReactElement, ReactNode, useEffect, useRef } from "react";
 import { useI18n } from "next-localization";
-import styles from "./AddNewEntranceNotice.module.scss";
-import QuestionButton from "../QuestionButton";
 import { IconArrowRight, IconSignin } from "hds-react";
 import { useRouter } from "next/router";
+import styles from "./AddNewEntranceNotice.module.scss";
+import QuestionButton from "../QuestionButton";
 
 // usage: in preview page, add new entrances component
 // notice: derived from Notice (marketing), removed props due to single use only

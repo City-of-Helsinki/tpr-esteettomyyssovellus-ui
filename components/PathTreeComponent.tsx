@@ -1,20 +1,20 @@
 import React from "react";
+import { useI18n } from "next-localization";
 import { PathTreeProps } from "../types/general";
 import styles from "./PathTreeComponent.module.scss";
 import { useAppSelector } from "../state/hooks";
-import { useI18n } from "next-localization";
 import { FRONT_URL_BASE } from "../types/constants";
 
 // usage: general breadcrumb component
 const PathTreeComponent = ({ treeItems }: PathTreeProps): JSX.Element => {
   const i18n = useI18n();
-  const length = treeItems.length;
+  const { length } = treeItems;
   const curServicepointId = useAppSelector(
     (state) => state.formReducer.currentServicepointId
   );
   const pathTree = treeItems.map((elem, index) => {
     const treeItem =
-      treeItems.indexOf(elem) == length - 1 ? (
+      treeItems.indexOf(elem) === length - 1 ? (
         <div key={index}>
           <a>
             {" > "}
@@ -26,9 +26,9 @@ const PathTreeComponent = ({ treeItems }: PathTreeProps): JSX.Element => {
           {" > "}
           <a
             className={styles.link}
-            href={
-              FRONT_URL_BASE + i18n.locale() + "/details/" + curServicepointId
-            }
+            href={`${
+              FRONT_URL_BASE + i18n.locale()
+            }/details/${curServicepointId}`}
           >
             {elem}
           </a>

@@ -1,11 +1,11 @@
 import React from "react";
 import { IconAlertCircle } from "hds-react";
 import { useI18n } from "next-localization";
+import router from "next/router";
 import Button from "./QuestionButton";
 import ServicepointLandingSummaryContent from "./ServicepointLandingSummaryContent";
 import { ServicepointLandingSummaryProps } from "../types/general";
 import styles from "./ServicepointLandingSummary.module.scss";
-import router from "next/router";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { setStartDate } from "../state/reducers/formSlice";
 import { FRONT_URL_BASE } from "../types/constants";
@@ -28,17 +28,17 @@ const ServicepointLandingSummary = ({
     if (data) {
       const startedAnswering = getCurrentDate();
       dispatch(setStartDate(startedAnswering));
-      const url = FRONT_URL_BASE + "accessibilityEdit/" + curEntranceId;
+      const url = `${FRONT_URL_BASE}accessibilityEdit/${curEntranceId}`;
       router.push(url);
     } else {
-      //todo: todo (?)
+      // todo: todo (?)
       console.log("create servicepoint data clicked, todo create logic");
     }
   };
 
   // Add React components to these arrays.
   let contents: any = [];
-  let mainEntrance: any = [];
+  const mainEntrance: any = [];
   let hasData = false;
 
   // If the data is of type servicePointData
@@ -49,8 +49,8 @@ const ServicepointLandingSummary = ({
       "accessibility_email",
       "accessibility_www",
     ];
-    let itemList: any = [];
-    hasData = keysToDisplay.some((e) => data[e] != null);
+    const itemList: any = [];
+    hasData = keysToDisplay.some((e) => data[e] !== null);
     keysToDisplay.map((key) => {
       let title = "";
       switch (key) {
@@ -80,15 +80,15 @@ const ServicepointLandingSummary = ({
     );
     // Else if the data is of type accessibilityData
   } else if (data) {
-    hasData = data != undefined && data["main"].length != 0;
+    hasData = data !== undefined && data.main.length !== 0;
 
-    let keys = Object.keys(data);
+    const keys = Object.keys(data);
     keys.map((key) => {
-      let itemList: any = [];
+      const itemList: any = [];
       let currentTitle = "";
       if (data[key]) {
         data[key].map((x: any) => {
-          if (x.sentence_group_name != currentTitle) {
+          if (x.sentence_group_name !== currentTitle) {
             currentTitle = x.sentence_group_name;
             // Add h3 titles in the container
             itemList.push(
@@ -100,7 +100,7 @@ const ServicepointLandingSummary = ({
       }
 
       // Check if main entrance.
-      if (key == "main") {
+      if (key === "main") {
         mainEntrance.push(
           <>
             <ServicepointLandingSummaryContent
@@ -131,7 +131,7 @@ const ServicepointLandingSummary = ({
   contents = mainEntrance.concat(contents);
 
   // If has no data buttons should say create servicepoint otherwise edit servicepoint
-  let buttonText = !hasData
+  const buttonText = !hasData
     ? i18n.t("servicepoint.buttons.createServicepoint")
     : i18n.t("servicepoint.buttons.editServicepoint");
 

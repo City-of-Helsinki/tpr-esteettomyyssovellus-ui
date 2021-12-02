@@ -39,7 +39,7 @@ const preview = ({
   const dispatch = useAppDispatch();
   const isLoading = useLoading();
   const treeItems = [
-    servicepointData["servicepoint_name"],
+    servicepointData.servicepoint_name,
     i18n.t("common.header.title"),
   ];
 
@@ -49,7 +49,7 @@ const preview = ({
     filteredAccessibilityData[key] = filterByLanguage(accessibilityData[key]);
     filteredAccessibilityData[key] = filteredAccessibilityData[key].filter(
       (elem: any) => {
-        return elem["form_submitted"] == "Y" || elem["form_submitted"] == "D";
+        return elem.form_submitted === "Y" || elem.form_submitted === "D";
       }
     );
   });
@@ -57,11 +57,11 @@ const preview = ({
   if (
     servicepointData &&
     entranceData.results &&
-    accessibilityData["main"].length != 0
+    accessibilityData.main.length !== 0
   ) {
     dispatch(setServicepointId(servicepointData.servicepoint_id));
     // TODO: Logic for when editing additional entrance vs main entrance
-    dispatch(setEntranceId(accessibilityData["main"][0].entrance_id));
+    dispatch(setEntranceId(accessibilityData.main[0].entrance_id));
   } else if (servicepointData && entranceData.results) {
     dispatch(setServicepointId(servicepointData.servicepoint_id));
     // TODO: Logic for when editing additional entrance vs main entrance
@@ -102,7 +102,7 @@ const preview = ({
               </h2>
             </div>
             <div>
-              <PreviewControlButtons hasHeader={true} />
+              <PreviewControlButtons hasHeader />
             </div>
             <div>
               <ServicepointLandingSummaryContent
@@ -153,7 +153,7 @@ export const getServerSideProps: GetServerSideProps = async ({
   let servicepointData;
   let hasExistingFormData = false;
   let isFinished = false;
-  if (params != undefined) {
+  if (params !== undefined) {
     try {
       const ServicepointResp = await fetch(
         `${API_FETCH_SERVICEPOINTS}${params.servicepointId}/?format=json`
@@ -173,17 +173,17 @@ export const getServerSideProps: GetServerSideProps = async ({
           `${API_FETCH_SENTENCE_LANGS}?entrance_id=${entranceData.results[i].entrance_id}&format=json`
         );
         const sentenceData = await SentenceResp.json();
-        if (entranceData.results[i].is_main_entrance == "Y") {
-          accessibilityData["main"] = sentenceData;
+        if (entranceData.results[i].is_main_entrance === "Y") {
+          accessibilityData.main = sentenceData;
           mainEntranceId = entranceData.results[i].entrance_id;
         } else {
-          accessibilityData["side" + j] = sentenceData;
+          accessibilityData[`side${j}`] = sentenceData;
           j++;
         }
         i++;
       }
 
-      if (entranceData.results.length != 0) {
+      if (entranceData.results.length !== 0) {
         const LogResp = await fetch(
           `${API_FETCH_ANSWER_LOGS}?entrance=${mainEntranceId}`
         );
@@ -191,9 +191,9 @@ export const getServerSideProps: GetServerSideProps = async ({
 
         // TODO: Should this be true even if the form has not been submitted
         hasExistingFormData = logData.some(
-          (e: any) => e["form_submitted"] == "Y" || e["form_submitted"] == "D"
+          (e: any) => e.form_submitted === "Y" || e.form_submitted === "D"
         );
-        isFinished = logData.some((e: any) => e["form_submitted"] == "Y");
+        isFinished = logData.some((e: any) => e.form_submitted === "Y");
       }
     } catch (err) {
       servicepointData = {};

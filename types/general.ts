@@ -343,7 +343,7 @@ export interface QuestionBlocksProps {
   visible_if_question_choice: string;
 }
 
-//TODO: add type for questionlist and question
+// TODO: add type for questionlist and question
 export interface QuestionBlockProps {
   mainInfoText?: string;
   // questionList: any;

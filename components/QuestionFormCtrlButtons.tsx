@@ -1,33 +1,33 @@
 import React from "react";
 import { IconArrowRight, IconArrowLeft, Card } from "hds-react";
+import router from "next/router";
+import { useI18n } from "next-localization";
+import publicIp from "public-ip";
 import Button from "./QuestionButton";
 import { QuestionFormCtrlButtonsProps } from "../types/general";
 import styles from "./QuestionFormCtrlButtons.module.scss";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
-import router from "next/router";
-import { useI18n } from "next-localization";
-import publicIp from "public-ip";
 import {
   API_FETCH_ANSWER_LOGS,
   API_FETCH_QUESTION_ANSWERS,
   API_FETCH_SERVICEPOINTS,
-  FRONT_URL_BASE
+  FRONT_URL_BASE,
 } from "../types/constants";
 import {
   setFormFinished,
   setInvalid,
   unsetFormFinished,
-  unsetInvalid
+  unsetInvalid,
 } from "../state/reducers/formSlice";
 import {
   getCurrentDate,
   postData,
-  postAdditionalInfo
+  postAdditionalInfo,
 } from "../utils/utilFunctions";
 
 export const getClientIp = async () =>
-  await publicIp.v4({
-    fallbackUrls: ["https://ifconfig.co/ip"]
+  publicIp.v4({
+    fallbackUrls: ["https://ifconfig.co/ip"],
   });
 
 // usage: Form control buttons: return, save / draft, preview, validate
@@ -37,15 +37,15 @@ const QuestionFormCtrlButtons = ({
   hasSaveDraftButton,
   hasPreviewButton,
   visibleBlocks,
-  visibleQuestionChoices
+  visibleQuestionChoices,
 }: QuestionFormCtrlButtonsProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
 
-  let curAnsweredChoices = useAppSelector(
+  const curAnsweredChoices = useAppSelector(
     (state) => state.formReducer.answeredChoices
   );
-  let curServicepointId = useAppSelector(
+  const curServicepointId = useAppSelector(
     (state) => state.formReducer.currentServicepointId
   );
   const startedAnswering = useAppSelector(
@@ -66,9 +66,9 @@ const QuestionFormCtrlButtons = ({
   const handleCancel = (): void => {
     // TODO: Add errorpage
     const url =
-      curServicepointId == -1
+      curServicepointId === -1
         ? FRONT_URL_BASE
-        : FRONT_URL_BASE + i18n.locale() + "/details/" + curServicepointId;
+        : `${FRONT_URL_BASE + i18n.locale()}/details/${curServicepointId}`;
     window.location.href = url;
   };
   const isPreviewActive = curAnsweredChoices.length > 1;
@@ -77,18 +77,18 @@ const QuestionFormCtrlButtons = ({
     const updateContactsOptions = {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        accessibility_phone: contacts["phoneNumber"][1]
-          ? contacts["phoneNumber"][0]
+        accessibility_phone: contacts.phoneNumber[1]
+          ? contacts.phoneNumber[0]
           : null,
-        accessibility_email: contacts["email"][1] ? contacts["email"][0] : null,
-        accessibility_www: contacts["www"][1] ? contacts["www"][0] : null,
+        accessibility_email: contacts.email[1] ? contacts.email[0] : null,
+        accessibility_www: contacts.www[1] ? contacts.www[0] : null,
         modified_by: "placeholder",
         // TODO: Add user here
-        modified: getCurrentDate()
-      })
+        modified: getCurrentDate(),
+      }),
     };
     const updateContactsUrl = `${API_FETCH_SERVICEPOINTS}${curServicepointId}/update_accessibility_contacts/`;
 
@@ -120,8 +120,8 @@ const QuestionFormCtrlButtons = ({
         form_cancelled: "N",
         // TODO: GET CURRENT USER HERE
         accessibility_editor: "Leba",
-        entrance: curEntranceId
-      })
+        entrance: curEntranceId,
+      }),
     };
 
     updateAccessibilityContacts(contacts);
@@ -151,7 +151,7 @@ const QuestionFormCtrlButtons = ({
       const parsedAdditionalInfos = Object.keys(additionalInfo).map((key) => {
         if (!isNaN(Number(key))) return [key, additionalInfo[key]];
       });
-      if (parsedAdditionalInfos != undefined) {
+      if (parsedAdditionalInfos !== undefined) {
         await postAdditionalInfo(logId, parsedAdditionalInfos);
       }
       const generateData = { entrance_id: curEntranceId, form_submitted: "D" };
@@ -171,7 +171,7 @@ const QuestionFormCtrlButtons = ({
   const validateForm = () => {
     // VALIDATE BLOCKS
     visibleBlocks?.forEach((elem) => {
-      if (elem != null) {
+      if (elem !== null) {
         if (!finishedBlocks.includes(Number(elem?.key?.toString()))) {
           dispatch(setInvalid(Number(elem?.key?.toString())));
           dispatch(unsetFormFinished());
@@ -186,7 +186,7 @@ const QuestionFormCtrlButtons = ({
     (state) => state.formReducer.invalidBlocks
   );
 
-  if (invalidBlocks.length == 0) {
+  if (invalidBlocks.length === 0) {
     dispatch(setFormFinished());
   } else {
     dispatch(unsetFormFinished());
@@ -201,7 +201,7 @@ const QuestionFormCtrlButtons = ({
     await saveDraft();
     // TODO: TÄSSÄ KOHTAA MAHDOLLISESTI PITÄÄ POSTATA TIEDOT APIIN/KANTAAN, ETTÄ PREVIEW SIVULLE
     // SAADAAN NÄKYMÄÄN JUURI TÄYTETYT TIEDOT.
-    router.push("/preview/" + curServicepointId);
+    router.push(`/preview/${curServicepointId}`);
   };
 
   return (
