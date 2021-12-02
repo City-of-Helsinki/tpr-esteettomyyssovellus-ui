@@ -2,6 +2,7 @@
 
 import { Dictionary } from "@reduxjs/toolkit";
 import { LatLngExpression } from "leaflet";
+import { EntranceResults, Servicepoint, StoredSentence } from "./backendModels";
 
 export interface User {
   authenticated: boolean;
@@ -402,4 +403,12 @@ export interface NoticeProps {
 export interface mainLocationAndPictureProps {
   canAddLocation: boolean;
   canAddPicture: boolean;
+}
+
+export interface DetailsProps {
+  servicepointData: Servicepoint;
+  accessibilityData: { [key: string]: StoredSentence[] };
+  entranceData: EntranceResults;
+  hasExistingFormData: boolean;
+  isFinished: boolean;
 }

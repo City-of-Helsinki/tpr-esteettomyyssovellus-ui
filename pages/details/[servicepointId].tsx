@@ -27,9 +27,11 @@ import { clearGeneralState, setServicepointLocation, setServicepointLocationWGS8
 import { API_FETCH_ANSWER_LOGS, API_FETCH_ENTRANCES, API_FETCH_SENTENCE_LANGS, API_FETCH_SERVICEPOINTS } from "../../types/constants";
 import LoadSpinner from "../../components/common/LoadSpinner";
 import { clearAddinfoState } from "../../state/reducers/additionalInfoSlice";
+import { AnswerLog, EntranceResults, Servicepoint, StoredSentence } from "../../types/backendModels";
+import { DetailsProps } from "../../types/general";
 
 // usage: the details / landing page of servicepoint
-const details = ({ servicepointData, accessibilityData, entranceData, hasExistingFormData, isFinished }: any): ReactElement => {
+const Details = ({ servicepointData, accessibilityData, entranceData, hasExistingFormData, isFinished }: DetailsProps): ReactElement => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
   const isLoading = useLoading();
@@ -68,10 +70,12 @@ const details = ({ servicepointData, accessibilityData, entranceData, hasExistin
   }
 
   // Filter by language
-  const filteredAccessibilityData: any = {};
-  Object.keys(accessibilityData).map(function (key, index) {
-    filteredAccessibilityData[key] = filterByLanguage(accessibilityData[key]);
-  });
+  const filteredAccessibilityData = Object.keys(accessibilityData).reduce((acc, key) => {
+    return {
+      ...acc,
+      [key]: filterByLanguage(accessibilityData[key]),
+    };
+  }, {});
 
   // Update entranceId and servicepointId to redux state
   if (servicepointData && entranceData.results && accessibilityData.main.length !== 0) {
@@ -156,7 +160,7 @@ const details = ({ servicepointData, accessibilityData, entranceData, hasExistin
 };
 
 // Server-side rendering
-export const getServerSideProps: GetServerSideProps = async ({ params, req, locales }) => {
+export const getServerSideProps: GetServerSideProps = async ({ params, locales }) => {
   const lngDict = await i18nLoader(locales);
 
   // todo: if user not checked here remove these
@@ -172,7 +176,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, loca
   //   initialReduxState.general.user = user;
   // }
 
-  let accessibilityData: any = {};
+  let accessibilityData = {};
   let entranceData;
   let servicepointData;
   let hasExistingFormData = false;
@@ -180,10 +184,13 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, loca
   if (params !== undefined) {
     try {
       const ServicepointResp = await fetch(`${API_FETCH_SERVICEPOINTS}${params.servicepointId}/?format=json`);
-      servicepointData = await ServicepointResp.json();
+      servicepointData = await (ServicepointResp.json() as Promise<Servicepoint>);
 
       const EntranceResp = await fetch(`${API_FETCH_ENTRANCES}?servicepoint=${servicepointData.servicepoint_id}&format=json`);
-      entranceData = await EntranceResp.json();
+      entranceData = await (EntranceResp.json() as Promise<EntranceResults>);
+
+      // Since await should not be used in a loop, the following code has been changed to use Promise.all instead
+      /*
       let i = 0;
       let j = 1;
       let mainEntranceId = 0;
@@ -200,14 +207,39 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, loca
         }
         i++;
       }
+      */
 
-      if (entranceData.results.length !== 0) {
-        const LogResp = await fetch(`${API_FETCH_ANSWER_LOGS}?entrance=${mainEntranceId}`);
-        const logData = await LogResp.json();
+      const entranceResultSentences = await Promise.all(
+        entranceData.results.map(async (entranceResult) => {
+          const SentenceResp = await fetch(`${API_FETCH_SENTENCE_LANGS}?entrance_id=${entranceResult.entrance_id}&format=json`);
+          const sentenceData = await (SentenceResp.json() as Promise<StoredSentence[]>);
+          return { entranceResult, sentenceData };
+        })
+      );
+
+      const mainResultSentences = entranceResultSentences.find((resultSentence) => resultSentence.entranceResult.is_main_entrance === "Y");
+
+      const sideEntrances = entranceResultSentences
+        .filter((resultSentence) => resultSentence.entranceResult.is_main_entrance !== "Y")
+        .reduce((acc, resultSentence, j) => {
+          return {
+            ...acc,
+            [`side${j + 1}`]: resultSentence.sentenceData,
+          };
+        }, {});
+
+      accessibilityData = {
+        main: mainResultSentences?.sentenceData,
+        ...sideEntrances,
+      };
+
+      if (entranceData.results.length !== 0 && mainResultSentences?.entranceResult) {
+        const LogResp = await fetch(`${API_FETCH_ANSWER_LOGS}?entrance=${mainResultSentences?.entranceResult.entrance_id}&format=json`);
+        const logData = await (LogResp.json() as Promise<AnswerLog[]>);
 
         // TODO: Should the this be true even if the form has not been submitted
         hasExistingFormData = logData.length !== 0;
-        isFinished = logData.some((e: any) => e.form_submitted === "Y");
+        isFinished = logData.some((e) => e.form_submitted === "Y");
       }
     } catch (err) {
       servicepointData = {};
@@ -228,4 +260,4 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, loca
   };
 };
 
-export default details;
+export default Details;
