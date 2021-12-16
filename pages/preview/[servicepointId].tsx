@@ -4,7 +4,6 @@ import Head from "next/head";
 import { GetServerSideProps } from "next";
 import { IconCrossCircle, IconQuestionCircle } from "hds-react";
 import Layout from "../../components/common/Layout";
-import store from "../../state/store";
 import i18nLoader from "../../utils/i18n";
 import styles from "./preview.module.scss";
 import QuestionInfo from "../../components/QuestionInfo";
@@ -13,28 +12,32 @@ import PathTreeComponent from "../../components/PathTreeComponent";
 import { useAppDispatch, useLoading } from "../../state/hooks";
 import { setServicepointId, setEntranceId } from "../../state/reducers/formSlice";
 import { filterByLanguage } from "../../utils/utilFunctions";
-import { API_FETCH_ANSWER_LOGS, API_FETCH_ENTRANCES, API_FETCH_SENTENCE_LANGS, API_FETCH_SERVICEPOINTS, API_URL_BASE } from "../../types/constants";
+import { API_FETCH_ANSWER_LOGS, API_FETCH_ENTRANCES, API_FETCH_SENTENCE_LANGS, API_FETCH_SERVICEPOINTS } from "../../types/constants";
 import PreviewPageLandingSummary from "../../components/PreviewPageLandingSummary";
 import PreviewControlButtons from "../../components/PreviewControlButtons";
 import LoadSpinner from "../../components/common/LoadSpinner";
 import ServicepointLandingSummaryContent from "../../components/ServicepointLandingSummaryContent";
 import MainEntranceLocationPicturesPreview from "../../components/MainEntranceLocationPicturesPreview";
+import { AnswerLog, EntranceResults, Servicepoint, StoredSentence } from "../../types/backendModels";
+import { AccessibilityData, PreviewProps } from "../../types/general";
 
 // usage: preview page of servicepoint, displayed before saving completed form
-const preview = ({ servicepointData, accessibilityData, entranceData }: any): ReactElement => {
+const Preview = ({ servicepointData, accessibilityData, entranceData }: PreviewProps): ReactElement => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
   const isLoading = useLoading();
   const treeItems = [servicepointData.servicepoint_name, i18n.t("common.header.title")];
 
   // Filter by language
-  const filteredAccessibilityData: any = {};
-  Object.keys(accessibilityData).map(function (key) {
-    filteredAccessibilityData[key] = filterByLanguage(accessibilityData[key]);
-    filteredAccessibilityData[key] = filteredAccessibilityData[key].filter((elem: any) => {
-      return elem.form_submitted === "Y" || elem.form_submitted === "D";
-    });
-  });
+  const filteredAccessibilityData: AccessibilityData = Object.keys(accessibilityData).reduce((acc, key) => {
+    return {
+      ...acc,
+      [key]: filterByLanguage(accessibilityData[key], i18n.locale()).filter((elem) => {
+        return elem.form_submitted === "Y" || elem.form_submitted === "D";
+      }),
+    };
+  }, {});
+
   // Update entranceId and servicepointId to redux state
   if (servicepointData && entranceData.results && accessibilityData.main.length !== 0) {
     dispatch(setServicepointId(servicepointData.servicepoint_id));
@@ -85,7 +88,7 @@ const preview = ({ servicepointData, accessibilityData, entranceData }: any): Re
               <ServicepointLandingSummaryContent contentHeader={i18n.t("PreviewPage.mainEntranceLocationHeader")}>
                 <MainEntranceLocationPicturesPreview />
               </ServicepointLandingSummaryContent>
-              <PreviewPageLandingSummary header={i18n.t("servicepoint.contactFormSummaryHeader")} data={filteredAccessibilityData} />
+              <PreviewPageLandingSummary data={filteredAccessibilityData} />
             </div>
             <div>
               <PreviewControlButtons hasHeader={false} />
@@ -98,7 +101,7 @@ const preview = ({ servicepointData, accessibilityData, entranceData }: any): Re
 };
 
 // Server-side rendering
-export const getServerSideProps: GetServerSideProps = async ({ params, req, locales }) => {
+export const getServerSideProps: GetServerSideProps = async ({ params, locales }) => {
   const lngDict = await i18nLoader(locales);
 
   // todo: if user not checked here remove these
@@ -116,7 +119,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, loca
 
   // Try except to stop software crashes when developing without backend running
   // TODO: Make this more reliable and change URLs and add to constants before production
-  let accessibilityData: any = {};
+  let accessibilityData = {};
   let entranceData;
   let servicepointData;
   let hasExistingFormData = false;
@@ -124,10 +127,13 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, loca
   if (params !== undefined) {
     try {
       const ServicepointResp = await fetch(`${API_FETCH_SERVICEPOINTS}${params.servicepointId}/?format=json`);
-      servicepointData = await ServicepointResp.json();
+      servicepointData = await (ServicepointResp.json() as Promise<Servicepoint>);
 
       const EntranceResp = await fetch(`${API_FETCH_ENTRANCES}?servicepoint=${servicepointData.servicepoint_id}&format=json`);
-      entranceData = await EntranceResp.json();
+      entranceData = await (EntranceResp.json() as Promise<EntranceResults>);
+
+      // Since await should not be used in a loop, the following code has been changed to use Promise.all instead
+      /*
       let i = 0;
       let j = 1;
       let mainEntranceId = 0;
@@ -144,14 +150,39 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, loca
         }
         i++;
       }
+      */
 
-      if (entranceData.results.length !== 0) {
-        const LogResp = await fetch(`${API_FETCH_ANSWER_LOGS}?entrance=${mainEntranceId}`);
-        const logData = await LogResp.json();
+      const entranceResultSentences = await Promise.all(
+        entranceData.results.map(async (entranceResult) => {
+          const SentenceResp = await fetch(`${API_FETCH_SENTENCE_LANGS}?entrance_id=${entranceResult.entrance_id}&format=json`);
+          const sentenceData = await (SentenceResp.json() as Promise<StoredSentence[]>);
+          return { entranceResult, sentenceData };
+        })
+      );
+
+      const mainResultSentences = entranceResultSentences.find((resultSentence) => resultSentence.entranceResult.is_main_entrance === "Y");
+
+      const sideEntrances = entranceResultSentences
+        .filter((resultSentence) => resultSentence.entranceResult.is_main_entrance !== "Y")
+        .reduce((acc, resultSentence, j) => {
+          return {
+            ...acc,
+            [`side${j + 1}`]: resultSentence.sentenceData,
+          };
+        }, {});
+
+      accessibilityData = {
+        main: mainResultSentences?.sentenceData,
+        ...sideEntrances,
+      };
+
+      if (entranceData.results.length !== 0 && mainResultSentences?.entranceResult) {
+        const LogResp = await fetch(`${API_FETCH_ANSWER_LOGS}?entrance=${mainResultSentences?.entranceResult.entrance_id}&format=json`);
+        const logData = await (LogResp.json() as Promise<AnswerLog[]>);
 
         // TODO: Should this be true even if the form has not been submitted
-        hasExistingFormData = logData.some((e: any) => e.form_submitted === "Y" || e.form_submitted === "D");
-        isFinished = logData.some((e: any) => e.form_submitted === "Y");
+        hasExistingFormData = logData.some((e) => e.form_submitted === "Y" || e.form_submitted === "D");
+        isFinished = logData.some((e) => e.form_submitted === "Y");
       }
     } catch (err) {
       servicepointData = {};
@@ -172,4 +203,4 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, loca
   };
 };
 
-export default preview;
+export default Preview;

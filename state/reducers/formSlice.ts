@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { MainPicture, MainPictureProps } from "../../types/general";
+import { MainPictureProps } from "../../types/general";
 
 interface formState {
   currentServicepointId: number;
@@ -48,7 +48,7 @@ export const formSlice = createSlice({
   name: "mainForm",
   initialState,
   reducers: {
-    clearFormState: (state) => {
+    clearFormState: () => {
       return {
         ...initialState,
       };
@@ -273,12 +273,11 @@ export const formSlice = createSlice({
     addMainImageInvalidValue: (state, action: PayloadAction<string[]>) => {
       const updatedInvalids = [...state.mainImageInvalidValues, ...action.payload];
 
-      // @ts-ignore
-      const removedDublicatesInvalids = [...new Set(updatedInvalids)];
+      const removedDuplicatesInvalids = [...updatedInvalids.filter((v, i, a) => v && a.indexOf(v) === i)];
 
       return {
         ...state,
-        mainImageInvalidValues: removedDublicatesInvalids,
+        mainImageInvalidValues: removedDuplicatesInvalids,
       };
     },
     addMainPicture: (state, action: PayloadAction<MainPictureProps>) => {

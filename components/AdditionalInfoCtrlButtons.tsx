@@ -23,7 +23,7 @@ const AdditionalInfoCtrlButtons = ({ questionId }: AdditionalInfoCtrlButtonsProp
   // also check if pageSaved (saved button clicked), if so then just return
   // otherwise set initStateAddinfo to current addinfo / remove all added answers -> for user didn't save
   useEffect(() => {
-    router.beforePopState(({}) => {
+    router.beforePopState(() => {
       if (pageSaved) {
         return true;
       }
@@ -34,7 +34,7 @@ const AdditionalInfoCtrlButtons = ({ questionId }: AdditionalInfoCtrlButtonsProp
       }
       return true;
     });
-  }, [prevState, pageSaved]);
+  }, [prevState, pageSaved, questionId, dispatch, router]);
 
   // don't alter already saved state, set pageSaved to true
   const handleSaveAndReturn = () => {
@@ -44,7 +44,9 @@ const AdditionalInfoCtrlButtons = ({ questionId }: AdditionalInfoCtrlButtonsProp
   };
 
   const hasInvalidValidations = useAppSelector((state) =>
-    state.additionalInfoReducer[questionId]?.invalidValues?.filter((invalids) => invalids.invalidAnswers && invalids.invalidAnswers.length > 0)
+    state.additionalInfoReducer.additionalInfo[questionId]?.invalidValues?.filter(
+      (invalids) => invalids.invalidAnswers && invalids.invalidAnswers.length > 0
+    )
   );
 
   // handle user clicked return no ssave button, uses beforePopState to reset state either init or empty respectively

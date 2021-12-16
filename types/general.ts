@@ -36,7 +36,7 @@ export interface QuestionContainerProps {
 export interface HeadlineQuestionContainerProps {
   text?: string;
   initOpen?: boolean;
-  children?: any;
+  children?: JSX.Element;
   number?: number;
   isValid?: boolean;
   id?: string;
@@ -73,8 +73,8 @@ export interface QuestionButtonProps {
   iconLeft?: JSX.Element | undefined;
   iconRight?: JSX.Element | undefined;
   disabled?: boolean;
-  onClickHandler?: (param?: any) => void;
-  onChange?: (param?: any) => void;
+  onClickHandler?: () => void;
+  onChange?: () => void;
 }
 
 export interface QuestionRadioButtonsProps {
@@ -108,8 +108,11 @@ export interface QuestionAdditionalInfoCtrlButtonProps {
 
 export interface ServicepointLandingSummaryProps {
   header: string;
-  // TODO: change any type when knowledge of the type getting
-  data?: any;
+  data: Servicepoint | AccessibilityData;
+}
+
+export interface PreviewPageLandingSummaryProps {
+  data: AccessibilityData;
 }
 
 export interface ServicepointLandingSummaryContentProps {
@@ -120,6 +123,10 @@ export interface ServicepointLandingSummaryContentProps {
 
 export interface ServicepointLandingSummaryCtrlButtonsProps {
   hasData: boolean;
+}
+
+export interface PreviewControlButtonsProps {
+  hasHeader: boolean;
 }
 
 export interface MapProps {
@@ -211,9 +218,13 @@ export interface MainPictureProps {
 }
 
 export interface AdditionalInfoProps {
-  initAddInfoFromDb: any;
-  curEditingInitialState: object;
   [key: string]: AdditionalInfos;
+}
+
+export interface AdditionalInfoStateProps {
+  initAddInfoFromDb: boolean;
+  curEditingInitialState: AdditionalInfoProps;
+  additionalInfo: AdditionalInfoProps;
 }
 
 export interface MainLocationOrImageProps {
@@ -224,9 +235,10 @@ export interface MainLocationOrImageProps {
 // Common interfaces
 
 export interface Languages {
-  fi?: string;
-  en?: string;
-  sv?: string;
+  fi: string;
+  en: string;
+  sv: string;
+  [key: string]: string;
 }
 
 // FORMS related stuff
@@ -345,10 +357,12 @@ export interface QuestionBlocksProps {
 }
 
 // TODO: add type for questionlist and question
+/*
 export interface QuestionBlockProps {
   mainInfoText?: string;
   // questionList: any;
 }
+*/
 
 export interface PathTreeProps {
   treeItems: any[];
@@ -370,10 +384,6 @@ export interface ContactInformationProps {
 export interface AdditionalInfoPageProps {
   questionId: number;
   questionData?: QuestionProps[];
-}
-
-export interface MainLocationOrImageProps {
-  caseId: number;
 }
 
 export interface AdditionalInfoCtrlButtonsProps {
@@ -405,10 +415,20 @@ export interface mainLocationAndPictureProps {
   canAddPicture: boolean;
 }
 
+export interface AccessibilityData {
+  [key: string]: StoredSentence[];
+}
+
 export interface DetailsProps {
   servicepointData: Servicepoint;
-  accessibilityData: { [key: string]: StoredSentence[] };
+  accessibilityData: AccessibilityData;
   entranceData: EntranceResults;
   hasExistingFormData: boolean;
   isFinished: boolean;
+}
+
+export interface PreviewProps {
+  servicepointData: Servicepoint;
+  accessibilityData: AccessibilityData;
+  entranceData: EntranceResults;
 }

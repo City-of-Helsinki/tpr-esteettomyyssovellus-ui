@@ -8,6 +8,7 @@ import { ServicepointLandingSummaryProps } from "../types/general";
 import styles from "./ServicepointLandingSummary.module.scss";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { setStartDate } from "../state/reducers/formSlice";
+import { Servicepoint } from "../types/backendModels";
 import { FRONT_URL_BASE } from "../types/constants";
 import { getCurrentDate } from "../utils/utilFunctions";
 import MainEntranceLocationPicturesPreview from "./MainEntranceLocationPicturesPreview";
@@ -32,17 +33,18 @@ const ServicepointLandingSummary = ({ header, data }: ServicepointLandingSummary
   };
 
   // Add React components to these arrays.
-  let contents: any = [];
-  const mainEntrance: any = [];
+  let contents: JSX.Element[] = [];
+  const mainEntrance: JSX.Element[] = [];
   let hasData = false;
 
   // If the data is of type servicePointData
   if (data && "servicepoint_id" in data) {
+    const servicepoint = data as Servicepoint;
+
     // Keys of accessibility data values
     const keysToDisplay = ["accessibility_phone", "accessibility_email", "accessibility_www"];
-    const itemList: any = [];
-    hasData = keysToDisplay.some((e) => data[e] !== null);
-    keysToDisplay.map((key) => {
+    hasData = keysToDisplay.some((e) => servicepoint[e] !== null);
+    const itemList = keysToDisplay.map((key) => {
       let title = "";
       switch (key) {
         case "accessibility_phone":
@@ -57,10 +59,10 @@ const ServicepointLandingSummary = ({ header, data }: ServicepointLandingSummary
         default:
           console.log("Incorrect key");
       }
-      itemList.push(
-        <div className={styles.infocontainer}>
+      return (
+        <div key={key} className={styles.infocontainer}>
           <h4>{title}</h4>
-          <p>{data[key] ? data[key] : i18n.t("servicepoint.noInfo")}</p>
+          <p>{servicepoint[key] ? servicepoint[key] : i18n.t("servicepoint.noInfo")}</p>
         </div>
       );
     });
@@ -74,11 +76,11 @@ const ServicepointLandingSummary = ({ header, data }: ServicepointLandingSummary
     hasData = data !== undefined && data.main.length !== 0;
 
     const keys = Object.keys(data);
-    keys.map((key) => {
-      const itemList: any = [];
+    keys.forEach((key) => {
+      const itemList: JSX.Element[] = [];
       let currentTitle = "";
       if (data[key]) {
-        data[key].map((x: any) => {
+        data[key].forEach((x) => {
           if (x.sentence_group_name !== currentTitle) {
             currentTitle = x.sentence_group_name;
             // Add h3 titles in the container

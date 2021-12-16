@@ -1,27 +1,28 @@
 import React from "react";
 import { IconAlertCircle } from "hds-react";
 import { useI18n } from "next-localization";
+import { PreviewPageLandingSummaryProps } from "../types/general";
 import ServicepointLandingSummaryContent from "./ServicepointLandingSummaryContent";
 import styles from "./PreviewPageLandingSummary.module.scss";
 
 // usage: summarizing preview page data component e.g. created sentences (list)
-const PreviewPageLandingSummary = ({ data }: any): JSX.Element => {
+const PreviewPageLandingSummary = ({ data }: PreviewPageLandingSummaryProps): JSX.Element => {
   const i18n = useI18n();
 
   // Add React components to these arrays.
-  let contents: any = [];
-  const mainEntrance: any = [];
+  let contents: JSX.Element[] = [];
+  const mainEntrance: JSX.Element[] = [];
   let hasData = false;
 
   if (data) {
     hasData = data !== undefined && data.main.length !== 0;
 
     const keys = Object.keys(data);
-    keys.map((key) => {
-      const itemList: any = [];
+    keys.forEach((key) => {
+      const itemList: JSX.Element[] = [];
       let currentTitle = "";
       if (data[key]) {
-        data[key].map((x: any) => {
+        data[key].forEach((x) => {
           if (x.sentence_group_name !== currentTitle) {
             currentTitle = x.sentence_group_name;
             // Add h3 titles in the container

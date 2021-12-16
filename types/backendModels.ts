@@ -21,6 +21,7 @@ export interface Servicepoint {
   loc_easting?: number;
   loc_northing?: number;
   location_id?: string;
+  [key: string]: number | string | Date | undefined;
 }
 
 export interface Entrance {
@@ -69,4 +70,11 @@ export interface AnswerLog {
   form_submitted?: string;
   form_cancelled?: string;
   accessibility_editor?: string;
+}
+
+export interface QuestionAnswerPhoto {
+  answer_photo_id: number;
+  log: number;
+  question: number;
+  photo_url?: string;
 }

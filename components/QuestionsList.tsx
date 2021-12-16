@@ -4,7 +4,6 @@ import QuestionRadioButtons from "./QuestionRadioButtons";
 import QuestionContainer from "./QuestionContainer";
 import { QuestionProps, QuestionsListProps } from "../types/general";
 import ContactInformationQuestionContainer from "./ContactInformationQuestionContainer";
-import QuestionInfo from "./QuestionInfo";
 import BlockMainLocationPictureContent from "./BlockMainLocationPictureContent";
 
 // usage: list questions component, should be called once per question block
@@ -12,7 +11,7 @@ const QuestionsList = ({ additionalInfoVisible, questions, answers }: QuestionsL
   return (
     <>
       {questions?.map((question: QuestionProps, ind: number) => {
-        const answerChoices: any = answers
+        const answerChoices = answers
           ?.filter((answer) => answer.question_id === question.question_id)
           .map((choice) => {
             return {

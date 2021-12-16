@@ -1,5 +1,5 @@
 import React from "react";
-import { IconArrowLeft, Card, Notification, IconSignin } from "hds-react";
+import { IconArrowLeft, Card, Notification } from "hds-react";
 import router from "next/router";
 import { useI18n } from "next-localization";
 import Button from "./QuestionButton";
@@ -8,11 +8,11 @@ import { useAppSelector, useAppDispatch } from "../state/hooks";
 import { API_FETCH_ANSWER_LOGS, API_FETCH_QUESTION_ANSWERS, FRONT_URL_BASE } from "../types/constants";
 import { setContinue } from "../state/reducers/formSlice";
 import { getCurrentDate, postData, getClientIp, postAdditionalInfo } from "../utils/utilFunctions";
-
 import AddNewEntranceNotice from "./common/AddNewEntranceNotice";
+import { PreviewControlButtonsProps } from "../types/general";
 
 // usage: controls for preview page
-const PreviewControlButtons = ({ hasHeader }: any): JSX.Element => {
+const PreviewControlButtons = ({ hasHeader }: PreviewControlButtonsProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
 
@@ -31,9 +31,7 @@ const PreviewControlButtons = ({ hasHeader }: any): JSX.Element => {
   };
 
   // TODO: MAKE INTO SMALLER FUNCTIONS
-  const handleSaveDraftClick = async () => {
-    let logId: any;
-
+  const handleSaveDraftClick = async (): Promise<void> => {
     // DATE FOR FINISHED ANSWERING
     const finishedAnswering = getCurrentDate();
 
@@ -59,29 +57,19 @@ const PreviewControlButtons = ({ hasHeader }: any): JSX.Element => {
     };
 
     // POST TO AR_X_ANSWER_LOG. RETURNS NEW LOG_ID USED FOR OTHER POST REQUESTS
-    await fetch(API_FETCH_ANSWER_LOGS, requestOptions)
-      .then((response) => response.json())
-      .then((data) => {
-        logId = data;
-      });
+    const response = await fetch(API_FETCH_ANSWER_LOGS, requestOptions);
+    const logId = await (response.json() as Promise<number>);
 
     // CHECK IF RETURNED LOG_ID IS A NUMBER. IF NOT A NUMBER STOP EXECUTING
-    if (!isNaN(logId)) {
+    if (!Number.isNaN(logId)) {
       // POST ALL QUESTION ANSWERS
       const data = { log: logId, data: curAnsweredChoices };
-      postData(API_FETCH_QUESTION_ANSWERS, data);
-      const parsedAdditionalInfos = Object.keys(additionalInfo).map((key) => {
-        if (!isNaN(Number(key))) return [key, additionalInfo[key]];
-      });
-      if (parsedAdditionalInfos !== undefined) {
-        postAdditionalInfo(logId, parsedAdditionalInfos);
-      }
+      postData(API_FETCH_QUESTION_ANSWERS, JSON.stringify(data));
+      await postAdditionalInfo(logId, additionalInfo.additionalInfo);
       const generateData = { entrance_id: curEntranceId };
       // todo: change static localhost to const
-      postData("http://localhost:8000/api/GenerateSentences/", generateData);
+      postData("http://localhost:8000/api/GenerateSentences/", JSON.stringify(generateData));
       window.location.href = FRONT_URL_BASE;
-    } else {
-      return -1;
     }
 
     // TODO: POST ALL ADDITIONAL INFO

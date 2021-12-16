@@ -28,7 +28,7 @@ import { API_FETCH_ANSWER_LOGS, API_FETCH_ENTRANCES, API_FETCH_SENTENCE_LANGS, A
 import LoadSpinner from "../../components/common/LoadSpinner";
 import { clearAddinfoState } from "../../state/reducers/additionalInfoSlice";
 import { AnswerLog, EntranceResults, Servicepoint, StoredSentence } from "../../types/backendModels";
-import { DetailsProps } from "../../types/general";
+import { AccessibilityData, DetailsProps } from "../../types/general";
 
 // usage: the details / landing page of servicepoint
 const Details = ({ servicepointData, accessibilityData, entranceData, hasExistingFormData, isFinished }: DetailsProps): ReactElement => {
@@ -70,10 +70,10 @@ const Details = ({ servicepointData, accessibilityData, entranceData, hasExistin
   }
 
   // Filter by language
-  const filteredAccessibilityData = Object.keys(accessibilityData).reduce((acc, key) => {
+  const filteredAccessibilityData: AccessibilityData = Object.keys(accessibilityData).reduce((acc, key) => {
     return {
       ...acc,
-      [key]: filterByLanguage(accessibilityData[key]),
+      [key]: filterByLanguage(accessibilityData[key], i18n.locale()),
     };
   }, {});
 
@@ -237,7 +237,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         const LogResp = await fetch(`${API_FETCH_ANSWER_LOGS}?entrance=${mainResultSentences?.entranceResult.entrance_id}&format=json`);
         const logData = await (LogResp.json() as Promise<AnswerLog[]>);
 
-        // TODO: Should the this be true even if the form has not been submitted
+        // TODO: Should this be true even if the form has not been submitted
         hasExistingFormData = logData.length !== 0;
         isFinished = logData.some((e) => e.form_submitted === "Y");
       }

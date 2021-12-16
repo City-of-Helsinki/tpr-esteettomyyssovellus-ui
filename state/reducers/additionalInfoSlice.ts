@@ -1,5 +1,5 @@
 import { createSlice, Dictionary, PayloadAction } from "@reduxjs/toolkit";
-import { AdditionalInfoProps, AdditionalInfos, PictureProps } from "../../types/general";
+import { AdditionalInfoProps, AdditionalInfos, AdditionalInfoStateProps, PictureProps } from "../../types/general";
 
 // TODO: maybe delete this before prod
 // notice: many [questionNumber] OR [qNumber] is actually questionId
@@ -32,13 +32,18 @@ import { AdditionalInfoProps, AdditionalInfos, PictureProps } from "../../types/
 //     components: [],
 //   },
 // };
+const initialState: AdditionalInfoStateProps = {
+  initAddInfoFromDb: false,
+  curEditingInitialState: {},
+  additionalInfo: {},
+};
 
 export const additionalInfoSlice = createSlice({
   name: "additionalInfo",
-  initialState: {} as AdditionalInfoProps,
+  initialState,
   reducers: {
-    clearAddinfoState: (state) => {
-      const initState = {} as AdditionalInfoProps;
+    clearAddinfoState: () => {
+      const initState = {} as AdditionalInfoStateProps;
       return {
         ...initState,
       };
@@ -46,8 +51,7 @@ export const additionalInfoSlice = createSlice({
     setInitAdditionalInfoFromDb: (
       state,
       action: PayloadAction<{
-        // should be boolean
-        isInited: any;
+        isInited: boolean;
       }>
     ) => {
       return {
@@ -58,7 +62,7 @@ export const additionalInfoSlice = createSlice({
     setEditingInitialState: (
       state,
       action: PayloadAction<{
-        obj: any;
+        obj: AdditionalInfoProps;
       }>
     ) => {
       const { obj } = action.payload;
@@ -89,12 +93,15 @@ export const additionalInfoSlice = createSlice({
       const { locEasting } = action.payload;
       return {
         ...state,
-        [qId]: {
-          ...state[qId],
-          locations: {
-            coordinates,
-            locNorthing,
-            locEasting,
+        additionalInfo: {
+          ...state.additionalInfo,
+          [qId]: {
+            ...state.additionalInfo[qId],
+            locations: {
+              coordinates,
+              locNorthing,
+              locEasting,
+            },
           },
         },
       };
@@ -108,9 +115,12 @@ export const additionalInfoSlice = createSlice({
       const qId = action.payload.questionId;
       return {
         ...state,
-        [qId]: {
-          ...state[qId],
-          locations: {},
+        additionalInfo: {
+          ...state.additionalInfo,
+          [qId]: {
+            ...state.additionalInfo[qId],
+            locations: {},
+          },
         },
       };
     },
@@ -118,9 +128,12 @@ export const additionalInfoSlice = createSlice({
       const { qNumber } = action.payload;
       return {
         ...state,
-        [qNumber]: {
-          ...state[qNumber],
-          pictures: [...(state[qNumber]?.pictures ?? []), action.payload],
+        additionalInfo: {
+          ...state.additionalInfo,
+          [qNumber]: {
+            ...state.additionalInfo[qNumber],
+            pictures: [...(state.additionalInfo[qNumber]?.pictures ?? []), action.payload],
+          },
         },
       };
     },
@@ -128,9 +141,12 @@ export const additionalInfoSlice = createSlice({
       const qNumber = action.payload.questionId;
       return {
         ...state,
-        [qNumber]: {
-          ...state[qNumber],
-          comments: {},
+        additionalInfo: {
+          ...state.additionalInfo,
+          [qNumber]: {
+            ...state.additionalInfo[qNumber],
+            comments: {},
+          },
         },
       };
     },
@@ -139,9 +155,12 @@ export const additionalInfoSlice = createSlice({
       const id = action.payload.currentId;
       return {
         ...state,
-        [qNumber]: {
-          ...state[qNumber],
-          pictures: [...(state[qNumber].pictures?.filter((picture) => picture.id !== id) ?? [])],
+        additionalInfo: {
+          ...state.additionalInfo,
+          [qNumber]: {
+            ...state.additionalInfo[qNumber],
+            pictures: [...(state.additionalInfo[qNumber].pictures?.filter((picture) => picture.id !== id) ?? [])],
+          },
         },
       };
     },
@@ -160,9 +179,12 @@ export const additionalInfoSlice = createSlice({
 
       return {
         ...state,
-        [qNumber]: {
-          ...state[qNumber],
-          comments: { ...state[qNumber]?.comments, [lang]: value },
+        additionalInfo: {
+          ...state.additionalInfo,
+          [qNumber]: {
+            ...state.additionalInfo[qNumber],
+            comments: { ...state.additionalInfo[qNumber]?.comments, [lang]: value },
+          },
         },
       };
     },
@@ -179,9 +201,12 @@ export const additionalInfoSlice = createSlice({
       const { id } = action.payload;
       return {
         ...state,
-        [qNumber]: {
-          ...state[qNumber],
-          components: [...(state[qNumber]?.components ?? []), { id, type }],
+        additionalInfo: {
+          ...state.additionalInfo,
+          [qNumber]: {
+            ...state.additionalInfo[qNumber],
+            components: [...(state.additionalInfo[qNumber]?.components ?? []), { id, type }],
+          },
         },
       };
     },
@@ -190,9 +215,12 @@ export const additionalInfoSlice = createSlice({
       const id = action.payload.delId;
       return {
         ...state,
-        [qNumber]: {
-          ...state[qNumber],
-          components: [...(state[qNumber]?.components?.filter((elem) => elem.id !== id) ?? [])],
+        additionalInfo: {
+          ...state.additionalInfo,
+          [qNumber]: {
+            ...state.additionalInfo[qNumber],
+            components: [...(state.additionalInfo[qNumber]?.components?.filter((elem) => elem.id !== id) ?? [])],
+          },
         },
       };
     },
@@ -210,7 +238,7 @@ export const additionalInfoSlice = createSlice({
       const { value } = action.payload;
       const id = action.payload.compId;
 
-      let targetPic = state[qNumber]?.pictures?.find((pic) => pic.id === id);
+      let targetPic = state.additionalInfo[qNumber]?.pictures?.find((pic) => pic.id === id);
 
       if (!targetPic) {
         return { ...state };
@@ -220,9 +248,12 @@ export const additionalInfoSlice = createSlice({
 
       return {
         ...state,
-        [qNumber]: {
-          ...state[qNumber],
-          pictures: [...(state[qNumber]?.pictures?.filter((pic) => pic.id !== id) || []), targetPic],
+        additionalInfo: {
+          ...state.additionalInfo,
+          [qNumber]: {
+            ...state.additionalInfo[qNumber],
+            pictures: [...(state.additionalInfo[qNumber]?.pictures?.filter((pic) => pic.id !== id) || []), targetPic],
+          },
         },
       };
     },
@@ -238,7 +269,7 @@ export const additionalInfoSlice = createSlice({
       const { source } = action.payload;
       const id = action.payload.compId;
 
-      let targetPic = state[qNumber]?.pictures?.find((pic) => pic.id === id);
+      let targetPic = state.additionalInfo[qNumber]?.pictures?.find((pic) => pic.id === id);
 
       if (!targetPic) {
         return { ...state };
@@ -248,9 +279,12 @@ export const additionalInfoSlice = createSlice({
 
       return {
         ...state,
-        [qNumber]: {
-          ...state[qNumber],
-          pictures: [...(state[qNumber]?.pictures?.filter((pic) => pic.id !== id) || []), targetPic],
+        additionalInfo: {
+          ...state.additionalInfo,
+          [qNumber]: {
+            ...state.additionalInfo[qNumber],
+            pictures: [...(state.additionalInfo[qNumber]?.pictures?.filter((pic) => pic.id !== id) || []), targetPic],
+          },
         },
       };
     },
@@ -258,7 +292,10 @@ export const additionalInfoSlice = createSlice({
       const qNumber = action.payload.questionId;
       return {
         ...state,
-        [qNumber]: {},
+        additionalInfo: {
+          ...state.additionalInfo,
+          [qNumber]: {},
+        },
       };
     },
     setPreviousInitStateAdditionalinfo: (
@@ -272,7 +309,10 @@ export const additionalInfoSlice = createSlice({
       const { prevState } = action.payload;
       return {
         ...state,
-        [qNumber]: prevState,
+        additionalInfo: {
+          ...state.additionalInfo,
+          [qNumber]: prevState,
+        },
       };
     },
     addInvalidValues: (
@@ -287,24 +327,26 @@ export const additionalInfoSlice = createSlice({
       const { compId } = action.payload;
       const values = action.payload.invalidAnswers;
 
-      const targetInvalid = state[qId]?.invalidValues?.find((invalids) => invalids.id === compId);
+      const targetInvalid = state.additionalInfo[qId]?.invalidValues?.find((invalids) => invalids.id === compId);
 
-      const invalidInitDublicates =
+      const invalidInitDuplicates =
         targetInvalid && targetInvalid?.invalidAnswers && targetInvalid?.invalidAnswers.length > 0
           ? targetInvalid?.invalidAnswers?.concat(values)
           : values;
 
-      // @ts-ignore
-      const newInvaRemoveDublicates = [...new Set(invalidInitDublicates)];
+      const newInvaRemoveDuplicates = [...invalidInitDuplicates.filter((v, i, a) => v && a.indexOf(v) === i)];
 
       return {
         ...state,
-        [qId]: {
-          ...state[qId],
-          invalidValues: [
-            ...(state[qId]?.invalidValues?.filter((invs) => invs.id !== compId) ?? []),
-            { id: compId, invalidAnswers: newInvaRemoveDublicates },
-          ],
+        additionalInfo: {
+          ...state.additionalInfo,
+          [qId]: {
+            ...state.additionalInfo[qId],
+            invalidValues: [
+              ...(state.additionalInfo[qId]?.invalidValues?.filter((invs) => invs.id !== compId) ?? []),
+              { id: compId, invalidAnswers: newInvaRemoveDuplicates },
+            ],
+          },
         },
       };
     },
@@ -319,13 +361,19 @@ export const additionalInfoSlice = createSlice({
       const qId = action.payload.questionId;
       const { compId } = action.payload;
       const remoTarget = action.payload.removeTarget;
-      const targetInvalid = state[qId]?.invalidValues?.find((invalids) => invalids.id === compId);
+      const targetInvalid = state.additionalInfo[qId]?.invalidValues?.find((invalids) => invalids.id === compId);
       const newInvalids = targetInvalid ? targetInvalid.invalidAnswers?.filter((val) => val !== remoTarget) : [];
       return {
         ...state,
-        [qId]: {
-          ...state[qId],
-          invalidValues: [...(state[qId].invalidValues?.filter((values) => values.id !== compId) || []), { id: compId, invalidAnswers: newInvalids }],
+        additionalInfo: {
+          ...state.additionalInfo,
+          [qId]: {
+            ...state.additionalInfo[qId],
+            invalidValues: [
+              ...(state.additionalInfo[qId].invalidValues?.filter((values) => values.id !== compId) || []),
+              { id: compId, invalidAnswers: newInvalids },
+            ],
+          },
         },
       };
     },
@@ -338,12 +386,15 @@ export const additionalInfoSlice = createSlice({
     ) => {
       const qId = action.payload.questionId;
       const { compId } = action.payload;
-      const invalidTargetRemoved = state[qId]?.invalidValues?.filter((invalids) => invalids.id !== compId);
+      const invalidTargetRemoved = state.additionalInfo[qId]?.invalidValues?.filter((invalids) => invalids.id !== compId);
       return {
         ...state,
-        [qId]: {
-          ...state[qId],
-          invalidValues: invalidTargetRemoved,
+        additionalInfo: {
+          ...state.additionalInfo,
+          [qId]: {
+            ...state.additionalInfo[qId],
+            invalidValues: invalidTargetRemoved,
+          },
         },
       };
     },

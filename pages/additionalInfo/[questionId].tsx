@@ -30,7 +30,7 @@ const AdditionalInfo = ({ questionId, questionData }: AdditionalInfoPageProps): 
   const [increasingId, setIncreasingId] = useState(0);
   const isLoading = useLoading();
   const dispatch = useAppDispatch();
-  const curAdditionalInfo: any = useAppSelector((state) => state.additionalInfoReducer[questionId] as AdditionalInfoProps);
+  const curAdditionalInfo = useAppSelector((state) => state.additionalInfoReducer.additionalInfo[questionId] as AdditionalInfoProps);
 
   // check/init addinfo can add comment / location and number of pictures able to add
   // disable control buttons for adding these components respectively
