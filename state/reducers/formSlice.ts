@@ -4,7 +4,7 @@ import { MainPictureProps } from "../../types/general";
 interface formState {
   currentServicepointId: number;
   currentEntranceId: number;
-  answeredChoices: string[];
+  answeredChoices: number[];
   answers: { [key: number]: number };
   isContinueClicked: boolean;
   finishedBlocks: number[];
@@ -65,13 +65,13 @@ export const formSlice = createSlice({
         currentEntranceId: action.payload,
       };
     },
-    setAnsweredChoice: (state, action: PayloadAction<string>) => {
+    setAnsweredChoice: (state, action: PayloadAction<number>) => {
       return {
         ...state,
         answeredChoices: [...state.answeredChoices, action.payload],
       };
     },
-    removeAnsweredChoice: (state, action: PayloadAction<string>) => {
+    removeAnsweredChoice: (state, action: PayloadAction<number>) => {
       return {
         ...state,
         answeredChoices: [...(state.answeredChoices?.filter((elem) => elem !== action.payload) ?? [])],

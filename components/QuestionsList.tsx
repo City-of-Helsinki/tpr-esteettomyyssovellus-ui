@@ -2,7 +2,8 @@ import React from "react";
 import QuestionDropdown from "./QuestionDropdown";
 import QuestionRadioButtons from "./QuestionRadioButtons";
 import QuestionContainer from "./QuestionContainer";
-import { QuestionProps, QuestionsListProps } from "../types/general";
+import { BackendQuestion } from "../types/backendModels";
+import { QuestionsListProps } from "../types/general";
 import ContactInformationQuestionContainer from "./ContactInformationQuestionContainer";
 import BlockMainLocationPictureContent from "./BlockMainLocationPictureContent";
 
@@ -10,7 +11,7 @@ import BlockMainLocationPictureContent from "./BlockMainLocationPictureContent";
 const QuestionsList = ({ additionalInfoVisible, questions, answers }: QuestionsListProps): JSX.Element => {
   return (
     <>
-      {questions?.map((question: QuestionProps, ind: number) => {
+      {questions?.map((question: BackendQuestion, ind: number) => {
         const answerChoices = answers
           ?.filter((answer) => answer.question_id === question.question_id)
           .map((choice) => {

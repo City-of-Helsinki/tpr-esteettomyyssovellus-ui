@@ -25,7 +25,19 @@ import {
 } from "../../types/constants";
 import { useAppSelector, useAppDispatch, useLoading } from "../../state/hooks";
 import QuestionBlock from "../../components/QuestionBlock";
-import { AddInfoPhoto, AddInfoPhotoText, MainEntranceFormProps, QuestionBlockProps } from "../../types/general";
+import {
+  BackendEntranceAnswer,
+  BackendQuestion,
+  BackendQuestionBlock,
+  BackendQuestionChoice,
+  Entrance,
+  QuestionAnswerComment,
+  QuestionAnswerLocation,
+  QuestionAnswerPhoto,
+  QuestionAnswerPhotoTxt,
+  Servicepoint,
+} from "../../types/backendModels";
+import { MainEntranceFormProps } from "../../types/general";
 import HeadlineQuestionContainer from "../../components/HeadlineQuestionContainer";
 
 import QuestionFormCtrlButtons from "../../components/QuestionFormCtrlButtons";
@@ -44,7 +56,7 @@ import {
   setStartDate,
   setWwwAddress,
 } from "../../state/reducers/formSlice";
-import ContactInformationQuestionContainer from "../../components/ContactInformationQuestionContainer";
+// import ContactInformationQuestionContainer from "../../components/ContactInformationQuestionContainer";
 import {
   addComment,
   addComponent,
@@ -60,12 +72,12 @@ import LoadSpinner from "../../components/common/LoadSpinner";
 
 // usage: the main form / pääsisäänkäynti page
 const AccessibilityEdit = ({
-  QuestionsData,
-  QuestionChoicesData,
-  QuestionBlocksData,
-  QuestionAnswerData,
-  ServicepointData,
-  AdditionalInfosData,
+  questionsData,
+  questionChoicesData,
+  questionBlocksData,
+  questionAnswerData,
+  servicepointData,
+  additionalInfosData,
   form_id,
   entrance_id,
 }: MainEntranceFormProps): ReactElement => {
@@ -87,13 +99,15 @@ const AccessibilityEdit = ({
   const additionalInfoInitedFromDb = useAppSelector((state) => state.additionalInfoReducer.initAddInfoFromDb);
   const isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
   const startedAnswering = useAppSelector((state) => state.formReducer.startedAnswering);
-  const treeItems = [ServicepointData.servicepoint_name, "PH: Esteettömyystiedot"];
+  const curAnswers = useAppSelector((state) => state.formReducer.answers);
+
+  const treeItems = [servicepointData.servicepoint_name, "PH: Esteettömyystiedot"];
 
   // validates contactinfo data and sets to state
-  if (ServicepointData !== undefined && !formInited) {
-    const phoneNumber = ServicepointData.accessibility_phone;
-    const email = ServicepointData.accessibility_email;
-    const www = ServicepointData.accessibility_www;
+  if (servicepointData !== undefined && !formInited) {
+    const phoneNumber = servicepointData.accessibility_phone ?? "";
+    const email = servicepointData.accessibility_email ?? "";
+    const www = servicepointData.accessibility_www ?? "";
 
     const phonePattern = new RegExp(PHONE_REGEX);
     const emailPattern = new RegExp(EMAIL_REGEX);
@@ -101,8 +115,8 @@ const AccessibilityEdit = ({
     dispatch(setPhoneNumber(phoneNumber));
     dispatch(setEmail(email));
     dispatch(setWwwAddress(www));
-    dispatch(setServicepointId(ServicepointData.servicepoint_id));
-    dispatch(setEntranceId(Number(entrance_id!)));
+    dispatch(setServicepointId(servicepointData.servicepoint_id));
+    dispatch(setEntranceId(Number(entrance_id)));
     if (startedAnswering === "") dispatch(setStartDate(getCurrentDate()));
 
     // VALIDATE PHONE
@@ -125,17 +139,17 @@ const AccessibilityEdit = ({
   }
 
   // loop additional info to state if first landing to form page and if data found
-  if (AdditionalInfosData && !additionalInfoInitedFromDb) {
+  if (additionalInfosData && !additionalInfoInitedFromDb) {
     // dispatch(removeImproperlySavedAddInfos());
     dispatch(setInitAdditionalInfoFromDb({ isInited: true }));
-    if (AdditionalInfosData.comments) {
-      AdditionalInfosData.comments.forEach((comment) => {
+    if (additionalInfosData.comments) {
+      additionalInfosData.comments.forEach((comment) => {
         const curLangStr = LANGUAGE_LOCALES[comment.language];
         dispatch(
           addComment({
             questionId: comment.question,
             language: curLangStr,
-            value: comment.comment,
+            value: comment.comment ?? "",
           })
         );
         // little hacky, only add component for the 1st language => fi (mandatory) for not adding 3 components if all languages
@@ -150,14 +164,14 @@ const AccessibilityEdit = ({
         }
       });
     }
-    if (AdditionalInfosData.locations) {
-      AdditionalInfosData.locations.forEach((location) => {
+    if (additionalInfosData.locations) {
+      additionalInfosData.locations.forEach((location) => {
         dispatch(
           addLocation({
             questionId: location.question,
-            coordinates: [location.loc_northing, location.loc_easting],
-            locNorthing: location.loc_northing,
-            locEasting: location.loc_easting,
+            coordinates: [location.loc_northing ?? 0, location.loc_easting ?? 0],
+            locNorthing: location.loc_northing ?? 0,
+            locEasting: location.loc_easting ?? 0,
           })
         );
         dispatch(
@@ -170,8 +184,8 @@ const AccessibilityEdit = ({
       });
     }
 
-    if (AdditionalInfosData.photos) {
-      AdditionalInfosData.photos.forEach((photo: AddInfoPhoto) => {
+    if (additionalInfosData.photos) {
+      additionalInfosData.photos.forEach((photo: QuestionAnswerPhoto) => {
         const picture = {
           qNumber: photo.question,
           id: photo.answer_photo_id,
@@ -191,16 +205,16 @@ const AccessibilityEdit = ({
           })
         );
 
-        if (AdditionalInfosData.phototexts) {
-          const curPhotoAlts = AdditionalInfosData.phototexts.filter((phototext) => phototext.answer_photo === photo.answer_photo_id);
+        if (additionalInfosData.phototexts) {
+          const curPhotoAlts = additionalInfosData.phototexts.filter((phototext) => phototext.answer_photo === photo.answer_photo_id);
           if (curPhotoAlts) {
-            curPhotoAlts.forEach((alt: AddInfoPhotoText) => {
+            curPhotoAlts.forEach((alt: QuestionAnswerPhotoTxt) => {
               const curLangStr = LANGUAGE_LOCALES[alt.language];
               dispatch(
                 setAlt({
                   questionId: photo.question,
                   language: curLangStr,
-                  value: alt.photo_text,
+                  value: alt.photo_text ?? "",
                   compId: photo.answer_photo_id,
                 })
               );
@@ -214,14 +228,12 @@ const AccessibilityEdit = ({
   // clear addinfo initState
   dispatch(clearEditingInitialState());
 
-  if (Object.keys(QuestionAnswerData).length !== 0) {
-    const curAnswers = useAppSelector((state) => state.formReducer.answers);
-    QuestionAnswerData.map((a: any) => {
+  if (Object.keys(questionAnswerData).length !== 0) {
+    questionAnswerData.forEach((a: BackendEntranceAnswer) => {
       const questionNumber = a.question_id;
       const answer = a.question_choice_id;
-      const answerString = answer;
-      if (!curAnsweredChoices.includes(answer) && curAnswers[questionNumber] === undefined) {
-        dispatch(setAnsweredChoice(answerString));
+      if (!!questionNumber && !!answer && !curAnsweredChoices.includes(answer) && curAnswers[questionNumber] === undefined) {
+        dispatch(setAnsweredChoice(answer));
         dispatch(setAnswer({ questionNumber, answer }));
       }
     });
@@ -229,18 +241,15 @@ const AccessibilityEdit = ({
 
   // map visible blocks & questions & answers
   const nextBlock = 0;
-  let lastBlockNumber = "";
+  // const lastBlockNumber = "";
   const visibleBlocks =
-    QuestionBlocksData && QuestionsData && QuestionChoicesData
-      ? QuestionBlocksData.map((block: QuestionBlockProps) => {
+    questionBlocksData && questionsData && questionChoicesData
+      ? questionBlocksData.map((block: BackendQuestionBlock) => {
           // The visible_if_question_choice is sometimes of form "1231+1231+12313+etc"
           const visibleQuestions = block.visible_if_question_choice?.split("+");
 
           const answersIncludeAllVisibleQuestions = visibleQuestions
-            ? visibleQuestions.some((elem) =>
-                // @ts-ignore: For some reason curAnsweredChoices type string[] contains numbers O_o
-                curAnsweredChoices.includes(Number(elem))
-              )
+            ? visibleQuestions.some((elem) => curAnsweredChoices.includes(Number(elem)))
             : false;
 
           const isVisible =
@@ -248,14 +257,14 @@ const AccessibilityEdit = ({
             (answersIncludeAllVisibleQuestions && block.language_id === curLocaleId && isContinueClicked);
 
           const blockQuestions = isVisible
-            ? QuestionsData.filter((question) => question.question_block_id === block.question_block_id && question.language_id === curLocaleId)
+            ? questionsData.filter((question) => question.question_block_id === block.question_block_id && question.language_id === curLocaleId)
             : null;
 
           const answerChoices = isVisible
-            ? QuestionChoicesData.filter((choice) => choice.question_block_id === block.question_block_id && choice.language_id === curLocaleId)
+            ? questionChoicesData.filter((choice) => choice.question_block_id === block.question_block_id && choice.language_id === curLocaleId)
             : null;
 
-          if (isVisible && blockQuestions && answerChoices && block.question_block_code !== undefined) lastBlockNumber = block.question_block_code;
+          // if (isVisible && blockQuestions && answerChoices && block.question_block_code !== undefined) lastBlockNumber = block.question_block_code;
 
           return isVisible && blockQuestions && answerChoices && block.question_block_id !== undefined ? (
             <HeadlineQuestionContainer
@@ -304,10 +313,8 @@ const AccessibilityEdit = ({
   //   );
   // }
 
-  const visibleQuestionChoices = QuestionChoicesData?.filter((choice) => {
-    if (visibleBlocks?.map((elem) => Number(elem?.key)).includes(choice.question_block_id!)) {
-      return choice.question_choice_id;
-    }
+  const visibleQuestionChoices = questionChoicesData?.filter((choice) => {
+    return !!choice.question_block_id && visibleBlocks?.map((elem) => Number(elem?.key)).includes(choice.question_block_id);
   });
 
   // if returning from additional info page -> init page to correct location / question
@@ -346,7 +353,7 @@ const AccessibilityEdit = ({
               </QuestionInfo>
             </div>
             <div className={styles.headingcontainer}>
-              <h1>{ServicepointData.servicepoint_name}</h1>
+              <h1>{servicepointData.servicepoint_name}</h1>
               <h2>{form_id === 0 ? i18n.t("common.mainEntrance") : i18n.t("common.additionalEntrance")}</h2>
             </div>
             <div>
@@ -383,84 +390,84 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   // if (user && user.authenticated) {
   //   initialReduxState.general.user = user;
   // }
-  let QuestionsData;
-  let QuestionChoicesData;
-  let QuestionBlocksData;
-  let QuestionAnswerData;
-  let EntranceData;
-  let ServicepointData;
-  let AdditionalInfosData = {};
-  let AddInfoCommentsData;
-  let AddInfoLocationsData;
-  let AddInfoPhotosData;
-  let AddInfoPhotoTextsData;
+  let questionsData;
+  let questionChoicesData;
+  let questionBlocksData;
+  let questionAnswerData;
+  let entranceData;
+  let servicepointData;
+  let additionalInfosData = {};
+  let addInfoCommentsData;
+  let addInfoLocationsData;
+  let addInfoPhotosData;
+  let addInfoPhotoTextsData;
   let form_id = 0;
   let entrance_id: string | string[] | undefined = "";
   if (params !== undefined) {
     try {
       entrance_id = params.entranceId;
       const EntranceResp = await fetch(`${API_FETCH_ENTRANCES}${entrance_id}/?format=json`);
-      EntranceData = await EntranceResp.json();
-      const servicepoint_id = EntranceData.servicepoint;
-      form_id = EntranceData.form;
+      entranceData = await (EntranceResp.json() as Promise<Entrance>);
+
+      const servicepoint_id = entranceData.servicepoint;
+      form_id = entranceData.form;
+
       const QuestionsResp = await fetch(API_FETCH_QUESTION_URL + form_id);
       const QuestionChoicesResp = await fetch(API_FETCH_QUESTIONCHOICES + form_id);
       const QuestionBlocksResp = await fetch(API_FETCH_QUESTIONBLOCK_URL + form_id);
       const QuestionAnswersResp = await fetch(`${API_FETCH_BACKEND_ENTRANCE_ANSWERS}?entrance_id=${entrance_id}&format=json`);
-
       const ServicepointResp = await fetch(`${API_FETCH_SERVICEPOINTS}${servicepoint_id}/?format=json`);
-      QuestionsData = await QuestionsResp.json();
-      QuestionChoicesData = await QuestionChoicesResp.json();
-      QuestionBlocksData = await QuestionBlocksResp.json();
-      QuestionAnswerData = await QuestionAnswersResp.json();
-      ServicepointData = await ServicepointResp.json();
-      if (QuestionAnswerData.length !== 0) {
+
+      questionsData = await (QuestionsResp.json() as Promise<BackendQuestion[]>);
+      questionChoicesData = await (QuestionChoicesResp.json() as Promise<BackendQuestionChoice[]>);
+      questionBlocksData = await (QuestionBlocksResp.json() as Promise<BackendQuestionBlock[]>);
+      questionAnswerData = await (QuestionAnswersResp.json() as Promise<BackendEntranceAnswer[]>);
+      servicepointData = await (ServicepointResp.json() as Promise<Servicepoint>);
+
+      if (questionAnswerData.length !== 0) {
         const logId =
-          (await QuestionAnswerData.sort((a: any, b: any) => {
-            return b.log_id - a.log_id;
-          })[0].log_id) ?? -1;
+          questionAnswerData.sort((a: BackendEntranceAnswer, b: BackendEntranceAnswer) => {
+            return (b.log_id ?? 0) - (a.log_id ?? 0);
+          })[0].log_id ?? -1;
 
         if (logId && logId >= 0) {
           const AddInfoComments = await fetch(`${API_FETCH_QUESTION_ANSWER_COMMENTS}?log=${logId}`);
-
           const AddInfoLocations = await fetch(`${API_FETCH_QUESTION_ANSWER_LOCATIONS}?log=${logId}`);
-
           const AddInfoPhotos = await fetch(`${API_FETCH_QUESTION_ANSWER_PHOTOS}?log=${logId}`);
-
           const AddInfoPhotoTexts = await fetch(`${API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS}?log=${logId}`);
 
-          AddInfoCommentsData = await AddInfoComments.json();
-          AddInfoLocationsData = await AddInfoLocations.json();
-          AddInfoPhotosData = await AddInfoPhotos.json();
-          AddInfoPhotoTextsData = await AddInfoPhotoTexts.json();
+          addInfoCommentsData = await (AddInfoComments.json() as Promise<QuestionAnswerComment[]>);
+          addInfoLocationsData = await (AddInfoLocations.json() as Promise<QuestionAnswerLocation[]>);
+          addInfoPhotosData = await (AddInfoPhotos.json() as Promise<QuestionAnswerPhoto[]>);
+          addInfoPhotoTextsData = await (AddInfoPhotoTexts.json() as Promise<QuestionAnswerPhotoTxt[]>);
 
-          AdditionalInfosData = {
-            comments: AddInfoCommentsData,
-            locations: AddInfoLocationsData,
-            photos: AddInfoPhotosData,
-            phototexts: AddInfoPhotoTextsData,
+          additionalInfosData = {
+            comments: addInfoCommentsData,
+            locations: addInfoLocationsData,
+            photos: addInfoPhotosData,
+            phototexts: addInfoPhotoTextsData,
           };
         }
       }
     } catch (e) {
-      QuestionsData = {};
-      QuestionChoicesData = {};
-      QuestionBlocksData = {};
-      QuestionAnswerData = {};
-      EntranceData = {};
-      ServicepointData = {};
-      AdditionalInfosData = {};
+      questionsData = {};
+      questionChoicesData = {};
+      questionBlocksData = {};
+      questionAnswerData = {};
+      entranceData = {};
+      servicepointData = {};
+      additionalInfosData = {};
     }
   }
   return {
     props: {
       form_id,
-      QuestionsData,
-      QuestionChoicesData,
-      QuestionBlocksData,
-      QuestionAnswerData,
-      ServicepointData,
-      AdditionalInfosData,
+      questionsData,
+      questionChoicesData,
+      questionBlocksData,
+      questionAnswerData,
+      servicepointData,
+      additionalInfosData,
       entrance_id,
       lngDict,
     },

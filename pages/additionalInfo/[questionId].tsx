@@ -3,7 +3,6 @@ import { useI18n } from "next-localization";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
 import { IconCrossCircle, IconLink, IconLocation, IconQuestionCircle, IconSpeechbubbleText, IconUpload } from "hds-react";
-import { Dictionary } from "@reduxjs/toolkit";
 import Layout from "../../components/common/Layout";
 import i18nLoader from "../../utils/i18n";
 import styles from "./additionalInfo.module.scss";
@@ -16,7 +15,8 @@ import AdditionalInfoPicturesContent from "../../components/AdditionalInfoPictur
 import AdditionalInfoCommentContent from "../../components/AdditionalInfoCommentContent";
 import { addComponent, removeAllInvalids, removeComponent, setEditingInitialState } from "../../state/reducers/additionalInfoSlice";
 import { useAppSelector, useAppDispatch, useLoading } from "../../state/hooks";
-import { AdditionalComponentProps, AdditionalInfoPageProps, AdditionalInfoProps } from "../../types/general";
+import { BackendQuestion } from "../../types/backendModels";
+import { AdditionalComponentProps, AdditionalInfoPageProps, AdditionalInfos, ElementCountProps } from "../../types/general";
 import { LANGUAGE_LOCALES, API_FETCH_BACKEND_QUESTIONS } from "../../types/constants";
 import { setCurrentlyEditingQuestion } from "../../state/reducers/generalSlice";
 import LoadSpinner from "../../components/common/LoadSpinner";
@@ -30,7 +30,7 @@ const AdditionalInfo = ({ questionId, questionData }: AdditionalInfoPageProps): 
   const [increasingId, setIncreasingId] = useState(0);
   const isLoading = useLoading();
   const dispatch = useAppDispatch();
-  const curAdditionalInfo = useAppSelector((state) => state.additionalInfoReducer.additionalInfo[questionId] as AdditionalInfoProps);
+  const curAdditionalInfo = useAppSelector((state) => state.additionalInfoReducer.additionalInfo[questionId] as AdditionalInfos);
 
   // check/init addinfo can add comment / location and number of pictures able to add
   // disable control buttons for adding these components respectively
@@ -38,20 +38,19 @@ const AdditionalInfo = ({ questionId, questionData }: AdditionalInfoPageProps): 
   const photoMaxCount = questionData && questionData[0].can_add_photo_max_count ? questionData[0]?.can_add_photo_max_count : -1;
   const canAddLocationCount = questionData && questionData[0].can_add_location === "Y" ? 0 : -1;
 
-  const filterByLanguage = (data: any) => {
-    const i18n = useI18n();
+  const filterByLanguage = (data: BackendQuestion[]) => {
     const curLocale: string = i18n.locale();
-    // @ts-ignore:
+    // @ts-ignore: TODO:
     const curLocaleId: number = LANGUAGE_LOCALES[curLocale];
-    return data.filter((entry: any) => {
+    return data.filter((entry: BackendQuestion) => {
       return entry.language_id === curLocaleId;
     });
   };
 
-  const questionDataCurrentLanguage = filterByLanguage(questionData).pop();
+  const questionDataCurrentLanguage = questionData ? filterByLanguage(questionData).pop() : undefined;
 
   // element counts for control buttons
-  const [elementCounts, setElementCounts]: any = useState({
+  const [elementCounts, setElementCounts] = useState<ElementCountProps>({
     comment: 0,
     upload: 0,
     link: 0,
@@ -60,7 +59,7 @@ const AdditionalInfo = ({ questionId, questionData }: AdditionalInfoPageProps): 
 
   // add element to addinfo page, increment elementCounts
   const handleAddElement = (type: string) => {
-    setElementCounts((prevCounts: any) => ({
+    setElementCounts((prevCounts: ElementCountProps) => ({
       ...prevCounts,
       [type]: elementCounts[type] + 1,
     }));
@@ -76,7 +75,7 @@ const AdditionalInfo = ({ questionId, questionData }: AdditionalInfoPageProps): 
 
   // remove component, decrease elementCount, remove invalid validations from that component
   const handleDelete = (deleteId: number, type: string) => {
-    setElementCounts((prevCounts: any) => ({
+    setElementCounts((prevCounts: ElementCountProps) => ({
       ...prevCounts,
       [type]: elementCounts[type] - 1,
     }));
@@ -88,10 +87,9 @@ const AdditionalInfo = ({ questionId, questionData }: AdditionalInfoPageProps): 
   useEffect(() => {
     dispatch(setCurrentlyEditingQuestion(questionId));
 
-    const highestIdState = Math.max.apply(
-      Math,
-      curAdditionalInfo?.components?.map((comp: any) => comp.id)
-    );
+    const highestIdState = curAdditionalInfo.components
+      ? Math.max(...curAdditionalInfo.components.map((comp: AdditionalComponentProps) => comp.id))
+      : -1;
 
     const highestExistingId = curAdditionalInfo?.components ? curAdditionalInfo.components.length + highestIdState : highestIdState;
 
@@ -102,19 +100,19 @@ const AdditionalInfo = ({ questionId, questionData }: AdditionalInfoPageProps): 
     if (curAdditionalInfo && Object.entries(curAdditionalInfo).length > 0) {
       dispatch(
         setEditingInitialState({
-          obj: curAdditionalInfo,
+          obj: { [questionId]: curAdditionalInfo },
         })
       );
 
       // set component amounts correct with states components to disable buttons respectively
-      curAdditionalInfo.components?.forEach((comp: Dictionary<any>) => {
-        setElementCounts((prevCounts: any) => ({
+      curAdditionalInfo.components?.forEach((comp: AdditionalComponentProps) => {
+        setElementCounts((prevCounts: ElementCountProps) => ({
           ...prevCounts,
           [comp.type]: elementCounts[comp.type] + 1,
         }));
       });
     }
-  }, []);
+  }, [curAdditionalInfo, elementCounts, questionId, dispatch]);
 
   return (
     <Layout>
@@ -141,8 +139,8 @@ const AdditionalInfo = ({ questionId, questionData }: AdditionalInfoPageProps): 
               <AdditionalInfoCtrlButtons questionId={questionId} />
               <div>
                 <div className={styles.mainheader}>
-                  <p>{questionDataCurrentLanguage.question_code ?? null}</p>
-                  <p className={styles.headerspacing}>{questionDataCurrentLanguage.text ?? null}</p>
+                  <p>{questionDataCurrentLanguage?.question_code ?? null}</p>
+                  <p className={styles.headerspacing}>{questionDataCurrentLanguage?.text ?? null}</p>
                 </div>
                 <div className={styles.maininfoctrl}>{i18n.t("additionalInfo.mainInfoText")}</div>
               </div>
@@ -198,11 +196,12 @@ const AdditionalInfo = ({ questionId, questionData }: AdditionalInfoPageProps): 
                           questionId={questionId}
                           compId={id}
                           onDelete={() => handleDelete(id, "location")}
-                          initValue={curAdditionalInfo.location ?? null}
+                          initValue={curAdditionalInfo.locations ?? null}
                         />
                       </div>
                     );
                   }
+                  return <></>;
                 })}
               </div>
               <div className={styles.editedelementsctrl}>
@@ -271,7 +270,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   const questionId = Number(params?.questionId) ?? null;
 
   const questionDataReq = await fetch(`${API_FETCH_BACKEND_QUESTIONS}?question_id=${questionId}&format=json`);
-  const questionData = await questionDataReq.json();
+  const questionData = await (questionDataReq.json() as Promise<BackendQuestion[]>);
 
   return {
     props: {

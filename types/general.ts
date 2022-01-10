@@ -2,7 +2,19 @@
 
 import { Dictionary } from "@reduxjs/toolkit";
 import { LatLngExpression } from "leaflet";
-import { EntranceResults, Servicepoint, StoredSentence } from "./backendModels";
+import {
+  BackendEntranceAnswer,
+  BackendQuestion,
+  BackendQuestionBlock,
+  BackendQuestionChoice,
+  EntranceResults,
+  QuestionAnswerComment,
+  QuestionAnswerLocation,
+  QuestionAnswerPhoto,
+  QuestionAnswerPhotoTxt,
+  Servicepoint,
+  StoredSentence,
+} from "./backendModels";
 
 export interface User {
   authenticated: boolean;
@@ -91,14 +103,14 @@ export interface QuestionFormCtrlButtonsProps {
   hasSaveDraftButton?: boolean;
   hasPreviewButton?: boolean;
   visibleBlocks?: (JSX.Element | null)[] | null;
-  visibleQuestionChoices?: QuestionChoicesProps[] | undefined;
+  visibleQuestionChoices?: BackendQuestionChoice[] | undefined;
 }
 
 // todo: add type for questionlist
 export interface QuestionsListProps {
   additionalInfoVisible: boolean;
-  questions?: QuestionProps[] | null;
-  answers?: QuestionChoicesProps[] | null;
+  questions?: BackendQuestion[] | null;
+  answers?: BackendQuestionChoice[] | null;
 }
 
 export interface QuestionAdditionalInfoCtrlButtonProps {
@@ -245,54 +257,25 @@ export interface Languages {
 
 export interface MainEntranceFormProps {
   isMobile?: boolean;
-  QuestionsData?: QuestionProps[];
-  QuestionChoicesData?: QuestionChoicesProps[];
-  QuestionBlocksData?: QuestionBlockProps[];
-  ServicepointData?: any;
-  QuestionAnswerData?: any;
-  AdditionalInfosData?: FetchAdditionalInfos;
-  form_id?: number;
-  entrance_id?: string;
+  questionsData: BackendQuestion[];
+  questionChoicesData: BackendQuestionChoice[];
+  questionBlocksData: BackendQuestionBlock[];
+  servicepointData: Servicepoint;
+  questionAnswerData: BackendEntranceAnswer[];
+  additionalInfosData: FetchAdditionalInfos;
+  form_id: number;
+  entrance_id: string;
 }
 
 interface FetchAdditionalInfos {
-  comments?: addInfoComment[];
-  locations?: AddInfoLocation[];
-  photos?: AddInfoPhoto[];
-  phototexts?: AddInfoPhotoText[];
-}
-
-export interface addInfoComment {
-  answer_comment_id: number;
-  comment: string;
-  language: number;
-  log: number;
-  question: number;
-}
-
-export interface AddInfoLocation {
-  answer_location_id: number;
-  loc_easting: number;
-  loc_northing: number;
-  log: number;
-  question: number;
-}
-
-export interface AddInfoPhoto {
-  answer_photo_id: number;
-  photo_url: string;
-  log: number;
-  question: number;
-}
-
-export interface AddInfoPhotoText {
-  answer_photo_txt_id: number;
-  answer_photo: number;
-  language: number;
-  photo_text: string;
+  comments?: QuestionAnswerComment[];
+  locations?: QuestionAnswerLocation[];
+  photos?: QuestionAnswerPhoto[];
+  phototexts?: QuestionAnswerPhotoTxt[];
 }
 
 // todo: added ? optional questionmark to all, remove where mandatory
+/*
 export interface QuestionProps {
   can_add_comment?: string;
   can_add_location?: string;
@@ -312,34 +295,14 @@ export interface QuestionProps {
   visible_if_question_choice: string;
   yes_no_question: string;
 }
+*/
 
 export interface QuestionBlockProps {
-  questions?: QuestionProps[] | null;
-  answers?: QuestionChoicesProps[] | null;
+  questions?: BackendQuestion[] | null;
+  answers?: BackendQuestionChoice[] | null;
   description?: string | null;
-  form_id?: number;
-  language_id?: number;
-  photo_text?: string | null;
-  photo_url?: string | null;
-  question_block_code?: string;
-  question_block_id?: number;
-  question_block_order_text?: string;
-  technical_id?: string;
-  text?: string;
-  visible_if_question_choice?: string | null;
   photoUrl?: string | null;
   photoText?: string | null;
-}
-
-export interface QuestionChoicesProps {
-  choice_order_text?: string;
-  form_id?: number;
-  language_id?: number;
-  question_block_id?: number;
-  question_choice_id?: number;
-  question_id?: number;
-  technical_id?: string;
-  text?: string;
 }
 
 export interface QuestionBlocksProps {
@@ -383,7 +346,7 @@ export interface ContactInformationProps {
 
 export interface AdditionalInfoPageProps {
   questionId: number;
-  questionData?: QuestionProps[];
+  questionData?: BackendQuestion[];
 }
 
 export interface AdditionalInfoCtrlButtonsProps {
@@ -431,4 +394,12 @@ export interface PreviewProps {
   servicepointData: Servicepoint;
   accessibilityData: AccessibilityData;
   entranceData: EntranceResults;
+}
+
+export interface ElementCountProps {
+  comment: number;
+  upload: number;
+  link: number;
+  location: number;
+  [key: string]: number;
 }

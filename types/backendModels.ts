@@ -72,9 +72,96 @@ export interface AnswerLog {
   accessibility_editor?: string;
 }
 
+export interface QuestionAnswerComment {
+  answer_comment_id: number;
+  log: number;
+  question: number;
+  language: number;
+  comment?: string;
+}
+
+export interface QuestionAnswerLocation {
+  answer_location_id: number;
+  log: number;
+  question: number;
+  loc_easting?: number;
+  loc_northing?: number;
+}
+
 export interface QuestionAnswerPhoto {
   answer_photo_id: number;
   log: number;
   question: number;
   photo_url?: string;
+}
+
+export interface QuestionAnswerPhotoTxt {
+  answer_photo_txt_id: number;
+  answer_photo: number;
+  language: number;
+  photo_text?: string;
+}
+
+export interface BackendEntranceAnswer {
+  technical_id: string;
+  log_id?: number;
+  entrance_id?: number;
+  form_submitted?: string;
+  question_block_id?: number;
+  question_id?: number;
+  question_choice_id?: number;
+  loc_easting?: number;
+  loc_northing?: number;
+  comment_fi?: string;
+  comment_sv?: string;
+  comment_en?: string;
+  photo_url?: string;
+  photo_text_fi?: string;
+  photo_text_sv?: string;
+  photo_text_en?: string;
+}
+
+export interface BackendQuestion {
+  technical_id: string;
+  form_id?: number;
+  language_id?: number;
+  question_block_id?: number;
+  question_id?: number;
+  question_code?: string;
+  text?: string;
+  visible_if_question_choice?: string;
+  question_level?: number;
+  question_order_text?: string;
+  description?: string;
+  photo_url?: string;
+  photo_text?: string;
+  yes_no_question?: string;
+  can_add_location?: string;
+  can_add_photo_max_count?: number;
+  can_add_comment?: string;
+}
+
+export interface BackendQuestionBlock {
+  technical_id: string;
+  form_id?: number;
+  language_id?: number;
+  question_block_id?: number;
+  question_block_code?: string;
+  text?: string;
+  visible_if_question_choice?: string;
+  question_block_order_text?: string;
+  description?: string;
+  photo_url?: string;
+  photo_text?: string;
+}
+
+export interface BackendQuestionChoice {
+  technical_id: string;
+  form_id?: number;
+  language_id?: number;
+  question_block_id?: number;
+  question_id?: number;
+  question_choice_id?: number;
+  text?: string;
+  choice_order_text?: string;
 }
