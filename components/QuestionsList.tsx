@@ -59,8 +59,8 @@ const QuestionsList = ({ additionalInfoVisible, questions, answers }: QuestionsL
                     key={question.question_code}
                     options={answerChoices}
                     value={question.question_id}
-                    firstButtonLabel={answerChoices[0].label}
-                    secondButtonLabel={answerChoices[1].label}
+                    firstButtonLabel={answerChoices ? answerChoices[0].label : undefined}
+                    secondButtonLabel={answerChoices ? answerChoices[1].label : undefined}
                   />
                 </>
               ) : (

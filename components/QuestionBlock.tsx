@@ -29,23 +29,19 @@ const QuestionBlock = ({ description, questions, answers, photoUrl, photoText }:
     // window.location.reload(false)
   };
 
-  const blockId: number = questions !== null && questions[0].question_block_id !== undefined ? questions[0].question_block_id : -1;
-  const hasInfoAndButtons = questions !== null ? blockId !== 0 : true;
+  const blockId = questions && questions.length > 0 && questions[0].question_block_id !== undefined ? questions[0].question_block_id : -1;
+  const hasInfoAndButtons = questions && questions.length > 0 ? blockId !== 0 : true;
   const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
   const continueActive = curAnsweredChoices.length !== 0;
 
   // filter questions to get only correct ones with curAnsweredChoices
-  const filteredQuestions =
-    questions !== null
-      ? questions.filter(
-          (question) =>
-            question.visible_if_question_choice === null ||
-            question.visible_if_question_choice
-              ?.split("+")
-              // @ts-ignore: TODO:
-              .some((elem) => curAnsweredChoices.includes(Number(elem)))
-        )
-      : null;
+  const filteredQuestions = questions
+    ? questions.filter(
+        (question) =>
+          question.visible_if_question_choice === null ||
+          question.visible_if_question_choice?.split("+").some((elem) => curAnsweredChoices.includes(Number(elem)))
+      )
+    : null;
 
   const curAnswers = useAppSelector((state) => state.formReducer.answers);
   const keys = Object.keys(curAnswers);
@@ -63,7 +59,8 @@ const QuestionBlock = ({ description, questions, answers, photoUrl, photoText }:
 
   // Turn "<BR>" to linebreaks
   const desc = description?.split("<BR>").map((elem, index) => {
-    return <p key={index}>{elem}</p>;
+    const key = `br_${index}`;
+    return <p key={key}>{elem}</p>;
   });
 
   return (

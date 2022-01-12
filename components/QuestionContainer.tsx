@@ -25,9 +25,9 @@ const QuestionContainer = ({
   children,
   hasAdditionalInfo,
   backgroundColor,
-  canAddLocation,
-  canAddPhotoMaxCount,
-  canAddComment,
+  // canAddLocation,
+  // canAddPhotoMaxCount,
+  // canAddComment,
   isMainLocPicComponent,
 }: QuestionContainerProps): JSX.Element => {
   const i18n = useI18n();
@@ -40,13 +40,13 @@ const QuestionContainer = ({
   const photoTexts = photoText?.split("<BR>");
   const questionInfos = questionInfo?.split("<BR><BR>");
   const invalidBlocks = useAppSelector((state) => state.formReducer.invalidBlocks);
-  const curQuestionAddinfos = useAppSelector((state) => state.additionalInfoReducer[questionId!]);
+  const curQuestionAddinfos = useAppSelector((state) => state.additionalInfoReducer.additionalInfo[questionId]);
   const curAnswers = useAppSelector((state) => state.formReducer.answers);
-  const isInvalid = invalidBlocks.includes(questionBlockId!);
+  const isInvalid = invalidBlocks.includes(questionBlockId);
 
   // set invalid style if validation errors
   const questionStyle =
-    isInvalid && curAnswers[questionId!] === undefined
+    isInvalid && curAnswers[questionId] === undefined
       ? {
           paddingLeft,
           backgroundColor,
@@ -88,7 +88,7 @@ const QuestionContainer = ({
           </p>
           {questionInfo ? (
             <QuestionInfo
-              key={questionNumber}
+              // key={questionNumber}
               openText={i18n.t("accessibilityForm.whatDoesThisMean")}
               openIcon={<IconInfoCircle aria-hidden />}
               closeText={i18n.t("accessibilityForm.closeGuidance")}
@@ -97,9 +97,10 @@ const QuestionContainer = ({
             >
               <div className={styles.infoContainer}>
                 {questionInfos?.map((e, index) => {
-                  return <p key={index}>{e}</p>;
+                  const key = `br_${index}`;
+                  return <p key={key}>{e}</p>;
                 })}
-                {photoUrl !== null ? <img src={photoUrl} className={styles.infoPicture} /> : null}
+                {photoUrl !== null ? <img src={photoUrl} alt="" className={styles.infoPicture} /> : null}
                 <p>{photoTexts}</p>
               </div>
             </QuestionInfo>
@@ -108,7 +109,7 @@ const QuestionContainer = ({
         <div className={styles.children}>{children}</div>
         {hasAdditionalInfo && questionId !== undefined ? (
           <QuestionAdditionalInformation
-            key={`${questionNumber}a`}
+            // key={`${questionNumber}a`}
             questionId={questionId}
             blockId={questionBlockId}
             // canAddLocation={canAddLocation}
@@ -117,72 +118,67 @@ const QuestionContainer = ({
             isMainLocPicComponent={isMainLocPicComponent}
           />
         ) : null}
-        {isInvalid && curAnswers[questionId!] === undefined ? <IconAlertCircle className={styles.alertCircle} aria-hidden /> : null}
+        {isInvalid && curAnswers[questionId] === undefined ? <IconAlertCircle className={styles.alertCircle} aria-hidden /> : null}
       </div>
       {/* code under loops additional infos to the form if question has addinfo */}
       {curQuestionAddinfos && curQuestionAddinfos.components && curQuestionAddinfos.components.length !== 0 ? (
         <div className={styles.addinfos} style={{ backgroundColor }}>
-          {
-            <>
-              <div className={styles.addinfos} style={{ backgroundColor }}>
-                <h4>{i18n.t("accessibilityForm.additionalInfoPreviewHeader")}</h4>
-                {curQuestionAddinfos.comments && curQuestionAddinfos?.comments.fi !== "" ? (
-                  <div className={styles.addinfopreviewcontainer}>
-                    <p className={styles.nomargintop}>
-                      {/* @ts-ignore */}
-                      {curQuestionAddinfos.comments[curLocale]}
-                    </p>
-                  </div>
-                ) : null}
-                {curQuestionAddinfos.pictures
-                  ? curQuestionAddinfos.pictures.map((pic, index) => {
-                      return (
-                        <div className={styles.addinfopreviewcontainer}>
-                          <div className={styles.picturetextcontainer}>
-                            <p key={`${pic.qNumber}alt${index}`}>
-                              <span>{i18n.t("accessibilityForm.additionalInfoPreviewAltText")}</span>
-                              {/* @ts-ignore */}
-                              {pic[curLocale]}
-                            </p>
-                            <p key={`${pic.qNumber}source${index}`}>
-                              <span>{i18n.t("accessibilityForm.additionalInfoPreviewSourceText")}</span>
-                              {pic.source ? pic.source : null}
-                            </p>
-                          </div>
-                          <div
-                            className={styles.addinfopicturepreview}
-                            style={{
-                              backgroundImage: `url(` + `${pic.base ?? pic.url}` + `)`,
-                            }}
-                          />
+          <>
+            <div className={styles.addinfos} style={{ backgroundColor }}>
+              <h4>{i18n.t("accessibilityForm.additionalInfoPreviewHeader")}</h4>
+              {curQuestionAddinfos.comments && curQuestionAddinfos?.comments.fi !== "" ? (
+                <div className={styles.addinfopreviewcontainer}>
+                  <p className={styles.nomargintop}>{curQuestionAddinfos.comments[curLocale]}</p>
+                </div>
+              ) : null}
+              {curQuestionAddinfos.pictures
+                ? curQuestionAddinfos.pictures.map((pic, index) => {
+                    const key = `question_${pic.qNumber}_picture_${index}`;
+                    return (
+                      <div key={key} className={styles.addinfopreviewcontainer}>
+                        <div className={styles.picturetextcontainer}>
+                          <p>
+                            <span>{i18n.t("accessibilityForm.additionalInfoPreviewAltText")}</span>
+                            {pic.altText[curLocale]}
+                          </p>
+                          <p>
+                            <span>{i18n.t("accessibilityForm.additionalInfoPreviewSourceText")}</span>
+                            {pic.source ? pic.source : null}
+                          </p>
                         </div>
-                      );
-                    })
-                  : null}
-                {curQuestionAddinfos.locations && curQuestionAddinfos.locations.coordinates ? (
-                  <div className={styles.addinfopreviewcontainer}>
-                    <div className={styles.mapcontainerspacer} />
-                    <div className={styles.mappreview}>
-                      <Map
-                        initCenter={curQuestionAddinfos.locations.coordinates!}
-                        initLocation={curQuestionAddinfos.locations.coordinates!}
-                        initZoom={17}
-                        draggableMarker={false}
-                        questionId={questionId!}
-                        makeStatic
-                      />
-                    </div>
+                        <div
+                          className={styles.addinfopicturepreview}
+                          style={{
+                            backgroundImage: `url(${pic.base ?? pic.url})`,
+                          }}
+                        />
+                      </div>
+                    );
+                  })
+                : null}
+              {curQuestionAddinfos.locations && curQuestionAddinfos.locations.coordinates ? (
+                <div className={styles.addinfopreviewcontainer}>
+                  <div className={styles.mapcontainerspacer} />
+                  <div className={styles.mappreview}>
+                    <Map
+                      initCenter={curQuestionAddinfos.locations.coordinates}
+                      initLocation={curQuestionAddinfos.locations.coordinates}
+                      initZoom={17}
+                      draggableMarker={false}
+                      questionId={questionId}
+                      makeStatic
+                    />
                   </div>
-                ) : null}
-              </div>
+                </div>
+              ) : null}
+            </div>
 
-              <div className={styles.editaddinfobutton}>
-                <QuestionButton variant="secondary" onClickHandler={handleEditAddInfo}>
-                  {i18n.t("common.editAddinfoText")}
-                </QuestionButton>
-              </div>
-            </>
-          }
+            <div className={styles.editaddinfobutton}>
+              <QuestionButton variant="secondary" onClickHandler={handleEditAddInfo}>
+                {i18n.t("common.editAddinfoText")}
+              </QuestionButton>
+            </div>
+          </>
         </div>
       ) : null}
     </div>

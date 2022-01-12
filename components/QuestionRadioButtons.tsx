@@ -1,5 +1,5 @@
 import { SelectionGroup, RadioButton } from "hds-react";
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { QuestionRadioButtonsProps } from "../types/general";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { removeAnsweredChoice, setAnswer, setAnsweredChoice } from "../state/reducers/formSlice";
@@ -19,14 +19,14 @@ const QuestionRadioButtons = ({
 
   const [selectedRadioItem, setSelectedRadioItem] = useState(startState);
 
-  const handleRadioClick = (e: any) => {
+  const handleRadioClick = (e: ChangeEvent<HTMLInputElement>) => {
     setSelectedRadioItem(e.target.value);
     const questionNumber = value || -1;
 
     if (value && options) {
       const answer = Number(e.target.value);
       if (curAnswers[questionNumber] !== undefined) {
-        dispatch(removeAnsweredChoice(curAnswers[questionNumber].toString()));
+        dispatch(removeAnsweredChoice(curAnswers[questionNumber]));
       }
       // @ts-ignore: this is weird
       dispatch(setAnsweredChoice(answer));

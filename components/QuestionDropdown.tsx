@@ -1,8 +1,7 @@
 import React from "react";
 import { Select } from "hds-react";
-import { Dictionary } from "@reduxjs/toolkit";
 import { useI18n } from "next-localization";
-import { DropdownQuestionProps } from "../types/general";
+import { DropdownQuestionProps, InputOption } from "../types/general";
 import style from "./QuestionDropdown.module.scss";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
 import { setAnsweredChoice, setAnswer, removeAnsweredChoice } from "../state/reducers/formSlice";
@@ -16,36 +15,35 @@ const QuestionDropdown = ({ options, placeholder = "--Valitse--", label = "", qu
   const dispatch = useAppDispatch();
 
   // handle add/remove answer from state
-  const handleChange = (selected: Dictionary<string>) => {
-    const answerString = selected.value;
-    const questionNumString = questionNumber;
-    if (answerString !== undefined && questionNumber !== undefined) {
-      options.map((element: Dictionary<string>) => {
-        element.value !== undefined ? dispatch(removeAnsweredChoice(element.value)) : null;
+  const handleChange = (selected: InputOption) => {
+    const answer = selected.value;
+    if (answer !== undefined && questionNumber !== undefined && options) {
+      options.forEach((element: InputOption) => {
+        if (element.value !== undefined) {
+          dispatch(removeAnsweredChoice(element.value));
+        }
       });
-      const answer = Number(answerString);
-      const questionNumber = Number(questionNumString);
       dispatch(setAnswer({ questionNumber, answer }));
-      dispatch(setAnsweredChoice(answerString));
+      dispatch(setAnsweredChoice(answer));
     }
   };
 
   const currentValues = useAppSelector((state) => state.formReducer);
-  const { invalidBlocks } = currentValues;
+  const { answers, invalidBlocks } = currentValues;
 
-  const value = questionNumber !== undefined && currentValues.answers[questionNumber] !== undefined ? currentValues.answers[questionNumber] : "";
-  const currentLabel = options.find((element) => {
+  const value = questionNumber !== undefined && answers[questionNumber] !== undefined ? answers[questionNumber] : -1;
+  const currentLabel = options?.find((element) => {
     return element.value === value;
   });
 
-  const currentValue: Dictionary<string> = {
+  const currentValue: InputOption = {
     label: currentLabel !== undefined ? currentLabel.label : "",
-    value: value.toString(),
+    value,
   };
 
-  const isInvalid = value === "" && invalidBlocks.includes(blockId!);
+  const isInvalid = value === -1 && !!blockId && invalidBlocks.includes(blockId);
 
-  return (
+  return options ? (
     <Select
       className={style.selectDropdown}
       label={label}
@@ -56,6 +54,8 @@ const QuestionDropdown = ({ options, placeholder = "--Valitse--", label = "", qu
       error={i18n.t("common.missingAnswerValue")}
       invalid={isInvalid}
     />
+  ) : (
+    <></>
   );
 };
 

@@ -29,10 +29,10 @@ export interface GeneralState {
 }
 
 export interface QuestionContainerProps {
-  questionId?: number;
+  questionId: number;
   questionBlockId: number;
-  questionNumber: number | string;
-  questionText: string;
+  questionNumber?: number | string;
+  questionText?: string;
   questionInfo?: string | null;
   children: JSX.Element;
   hasAdditionalInfo: boolean;
@@ -54,8 +54,13 @@ export interface HeadlineQuestionContainerProps {
   id?: string;
 }
 
+export interface InputOption {
+  value: number;
+  label?: string;
+}
+
 export interface DropdownQuestionProps {
-  options: Dictionary<string>[];
+  options?: InputOption[];
   label?: string;
   placeholder?: string;
   questionNumber?: number;
@@ -93,7 +98,7 @@ export interface QuestionRadioButtonsProps {
   mainLabel?: string;
   firstButtonLabel?: string;
   secondButtonLabel?: string;
-  options?: Dictionary<string>[];
+  options?: InputOption[];
   value?: number;
 }
 

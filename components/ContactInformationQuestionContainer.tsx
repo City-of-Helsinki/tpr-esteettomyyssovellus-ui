@@ -182,7 +182,13 @@ const ContactInformationQuestionContainer = ({ blockNumber }: ContactInformation
 
         return (
           <div style={questionStyle} key={question.question_code}>
-            <QuestionContainer key={question.question_code} questionText={question.text} backgroundColor={backgroundColor} hasAdditionalInfo={false}>
+            <QuestionContainer
+              key={question.question_code}
+              questionId={-1}
+              questionText={question.text}
+              backgroundColor={backgroundColor}
+              hasAdditionalInfo={false}
+            >
               <TextInput
                 key={question.question_code}
                 className={styles.textInput}

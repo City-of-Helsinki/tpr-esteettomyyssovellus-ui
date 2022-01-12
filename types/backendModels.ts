@@ -1,3 +1,4 @@
+// Tables
 export interface Servicepoint {
   servicepoint_id: number;
   business_id?: string;
@@ -102,12 +103,14 @@ export interface QuestionAnswerPhotoTxt {
   photo_text?: string;
 }
 
+// Views
+// Note: Optional id fields have been changed to mandatory according to the underlying sql of the backend views
 export interface BackendEntranceAnswer {
   technical_id: string;
-  log_id?: number;
-  entrance_id?: number;
+  log_id: number;
+  entrance_id: number;
   form_submitted?: string;
-  question_block_id?: number;
+  question_block_id: number;
   question_id?: number;
   question_choice_id?: number;
   loc_easting?: number;
@@ -123,10 +126,10 @@ export interface BackendEntranceAnswer {
 
 export interface BackendQuestion {
   technical_id: string;
-  form_id?: number;
-  language_id?: number;
-  question_block_id?: number;
-  question_id?: number;
+  form_id: number;
+  language_id: number;
+  question_block_id: number;
+  question_id: number;
   question_code?: string;
   text?: string;
   visible_if_question_choice?: string;
@@ -143,9 +146,9 @@ export interface BackendQuestion {
 
 export interface BackendQuestionBlock {
   technical_id: string;
-  form_id?: number;
-  language_id?: number;
-  question_block_id?: number;
+  form_id: number;
+  language_id: number;
+  question_block_id: number;
   question_block_code?: string;
   text?: string;
   visible_if_question_choice?: string;
@@ -157,11 +160,11 @@ export interface BackendQuestionBlock {
 
 export interface BackendQuestionChoice {
   technical_id: string;
-  form_id?: number;
-  language_id?: number;
-  question_block_id?: number;
-  question_id?: number;
-  question_choice_id?: number;
+  form_id: number;
+  language_id: number;
+  question_block_id: number;
+  question_id: number;
+  question_choice_id: number;
   text?: string;
   choice_order_text?: string;
 }
