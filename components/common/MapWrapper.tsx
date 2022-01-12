@@ -1,4 +1,4 @@
-import React, { ReactElement, useRef, useEffect, useState } from "react";
+import React, { ReactElement, useRef, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useI18n } from "next-localization";
 import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from "react-leaflet";
@@ -15,7 +15,6 @@ interface MapWrapperProps {
   questionId: number;
   initialZoom: number;
   initLocation?: [number, number] | number[];
-  setLocation?: (initLocation: [number, number]) => void;
   setMapReady?: (ready: boolean) => void;
   draggableMarker?: boolean;
   makeStatic: boolean;
@@ -41,21 +40,20 @@ const MapWrapper = ({
   const markerRef = useRef<LeafletMarker>(null);
 
   // state location for addinfos for getting location from addinfo question state
-  const stateLocation = useAppSelector((state) => state.additionalInfoReducer[questionId]?.locations?.coordinates);
+  const stateLocation = useAppSelector((state) => state.additionalInfoReducer.additionalInfo[questionId]?.locations?.coordinates);
 
   // for setting initLocation or fallback getting it from state
-  const initGeneralLocation = initLocation || useAppSelector((state) => state.generalSlice.coordinatesWGS84);
+  const coordinatesWGS84 = useAppSelector((state) => state.generalSlice.coordinatesWGS84);
+  const initGeneralLocation = initLocation || coordinatesWGS84;
 
   // @ts-ignore : ignore types because .reverse() returns number[]
   const curLocation: [number, number] = stateLocation && stateLocation !== undefined && !isMainLocPicComponent ? stateLocation : initGeneralLocation;
 
   const setLocation = (coordinates: [number, number]) => {
-    let locNor;
-    let locEas;
     // transform coordinates to northing and easting for db
     const LonLatReverseCoordinates: [number, number] = [coordinates[1], coordinates[0]];
 
-    [locEas, locNor] = convertCoordinates("WGS84", "EPSG:3067", LonLatReverseCoordinates);
+    const [locEas, locNor] = convertCoordinates("WGS84", "EPSG:3067", LonLatReverseCoordinates);
 
     // this case is for mainform mainlocation, questionId -1
     if (isMainLocPicComponent && questionId === -1) {
@@ -176,8 +174,10 @@ const MapWrapper = ({
 };
 
 MapWrapper.defaultProps = {
-  setLocation: undefined,
+  initLocation: undefined,
   setMapReady: undefined,
+  draggableMarker: false,
+  isMainLocPicComponent: false,
 };
 
 export default MapWrapper;

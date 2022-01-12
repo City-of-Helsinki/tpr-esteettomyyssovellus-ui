@@ -1,24 +1,19 @@
-import React, { ReactElement, useEffect, useState } from "react";
+import React, { ReactElement, useEffect } from "react";
 import { useI18n } from "next-localization";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
-import { IconCrossCircle, IconLink, IconLocation, IconQuestionCircle, IconSpeechbubbleText, IconUpload } from "hds-react";
-import { Dictionary } from "@reduxjs/toolkit";
+import { IconCrossCircle, IconLink, IconQuestionCircle, IconUpload } from "hds-react";
 import Layout from "../../../components/common/Layout";
 import i18nLoader from "../../../utils/i18n";
 import styles from "./mainLocationOrImage.module.scss";
 import QuestionInfo from "../../../components/QuestionInfo";
 import ServicepointMainInfoContent from "../../../components/ServicepointMainInfoContent";
-import AdditionalInfoCtrlButtons from "../../../components/AdditionalInfoCtrlButtons";
+// import AdditionalInfoCtrlButtons from "../../../components/AdditionalInfoCtrlButtons";
 import QuestionButton from "../../../components/QuestionButton";
 import AdditionalInfoLocationContent from "../../../components/AdditionalInfoLocationContent";
-import AdditionalInfoPicturesContent from "../../../components/AdditionalInfoPicturesContent";
-import AdditionalInfoCommentContent from "../../../components/AdditionalInfoCommentContent";
-import { addComponent, removeAllInvalids, removeComponent, setEditingInitialState } from "../../../state/reducers/additionalInfoSlice";
 import { useAppSelector, useAppDispatch, useLoading } from "../../../state/hooks";
-import { AdditionalComponentProps, AdditionalInfoPageProps, AdditionalInfoProps, MainLocationOrImageProps } from "../../../types/general";
-import { LANGUAGE_LOCALES, API_FETCH_BACKEND_QUESTIONS } from "../../../types/constants";
-import generalSlice, { setCurEditingBothCoordinateTemps, setCurrentlyEditingQuestion } from "../../../state/reducers/generalSlice";
+import { MainLocationOrImageProps } from "../../../types/general";
+import { setCurEditingBothCoordinateTemps } from "../../../state/reducers/generalSlice";
 import LoadSpinner from "../../../components/common/LoadSpinner";
 import {
   addMainImageElement,
@@ -77,7 +72,7 @@ const MainLocationOrImage = ({ pageId, caseId }: MainLocationOrImageProps): Reac
         coordinatesWGS84,
       })
     );
-  }, []);
+  }, [coordinates, coordinatesWGS84, currentMainImage, currentMainImageElement, dispatch]);
 
   const hasMainImage = useAppSelector((state) => state.formReducer.mainImageElement);
 
@@ -211,8 +206,8 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   //   initialReduxState.general.user = user;
   // }
 
-  const pageId = Number(params?.pageId) ?? null;
-  const caseId = Number(params?.caseId) ?? null;
+  const pageId = Number(params?.pageId) ?? null; // questionId
+  const caseId = Number(params?.caseId) ?? null; // questionBlockId
 
   return {
     props: {

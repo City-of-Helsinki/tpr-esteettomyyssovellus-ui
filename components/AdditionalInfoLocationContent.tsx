@@ -23,20 +23,22 @@ const AdditionalInfoLocationContent = ({
   // geodocing related -> delete if not used in final production
   //   const [addressErrorText, setAddressErrorText] = useState("");
 
-  const fallbackLocation = !initValue && !isMainLocPicComponent ? useAppSelector((state) => state.generalSlice.coordinatesWGS84) : initValue;
+  const coordinatesWGS84 = useAppSelector((state) => state.generalSlice.coordinatesWGS84);
+  const fallbackLocation = !initValue && !isMainLocPicComponent ? coordinatesWGS84 : initValue;
 
-  const coords: [number, number] = !isMainLocPicComponent
-    ? useAppSelector((state) => state.additionalInfoReducer[questionId].locations?.coordinates)
-    : fallbackLocation;
+  const coordinates = useAppSelector((state) => state.additionalInfoReducer.additionalInfo[questionId].locations?.coordinates);
+  const coords: [number, number] = !isMainLocPicComponent ? coordinates : fallbackLocation;
+
+  const handleRemoveLocation = () => {
+    dispatch(removeLocation({ questionId }));
+  };
 
   // on delete button clicked chain delete location from store and delete component cb
   const handleOnDelete = () => {
     handleRemoveLocation();
-    onDelete ? onDelete() : null;
-  };
-
-  const handleRemoveLocation = () => {
-    dispatch(removeLocation({ questionId }));
+    if (onDelete) {
+      onDelete();
+    }
   };
 
   // So this (geocoding) was doned but then decided to drop it out
@@ -97,7 +99,7 @@ const AdditionalInfoLocationContent = ({
         isMainLocPicComponent={isMainLocPicComponent}
       />
     );
-  }, [coords]);
+  }, [coords, isMainLocPicComponent, questionId]);
 
   return (
     <div className={styles.maincontainer}>

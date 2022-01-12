@@ -5,14 +5,12 @@ import { useRouter } from "next/router";
 import styles from "./AdditionalInfoCtrlButtons.module.scss";
 import QuestionButton from "./QuestionButton";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
-import { removeSingleQuestionAdditionalinfo, setPreviousInitStateAdditionalinfo } from "../state/reducers/additionalInfoSlice";
-import { AdditionalInfoCtrlButtonsProps, AdditionalInfoProps } from "../types/general";
 import { addMainImageElement, addMainPicture } from "../state/reducers/formSlice";
 import { setServicepointLocation, setServicepointLocationWGS84 } from "../state/reducers/generalSlice";
 
 // usage: save and return without saving buttons in additionalinfo page
 // notes: only save if save clicked, if return no save or back button (browser, mice etc) returns to old or emtpy value
-const MainLocationPictureCtrlButtons = ({ caseId }: any): JSX.Element => {
+const MainLocationPictureCtrlButtons = (): JSX.Element => {
   const i18n = useI18n();
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -33,7 +31,7 @@ const MainLocationPictureCtrlButtons = ({ caseId }: any): JSX.Element => {
   // also check if pageSaved (saved button clicked), if so then just return
   // sets temps (which are set when first entering the page) to the non-temp/values
   useEffect(() => {
-    router.beforePopState(({}) => {
+    router.beforePopState(() => {
       if (pageSaved) {
         return true;
       }
@@ -60,7 +58,7 @@ const MainLocationPictureCtrlButtons = ({ caseId }: any): JSX.Element => {
 
       return true;
     });
-  }, [mainimageTemp, coordinatesTemp, pageSaved]);
+  }, [mainimageTemp, mainimageElementTemp, coordinatesTemp, coordinatesWGS84Temp, pageSaved, router, dispatch]);
 
   // don't alter already saved state, set pageSaved to true
   const handleSaveAndReturn = () => {
