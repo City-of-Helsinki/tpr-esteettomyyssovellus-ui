@@ -196,9 +196,11 @@ const AdditionalEntrance = ({
           id: photo.answer_photo_id,
           base: photo.photo_url,
           url: photo.photo_url,
-          fi: "",
-          sv: "",
-          en: "",
+          altText: {
+            fi: "",
+            sv: "",
+            en: "",
+          },
         };
 
         dispatch(addPicture(picture));

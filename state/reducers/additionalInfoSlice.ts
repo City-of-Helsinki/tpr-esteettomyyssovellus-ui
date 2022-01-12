@@ -244,7 +244,13 @@ export const additionalInfoSlice = createSlice({
         return { ...state };
       }
 
-      targetPic = { ...targetPic, [lang]: value };
+      targetPic = {
+        ...targetPic,
+        altText: {
+          ...targetPic.altText,
+          [lang]: value,
+        },
+      };
 
       return {
         ...state,

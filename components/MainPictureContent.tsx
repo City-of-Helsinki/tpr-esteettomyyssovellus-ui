@@ -69,9 +69,11 @@ const MainPictureContent = ({ pageId, onlyLink = false, onDelete, initValue }: M
         base: imgBase64,
         uuid: uuidv4(),
         url: "",
-        fi: "",
-        sv: "",
-        en: "",
+        altText: {
+          fi: "",
+          sv: "",
+          en: "",
+        },
         source: "",
       };
       dispatch(addMainPicture(payload));
@@ -93,9 +95,11 @@ const MainPictureContent = ({ pageId, onlyLink = false, onDelete, initValue }: M
           name: "",
           base: linkText,
           url: linkText,
-          fi: "",
-          sv: "",
-          en: "",
+          altText: {
+            fi: "",
+            sv: "",
+            en: "",
+          },
           source: "",
         };
         dispatch(addMainPicture(payload));

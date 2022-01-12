@@ -213,9 +213,7 @@ export interface PictureProps {
   url?: string;
   name?: string;
   source?: string;
-  fi: string;
-  en?: string;
-  sv?: string;
+  altText: Languages;
 }
 
 export interface MainPictureProps {
@@ -224,9 +222,7 @@ export interface MainPictureProps {
   url?: string;
   name?: string;
   source?: string;
-  fi: string;
-  en?: string;
-  sv?: string;
+  altText: Languages;
 }
 
 export interface AdditionalInfoProps {

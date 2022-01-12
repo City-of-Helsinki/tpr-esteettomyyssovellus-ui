@@ -73,9 +73,11 @@ const AdditionalInfoPicturesContent = ({ questionId, compId, onlyLink = false, o
         base: imgBase64,
         uuid: uuidv4(),
         url: "",
-        fi: "",
-        sv: "",
-        en: "",
+        altText: {
+          fi: "",
+          sv: "",
+          en: "",
+        },
         source: "",
       };
       dispatch(addPicture(payload));
@@ -98,9 +100,11 @@ const AdditionalInfoPicturesContent = ({ questionId, compId, onlyLink = false, o
           name: "",
           base: linkText,
           url: linkText,
-          fi: "",
-          sv: "",
-          en: "",
+          altText: {
+            fi: "",
+            sv: "",
+            en: "",
+          },
           source: "",
         };
         dispatch(addPicture(payload));

@@ -295,7 +295,10 @@ export const formSlice = createSlice({
     setMainPictureAlt: (state, action: PayloadAction<{ language: string; value: string }>) => {
       const updatedMainPic = {
         ...state.mainImage,
-        [action.payload.language]: action.payload.value,
+        altText: {
+          ...state.mainImage?.altText,
+          [action.payload.language]: action.payload.value,
+        },
       } as MainPictureProps;
       return {
         ...state,

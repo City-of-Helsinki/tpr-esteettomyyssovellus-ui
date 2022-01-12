@@ -16,7 +16,7 @@ import AdditionalInfoCommentContent from "../../components/AdditionalInfoComment
 import { addComponent, removeAllInvalids, removeComponent, setEditingInitialState } from "../../state/reducers/additionalInfoSlice";
 import { useAppSelector, useAppDispatch, useLoading } from "../../state/hooks";
 import { BackendQuestion } from "../../types/backendModels";
-import { AdditionalComponentProps, AdditionalInfoPageProps, AdditionalInfos, ElementCountProps } from "../../types/general";
+import { AdditionalComponentProps, AdditionalInfoPageProps, ElementCountProps } from "../../types/general";
 import { LANGUAGE_LOCALES, API_FETCH_BACKEND_QUESTIONS } from "../../types/constants";
 import { setCurrentlyEditingQuestion } from "../../state/reducers/generalSlice";
 import LoadSpinner from "../../components/common/LoadSpinner";
@@ -30,7 +30,7 @@ const AdditionalInfo = ({ questionId, questionData }: AdditionalInfoPageProps): 
   const [increasingId, setIncreasingId] = useState(0);
   const isLoading = useLoading();
   const dispatch = useAppDispatch();
-  const curAdditionalInfo = useAppSelector((state) => state.additionalInfoReducer.additionalInfo[questionId] as AdditionalInfos);
+  const curAdditionalInfo = useAppSelector((state) => state.additionalInfoReducer.additionalInfo[questionId]);
 
   // check/init addinfo can add comment / location and number of pictures able to add
   // disable control buttons for adding these components respectively

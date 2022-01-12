@@ -135,9 +135,9 @@ export const postAdditionalInfo = async (logId: number, data: AdditionalInfoProp
             console.log("Posted additionalinfo pictures for question ", question[0]);
             const photoId = responseData !== null ? responseData.answer_photo_id : null;
 
-            const fiComment = pic.fi;
-            const svComment = pic.sv;
-            const enComment = pic.en;
+            const fiComment = pic.altText.fi;
+            const svComment = pic.altText.sv;
+            const enComment = pic.altText.en;
             if (photoId !== null) {
               if (fiComment !== "") {
                 const pictureTextData = {
