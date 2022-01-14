@@ -4,7 +4,7 @@ import { useI18n } from "next-localization";
 import router from "next/router";
 import Button from "./QuestionButton";
 import ServicepointLandingSummaryContent from "./ServicepointLandingSummaryContent";
-import { ServicepointLandingSummaryProps } from "../types/general";
+import { AccessibilityData, ServicepointLandingSummaryProps } from "../types/general";
 import styles from "./ServicepointLandingSummary.module.scss";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { setStartDate } from "../state/reducers/formSlice";
@@ -73,14 +73,15 @@ const ServicepointLandingSummary = ({ header, data }: ServicepointLandingSummary
     );
     // Else if the data is of type accessibilityData
   } else if (data) {
-    hasData = data !== undefined && data.main.length !== 0;
+    const accessibilityData = data as AccessibilityData;
+    hasData = accessibilityData !== undefined && accessibilityData.main !== undefined && accessibilityData.main.length !== 0;
 
-    const keys = Object.keys(data);
+    const keys = Object.keys(accessibilityData);
     keys.forEach((key) => {
       const itemList: JSX.Element[] = [];
       let currentTitle = "";
-      if (data[key]) {
-        data[key].forEach((x) => {
+      if (accessibilityData[key]) {
+        accessibilityData[key].forEach((x) => {
           if (x.sentence_group_name !== currentTitle) {
             currentTitle = x.sentence_group_name;
             // Add h3 titles in the container

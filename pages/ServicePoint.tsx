@@ -20,7 +20,7 @@ import { ChangeProps } from "../types/general";
 import styles from "./ServicePoint.module.scss";
 
 import { getCurrentDate, validateChecksum } from "../utils/utilFunctions";
-import { checksumSecretTPRTesti } from "./checksumSecret";
+import { checksumSecretTPRTesti } from "../utils/checksumSecret";
 import { Servicepoint, SystemForm } from "../types/backendModels";
 
 // usage: not sure if this is obsolete?
