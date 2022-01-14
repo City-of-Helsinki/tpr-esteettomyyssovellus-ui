@@ -5,7 +5,7 @@ import { useI18n } from "next-localization";
 import Button from "./QuestionButton";
 import styles from "./PreviewControlButtons.module.scss";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
-import { API_FETCH_ANSWER_LOGS, API_FETCH_QUESTION_ANSWERS, FRONT_URL_BASE } from "../types/constants";
+import { API_FETCH_ANSWER_LOGS, API_FETCH_QUESTION_ANSWERS, API_URL_BASE, FRONT_URL_BASE } from "../types/constants";
 import { setContinue } from "../state/reducers/formSlice";
 import { getCurrentDate, postData, getClientIp, postAdditionalInfo } from "../utils/utilFunctions";
 import AddNewEntranceNotice from "./common/AddNewEntranceNotice";
@@ -67,8 +67,7 @@ const PreviewControlButtons = ({ hasHeader }: PreviewControlButtonsProps): JSX.E
       postData(API_FETCH_QUESTION_ANSWERS, JSON.stringify(data));
       await postAdditionalInfo(logId, additionalInfo.additionalInfo);
       const generateData = { entrance_id: curEntranceId };
-      // todo: change static localhost to const
-      postData("http://localhost:8000/api/GenerateSentences/", JSON.stringify(generateData));
+      postData(`${API_URL_BASE}GenerateSentences/`, JSON.stringify(generateData));
       window.location.href = FRONT_URL_BASE;
     }
 

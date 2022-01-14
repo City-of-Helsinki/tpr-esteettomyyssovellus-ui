@@ -1,5 +1,5 @@
-import { createSlice, Dictionary, PayloadAction } from "@reduxjs/toolkit";
-import { AdditionalInfoProps, AdditionalInfos, AdditionalInfoStateProps, PictureProps } from "../../types/general";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { AdditionalInfoProps, AdditionalInfoStateProps, PictureProps } from "../../types/general";
 
 // TODO: maybe delete this before prod
 // notice: many [questionNumber] OR [qNumber] is actually questionId
@@ -308,7 +308,7 @@ export const additionalInfoSlice = createSlice({
       state,
       action: PayloadAction<{
         questionId: number;
-        prevState: Dictionary<AdditionalInfos>;
+        prevState: AdditionalInfoProps;
       }>
     ) => {
       const qNumber = action.payload.questionId;

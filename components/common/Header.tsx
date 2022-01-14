@@ -56,7 +56,7 @@ const Header = ({ children }: HeaderProps): ReactElement => {
   };
 
   // This checks whether the view has become so thin, i.e. mobile view, that the languageselector component should change place.
-  const [width, setWidth] = useState<number>(window.innerWidth);
+  const [width, setWidth] = useState(window.innerWidth);
   useEffect(() => {
     if (typeof window !== "undefined") {
       window.addEventListener("resize", () => setWidth(window.innerWidth));

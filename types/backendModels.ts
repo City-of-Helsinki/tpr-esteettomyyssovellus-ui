@@ -1,4 +1,10 @@
 // Tables
+export interface System {
+  system_id: string;
+  name: string;
+  checksum_secret: string;
+}
+
 export interface SystemForm {
   system: string;
   form: number;

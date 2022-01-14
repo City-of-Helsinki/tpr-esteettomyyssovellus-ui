@@ -47,5 +47,4 @@ remove code/components if not used:
 - common/ToastNorification
 - common/Hero
 - components/SearchBox*.* (all files starting with)
-- ~checkUser codeblocks in multiple SSR's
 - all obsolete / commented / console.logs etc.

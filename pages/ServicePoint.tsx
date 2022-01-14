@@ -137,19 +137,6 @@ const Servicepoints = ({
 export const getServerSideProps: GetServerSideProps = async ({ locales, query }) => {
   const lngDict = await i18nLoader(locales);
 
-  // todo: if user not checked here remove these
-  // also reduxStore and reduxStore.getState() need to be changed to redux-toolkit
-  // const reduxStore = store;
-  // const initialReduxState = reduxStore.getState();
-
-  // const user = await checkUser(req);
-  // if (!user) {
-  //   // Invalid user but login is not required
-  // }
-  // if (user && user.authenticated) {
-  //   initialReduxState.general.user = user;
-  // }
-
   // systemId=e186251e-1fb6-4f21-901c-cb6820aee164     DONE
   // &servicePointId=3266
   // &user=uusiesteettomyys%40hel.fi
@@ -182,12 +169,12 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
     }
     try {
       let servicepointId = 0;
-      // const SystemResp = await fetch(API_FETCH_SYSTEMS + query.systemId);
-      const ServicepointResp = await fetch(`${API_FETCH_SERVICEPOINTS}?format=json&ext_servicepoint_id=${query.servicePointId}`);
-      // const SystemData = await SystemResp.json();
-      const ServicepointData = await ServicepointResp.json();
+      // const systemResp = await fetch(API_FETCH_SYSTEMS + query.systemId);
+      const servicepointResp = await fetch(`${API_FETCH_SERVICEPOINTS}?format=json&ext_servicepoint_id=${query.servicePointId}`);
+      // const systemData = await (systemResp.json() as Promise<System>);
+      const servicepointData = await (servicepointResp.json() as Promise<Servicepoint[]>);
 
-      // const checksumSecret = SystemData[0].checksum_secret;
+      // const checksumSecret = systemData[0].checksum_secret;
       const checksumString =
         // TODO: CHANGE TO checksumSecret when moving to production
         // checksumSecret +
@@ -209,7 +196,6 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
         console.log("Checksums did not match.");
         //   return {
         //     props: {
-        //       initialReduxState,
         //       lngDict
         //     }
         //   };
@@ -238,7 +224,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
       const addressData = await (addressResponse.json() as Promise<string[]>);
       const [choppedAddress = "", choppedAddressNumber = "", choppedPostOffice = ""] = addressData || [];
 
-      const isNewServicepoint = ServicepointData.length === 0;
+      const isNewServicepoint = servicepointData.length === 0;
 
       if (isNewServicepoint) {
         // TODO: ADD NEW ENTRY TO ARSERVICEPOINTS
@@ -284,9 +270,9 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
 
         // POST TO ARSERVICEPOINT. RETURNS NEW SERVICEPOINTID USED FOR OTHER POST REQUESTS
         console.log("Create new servicepoint");
-        const servicepointResponse = await fetch(API_FETCH_SERVICEPOINTS, servicepointRequestOptions);
-        const servicepointData = await (servicepointResponse.json() as Promise<Servicepoint>);
-        servicepointId = servicepointData.servicepoint_id;
+        const newServicepointResp = await fetch(API_FETCH_SERVICEPOINTS, servicepointRequestOptions);
+        const newServicepointData = await (newServicepointResp.json() as Promise<Servicepoint>);
+        servicepointId = newServicepointData.servicepoint_id;
 
         const externalServicepointOptions = {
           method: "POST",
@@ -333,12 +319,12 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
       } else {
         // TODO: COMPARE EXISTING VALUES
         console.log("Compare old data");
-        servicepointId = ServicepointData[0].servicepoint_id;
-        const oldAddress = ServicepointData[0].address_street_name;
-        const oldAddressNumber = ServicepointData[0].address_no;
-        const oldAddressCity = ServicepointData[0].address_city;
-        // const oldEasting = ServicepointData[0].loc_easting;
-        // const oldNorthing = ServicepointData[0].loc_northing;
+        servicepointId = servicepointData[0].servicepoint_id;
+        const oldAddress = servicepointData[0].address_street_name;
+        const oldAddressNumber = servicepointData[0].address_no;
+        const oldAddressCity = servicepointData[0].address_city;
+        // const oldEasting = servicepointData[0].loc_easting;
+        // const oldNorthing = servicepointData[0].loc_northing;
         const newAddress = choppedAddress;
         const newAddressNumber = choppedAddressNumber;
         const newAddressCity = choppedPostOffice;

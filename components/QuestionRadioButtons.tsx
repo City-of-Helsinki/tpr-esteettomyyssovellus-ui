@@ -28,7 +28,6 @@ const QuestionRadioButtons = ({
       if (curAnswers[questionNumber] !== undefined) {
         dispatch(removeAnsweredChoice(curAnswers[questionNumber]));
       }
-      // @ts-ignore: this is weird
       dispatch(setAnsweredChoice(answer));
       dispatch(setAnswer({ questionNumber, answer }));
     }

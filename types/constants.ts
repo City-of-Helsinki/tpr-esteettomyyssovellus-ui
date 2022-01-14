@@ -32,7 +32,7 @@ export const API_FETCH_SENTENCE_LANGS = `${API_URL_BASE}ArXStoredSentenceLangs/`
 export const API_FETCH_SYSTEM_FORMS = `${API_URL_BASE}ArSystemForms/`;
 export const API_FETCH_EXTERNAL_SERVICEPOINTS = `${API_URL_BASE}ArExternalServicepoint/`;
 
-export enum LANGUAGE_LOCALES {
+export enum LanguageLocales {
   fi = 1,
   sv = 2,
   en = 3,

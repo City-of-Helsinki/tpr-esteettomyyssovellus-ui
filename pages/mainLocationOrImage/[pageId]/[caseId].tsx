@@ -46,19 +46,6 @@ const MainLocationOrImage = ({ pageId, caseId }: MainLocationOrImageProps): Reac
 
   const coordinatesWGS84 = useAppSelector((state) => state.generalSlice.coordinatesWGS84);
 
-  // todo: maybe obsolete
-  // const filterByLanguage = (data: any) => {
-  //   const i18n = useI18n();
-  //   const curLocale: string = i18n.locale();
-  //   // @ts-ignore:
-  //   const curLocaleId: number = LANGUAGE_LOCALES[curLocale];
-  //   return data.filter((entry: any) => {
-  //     return entry.language_id === curLocaleId;
-  //   });
-  // };
-
-  // const questionDataCurrentLanguage = filterByLanguage(questionData).pop();
-
   // for saving current state obj initial state for if user edits and cancels without saving to return to old state or empty if no init addinfo
   useEffect(() => {
     // todo: save init state or not
@@ -186,19 +173,6 @@ const MainLocationOrImage = ({ pageId, caseId }: MainLocationOrImageProps): Reac
 // NextJs Server-Side Rendering, HDS best practices (SSR)
 export const getServerSideProps: GetServerSideProps = async ({ params, locales }) => {
   const lngDict = await i18nLoader(locales);
-
-  // todo: if user not checked here remove these
-  // also reduxStore and reduxStore.getState() need to be changed to redux-toolkit
-  // const reduxStore = store;
-  // const initialReduxState = reduxStore.getState();
-
-  // const user = await checkUser(req);
-  // if (!user) {
-  //   // Invalid user but login is not required
-  // }
-  // if (user && user.authenticated) {
-  //   initialReduxState.general.user = user;
-  // }
 
   const pageId = Number(params?.pageId) ?? null; // questionId
   const caseId = Number(params?.caseId) ?? null; // questionBlockId

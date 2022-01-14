@@ -12,7 +12,7 @@ import "../styles/global.scss";
 const App = ({ Component, pageProps }: AppProps): ReactElement => {
   // This function is called when doing both server-side and client-side rendering
   const router = useRouter();
-  const { lngDict, initialReduxState, ...rest } = pageProps;
+  const { lngDict, ...rest } = pageProps;
   const locale = router.locale || router.defaultLocale || defaultLocale;
 
   if (typeof window !== "undefined" && process.env.NODE_ENV !== "production") {

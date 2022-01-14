@@ -51,14 +51,13 @@ const MapWrapper = ({
 
   const setLocation = (coordinates: [number, number]) => {
     // transform coordinates to northing and easting for db
-    const LonLatReverseCoordinates: [number, number] = [coordinates[1], coordinates[0]];
+    const lonLatReverseCoordinates: [number, number] = [coordinates[1], coordinates[0]];
 
-    const [locEas, locNor] = convertCoordinates("WGS84", "EPSG:3067", LonLatReverseCoordinates);
+    const [locEas, locNor] = convertCoordinates("WGS84", "EPSG:3067", lonLatReverseCoordinates);
 
     // this case is for mainform mainlocation, questionId -1
     if (isMainLocPicComponent && questionId === -1) {
       // set state main location main form
-      // @ts-ignore: [number, number] !== number[]
       const coordinatesEPSG: [number, number] = [locEas, locNor];
 
       dispatch(

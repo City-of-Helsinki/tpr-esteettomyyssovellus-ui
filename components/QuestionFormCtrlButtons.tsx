@@ -6,7 +6,7 @@ import Button from "./QuestionButton";
 import { QuestionFormCtrlButtonsProps } from "../types/general";
 import styles from "./QuestionFormCtrlButtons.module.scss";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
-import { API_FETCH_ANSWER_LOGS, API_FETCH_QUESTION_ANSWERS, API_FETCH_SERVICEPOINTS, FRONT_URL_BASE } from "../types/constants";
+import { API_FETCH_ANSWER_LOGS, API_FETCH_QUESTION_ANSWERS, API_FETCH_SERVICEPOINTS, API_URL_BASE, FRONT_URL_BASE } from "../types/constants";
 import { setFormFinished, setInvalid, unsetFormFinished, unsetInvalid } from "../state/reducers/formSlice";
 import { getCurrentDate, postData, postAdditionalInfo, getClientIp } from "../utils/utilFunctions";
 
@@ -107,7 +107,7 @@ const QuestionFormCtrlButtons = ({
       await postAdditionalInfo(logId, additionalInfo.additionalInfo);
 
       const generateData = { entrance_id: curEntranceId, form_submitted: "D" };
-      await postData("http://localhost:8000/api/GenerateSentences/", JSON.stringify(generateData));
+      await postData(`${API_URL_BASE}GenerateSentences/`, JSON.stringify(generateData));
     }
   };
 

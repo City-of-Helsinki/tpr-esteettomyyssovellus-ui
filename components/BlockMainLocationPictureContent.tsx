@@ -1,11 +1,11 @@
 import React from "react";
 import { useAppSelector } from "../state/hooks";
-import { mainLocationAndPictureProps } from "../types/general";
+import { MainLocationAndPictureProps } from "../types/general";
 import Map from "./common/Map";
 import QuestionContainer from "./QuestionContainer";
 import styles from "./BlockMainLocationPictureContent.module.scss";
 
-const BlockMainLocationPictureContent = ({ canAddLocation, canAddPicture }: mainLocationAndPictureProps): JSX.Element => {
+const BlockMainLocationPictureContent = ({ canAddLocation, canAddPicture }: MainLocationAndPictureProps): JSX.Element => {
   // note: questionBlockId 1 === location, 2 === image
 
   const coordinatesWGS84 = useAppSelector((state) => state.generalSlice.coordinatesWGS84) ?? [60.1, 24.9];

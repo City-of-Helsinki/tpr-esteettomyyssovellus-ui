@@ -4,7 +4,6 @@ import Head from "next/head";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import i18nLoader from "../utils/i18n";
-import store from "../state/store";
 import Layout from "../components/common/Layout";
 
 const Target = (): ReactElement => {
@@ -28,17 +27,7 @@ const Target = (): ReactElement => {
 export const getServerSideProps: GetServerSideProps = async ({ locales, query }) => {
   const lngDict = await i18nLoader(locales);
 
-  const reduxStore = store;
-  // reduxStore.dispatch({ type: CLEAR_STATE });
-  const initialReduxState = reduxStore.getState();
   // console.log(params!.params);
-  // const user = await checkUser(req);
-  // if (!user) {
-  //   // Invalid user but login is not required
-  // }
-  // if (user && user.authenticated) {
-  //   initialReduxState.general.user = user;
-  // }
 
   //   GET app/{language code}/target/?
   // systemId={systemId}         => system
@@ -68,18 +57,14 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
     // CHECK PARAMS AND REDIRECT
     return {
       props: {
-        initialReduxState,
         lngDict,
-        // languageCode
       },
     };
   }
   // TAKE TO ERROR PAGE
   return {
     props: {
-      initialReduxState,
       lngDict,
-      // languageCode
     },
   };
 };

@@ -34,7 +34,7 @@ const Main = (): ReactElement => {
   const i18n = useI18n();
 
   // This checks whether the view has become so thin, i.e. mobile view, that the languageselector component should change place.
-  const [width, setWidth] = useState<number>(0);
+  const [width, setWidth] = useState(0);
   useEffect(() => {
     if (typeof window !== "undefined") {
       setWidth(window.innerWidth);
@@ -76,19 +76,6 @@ const Main = (): ReactElement => {
 // Server-side rendering
 export const getServerSideProps: GetServerSideProps = async ({ locales }) => {
   const lngDict = await i18nLoader(locales);
-
-  // todo: if user not checked here remove these
-  // also reduxStore and reduxStore.getState() need to be changed to redux-toolkit
-  // const reduxStore = store;
-  // const initialReduxState = reduxStore.getState();
-
-  // const user = await checkUser(req);
-  // if (!user) {
-  //   // Invalid user but login is not required
-  // }
-  // if (user && user.authenticated) {
-  //   initialReduxState.general.user = user;
-  // }
 
   return {
     props: {

@@ -23,7 +23,7 @@ import {
   API_FETCH_QUESTION_ANSWER_LOCATIONS,
   API_FETCH_QUESTION_ANSWER_PHOTOS,
   API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS,
-  LANGUAGE_LOCALES,
+  LanguageLocales,
 } from "../../types/constants";
 import { useAppSelector, useAppDispatch, useLoading } from "../../state/hooks";
 import QuestionBlock from "../../components/QuestionBlock";
@@ -89,8 +89,7 @@ const AdditionalEntrance = ({
   const i18n = useI18n();
   const curLocale: string = i18n.locale();
   const dispatch = useAppDispatch();
-  // @ts-ignore: TODO:
-  const curLocaleId: number = LANGUAGE_LOCALES[curLocale];
+  const curLocaleId: number = LanguageLocales[curLocale as keyof typeof LanguageLocales];
 
   const isLoading = useLoading();
 
@@ -149,7 +148,7 @@ const AdditionalEntrance = ({
     dispatch(setInitAdditionalInfoFromDb({ isInited: true }));
     if (additionalInfosData.comments) {
       additionalInfosData.comments.forEach((comment) => {
-        const curLangStr = LANGUAGE_LOCALES[comment.language];
+        const curLangStr = LanguageLocales[comment.language];
         dispatch(
           addComment({
             questionId: comment.question,
@@ -216,7 +215,7 @@ const AdditionalEntrance = ({
           const curPhotoAlts = additionalInfosData.phototexts.filter((phototext) => phototext.answer_photo === photo.answer_photo_id);
           if (curPhotoAlts) {
             curPhotoAlts.forEach((alt: QuestionAnswerPhotoTxt) => {
-              const curLangStr = LANGUAGE_LOCALES[alt.language];
+              const curLangStr = LanguageLocales[alt.language];
               dispatch(
                 setAlt({
                   questionId: photo.question,
@@ -385,18 +384,6 @@ const AdditionalEntrance = ({
 export const getServerSideProps: GetServerSideProps = async ({ params, locales }) => {
   const lngDict = await i18nLoader(locales);
 
-  // todo: if user not checked here remove these
-  // also reduxStore and reduxStore.getState() need to be changed to redux-toolkit
-  // const reduxStore = store;
-  // const initialReduxState = reduxStore.getState();
-
-  // const user = await checkUser(req);
-  // if (!user) {
-  //   // Invalid user but login is not required
-  // }
-  // if (user && user.authenticated) {
-  //   initialReduxState.general.user = user;
-  // }
   let questionsData;
   let questionChoicesData;
   let questionBlocksData;
@@ -413,23 +400,23 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   if (params !== undefined) {
     try {
       entrance_id = params.entranceId;
-      const EntranceResp = await fetch(`${API_FETCH_ENTRANCES}${entrance_id}/?format=json`);
-      entranceData = await (EntranceResp.json() as Promise<Entrance>);
+      const entranceResp = await fetch(`${API_FETCH_ENTRANCES}${entrance_id}/?format=json`);
+      entranceData = await (entranceResp.json() as Promise<Entrance>);
 
       const servicepoint_id = entranceData.servicepoint;
       //   form_id = EntranceData["form"];
 
-      const QuestionsResp = await fetch(API_FETCH_QUESTION_URL + form_id);
-      const QuestionChoicesResp = await fetch(API_FETCH_QUESTIONCHOICES + form_id);
-      const QuestionBlocksResp = await fetch(API_FETCH_QUESTIONBLOCK_URL + form_id);
-      const QuestionAnswersResp = await fetch(`${API_FETCH_BACKEND_ENTRANCE_ANSWERS}?entrance_id=${entrance_id}&format=json`);
-      const ServicepointResp = await fetch(`${API_FETCH_SERVICEPOINTS}${servicepoint_id}/?format=json`);
+      const questionsResp = await fetch(API_FETCH_QUESTION_URL + form_id);
+      const questionChoicesResp = await fetch(API_FETCH_QUESTIONCHOICES + form_id);
+      const questionBlocksResp = await fetch(API_FETCH_QUESTIONBLOCK_URL + form_id);
+      const questionAnswersResp = await fetch(`${API_FETCH_BACKEND_ENTRANCE_ANSWERS}?entrance_id=${entrance_id}&format=json`);
+      const servicepointResp = await fetch(`${API_FETCH_SERVICEPOINTS}${servicepoint_id}/?format=json`);
 
-      questionsData = await (QuestionsResp.json() as Promise<BackendQuestion[]>);
-      questionChoicesData = await (QuestionChoicesResp.json() as Promise<BackendQuestionChoice[]>);
-      questionBlocksData = await (QuestionBlocksResp.json() as Promise<BackendQuestionBlock[]>);
-      questionAnswerData = await (QuestionAnswersResp.json() as Promise<BackendEntranceAnswer[]>);
-      servicepointData = await (ServicepointResp.json() as Promise<Servicepoint>);
+      questionsData = await (questionsResp.json() as Promise<BackendQuestion[]>);
+      questionChoicesData = await (questionChoicesResp.json() as Promise<BackendQuestionChoice[]>);
+      questionBlocksData = await (questionBlocksResp.json() as Promise<BackendQuestionBlock[]>);
+      questionAnswerData = await (questionAnswersResp.json() as Promise<BackendEntranceAnswer[]>);
+      servicepointData = await (servicepointResp.json() as Promise<Servicepoint>);
 
       if (questionAnswerData.length !== 0) {
         const logId =
@@ -438,15 +425,15 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
           })[0].log_id ?? -1;
 
         if (logId && logId >= 0) {
-          const AddInfoComments = await fetch(`${API_FETCH_QUESTION_ANSWER_COMMENTS}?log=${logId}`);
-          const AddInfoLocations = await fetch(`${API_FETCH_QUESTION_ANSWER_LOCATIONS}?log=${logId}`);
-          const AddInfoPhotos = await fetch(`${API_FETCH_QUESTION_ANSWER_PHOTOS}?log=${logId}`);
-          const AddInfoPhotoTexts = await fetch(`${API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS}?log=${logId}`);
+          const addInfoComments = await fetch(`${API_FETCH_QUESTION_ANSWER_COMMENTS}?log=${logId}`);
+          const addInfoLocations = await fetch(`${API_FETCH_QUESTION_ANSWER_LOCATIONS}?log=${logId}`);
+          const addInfoPhotos = await fetch(`${API_FETCH_QUESTION_ANSWER_PHOTOS}?log=${logId}`);
+          const addInfoPhotoTexts = await fetch(`${API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS}?log=${logId}`);
 
-          addInfoCommentsData = await (AddInfoComments.json() as Promise<QuestionAnswerComment[]>);
-          addInfoLocationsData = await (AddInfoLocations.json() as Promise<QuestionAnswerLocation[]>);
-          addInfoPhotosData = await (AddInfoPhotos.json() as Promise<QuestionAnswerPhoto[]>);
-          addInfoPhotoTextsData = await (AddInfoPhotoTexts.json() as Promise<QuestionAnswerPhotoTxt[]>);
+          addInfoCommentsData = await (addInfoComments.json() as Promise<QuestionAnswerComment[]>);
+          addInfoLocationsData = await (addInfoLocations.json() as Promise<QuestionAnswerLocation[]>);
+          addInfoPhotosData = await (addInfoPhotos.json() as Promise<QuestionAnswerPhoto[]>);
+          addInfoPhotoTextsData = await (addInfoPhotoTexts.json() as Promise<QuestionAnswerPhotoTxt[]>);
 
           additionalInfosData = {
             comments: addInfoCommentsData,

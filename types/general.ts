@@ -1,6 +1,5 @@
 // place for custom typescript interfaces/"models"
 
-import { Dictionary } from "@reduxjs/toolkit";
 import { LatLngExpression } from "leaflet";
 import {
   BackendEntranceAnswer,
@@ -15,18 +14,6 @@ import {
   Servicepoint,
   StoredSentence,
 } from "./backendModels";
-
-export interface User {
-  authenticated: boolean;
-  username: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-}
-
-export interface GeneralState {
-  user?: User;
-}
 
 export interface QuestionContainerProps {
   questionId: number;
@@ -74,14 +61,6 @@ export interface QuestionInfoProps {
   closeIcon: JSX.Element;
   textOnBottom?: boolean;
   children: string | JSX.Element;
-}
-
-export interface QuestionDataProps {
-  type: string;
-  qnumber: number;
-  qText: string;
-  qInfo?: string | undefined;
-  data: Dictionary<string>[];
 }
 
 export interface QuestionButtonProps {
@@ -189,17 +168,17 @@ export interface AdditionalInfos {
   comments?: Languages;
   pictures?: PictureProps[];
   components?: AdditionalComponentProps[];
-  invalidValues?: addinfoInvalidAnswers[];
+  invalidValues?: AddinfoInvalidAnswers[];
 }
 
 // invalid values 1 per component
-// interface addinfoInvalidValues {
+// interface AddinfoInvalidValues {
 //   id: number;
-//   invalidValues?: addinfoInvalidAnswers;
+//   invalidValues?: AddinfoInvalidAnswers;
 // }
 
 // invalid answers list of
-interface addinfoInvalidAnswers {
+interface AddinfoInvalidAnswers {
   id: number;
   invalidAnswers?: string[];
 }
@@ -304,20 +283,6 @@ export interface QuestionBlockProps {
   photoText?: string | null;
 }
 
-export interface QuestionBlocksProps {
-  description?: string;
-  form_id: number;
-  language_id: number;
-  photo_text?: string;
-  photo_url?: string;
-  question_block_code: string;
-  question_block_id: number;
-  question_block_order_text: string;
-  technical_id: string;
-  text: string;
-  visible_if_question_choice: string;
-}
-
 // TODO: add type for questionlist and question
 /*
 export interface QuestionBlockProps {
@@ -372,7 +337,7 @@ export interface NoticeProps {
   button?: JSX.Element;
 }
 
-export interface mainLocationAndPictureProps {
+export interface MainLocationAndPictureProps {
   canAddLocation: boolean;
   canAddPicture: boolean;
 }

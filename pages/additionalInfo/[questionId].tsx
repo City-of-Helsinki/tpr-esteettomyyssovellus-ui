@@ -17,7 +17,7 @@ import { addComponent, removeAllInvalids, removeComponent, setEditingInitialStat
 import { useAppSelector, useAppDispatch, useLoading } from "../../state/hooks";
 import { BackendQuestion } from "../../types/backendModels";
 import { AdditionalComponentProps, AdditionalInfoPageProps, ElementCountProps } from "../../types/general";
-import { LANGUAGE_LOCALES, API_FETCH_BACKEND_QUESTIONS } from "../../types/constants";
+import { LanguageLocales, API_FETCH_BACKEND_QUESTIONS } from "../../types/constants";
 import { setCurrentlyEditingQuestion } from "../../state/reducers/generalSlice";
 import LoadSpinner from "../../components/common/LoadSpinner";
 
@@ -40,8 +40,7 @@ const AdditionalInfo = ({ questionId, questionData }: AdditionalInfoPageProps): 
 
   const filterByLanguage = (data: BackendQuestion[]) => {
     const curLocale: string = i18n.locale();
-    // @ts-ignore: TODO:
-    const curLocaleId: number = LANGUAGE_LOCALES[curLocale];
+    const curLocaleId: number = LanguageLocales[curLocale as keyof typeof LanguageLocales];
     return data.filter((entry: BackendQuestion) => {
       return entry.language_id === curLocaleId;
     });
@@ -253,19 +252,6 @@ const AdditionalInfo = ({ questionId, questionData }: AdditionalInfoPageProps): 
 // NextJs Server-Side Rendering, HDS best practices (SSR)
 export const getServerSideProps: GetServerSideProps = async ({ params, locales }) => {
   const lngDict = await i18nLoader(locales);
-
-  // todo: if user not checked here remove these
-  // also reduxStore and reduxStore.getState() need to be changed to redux-toolkit
-  // const reduxStore = store;
-  // const initialReduxState = reduxStore.getState();
-
-  // const user = await checkUser(req);
-  // if (!user) {
-  //   // Invalid user but login is not required
-  // }
-  // if (user && user.authenticated) {
-  //   initialReduxState.general.user = user;
-  // }
 
   const questionId = Number(params?.questionId) ?? null;
 

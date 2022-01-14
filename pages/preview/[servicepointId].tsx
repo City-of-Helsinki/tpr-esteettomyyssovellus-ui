@@ -104,19 +104,6 @@ const Preview = ({ servicepointData, accessibilityData, entranceData }: PreviewP
 export const getServerSideProps: GetServerSideProps = async ({ params, locales }) => {
   const lngDict = await i18nLoader(locales);
 
-  // todo: if user not checked here remove these
-  // also reduxStore and reduxStore.getState() need to be changed to redux-toolkit
-  // const reduxStore = store;
-  // const initialReduxState = reduxStore.getState();
-
-  // const user = await checkUser(req);
-  // if (!user) {
-  //   // Invalid user but login is not required
-  // }
-  // if (user && user.authenticated) {
-  //   initialReduxState.general.user = user;
-  // }
-
   // Try except to stop software crashes when developing without backend running
   // TODO: Make this more reliable and change URLs and add to constants before production
   let accessibilityData = {};
@@ -126,11 +113,11 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   let isFinished = false;
   if (params !== undefined) {
     try {
-      const ServicepointResp = await fetch(`${API_FETCH_SERVICEPOINTS}${params.servicepointId}/?format=json`);
-      servicepointData = await (ServicepointResp.json() as Promise<Servicepoint>);
+      const servicepointResp = await fetch(`${API_FETCH_SERVICEPOINTS}${params.servicepointId}/?format=json`);
+      servicepointData = await (servicepointResp.json() as Promise<Servicepoint>);
 
-      const EntranceResp = await fetch(`${API_FETCH_ENTRANCES}?servicepoint=${servicepointData.servicepoint_id}&format=json`);
-      entranceData = await (EntranceResp.json() as Promise<EntranceResults>);
+      const entranceResp = await fetch(`${API_FETCH_ENTRANCES}?servicepoint=${servicepointData.servicepoint_id}&format=json`);
+      entranceData = await (entranceResp.json() as Promise<EntranceResults>);
 
       // Since await should not be used in a loop, the following code has been changed to use Promise.all instead
       /*
@@ -154,8 +141,8 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
 
       const entranceResultSentences = await Promise.all(
         entranceData.results.map(async (entranceResult) => {
-          const SentenceResp = await fetch(`${API_FETCH_SENTENCE_LANGS}?entrance_id=${entranceResult.entrance_id}&format=json`);
-          const sentenceData = await (SentenceResp.json() as Promise<StoredSentence[]>);
+          const sentenceResp = await fetch(`${API_FETCH_SENTENCE_LANGS}?entrance_id=${entranceResult.entrance_id}&format=json`);
+          const sentenceData = await (sentenceResp.json() as Promise<StoredSentence[]>);
           return { entranceResult, sentenceData };
         })
       );
@@ -177,8 +164,8 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       };
 
       if (entranceData.results.length !== 0 && mainResultSentences?.entranceResult) {
-        const LogResp = await fetch(`${API_FETCH_ANSWER_LOGS}?entrance=${mainResultSentences?.entranceResult.entrance_id}&format=json`);
-        const logData = await (LogResp.json() as Promise<AnswerLog[]>);
+        const logResp = await fetch(`${API_FETCH_ANSWER_LOGS}?entrance=${mainResultSentences?.entranceResult.entrance_id}&format=json`);
+        const logData = await (logResp.json() as Promise<AnswerLog[]>);
 
         // TODO: Should this be true even if the form has not been submitted
         hasExistingFormData = logData.some((e) => e.form_submitted === "Y" || e.form_submitted === "D");
