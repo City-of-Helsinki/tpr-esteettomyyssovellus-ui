@@ -1,9 +1,9 @@
 // this files code from marketing project: needs editing or deleting
 
-import React, { ReactElement, ReactNode, useEffect, useRef } from "react";
+import React, { ReactElement } from "react";
 import { useI18n } from "next-localization";
 import { IconArrowRight, IconSignin } from "hds-react";
-import { useRouter } from "next/router";
+// import { useRouter } from "next/router";
 import styles from "./AddNewEntranceNotice.module.scss";
 import QuestionButton from "../QuestionButton";
 
@@ -13,7 +13,7 @@ import QuestionButton from "../QuestionButton";
 // if the functionality changes enough
 const AddNewEntranceNotice = (): ReactElement => {
   const i18n = useI18n();
-  const router = useRouter();
+  // const router = useRouter();
 
   const handleAddAdditionalEntrance = async () => {
     // todo: add url to add additional entrance

@@ -4,32 +4,37 @@ import { useI18n } from "next-localization";
 import styles from "./AdditionalInfoCommentContent.module.scss";
 
 import QuestionInfo from "./QuestionInfo";
-import { AdditionalContentProps } from "../types/general";
+import { AdditionalContentProps, Languages } from "../types/general";
 import { addComment, addInvalidValues, removeComment, removeInvalidValues } from "../state/reducers/additionalInfoSlice";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import QuestionButton from "./QuestionButton";
 
 // usage: additional info page comment component
-const AdditionalInfoCommentContent = ({ questionId, onDelete, compId, initValue }: AdditionalContentProps): JSX.Element => {
+const AdditionalInfoCommentContent = ({ questionId, onDelete, compId, initValue: initLanguagesValue }: AdditionalContentProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
-
-  // on delete button clicked chain delete comment from store and delete component cb
-  const handleOnDelete = () => {
-    handleRemoveComment();
-    onDelete ? onDelete() : null;
-  };
 
   const handleRemoveComment = () => {
     dispatch(removeComment({ questionId }));
   };
 
-  const currentInvalids = useAppSelector((state) => state.additionalInfoReducer[questionId]?.invalidValues?.find((invs) => invs.id === compId));
+  // on delete button clicked chain delete comment from store and delete component cb
+  const handleOnDelete = () => {
+    handleRemoveComment();
+    if (onDelete) {
+      onDelete();
+    }
+  };
+
+  const initValue = initLanguagesValue as Languages;
+
+  const currentInvalids = useAppSelector((state) =>
+    state.additionalInfoReducer.additionalInfo[questionId]?.invalidValues?.find((invs) => invs.id === compId)
+  );
 
   // only update state after .5 sec from prev KeyDown, set Alt text with correct lang
   let timer: NodeJS.Timeout;
-  const handleAddComment = (e: React.KeyboardEvent<HTMLTextAreaElement>, language: string) => {
-    const { value } = e.currentTarget;
+  const handleAddCommentValue = (value: string, language: string) => {
     clearTimeout(timer);
     timer = setTimeout(() => {
       dispatch(addComment({ questionId, language, value }));
@@ -54,6 +59,11 @@ const AdditionalInfoCommentContent = ({ questionId, onDelete, compId, initValue 
     }
   };
 
+  const handleAddComment = (e: React.KeyboardEvent<HTMLTextAreaElement>, language: string) => {
+    const { value } = e.currentTarget;
+    handleAddCommentValue(value, language);
+  };
+
   useEffect(() => {
     if (!initValue?.fi || initValue?.fi === "") {
       dispatch(
@@ -64,7 +74,7 @@ const AdditionalInfoCommentContent = ({ questionId, onDelete, compId, initValue 
         })
       );
     }
-  }, []);
+  }, [compId, initValue?.fi, questionId, dispatch]);
 
   return (
     <div className={styles.maincontainer}>
@@ -83,7 +93,7 @@ const AdditionalInfoCommentContent = ({ questionId, onDelete, compId, initValue 
               tooltipLabel={i18n.t("additionalInfo.generalTooptipLabel")}
               tooltipText={i18n.t("additionalInfo.altToolTipContent")}
               onKeyUp={(e: React.KeyboardEvent<HTMLTextAreaElement>) => handleAddComment(e, "fi")}
-              onLoad={() => handleAddComment(initValue?.fi, "fi")}
+              onLoad={() => handleAddCommentValue(initValue?.fi, "fi")}
               defaultValue={initValue?.fi ?? null}
               invalid={!!currentInvalids?.invalidAnswers?.includes("fi")}
               errorText={currentInvalids?.invalidAnswers?.includes("fi") ? i18n.t("additionalInfo.addCommentFiErrorText") : ""}
@@ -101,7 +111,7 @@ const AdditionalInfoCommentContent = ({ questionId, onDelete, compId, initValue 
                   label={i18n.t("additionalInfo.commentSvButtonLabel")}
                   helperText={i18n.t("additionalInfo.commentSvButtonLabelHelper")}
                   onKeyUp={(e: React.KeyboardEvent<HTMLTextAreaElement>) => handleAddComment(e, "sv")}
-                  onLoad={() => handleAddComment(initValue?.sv, "sv")}
+                  onLoad={() => handleAddCommentValue(initValue?.sv, "sv")}
                   defaultValue={initValue?.sv ?? null}
                 />
               </QuestionInfo>
@@ -117,7 +127,7 @@ const AdditionalInfoCommentContent = ({ questionId, onDelete, compId, initValue 
                   label={i18n.t("additionalInfo.commentEnLabel")}
                   helperText={i18n.t("additionalInfo.commentEnLabelHelper")}
                   onKeyUp={(e: React.KeyboardEvent<HTMLTextAreaElement>) => handleAddComment(e, "en")}
-                  onLoad={() => handleAddComment(initValue?.en, "en")}
+                  onLoad={() => handleAddCommentValue(initValue?.en, "en")}
                   defaultValue={initValue?.en ?? null}
                 />
               </QuestionInfo>

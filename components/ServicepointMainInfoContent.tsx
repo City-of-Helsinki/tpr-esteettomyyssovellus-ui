@@ -1,11 +1,11 @@
-import { useI18n } from "next-localization";
+// import { useI18n } from "next-localization";
 import { IconClock, IconPenLine, IconPersonWheelchair, IconLinkExternal } from "hds-react";
 import styles from "./ServicepointMainInfoContent.module.scss";
 
 // usage: Servicepoint info component with dropdown
 // notes: replace the placeholder text with -> ? -> not sure if locales or db sentences
 const ServicepointMainInfoContent = (): JSX.Element => {
-  const i18n = useI18n();
+  // const i18n = useI18n();
   return (
     <div className={styles.maincontainer}>
       <div className={styles.card}>

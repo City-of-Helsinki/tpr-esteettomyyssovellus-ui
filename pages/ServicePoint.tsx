@@ -1,9 +1,9 @@
-import React, { ReactElement, useState } from "react";
+import React, { ChangeEvent, ReactElement, useState } from "react";
 import { useI18n } from "next-localization";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
 import router from "next/router";
-import { getPreciseDistance } from "geolib";
+// import { getPreciseDistance } from "geolib";
 import { Button, RadioButton, SelectionGroup } from "hds-react";
 import Layout from "../components/common/Layout";
 import i18nLoader from "../utils/i18n";
@@ -11,7 +11,7 @@ import {
   API_CHOP_ADDRESS,
   API_FETCH_ENTRANCES,
   API_FETCH_SERVICEPOINTS,
-  API_FETCH_SYSTEMS,
+  // API_FETCH_SYSTEMS,
   FRONT_URL_BASE,
   API_FETCH_SYSTEM_FORMS,
   API_FETCH_EXTERNAL_SERVICEPOINTS,
@@ -21,6 +21,7 @@ import styles from "./ServicePoint.module.scss";
 
 import { getCurrentDate, validateChecksum } from "../utils/utilFunctions";
 import { checksumSecretTPRTesti } from "./checksumSecret";
+import { Servicepoint, SystemForm } from "../types/backendModels";
 
 // usage: not sure if this is obsolete?
 const Servicepoints = ({
@@ -41,11 +42,11 @@ const Servicepoints = ({
   const radioButtonNoText = "PH: EI blaablaa";
   const [selectedRadioItem, setSelectedRadioItem] = useState(startState);
 
-  const handleRadioClick = (e: any) => {
+  const handleRadioClick = (e: ChangeEvent<HTMLInputElement>) => {
     setSelectedRadioItem(e.target.value);
   };
 
-  const handleContinueClick = async (e: any) => {
+  const handleContinueClick = async () => {
     if (selectedRadioItem === "1") {
       console.log("Yes selected");
 
@@ -67,11 +68,7 @@ const Servicepoints = ({
       };
       const updateAddressUrl = `${API_FETCH_SERVICEPOINTS}${servicepointId}/update_address/`;
 
-      await fetch(updateAddressUrl, updateAddressOptions)
-        .then((response) => response.json())
-        .then((data) => {
-          // console.log(data);
-        });
+      await fetch(updateAddressUrl, updateAddressOptions);
       const url = `details/${servicepointId}`;
       router.push(url);
       // TODO: Update entry in ArServicePoint and redirect to /details/x page.
@@ -84,62 +81,60 @@ const Servicepoints = ({
         <title>{i18n.t("notification.title")}</title>
       </Head>
       <main id="content">
-        {changed ? (
-          changed === "address" ? (
-            <div>
-              <h1>
-                {i18n.t("AddressChangedPage.headerSentence1")}
-                {servicepointName}
-                {i18n.t("AddressChangedPage.headerSentence2")}
-              </h1>
-              <div className={styles.addressBlock}>
-                <p>{i18n.t("AddressChangedPage.oldAddress")}:</p>
-                <h4 className={styles.address}>{`${oldAddress} ${oldAddressNumber}, ${oldAddressCity}`}</h4>
-              </div>
-              <div className={styles.addressBlock}>
-                <p>{i18n.t("AddressChangedPage.oldAddress")}:</p>
-                <h4 className={styles.address}>{`${newAddress} ${newAddressNumber}, ${newAddressCity}`}</h4>
-              </div>
-              <div className={styles.radioButtonDiv}>
-                <SelectionGroup label={i18n.t("AddressChangedPage.hasServicepointMoved")}>
-                  <RadioButton
-                    id="v-radio1"
-                    name="v-radio"
-                    label={radioButtonYesText}
-                    value="1"
-                    checked={selectedRadioItem === "1"}
-                    onChange={handleRadioClick}
-                  />
-                  <RadioButton
-                    id="v-radio2"
-                    name="v-radio"
-                    label={radioButtonNoText}
-                    value="2"
-                    checked={selectedRadioItem === "2"}
-                    onChange={handleRadioClick}
-                  />
-                </SelectionGroup>
-              </div>
-              <Button id="continueButton" variant="primary" disabled={selectedRadioItem === startState} onClick={handleContinueClick}>
-                {i18n.t("accessibilityForm.continue")}
-              </Button>
-              {
-                // TODO: Sulje välilehti
-              }
+        {changed && changed === "address" && (
+          <div>
+            <h1>
+              {i18n.t("AddressChangedPage.headerSentence1")}
+              {servicepointName}
+              {i18n.t("AddressChangedPage.headerSentence2")}
+            </h1>
+            <div className={styles.addressBlock}>
+              <p>{i18n.t("AddressChangedPage.oldAddress")}:</p>
+              <h4 className={styles.address}>{`${oldAddress} ${oldAddressNumber}, ${oldAddressCity}`}</h4>
             </div>
-          ) : (
-            <h1>{i18n.t("AddressChangedPage.locationHasChanged")}</h1>
-          )
-        ) : (
-          <h1>{i18n.t("AddressChangedPage.errorHasOccured")}</h1>
+            <div className={styles.addressBlock}>
+              <p>{i18n.t("AddressChangedPage.oldAddress")}:</p>
+              <h4 className={styles.address}>{`${newAddress} ${newAddressNumber}, ${newAddressCity}`}</h4>
+            </div>
+            <div className={styles.radioButtonDiv}>
+              <SelectionGroup label={i18n.t("AddressChangedPage.hasServicepointMoved")}>
+                <RadioButton
+                  id="v-radio1"
+                  name="v-radio"
+                  label={radioButtonYesText}
+                  value="1"
+                  checked={selectedRadioItem === "1"}
+                  onChange={handleRadioClick}
+                />
+                <RadioButton
+                  id="v-radio2"
+                  name="v-radio"
+                  label={radioButtonNoText}
+                  value="2"
+                  checked={selectedRadioItem === "2"}
+                  onChange={handleRadioClick}
+                />
+              </SelectionGroup>
+            </div>
+            <Button id="continueButton" variant="primary" disabled={selectedRadioItem === startState} onClick={handleContinueClick}>
+              {i18n.t("accessibilityForm.continue")}
+            </Button>
+            {
+              // TODO: Sulje välilehti
+            }
+          </div>
         )}
+
+        {changed && changed !== "address" && <h1>{i18n.t("AddressChangedPage.locationHasChanged")}</h1>}
+
+        {!changed && <h1>{i18n.t("AddressChangedPage.errorHasOccured")}</h1>}
       </main>
     </Layout>
   );
 };
 
 // Server-side rendering
-export const getServerSideProps: GetServerSideProps = async ({ params, req, locales, query }) => {
+export const getServerSideProps: GetServerSideProps = async ({ locales, query }) => {
   const lngDict = await i18nLoader(locales);
 
   // todo: if user not checked here remove these
@@ -166,8 +161,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, loca
   // &easting=386500
   // &checksum=90CE983598EB80B3A7332B700C0CA5E8C4FF3E6689CA4FB5C2000BCB578843C6
 
-  let SystemData;
-  let ServicepointData;
   if (query !== undefined) {
     if (
       query?.systemId === undefined ||
@@ -188,14 +181,13 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, loca
       };
     }
     try {
-      let isNewServicepoint: boolean;
       let servicepointId = 0;
-      const SystemResp = await fetch(API_FETCH_SYSTEMS + query.systemId);
+      // const SystemResp = await fetch(API_FETCH_SYSTEMS + query.systemId);
       const ServicepointResp = await fetch(`${API_FETCH_SERVICEPOINTS}?format=json&ext_servicepoint_id=${query.servicePointId}`);
-      SystemData = await SystemResp.json();
-      ServicepointData = await ServicepointResp.json();
+      // const SystemData = await SystemResp.json();
+      const ServicepointData = await ServicepointResp.json();
 
-      const checksumSecret = SystemData[0].checksum_secret;
+      // const checksumSecret = SystemData[0].checksum_secret;
       const checksumString =
         // TODO: CHANGE TO checksumSecret when moving to production
         // checksumSecret +
@@ -213,33 +205,26 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, loca
       const checksumIsValid = validateChecksum(checksumString, query.checksum);
 
       // TODO: UNCOMMENT WHEN MOVING TO PRODUCTION
-      // if (!checksumIsValid) {
-      //   console.log("Checksums did not match.");
-      //   return {
-      //     props: {
-      //       initialReduxState,
-      //       lngDict
-      //     }
-      //   };
-      // }
+      if (!checksumIsValid) {
+        console.log("Checksums did not match.");
+        //   return {
+        //     props: {
+        //       initialReduxState,
+        //       lngDict
+        //     }
+        //   };
+      }
       console.log("Checksums matched.");
 
-      const SystemFormResp = await fetch(`${API_FETCH_SYSTEM_FORMS}`);
-      const SystemFormData = await SystemFormResp.json();
+      const systemFormResp = await fetch(`${API_FETCH_SYSTEM_FORMS}`);
+      const systemFormData = await (systemFormResp.json() as Promise<SystemForm[]>);
 
-      let canUseForm = false;
-
-      SystemFormData.map((system: any) => {
-        if (system.system === query.systemId && (system.form === 0 || system.form === 1)) {
-          canUseForm = true;
-        }
-      });
+      const canUseForm = systemFormData.some((system: SystemForm) => system.system === query.systemId && (system.form === 0 || system.form === 1));
 
       if (!canUseForm) {
         throw new Error("A servicepoint with this systemId cannot use form 0 or 1");
       }
 
-      let addressData: any[] = [];
       // CHOP THE ADDRESS
       const addressRequestOptions = {
         method: "POST",
@@ -249,23 +234,11 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, loca
           postOffice: query.postOffice,
         }),
       };
-      await fetch(API_CHOP_ADDRESS, addressRequestOptions)
-        .then((response) => response.json())
-        .then((data) => {
-          addressData = data;
-        });
+      const addressResponse = await fetch(API_CHOP_ADDRESS, addressRequestOptions);
+      const addressData = await (addressResponse.json() as Promise<string[]>);
+      const [choppedAddress = "", choppedAddressNumber = "", choppedPostOffice = ""] = addressData || [];
 
-      let choppedAddress = "";
-      let choppedAddressNumber = "";
-      let choppedPostOffice = "";
-
-      if (addressData.length === 3) {
-        choppedAddress = addressData[0];
-        choppedAddressNumber = addressData[1];
-        choppedPostOffice = addressData[2];
-      }
-
-      isNewServicepoint = ServicepointData.length === 0;
+      const isNewServicepoint = ServicepointData.length === 0;
 
       if (isNewServicepoint) {
         // TODO: ADD NEW ENTRY TO ARSERVICEPOINTS
@@ -310,12 +283,10 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, loca
         };
 
         // POST TO ARSERVICEPOINT. RETURNS NEW SERVICEPOINTID USED FOR OTHER POST REQUESTS
-        await fetch(API_FETCH_SERVICEPOINTS, servicepointRequestOptions)
-          .then((response) => response.json())
-          .then((data) => {
-            console.log("Create new servicepoint");
-            servicepointId = data.servicepoint_id;
-          });
+        console.log("Create new servicepoint");
+        const servicepointResponse = await fetch(API_FETCH_SERVICEPOINTS, servicepointRequestOptions);
+        const servicepointData = await (servicepointResponse.json() as Promise<Servicepoint>);
+        servicepointId = servicepointData.servicepoint_id;
 
         const externalServicepointOptions = {
           method: "POST",
@@ -329,11 +300,8 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, loca
           }),
         };
 
-        await fetch(API_FETCH_EXTERNAL_SERVICEPOINTS, externalServicepointOptions)
-          .then((response) => response.json())
-          .then((data) => {
-            console.log("Created new external servicepoint");
-          });
+        await fetch(API_FETCH_EXTERNAL_SERVICEPOINTS, externalServicepointOptions);
+        console.log("Created new external servicepoint");
 
         const entranceRequestOptions = {
           method: "POST",
@@ -358,11 +326,9 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, loca
           }),
         };
 
-        await fetch(API_FETCH_ENTRANCES, entranceRequestOptions)
-          .then((response) => response.json())
-          .then((data) => {
-            console.log("Create new entrance");
-          });
+        await fetch(API_FETCH_ENTRANCES, entranceRequestOptions);
+        console.log("Create new entrance");
+
         console.log("New servicepoint and entrance inserted to the database");
       } else {
         // TODO: COMPARE EXISTING VALUES
@@ -371,8 +337,8 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, loca
         const oldAddress = ServicepointData[0].address_street_name;
         const oldAddressNumber = ServicepointData[0].address_no;
         const oldAddressCity = ServicepointData[0].address_city;
-        const oldEasting = ServicepointData[0].loc_easting;
-        const oldNorthing = ServicepointData[0].loc_northing;
+        // const oldEasting = ServicepointData[0].loc_easting;
+        // const oldNorthing = ServicepointData[0].loc_northing;
         const newAddress = choppedAddress;
         const newAddressNumber = choppedAddressNumber;
         const newAddressCity = choppedPostOffice;
@@ -380,6 +346,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, loca
 
         const addressHasChanged = oldAddress !== choppedAddress || oldAddressNumber !== choppedAddressNumber || oldAddressCity !== choppedPostOffice;
 
+        /*
         const preciseDistance = getPreciseDistance(
           { latitude: oldNorthing, longitude: oldEasting },
           {
@@ -387,11 +354,12 @@ export const getServerSideProps: GetServerSideProps = async ({ params, req, loca
             longitude: Number(query.easting),
           }
         );
+        */
 
         // console.log(oldNorthing, oldEasting);
         // console.log(Number(query.northing), Number(query.easting));
         // console.log(preciseDistance);
-        const locationHasChanged = preciseDistance > 15;
+        // const locationHasChanged = preciseDistance > 15;
 
         if (addressHasChanged) {
           const changed = "address";

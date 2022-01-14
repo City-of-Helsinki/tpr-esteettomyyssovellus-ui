@@ -24,10 +24,10 @@ const AdditionalInfoLocationContent = ({
   //   const [addressErrorText, setAddressErrorText] = useState("");
 
   const coordinatesWGS84 = useAppSelector((state) => state.generalSlice.coordinatesWGS84);
-  const fallbackLocation = !initValue && !isMainLocPicComponent ? coordinatesWGS84 : initValue;
+  const fallbackLocation = !initValue && !isMainLocPicComponent ? coordinatesWGS84 : (initValue as [number, number]);
 
   const coordinates = useAppSelector((state) => state.additionalInfoReducer.additionalInfo[questionId].locations?.coordinates);
-  const coords: [number, number] = !isMainLocPicComponent ? coordinates : fallbackLocation;
+  const coords = !isMainLocPicComponent && coordinates ? coordinates : fallbackLocation;
 
   const handleRemoveLocation = () => {
     dispatch(removeLocation({ questionId }));

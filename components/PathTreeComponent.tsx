@@ -11,16 +11,17 @@ const PathTreeComponent = ({ treeItems }: PathTreeProps): JSX.Element => {
   const { length } = treeItems;
   const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
   const pathTree = treeItems.map((elem, index) => {
+    const key = `treeitem_${index}`;
     const treeItem =
       treeItems.indexOf(elem) === length - 1 ? (
-        <div key={index}>
-          <a>
+        <div key={key}>
+          <a href="/TODO">
             {" > "}
             {elem}
           </a>
         </div>
       ) : (
-        <div key={index}>
+        <div key={key}>
           {" > "}
           <a className={styles.link} href={`${FRONT_URL_BASE + i18n.locale()}/details/${curServicepointId}`}>
             {elem}

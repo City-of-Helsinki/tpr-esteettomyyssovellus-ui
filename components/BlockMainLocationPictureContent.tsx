@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useAppSelector } from "../state/hooks";
 import { mainLocationAndPictureProps } from "../types/general";
 import Map from "./common/Map";
@@ -71,7 +71,7 @@ const BlockMainLocationPictureContent = ({ canAddLocation, canAddPicture }: main
               <div
                 className={styles.addinfopicturepreview}
                 style={{
-                  backgroundImage: `url(` + `${mainImage.base ?? mainImage.url}` + `)`,
+                  backgroundImage: `url(${mainImage.base ?? mainImage.url})`,
                 }}
               />
             </div>

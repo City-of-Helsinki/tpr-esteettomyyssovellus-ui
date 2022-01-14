@@ -4,7 +4,7 @@ import Head from "next/head";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import i18nLoader from "../utils/i18n";
-import { store } from "../state/store";
+import store from "../state/store";
 import Layout from "../components/common/Layout";
 
 const Target = (): ReactElement => {
@@ -25,7 +25,7 @@ const Target = (): ReactElement => {
 };
 
 // Server-side rendering
-export const getServerSideProps: GetServerSideProps = async ({ req, locales, params, query }) => {
+export const getServerSideProps: GetServerSideProps = async ({ locales, query }) => {
   const lngDict = await i18nLoader(locales);
 
   const reduxStore = store;

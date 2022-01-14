@@ -40,7 +40,7 @@ const MainLocationOrImage = ({ pageId, caseId }: MainLocationOrImageProps): Reac
 
   const currentMainImageElement = useAppSelector((state) => state.formReducer.mainImageElement) ?? null;
 
-  const currentMainImage = useAppSelector((state) => state.formReducer.mainImage) ?? null;
+  const currentMainImage = useAppSelector((state) => state.formReducer.mainImage);
 
   const coordinates = useAppSelector((state) => state.generalSlice.coordinates);
 
@@ -129,7 +129,7 @@ const MainLocationOrImage = ({ pageId, caseId }: MainLocationOrImageProps): Reac
                       key={`key_${pageId}`}
                       questionId={pageId}
                       compId={caseId}
-                      initValue={coordinatesWGS84 ?? null}
+                      initValue={coordinatesWGS84}
                       canDelete={false}
                       isMainLocPicComponent
                     />
@@ -138,19 +138,13 @@ const MainLocationOrImage = ({ pageId, caseId }: MainLocationOrImageProps): Reac
 
                 {currentMainImageElement === "upload" && !isLocation ? (
                   <div className={styles.componentcontainer}>
-                    <MainPictureContent pageId={pageId} key={`key_${caseId}`} onDelete={() => handleDelete()} initValue={currentMainImage || null} />
+                    <MainPictureContent pageId={pageId} key={`key_${caseId}`} onDelete={() => handleDelete()} initValue={currentMainImage} />
                   </div>
                 ) : null}
 
                 {currentMainImageElement === "link" && !isLocation ? (
                   <div className={styles.componentcontainer}>
-                    <MainPictureContent
-                      pageId={pageId}
-                      onlyLink
-                      key={`key_${caseId}`}
-                      onDelete={() => handleDelete()}
-                      initValue={currentMainImage || null}
-                    />
+                    <MainPictureContent pageId={pageId} onlyLink key={`key_${caseId}`} onDelete={() => handleDelete()} initValue={currentMainImage} />
                   </div>
                 ) : null}
 

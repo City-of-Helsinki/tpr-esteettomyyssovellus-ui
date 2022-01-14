@@ -1,3 +1,4 @@
+import React, { ChangeEvent } from "react";
 import { useI18n } from "next-localization";
 import { TextInput } from "hds-react";
 import QuestionFormImportExistingData from "./QuestionFormImportExistingData";
@@ -65,7 +66,7 @@ const ContactInformationQuestionContainer = ({ blockNumber }: ContactInformation
   ];
 
   // general handler for contactinfo text inputs
-  const handleChange = (event: any) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     // REGEXES FOR VALIDATING
     const phonePattern = new RegExp(PHONE_REGEX);
     const emailPattern = new RegExp(EMAIL_REGEX);
@@ -105,6 +106,8 @@ const ContactInformationQuestionContainer = ({ blockNumber }: ContactInformation
         } else {
           dispatch(changeWwwStatus(false));
         }
+        break;
+      default:
     }
   };
 
@@ -129,7 +132,6 @@ const ContactInformationQuestionContainer = ({ blockNumber }: ContactInformation
         <QuestionFormImportExistingData />
       </div>
       {contactQuestions.map((question, ind: number) => {
-        const contacts = useAppSelector((state) => state.formReducer.contacts);
         const { phoneNumber } = contacts;
         const { email } = contacts;
         const { contactPerson } = contacts;
@@ -141,31 +143,28 @@ const ContactInformationQuestionContainer = ({ blockNumber }: ContactInformation
 
         switch (question.question_id) {
           case -1:
-            value = contactPerson[0];
-            isAnswered = contactPerson[1];
+            [value, isAnswered] = contactPerson;
             error = contactPerson[1] ? "" : i18n.t("ContactInformation.personValidationErrorText");
             break;
           case -2:
-            value = phoneNumber[0];
-            isAnswered = phoneNumber[1];
+            [value, isAnswered] = phoneNumber;
             // phoneNumber[1] is a boolean value indicating whether the phone number
             // is valid. If the phone number is invalid displays an error text
             error = phoneNumber[1] ? "" : i18n.t("ContactInformation.phoneNumberValidationErrorText");
             break;
           case -3:
-            value = email[0];
-            isAnswered = email[1];
+            [value, isAnswered] = email;
             // email[1] is a boolean value indicating whether the email
             // is valid. If the email is invalid displays an error text
             error = email[1] ? "" : i18n.t("ContactInformation.emailValidationErrorText");
             break;
           case -4:
-            value = www[0];
-            isAnswered = www[1];
+            [value, isAnswered] = www;
             // email[1] is a boolean value indicating whether the email
             // is valid. If the email is invalid displays an error text
             error = www[1] ? "" : i18n.t("ContactInformation.wwwValidationErrorText");
             break;
+          default:
         }
 
         const questionStyle =
@@ -185,6 +184,7 @@ const ContactInformationQuestionContainer = ({ blockNumber }: ContactInformation
             <QuestionContainer
               key={question.question_code}
               questionId={-1}
+              questionBlockId={1}
               questionText={question.text}
               backgroundColor={backgroundColor}
               hasAdditionalInfo={false}

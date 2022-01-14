@@ -156,7 +156,7 @@ const AdditionalInfo = ({ questionId, questionData }: AdditionalInfoPageProps): 
                           questionId={questionId}
                           compId={id}
                           onDelete={() => handleDelete(id, "upload")}
-                          initValue={curAdditionalInfo?.pictures ? curAdditionalInfo?.pictures : null}
+                          initValue={curAdditionalInfo?.pictures}
                         />
                       </div>
                     );
@@ -170,7 +170,7 @@ const AdditionalInfo = ({ questionId, questionData }: AdditionalInfoPageProps): 
                           questionId={questionId}
                           compId={id}
                           onDelete={() => handleDelete(id, "link")}
-                          initValue={curAdditionalInfo?.pictures ? curAdditionalInfo?.pictures : null}
+                          initValue={curAdditionalInfo?.pictures}
                         />
                       </div>
                     );
@@ -183,7 +183,7 @@ const AdditionalInfo = ({ questionId, questionData }: AdditionalInfoPageProps): 
                           questionId={questionId}
                           compId={id}
                           onDelete={() => handleDelete(id, "comment")}
-                          initValue={curAdditionalInfo.comments ?? null}
+                          initValue={curAdditionalInfo.comments}
                         />
                       </div>
                     );
@@ -196,7 +196,7 @@ const AdditionalInfo = ({ questionId, questionData }: AdditionalInfoPageProps): 
                           questionId={questionId}
                           compId={id}
                           onDelete={() => handleDelete(id, "location")}
-                          initValue={curAdditionalInfo.locations ?? null}
+                          initValue={curAdditionalInfo.locations?.coordinates}
                         />
                       </div>
                     );

@@ -1,6 +1,6 @@
 import React from "react";
 import { useAccordion, Button, IconMinus, IconPlus, IconCheckCircleFill, Card, IconAlertCircle } from "hds-react";
-import router from "next/router";
+// import router from "next/router";
 import { HeadlineQuestionContainerProps } from "../types/general";
 import styles from "./HeadlineQuestionContainer.module.scss";
 import { useAppSelector } from "../state/hooks";
@@ -17,16 +17,18 @@ const HeadlineQuestionContainer = ({ text, number, initOpen = false, children, i
   // Change icon based on accordion open state
   const icon = isOpen ? <IconMinus aria-hidden /> : <IconPlus aria-hidden />;
   let iconLeft = curFinishedBlocks.includes(Number(number)) ? <IconCheckCircleFill aria-hidden /> : null;
-  !isValid ? (iconLeft = <IconAlertCircle aria-hidden color="#b01038" />) : iconLeft;
+  iconLeft = !isValid ? <IconAlertCircle aria-hidden color="#b01038" /> : iconLeft;
   let buttonVariant: "primary" | "secondary" | "danger" = isOpen ? "primary" : "secondary";
 
   const buttonStyle = number !== undefined && curInvalidBlocks.includes(number) && !isOpen ? { borderColor: "#b01038", borderWidth: "0.2rem" } : {};
   buttonVariant = number !== undefined && curInvalidBlocks.includes(number) && isOpen ? "danger" : buttonVariant;
 
+  /*
   const handleOnClickOnFirstAccordion = () => {
     console.log("CANT OPEN");
     router.reload();
   };
+  */
 
   // for custom toggle and firing event resize for the leaflet maps to render properly
   // if they are hidden and no rerender/window event is triggered they will render poorly

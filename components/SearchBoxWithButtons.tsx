@@ -25,6 +25,7 @@ const SearchBoxWithButtons = (): JSX.Element => {
               <a
                 // TODO: Add functionality
                 className={styles.helpText}
+                href="/TODO"
               >
                 {" "}
                 näytä hakuohje <IconAngleDown style={{ marginLeft: "1px" }} />

@@ -1,4 +1,9 @@
 // Tables
+export interface SystemForm {
+  system: string;
+  form: number;
+}
+
 export interface Servicepoint {
   servicepoint_id: number;
   business_id?: string;
@@ -23,6 +28,15 @@ export interface Servicepoint {
   loc_northing?: number;
   location_id?: string;
   [key: string]: number | string | Date | undefined;
+}
+
+export interface ExternalServicepoint {
+  external_servicepoint_id: string;
+  system: string;
+  servicepoint: number;
+  created: Date;
+  id: number;
+  created_by: string;
 }
 
 export interface Entrance {

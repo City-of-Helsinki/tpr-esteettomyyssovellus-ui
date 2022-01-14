@@ -134,8 +134,7 @@ export interface PreviewPageLandingSummaryProps {
 
 export interface ServicepointLandingSummaryContentProps {
   contentHeader?: string;
-  // TODO: change any type when knowledge of the type getting
-  children?: any;
+  children?: JSX.Element;
 }
 
 export interface ServicepointLandingSummaryCtrlButtonsProps {
@@ -165,7 +164,7 @@ export interface AdditionalContentProps {
   compId: number;
   onDelete?: (id?: number, type?: string) => void;
   canDelete?: boolean;
-  initValue?: any;
+  initValue?: [number, number] | Languages | PictureProps[];
   isMainLocPicComponent?: boolean;
 }
 
@@ -173,7 +172,7 @@ export interface MainPictureContentProps {
   onlyLink?: boolean;
   pageId: number;
   onDelete?: (id?: number, type?: string) => void;
-  initValue?: any;
+  initValue?: MainPictureProps;
 }
 
 export interface Location {
@@ -257,7 +256,6 @@ export interface Languages {
 // FORMS related stuff
 
 export interface MainEntranceFormProps {
-  isMobile?: boolean;
   questionsData: BackendQuestion[];
   questionChoicesData: BackendQuestionChoice[];
   questionBlocksData: BackendQuestionBlock[];
@@ -329,7 +327,7 @@ export interface QuestionBlockProps {
 */
 
 export interface PathTreeProps {
-  treeItems: any[];
+  treeItems: (string | undefined)[];
 }
 
 export interface QuestionAdditionalInfoProps {
