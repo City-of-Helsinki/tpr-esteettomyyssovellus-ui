@@ -44,9 +44,8 @@ export const additionalInfoSlice = createSlice({
   initialState,
   reducers: {
     clearAddinfoState: () => {
-      const initState = {} as AdditionalInfoStateProps;
       return {
-        ...initState,
+        ...initialState,
       };
     },
     setInitAdditionalInfoFromDb: (
