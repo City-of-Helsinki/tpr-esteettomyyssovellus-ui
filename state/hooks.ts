@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import type { TypedUseSelectorHook } from "react-redux";
 import type { RootState, AppDispatch } from "./store";
 
 // custom hook for checking if page is loaded (uses nextjs router events)
