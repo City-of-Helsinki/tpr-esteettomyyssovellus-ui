@@ -15,10 +15,8 @@ const PathTreeComponent = ({ treeItems }: PathTreeProps): JSX.Element => {
     const treeItem =
       treeItems.indexOf(elem) === length - 1 ? (
         <div key={key}>
-          <a href="/TODO">
-            {" > "}
-            {elem}
-          </a>
+          {" > "}
+          {elem}
         </div>
       ) : (
         <div key={key}>
