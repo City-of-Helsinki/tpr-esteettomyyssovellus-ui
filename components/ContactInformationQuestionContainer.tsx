@@ -1,8 +1,9 @@
+import React, { ChangeEvent } from "react";
+import { useI18n } from "next-localization";
+import { TextInput } from "hds-react";
 import QuestionFormImportExistingData from "./QuestionFormImportExistingData";
 import styles from "./ContactInformationQuestionContainer.module.scss";
-import { useI18n } from "next-localization";
 import QuestionContainer from "./QuestionContainer";
-import { TextInput } from "hds-react";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { ContactInformationProps } from "../types/general";
 import {
@@ -24,9 +25,7 @@ import { EMAIL_REGEX, PHONE_REGEX } from "../types/constants";
 // notes: i guess if this info would be fetched from db this component could be removed(?)
 // todo: maybe remove this whole component if these come from db with dame logic as other questions
 
-const ContactInformationQuestionContainer = ({
-  blockNumber,
-}: ContactInformationProps): JSX.Element => {
+const ContactInformationQuestionContainer = ({ blockNumber }: ContactInformationProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
 
@@ -35,7 +34,7 @@ const ContactInformationQuestionContainer = ({
     {
       placeholder: i18n.t("ContactInformation.personPlaceholder"),
       question_block_id: blockNumber,
-      question_code: blockNumber + ".1",
+      question_code: `${blockNumber}.1`,
       question_id: -1,
       question_level: 1,
       text: i18n.t("ContactInformation.contactPerson"),
@@ -43,7 +42,7 @@ const ContactInformationQuestionContainer = ({
     {
       placeholder: i18n.t("ContactInformation.phonePlaceholder"),
       question_block_id: blockNumber,
-      question_code: blockNumber + ".2",
+      question_code: `${blockNumber}.2`,
       question_id: -2,
       question_level: 1,
       text: i18n.t("ContactInformation.phoneNumber"),
@@ -51,7 +50,7 @@ const ContactInformationQuestionContainer = ({
     {
       placeholder: i18n.t("ContactInformation.emailPlaceholder"),
       question_block_id: blockNumber,
-      question_code: blockNumber + ".3",
+      question_code: `${blockNumber}.3`,
       question_id: -3,
       question_level: 1,
       text: i18n.t("ContactInformation.email"),
@@ -59,7 +58,7 @@ const ContactInformationQuestionContainer = ({
     {
       placeholder: i18n.t("ContactInformation.wwwPlaceholder"),
       question_block_id: blockNumber,
-      question_code: blockNumber + ".4",
+      question_code: `${blockNumber}.4`,
       question_id: -4,
       question_level: 1,
       text: i18n.t("ContactInformation.www"),
@@ -67,10 +66,10 @@ const ContactInformationQuestionContainer = ({
   ];
 
   // general handler for contactinfo text inputs
-  const handleChange = (event: any) => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     // REGEXES FOR VALIDATING
-    var phonePattern = new RegExp(PHONE_REGEX);
-    var emailPattern = new RegExp(EMAIL_REGEX);
+    const phonePattern = new RegExp(PHONE_REGEX);
+    const emailPattern = new RegExp(EMAIL_REGEX);
 
     switch (event.target.id) {
       case "-1":
@@ -107,37 +106,36 @@ const ContactInformationQuestionContainer = ({
         } else {
           dispatch(changeWwwStatus(false));
         }
+        break;
+      default:
     }
   };
 
   // CHECK IF THE BLOCK IS FINISHED
   const contacts = useAppSelector((state) => state.formReducer.contacts);
-  if (Object.values(contacts).every((e) => e[1] == true)) {
+  if (Object.values(contacts).every((e) => e[1] === true)) {
     dispatch(setFinished(99));
   } else {
     dispatch(unsetFinished(99));
   }
 
-  const invalidBlocks = useAppSelector(
-    (state) => state.formReducer.invalidBlocks
-  );
+  const invalidBlocks = useAppSelector((state) => state.formReducer.invalidBlocks);
   const isInvalid = invalidBlocks.includes(99);
 
   return (
     <>
       <div className={styles.mainInfo}>
         <p>{i18n.t("ContactInformation.contactInformationText")}</p>
-        <div className={styles.infoContainer}></div>
+        <div className={styles.infoContainer} />
       </div>
       <div className={styles.importAddinfoContainer}>
         <QuestionFormImportExistingData />
       </div>
       {contactQuestions.map((question, ind: number) => {
-        const contacts = useAppSelector((state) => state.formReducer.contacts);
-        const phoneNumber = contacts["phoneNumber"];
-        const email = contacts["email"];
-        const contactPerson = contacts["contactPerson"];
-        const www = contacts["www"];
+        const { phoneNumber } = contacts;
+        const { email } = contacts;
+        const { contactPerson } = contacts;
+        const { www } = contacts;
         let value = "";
         let error = "";
         let isAnswered = false;
@@ -145,39 +143,28 @@ const ContactInformationQuestionContainer = ({
 
         switch (question.question_id) {
           case -1:
-            value = contactPerson[0];
-            isAnswered = contactPerson[1];
-            error = contactPerson[1]
-              ? ""
-              : i18n.t("ContactInformation.personValidationErrorText");
+            [value, isAnswered] = contactPerson;
+            error = contactPerson[1] ? "" : i18n.t("ContactInformation.personValidationErrorText");
             break;
           case -2:
-            value = phoneNumber[0];
-            isAnswered = phoneNumber[1];
+            [value, isAnswered] = phoneNumber;
             // phoneNumber[1] is a boolean value indicating whether the phone number
             // is valid. If the phone number is invalid displays an error text
-            error = phoneNumber[1]
-              ? ""
-              : i18n.t("ContactInformation.phoneNumberValidationErrorText");
+            error = phoneNumber[1] ? "" : i18n.t("ContactInformation.phoneNumberValidationErrorText");
             break;
           case -3:
-            value = email[0];
-            isAnswered = email[1];
+            [value, isAnswered] = email;
             // email[1] is a boolean value indicating whether the email
             // is valid. If the email is invalid displays an error text
-            error = email[1]
-              ? ""
-              : i18n.t("ContactInformation.emailValidationErrorText");
+            error = email[1] ? "" : i18n.t("ContactInformation.emailValidationErrorText");
             break;
           case -4:
-            value = www[0];
-            isAnswered = www[1];
+            [value, isAnswered] = www;
             // email[1] is a boolean value indicating whether the email
             // is valid. If the email is invalid displays an error text
-            error = www[1]
-              ? ""
-              : i18n.t("ContactInformation.wwwValidationErrorText");
+            error = www[1] ? "" : i18n.t("ContactInformation.wwwValidationErrorText");
             break;
+          default:
         }
 
         const questionStyle =
@@ -196,6 +183,8 @@ const ContactInformationQuestionContainer = ({
           <div style={questionStyle} key={question.question_code}>
             <QuestionContainer
               key={question.question_code}
+              questionId={-1}
+              questionBlockId={1}
               questionText={question.text}
               backgroundColor={backgroundColor}
               hasAdditionalInfo={false}
@@ -206,7 +195,7 @@ const ContactInformationQuestionContainer = ({
                 id={question.question_id.toString()}
                 placeholder={question.placeholder}
                 onChange={handleChange}
-                value={value ? value : undefined}
+                value={value || undefined}
                 errorText={error}
               />
             </QuestionContainer>

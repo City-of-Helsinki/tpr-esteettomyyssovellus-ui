@@ -1,36 +1,35 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import type { TypedUseSelectorHook } from "react-redux";
 import type { RootState, AppDispatch } from "./store";
 
 // custom hook for checking if page is loaded (uses nextjs router events)
 // is used to display loading spinner while loading page
-export const useLoading = () => {
+export const useLoading = (): boolean => {
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const handleStart = (url: string) => {
-      var siteUrl = url;
-      if (
-        siteUrl.substring(0, 3) == "/en" ||
-        siteUrl.substring(0, 3) == "/sv"
-      ) {
+      let siteUrl = url;
+      if (siteUrl.substring(0, 3) === "/en" || siteUrl.substring(0, 3) === "/sv") {
         siteUrl = url.substring(3);
       }
-      siteUrl !== router.asPath && setLoading(true);
+      if (siteUrl !== router.asPath) {
+        setLoading(true);
+      }
     };
 
     const handleComplete = (url: string) => {
-      var siteUrl = url;
-      if (
-        siteUrl.substring(0, 3) == "/en" ||
-        siteUrl.substring(0, 3) == "/sv"
-      ) {
+      let siteUrl = url;
+      if (siteUrl.substring(0, 3) === "/en" || siteUrl.substring(0, 3) === "/sv") {
         siteUrl = url.substring(3);
       }
-      siteUrl === router.asPath && setLoading(false);
+      if (siteUrl === router.asPath) {
+        setLoading(false);
+      }
     };
 
     router.events.on("routeChangeStart", handleStart);
@@ -42,11 +41,11 @@ export const useLoading = () => {
       router.events.off("routeChangeComplete", handleComplete);
       router.events.off("routeChangeError", handleComplete);
     };
-  }, []);
+  }, [router.asPath, router.events]);
 
   return loading;
 };
 
 // use these typed hooks throughout the app instead of regular useDispatch and useSelector
-export const useAppDispatch = () => useDispatch<AppDispatch>();
+export const useAppDispatch = (): AppDispatch => useDispatch<AppDispatch>();
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;

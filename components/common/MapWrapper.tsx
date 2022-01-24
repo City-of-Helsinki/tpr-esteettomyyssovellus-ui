@@ -1,30 +1,20 @@
-import React, { ReactElement, useRef, useEffect, useState } from "react";
+import React, { ReactElement, useRef, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useI18n } from "next-localization";
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  useMap,
-  useMapEvents,
-} from "react-leaflet";
+import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from "react-leaflet";
 import { Marker as LeafletMarker, Icon } from "leaflet";
+import { useDispatch } from "react-redux";
 import getOrigin from "../../utils/request";
 import styles from "./MapWrapper.module.scss";
-import { useDispatch } from "react-redux";
 import { addLocation } from "../../state/reducers/additionalInfoSlice";
 import { useAppSelector } from "../../state/hooks";
 import { convertCoordinates, isLocationValid } from "../../utils/utilFunctions";
-import {
-  setServicepointLocation,
-  setServicepointLocationWGS84,
-} from "../../state/reducers/generalSlice";
+import { setServicepointLocation, setServicepointLocationWGS84 } from "../../state/reducers/generalSlice";
 
 interface MapWrapperProps {
   questionId: number;
   initialZoom: number;
   initLocation?: [number, number] | number[];
-  setLocation?: (initLocation: [number, number]) => void;
   setMapReady?: (ready: boolean) => void;
   draggableMarker?: boolean;
   makeStatic: boolean;
@@ -50,39 +40,24 @@ const MapWrapper = ({
   const markerRef = useRef<LeafletMarker>(null);
 
   // state location for addinfos for getting location from addinfo question state
-  const stateLocation = useAppSelector(
-    (state) => state.additionalInfoReducer[questionId]?.locations?.coordinates
-  );
+  const stateLocation = useAppSelector((state) => state.additionalInfoReducer.additionalInfo[questionId]?.locations?.coordinates);
 
   // for setting initLocation or fallback getting it from state
-  const initGeneralLocation = initLocation
-    ? initLocation
-    : useAppSelector((state) => state.generalSlice.coordinatesWGS84);
+  const coordinatesWGS84 = useAppSelector((state) => state.generalSlice.coordinatesWGS84);
+  const initGeneralLocation = initLocation || coordinatesWGS84;
 
   // @ts-ignore : ignore types because .reverse() returns number[]
-  const curLocation: [number, number] =
-    stateLocation && stateLocation !== undefined && !isMainLocPicComponent
-      ? stateLocation
-      : initGeneralLocation;
+  const curLocation: [number, number] = stateLocation && stateLocation !== undefined && !isMainLocPicComponent ? stateLocation : initGeneralLocation;
 
   const setLocation = (coordinates: [number, number]) => {
-    let locNor, locEas;
     // transform coordinates to northing and easting for db
-    const LonLatReverseCoordinates: [number, number] = [
-      coordinates[1],
-      coordinates[0],
-    ];
+    const lonLatReverseCoordinates: [number, number] = [coordinates[1], coordinates[0]];
 
-    [locEas, locNor] = convertCoordinates(
-      "WGS84",
-      "EPSG:3067",
-      LonLatReverseCoordinates
-    );
+    const [locEas, locNor] = convertCoordinates("WGS84", "EPSG:3067", lonLatReverseCoordinates);
 
     // this case is for mainform mainlocation, questionId -1
     if (isMainLocPicComponent && questionId === -1) {
       // set state main location main form
-      //@ts-ignore: [number, number] != number[]
       const coordinatesEPSG: [number, number] = [locEas, locNor];
 
       dispatch(
@@ -102,8 +77,8 @@ const MapWrapper = ({
       // for additionalinfo location adding
       dispatch(
         addLocation({
-          questionId: questionId,
-          coordinates: coordinates,
+          questionId,
+          coordinates,
           locNorthing: Math.round(locNor),
           locEasting: Math.round(locEas),
         })
@@ -154,11 +129,7 @@ const MapWrapper = ({
 
     // If the initLocation in redux state has changed, by geocoding or dragging, pan the map to centre on the new position
     useEffect(() => {
-      if (
-        isLocationValid(curLocation) &&
-        prevLocation !== curLocation &&
-        !makeStatic
-      ) {
+      if (isLocationValid(curLocation) && prevLocation !== curLocation && !makeStatic) {
         map.setView(curLocation, 18);
         map.invalidateSize();
       }
@@ -188,37 +159,24 @@ const MapWrapper = ({
   };
 
   return (
-    <MapContainer
-      className={styles.mapwrapper}
-      center={curLocation}
-      zoom={initialZoom}
-      minZoom={5}
-      maxZoom={18}
-      whenReady={whenReady}
-    >
+    <MapContainer className={styles.mapwrapper} center={curLocation} zoom={initialZoom} minZoom={5} maxZoom={18} whenReady={whenReady}>
       <CustomMapHandler />
       <TileLayer
         url="http://tiles.hel.ninja/styles/hel-osm-bright/{z}/{x}/{y}@2x@fi.png"
-        attribution={`<a href="https://www.openstreetmap.org/copyright" target="_blank">© ${i18n.t(
-          "common.map.osm"
-        )}</a>`}
+        attribution={`<a href="https://www.openstreetmap.org/copyright" target="_blank">© ${i18n.t("common.map.osm")}</a>`}
       />
       {isLocationValid(curLocation) && (
-        <Marker
-          ref={markerRef}
-          icon={icon}
-          position={curLocation}
-          draggable={draggableMarker}
-          eventHandlers={markerEventHandlers}
-        />
+        <Marker ref={markerRef} icon={icon} position={curLocation} draggable={draggableMarker} eventHandlers={markerEventHandlers} />
       )}
     </MapContainer>
   );
 };
 
 MapWrapper.defaultProps = {
-  setLocation: undefined,
+  initLocation: undefined,
   setMapReady: undefined,
+  draggableMarker: false,
+  isMainLocPicComponent: false,
 };
 
 export default MapWrapper;

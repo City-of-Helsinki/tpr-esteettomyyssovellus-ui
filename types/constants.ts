@@ -1,14 +1,11 @@
 // place for general constrants e.g const and enums
 // all 'static text' should be here
 
-export const TERMS_URL =
-  "https://myhelsinki.fi/fi/myhelsinki-places-palvelun-käyttöehdot/";
-export const ACCESSIBILITY_URL =
-  "https://myhelsinki.fi/fi/saavutettavuusseloste/";
+export const TERMS_URL = "https://myhelsinki.fi/fi/myhelsinki-places-palvelun-käyttöehdot/";
+export const ACCESSIBILITY_URL = "https://myhelsinki.fi/fi/saavutettavuusseloste/";
 export const CREATIVECOMMONS_URL = "creativecommons.org/licences/by/4.0";
 
-export const HKI_GEOCODING_URL =
-  "https://api.hel.fi/servicemap/v2/search/?format=json&type=address&input=";
+export const HKI_GEOCODING_URL = "https://api.hel.fi/servicemap/v2/search/?format=json&type=address&input=";
 export const GEOCODING_PARAMS = "&language=fi&only=location";
 
 export const API_URL_BASE = "http://localhost:8000/api/";
@@ -35,7 +32,7 @@ export const API_FETCH_SENTENCE_LANGS = `${API_URL_BASE}ArXStoredSentenceLangs/`
 export const API_FETCH_SYSTEM_FORMS = `${API_URL_BASE}ArSystemForms/`;
 export const API_FETCH_EXTERNAL_SERVICEPOINTS = `${API_URL_BASE}ArExternalServicepoint/`;
 
-export enum LANGUAGE_LOCALES {
+export enum LanguageLocales {
   fi = 1,
   sv = 2,
   en = 3,
@@ -52,6 +49,7 @@ export enum Toast {
 }
 
 export const PHONE_REGEX = /^[^a-zA-Z]+$/;
-export const EMAIL_REGEX = /^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i;
+export const EMAIL_REGEX =
+  /^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i;
 
 export default null;

@@ -3,10 +3,7 @@ import styles from "./ServicepointLandingSummaryContent.module.scss";
 import { ServicepointLandingSummaryContentProps } from "../types/general";
 
 // usage: used in details/landing page for content to ServicepointLandingSummary
-const ServicepointLandingSummaryContent = ({
-  contentHeader,
-  children,
-}: ServicepointLandingSummaryContentProps): JSX.Element => {
+const ServicepointLandingSummaryContent = ({ contentHeader, children }: ServicepointLandingSummaryContentProps): JSX.Element => {
   return (
     <div className={styles.maincontainer}>
       <h2 className={styles.header}>{contentHeader}</h2>

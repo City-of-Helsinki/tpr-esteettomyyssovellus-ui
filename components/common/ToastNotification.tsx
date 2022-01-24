@@ -9,11 +9,7 @@ interface NoticeProps {
   setToast: Dispatch<SetStateAction<Toast | undefined>>;
 }
 
-const ToastNotification = ({
-  prefix,
-  toast,
-  setToast,
-}: NoticeProps): ReactElement => {
+const ToastNotification = ({ prefix, toast, setToast }: NoticeProps): ReactElement => {
   const i18n = useI18n();
 
   const cleanupToast = () => {

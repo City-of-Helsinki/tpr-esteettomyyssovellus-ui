@@ -1,6 +1,6 @@
 // this files code from marketing project: needs editing or deleting
 
-import React, { ReactElement, useEffect, useState } from "react";
+import React, { KeyboardEvent, ReactElement, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useI18n } from "next-localization";
@@ -10,7 +10,6 @@ import getOrigin from "../../utils/request";
 import styles from "./Header.module.scss";
 
 interface HeaderProps {
-  includeLanguageSelector?: boolean;
   children?: React.ReactNode;
 }
 
@@ -22,10 +21,7 @@ const DynamicNavigation = dynamic(
   { ssr: false }
 );
 
-const Header = ({
-  includeLanguageSelector,
-  children,
-}: HeaderProps): ReactElement => {
+const Header = ({ children }: HeaderProps): ReactElement => {
   const i18n = useI18n();
   const router = useRouter();
 
@@ -44,10 +40,7 @@ const Header = ({
       location: { pathname },
     } = window;
 
-    window.open(
-      `${getOrigin(router)}/helauth/login/?next=${pathname}`,
-      "_self"
-    );
+    window.open(`${getOrigin(router)}/helauth/login/?next=${pathname}`, "_self");
   };
 
   const signOut = async () => {
@@ -56,25 +49,26 @@ const Header = ({
     window.open("https://api.hel.fi/sso/openid/end-session/", "_self");
   };
 
-  const handleKeyPress = (e: Event, id: string) => {
-    let evt = e as KeyboardEvent;
-    if (evt.code == "Enter") {
+  const handleKeyPress = (evt: KeyboardEvent<HTMLAnchorElement>, id: string) => {
+    if (evt.code === "Enter") {
       document.getElementById(id)?.click();
     }
   };
 
   // This checks whether the view has become so thin, i.e. mobile view, that the languageselector component should change place.
-  if (typeof window !== "undefined") {
-    const [width, setWidth] = useState<number>(window.innerWidth);
-    useEffect(() => {
+  const [width, setWidth] = useState(window.innerWidth);
+  useEffect(() => {
+    if (typeof window !== "undefined") {
       window.addEventListener("resize", () => setWidth(window.innerWidth));
-      return () => {
+    }
+    return () => {
+      if (typeof window !== "undefined") {
         window.removeEventListener("resize", () => setWidth(window.innerWidth));
-      };
-    }, []);
-    let isMobile: boolean = width < 768;
-    includeLanguageSelector = isMobile ? false : true;
-  }
+      }
+    };
+  }, []);
+  const isMobile = width < 768;
+  const includeLanguageSelector = !isMobile;
 
   return (
     <>
@@ -107,10 +101,7 @@ const Header = ({
                 as="a"
                 label={i18n.t("common.header.servicepoints")}
                 href={`${router.basePath}/${router.locale}/servicepoints`}
-                active={
-                  router.pathname.includes("servicepoint") ||
-                  router.pathname.includes("accessibilityEdit")
-                }
+                active={router.pathname.includes("servicepoint") || router.pathname.includes("accessibilityEdit")}
               />
               <Navigation.Item
                 role="button"
@@ -126,10 +117,8 @@ const Header = ({
           {
             <Navigation.User
               label={i18n.t("common.header.login")}
-              authenticated={true} /* Change to: currentUser?.authenticated} */
-              userName={
-                "PLACEHOLDER"
-              } /* Change to: currentUser?.first_name || currentUser?.email} */
+              authenticated /* Change to: currentUser?.authenticated} */
+              userName="PLACEHOLDER" /* Change to: currentUser?.first_name || currentUser?.email} */
               onSignIn={signIn}
             >
               <Navigation.Item
@@ -137,9 +126,7 @@ const Header = ({
                 href="#"
                 variant="supplementary"
                 className={includeLanguageSelector ? "" : styles.logout}
-                icon={
-                  !includeLanguageSelector ? "" : <IconSignout aria-hidden />
-                }
+                icon={!includeLanguageSelector ? "" : <IconSignout aria-hidden />}
                 label={i18n.t("common.header.logout")}
                 onClick={signOut}
               />
@@ -147,15 +134,13 @@ const Header = ({
           }
 
           {includeLanguageSelector && (
-            <Navigation.LanguageSelector
-              label={(router.locale || defaultLocale).toUpperCase()}
-            >
+            <Navigation.LanguageSelector label={(router.locale || defaultLocale).toUpperCase()}>
               <Navigation.Item
                 role="button"
                 id="fi"
                 label="Suomeksi"
                 tabIndex={0}
-                onKeyPress={(e: any) => handleKeyPress(e, "fi")}
+                onKeyPress={(e: KeyboardEvent<HTMLAnchorElement>) => handleKeyPress(e, "fi")}
                 onClick={() => changeLanguage("fi")}
               />
               <Navigation.Item
@@ -163,7 +148,7 @@ const Header = ({
                 id="sv"
                 label="På svenska"
                 tabIndex={0}
-                onKeyPress={(e: any) => handleKeyPress(e, "sv")}
+                onKeyPress={(e: KeyboardEvent<HTMLAnchorElement>) => handleKeyPress(e, "sv")}
                 onClick={() => changeLanguage("sv")}
               />
               <Navigation.Item
@@ -171,7 +156,7 @@ const Header = ({
                 id="en"
                 label="In English"
                 tabIndex={0}
-                onKeyPress={(e: any) => handleKeyPress(e, "en")}
+                onKeyPress={(e: KeyboardEvent<HTMLAnchorElement>) => handleKeyPress(e, "en")}
                 onClick={() => changeLanguage("en")}
               />
             </Navigation.LanguageSelector>
@@ -184,33 +169,27 @@ const Header = ({
                 role="button"
                 id="fim"
                 tabIndex={0}
-                className={
-                  router.locale == "fi" ? styles.chosen : styles.unchosen
-                }
+                className={router.locale === "fi" ? styles.chosen : styles.unchosen}
                 label="Suomeksi (FI)"
-                onKeyPress={(e: any) => handleKeyPress(e, "fim")}
+                onKeyPress={(e: KeyboardEvent<HTMLAnchorElement>) => handleKeyPress(e, "fim")}
                 onClick={() => changeLanguage("fi")}
               />
               <Navigation.Item
                 role="button"
                 id="svm"
                 tabIndex={0}
-                className={
-                  router.locale == "sv" ? styles.chosen : styles.unchosen
-                }
+                className={router.locale === "sv" ? styles.chosen : styles.unchosen}
                 label="På svenska (SV)"
-                onKeyPress={(e: any) => handleKeyPress(e, "svm")}
+                onKeyPress={(e: KeyboardEvent<HTMLAnchorElement>) => handleKeyPress(e, "svm")}
                 onClick={() => changeLanguage("sv")}
               />
               <Navigation.Item
                 role="button"
                 id="enm"
                 tabIndex={0}
-                className={
-                  router.locale == "en" ? styles.chosen : styles.unchosen
-                }
+                className={router.locale === "en" ? styles.chosen : styles.unchosen}
                 label="In English (EN)"
-                onKeyPress={(e: any) => handleKeyPress(e, "enm")}
+                onKeyPress={(e: KeyboardEvent<HTMLAnchorElement>) => handleKeyPress(e, "enm")}
                 onClick={() => changeLanguage("en")}
               />
             </div>
@@ -222,7 +201,6 @@ const Header = ({
 };
 
 Header.defaultProps = {
-  includeLanguageSelector: true,
   children: [],
 };
 

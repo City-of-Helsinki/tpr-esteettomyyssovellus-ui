@@ -1,61 +1,37 @@
 import React, { useEffect, useState } from "react";
 import { IconArrowLeft } from "hds-react";
-import styles from "./AdditionalInfoCtrlButtons.module.scss";
-import QuestionButton from "./QuestionButton";
 import { useI18n } from "next-localization";
 import { useRouter } from "next/router";
+import styles from "./AdditionalInfoCtrlButtons.module.scss";
+import QuestionButton from "./QuestionButton";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
-import {
-  removeSingleQuestionAdditionalinfo,
-  setPreviousInitStateAdditionalinfo,
-} from "../state/reducers/additionalInfoSlice";
-import {
-  AdditionalInfoCtrlButtonsProps,
-  AdditionalInfoProps,
-} from "../types/general";
-import {
-  addMainImageElement,
-  addMainPicture,
-} from "../state/reducers/formSlice";
-import {
-  setServicepointLocation,
-  setServicepointLocationWGS84,
-} from "../state/reducers/generalSlice";
+import { addMainImageElement, addMainPicture } from "../state/reducers/formSlice";
+import { setServicepointLocation, setServicepointLocationWGS84 } from "../state/reducers/generalSlice";
 
 // usage: save and return without saving buttons in additionalinfo page
 // notes: only save if save clicked, if return no save or back button (browser, mice etc) returns to old or emtpy value
-const MainLocationPictureCtrlButtons = ({ caseId }: any): JSX.Element => {
+const MainLocationPictureCtrlButtons = (): JSX.Element => {
   const i18n = useI18n();
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [pageSaved, setPageSaved] = useState(false);
 
-  const hasInvalidValidations = useAppSelector(
-    (state) => state.formReducer.mainImageInvalidValues
-  );
+  const hasInvalidValidations = useAppSelector((state) => state.formReducer.mainImageInvalidValues);
 
-  const mainimageTemp = useAppSelector(
-    (state) => state.formReducer.mainImageTemp
-  );
+  const mainimageTemp = useAppSelector((state) => state.formReducer.mainImageTemp);
 
-  const mainimageElementTemp = useAppSelector(
-    (state) => state.formReducer.mainImageTempElement
-  );
+  const mainimageElementTemp = useAppSelector((state) => state.formReducer.mainImageTempElement);
 
-  const coordinatesTemp = useAppSelector(
-    (state) => state.generalSlice.coordinatesTemp
-  );
+  const coordinatesTemp = useAppSelector((state) => state.generalSlice.coordinatesTemp);
 
-  const coordinatesWGS84Temp = useAppSelector(
-    (state) => state.generalSlice.coordinatesWGS84Temp
-  );
+  const coordinatesWGS84Temp = useAppSelector((state) => state.generalSlice.coordinatesWGS84Temp);
 
   // handle user clicking back button on browser / mouse ->
   // needs to remove the "saved" values same as clicking return no save
   // also check if pageSaved (saved button clicked), if so then just return
   // sets temps (which are set when first entering the page) to the non-temp/values
   useEffect(() => {
-    router.beforePopState(({}) => {
+    router.beforePopState(() => {
       if (pageSaved) {
         return true;
       }
@@ -82,7 +58,7 @@ const MainLocationPictureCtrlButtons = ({ caseId }: any): JSX.Element => {
 
       return true;
     });
-  }, [mainimageTemp, coordinatesTemp, pageSaved]);
+  }, [mainimageTemp, mainimageElementTemp, coordinatesTemp, coordinatesWGS84Temp, pageSaved, router, dispatch]);
 
   // don't alter already saved state, set pageSaved to true
   const handleSaveAndReturn = () => {
@@ -109,19 +85,12 @@ const MainLocationPictureCtrlButtons = ({ caseId }: any): JSX.Element => {
         variant="secondary"
         iconLeft={<IconArrowLeft />}
         onClickHandler={handleSaveAndReturn}
-        disabled={
-          hasInvalidValidations && hasInvalidValidations.length > 0
-            ? true
-            : false
-        }
+        disabled={!!(hasInvalidValidations && hasInvalidValidations.length > 0)}
       >
         {i18n.t("common.buttons.saveAndReturn")}
       </QuestionButton>
       <span className={styles.noborderbutton}>
-        <QuestionButton
-          variant="secondary"
-          onClickHandler={() => handleReturnNoSave()}
-        >
+        <QuestionButton variant="secondary" onClickHandler={() => handleReturnNoSave()}>
           {i18n.t("common.buttons.returnNoSave")}
         </QuestionButton>
       </span>

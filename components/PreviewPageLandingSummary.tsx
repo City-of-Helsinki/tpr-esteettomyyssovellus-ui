@@ -1,52 +1,47 @@
 import React from "react";
 import { IconAlertCircle } from "hds-react";
 import { useI18n } from "next-localization";
+import { PreviewPageLandingSummaryProps } from "../types/general";
 import ServicepointLandingSummaryContent from "./ServicepointLandingSummaryContent";
 import styles from "./PreviewPageLandingSummary.module.scss";
 
 // usage: summarizing preview page data component e.g. created sentences (list)
-const PreviewPageLandingSummary = ({ data }: any): JSX.Element => {
+const PreviewPageLandingSummary = ({ data }: PreviewPageLandingSummaryProps): JSX.Element => {
   const i18n = useI18n();
 
   // Add React components to these arrays.
-  let contents: any = [];
-  let mainEntrance: any = [];
+  let contents: JSX.Element[] = [];
+  const mainEntrance: JSX.Element[] = [];
   let hasData = false;
 
   if (data) {
-    hasData = data != undefined && data["main"].length != 0;
+    hasData = data !== undefined && data.main.length !== 0;
 
-    let keys = Object.keys(data);
-    keys.map((key) => {
-      let itemList: any = [];
+    const keys = Object.keys(data);
+    keys.forEach((key) => {
+      const itemList: JSX.Element[] = [];
       let currentTitle = "";
       if (data[key]) {
-        data[key].map((x: any) => {
-          if (x.sentence_group_name != currentTitle) {
+        data[key].forEach((x) => {
+          if (x.sentence_group_name !== currentTitle) {
             currentTitle = x.sentence_group_name;
             // Add h3 titles in the container
-            itemList.push(
-              <h3 className={styles.sentenceGroupName}>{currentTitle}</h3>
-            );
+            itemList.push(<h3 className={styles.sentenceGroupName}>{currentTitle}</h3>);
           }
           itemList.push(<li>{x.sentence}</li>);
         });
       }
 
       // Check if main entrance.
-      if (key == "main") {
+      if (key === "main") {
         mainEntrance.push(
-          <ServicepointLandingSummaryContent
-            contentHeader={i18n.t("common.mainEntrance")}
-          >
+          <ServicepointLandingSummaryContent contentHeader={i18n.t("common.mainEntrance")}>
             <ul>{itemList}</ul>
           </ServicepointLandingSummaryContent>
         );
       } else {
         contents.push(
-          <ServicepointLandingSummaryContent
-            contentHeader={i18n.t("common.additionalEntrance")}
-          >
+          <ServicepointLandingSummaryContent contentHeader={i18n.t("common.additionalEntrance")}>
             <ul>{itemList}</ul>
           </ServicepointLandingSummaryContent>
         );

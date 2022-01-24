@@ -1,59 +1,53 @@
-import React, { useEffect, useRef, useState } from "react";
-import {
-  IconPlus,
-  IconMinus,
-  TextArea,
-  TextInput,
-  Checkbox,
-  Tooltip,
-  SelectionGroup,
-} from "hds-react";
+import React, { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
+import { IconPlus, IconMinus, TextArea, TextInput, Checkbox, Tooltip, SelectionGroup } from "hds-react";
 import { useI18n } from "next-localization";
+import { v4 as uuidv4 } from "uuid";
 import styles from "./AdditionalInfoPicturesContent.module.scss";
 import QuestionButton from "./QuestionButton";
 import QuestionInfo from "./QuestionInfo";
-import {
-  addInvalidValues,
-  addPicture,
-  removeInvalidValues,
-  removePicture,
-  setAlt,
-  setPictureSource,
-} from "../state/reducers/additionalInfoSlice";
+import { addInvalidValues, addPicture, removeInvalidValues, removePicture, setAlt, setPictureSource } from "../state/reducers/additionalInfoSlice";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { AdditionalContentProps } from "../types/general";
-import { CREATIVECOMMONS_URL } from "../types/constants";
-import { v4 as uuidv4 } from "uuid";
 
 // usage: additionalinfo page picture components
 // notes: this component has both "upload" and "link/url" image components for they are such similar
-const AdditionalInfoPicturesContent = ({
-  questionId,
-  compId,
-  onlyLink = false,
-  onDelete,
-  initValue,
-}: AdditionalContentProps): JSX.Element => {
+const AdditionalInfoPicturesContent = ({ questionId, compId, onlyLink = false, onDelete, initValue }: AdditionalContentProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
   const currentId = compId;
-  const curAddInfo = useAppSelector(
-    (state) => state.additionalInfoReducer[questionId]
-  );
-  const curImage = curAddInfo?.pictures?.filter(
-    (pic) => pic.id === currentId
-  )[0];
+  const curAddInfo = useAppSelector((state) => state.additionalInfoReducer.additionalInfo[questionId]);
+  const curImage = curAddInfo?.pictures?.filter((pic) => pic.id === currentId)[0];
   const [linkText, setLinkText] = useState("");
+  const [termsChecked, setTermsChecked] = useState(false);
 
   // get current invalid fields for validation
   const currentInvalids = useAppSelector((state) =>
-    state.additionalInfoReducer[questionId].invalidValues?.find(
-      (invs) => invs.id === compId
-    )
+    state.additionalInfoReducer.additionalInfo[questionId].invalidValues?.find((invs) => invs.id === compId)
   );
 
   // hidden input field which is clicked after custom button is pressed
   const hiddenFileInput = useRef<HTMLInputElement>(null);
+
+  // remove validation values respectively
+  const handleAddInvalidValues = useCallback(
+    (answersToAdd: string[]) => {
+      dispatch(
+        addInvalidValues({
+          questionId,
+          compId: currentId,
+          invalidAnswers: answersToAdd,
+        })
+      );
+    },
+    [currentId, questionId, dispatch]
+  );
+
+  // remove image from state
+  const handleRemoveImage = () => {
+    dispatch(removePicture({ questionId, currentId }));
+    // also adds errors back for validation
+    handleAddInvalidValues(["url", "fi", "source", "sharelicense"]);
+  };
 
   // click the hidden file input and remove previous image if present
   const handleAddImageToInput = (): void => {
@@ -70,26 +64,25 @@ const AdditionalInfoPicturesContent = ({
   const handleremoveInvalidValue = (remoTarget: string) => {
     dispatch(
       removeInvalidValues({
-        questionId: questionId,
+        questionId,
         compId: currentId,
         removeTarget: remoTarget,
       })
     );
   };
 
-  // remove validation values respectively
-  const handleAddInvalidValues = (answersToAdd: string[]) => {
-    dispatch(
-      addInvalidValues({
-        questionId: questionId,
-        compId: currentId,
-        invalidAnswers: answersToAdd,
-      })
-    );
+  // todo: maybe needs more refined error message if not found image (?)
+  const validateUrlIsImage = async (url: string) => {
+    const res = await fetch(url);
+    if (res.status === 200) {
+      return true;
+    }
+    setLinkText("");
+    return false;
   };
 
   // add image to state, in else when adding just the img link/url
-  const handleImageAdded = async (e?: any) => {
+  const handleImageAdded = async (e?: ChangeEvent<HTMLInputElement>) => {
     setTermsChecked(false);
     // this if is for upload image component
     if (e && e.target.files && e.target.files.length > 0) {
@@ -102,9 +95,11 @@ const AdditionalInfoPicturesContent = ({
         base: imgBase64,
         uuid: uuidv4(),
         url: "",
-        fi: "",
-        sv: "",
-        en: "",
+        altText: {
+          fi: "",
+          sv: "",
+          en: "",
+        },
         source: "",
       };
       dispatch(addPicture(payload));
@@ -127,9 +122,11 @@ const AdditionalInfoPicturesContent = ({
           name: "",
           base: linkText,
           url: linkText,
-          fi: "",
-          sv: "",
-          en: "",
+          altText: {
+            fi: "",
+            sv: "",
+            en: "",
+          },
           source: "",
         };
         dispatch(addPicture(payload));
@@ -140,46 +137,27 @@ const AdditionalInfoPicturesContent = ({
     }
   };
 
-  //todo: maybe needs more refined error message if not found image (?)
-  const validateUrlIsImage = async (url: string) => {
-    const res = await fetch(url);
-    if (res.status === 200) {
-      return true;
-    }
-    setLinkText("");
-    return false;
-  };
-
   // combined remove and add image
   const handleImageRemoveAndAdded = () => {
     handleRemoveImage();
     handleImageAdded();
   };
 
-  // remove image from state
-  const handleRemoveImage = () => {
-    dispatch(removePicture({ questionId, currentId }));
-    // also adds errors back for validation
-    handleAddInvalidValues(["url", "fi", "source", "sharelicense"]);
-  };
-
   // on delete button clicked chain delete image from store and delete component cb
   const handleOnDelete = () => {
     handleRemoveImage();
-    onDelete ? onDelete() : null;
+    if (onDelete) {
+      onDelete();
+    }
   };
 
   // only update state after X (0.5) sec from prev KeyDown, set Alt text with correct lang
   let timer: NodeJS.Timeout;
-  const handleAddAlt = (
-    e: React.KeyboardEvent<HTMLTextAreaElement>,
-    language: string,
-    compId: number
-  ) => {
-    const value: string = e.currentTarget.value;
+  const handleAddAlt = (e: React.KeyboardEvent<HTMLTextAreaElement>, language: string, id: number) => {
+    const { value } = e.currentTarget;
     clearTimeout(timer);
     timer = setTimeout(() => {
-      dispatch(setAlt({ questionId, language, value, compId }));
+      dispatch(setAlt({ questionId, language, value, compId: id }));
     }, 500);
     // remove or add mandatory alt fi validation to state
     if (value && value !== "") {
@@ -191,8 +169,7 @@ const AdditionalInfoPicturesContent = ({
 
   // logic for checkbox picture terms using HDS
   // todo: this could be put in to state, or maybe not because only used for validation so no need to save anywhere (?)
-  const [termsChecked, setTermsChecked] = useState(false);
-  const onCheckChange = (e: any) => {
+  const onCheckChange = () => {
     setTermsChecked(!termsChecked);
     if (!termsChecked) {
       handleremoveInvalidValue("sharelicense");
@@ -201,8 +178,8 @@ const AdditionalInfoPicturesContent = ({
     }
   };
 
-  //update source on state
-  const onSourceChange = (e: any) => {
+  // update source on state
+  const onSourceChange = (e: ChangeEvent<HTMLInputElement>) => {
     const source = e.currentTarget.value;
     dispatch(setPictureSource({ questionId, source, compId }));
     // remove or add mandatory source validation to state
@@ -214,9 +191,11 @@ const AdditionalInfoPicturesContent = ({
   };
 
   // add or remove url validation errors
-  const handleLinkText = (e: any) => {
-    const value = e.currentTarget.value;
-    value.length > 0 ? setLinkText(value) : null;
+  const handleLinkText = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.currentTarget;
+    if (value.length > 0) {
+      setLinkText(value);
+    }
     if (value && value !== "") {
       handleremoveInvalidValue("url");
     } else if (value === "") {
@@ -230,11 +209,7 @@ const AdditionalInfoPicturesContent = ({
       {i18n.t("additionalInfo.chooseFromDevice")}
     </QuestionButton>
   ) : (
-    <QuestionButton
-      variant="secondary"
-      onClickHandler={() => handleImageRemoveAndAdded()}
-      disabled={linkText ? false : true}
-    >
+    <QuestionButton variant="secondary" onClickHandler={() => handleImageRemoveAndAdded()} disabled={!linkText}>
       {i18n.t("additionalInfo.pictureLinkConfirmButton")}
     </QuestionButton>
   );
@@ -248,73 +223,45 @@ const AdditionalInfoPicturesContent = ({
       // set terms checked if already validated image due to always checked otherwise cant save
       setTermsChecked(true);
     }
-  }, []);
+  }, [curImage, handleAddInvalidValues, initValue]);
 
   return (
     <div className={styles.maincontainer}>
       <div
         className={styles.inputcontainer}
-        style={
-          currentInvalids?.invalidAnswers?.includes("url")
-            ? { alignItems: "center" }
-            : { alignItems: "flex-end" }
-        }
+        style={currentInvalids?.invalidAnswers?.includes("url") ? { alignItems: "center" } : { alignItems: "flex-end" }}
       >
         <span className={styles.inputfield}>
           <TextInput
-            id="{`chooseimg-${currentId}`}"
-            label={
-              onlyLink
-                ? i18n.t("additionalInfo.pictureInputLink")
-                : i18n.t("additionalInfo.pictureInput")
-            }
+            // id="{`chooseimg-${currentId}`}"
+            id="chooseimg"
+            label={onlyLink ? i18n.t("additionalInfo.pictureInputLink") : i18n.t("additionalInfo.pictureInput")}
             placeholder={curImage?.name}
-            disabled={onlyLink ? false : true}
+            disabled={!onlyLink}
             onChange={(e) => handleLinkText(e)}
             defaultValue={curImage?.url ? curImage.url : ""}
-            invalid={
-              currentInvalids?.invalidAnswers?.includes("url") ? true : false
-            }
-            errorText={
-              currentInvalids?.invalidAnswers?.includes("url")
-                ? i18n.t("additionalInfo.picureLinkErrorText")
-                : ""
-            }
+            invalid={!!currentInvalids?.invalidAnswers?.includes("url")}
+            errorText={currentInvalids?.invalidAnswers?.includes("url") ? i18n.t("additionalInfo.picureLinkErrorText") : ""}
           />
         </span>
 
         {curImage?.base && !onlyLink ? (
-          <QuestionButton
-            variant="secondary"
-            onClickHandler={handleAddImageToInput}
-          >
+          <QuestionButton variant="secondary" onClickHandler={handleAddImageToInput}>
             {i18n.t("additionalInfo.changePicture")}
           </QuestionButton>
         ) : (
           addFromDeviceButton
         )}
-        <QuestionButton
-          variant="secondary"
-          onClickHandler={() => handleOnDelete()}
-        >
+        <QuestionButton variant="secondary" onClickHandler={() => handleOnDelete()}>
           {i18n.t("additionalInfo.cancelPicture")}
         </QuestionButton>
-        {onlyLink ? null : (
-          <input
-            type="file"
-            className={styles.hidden}
-            ref={hiddenFileInput}
-            onChange={handleImageAdded}
-          ></input>
-        )}
+        {onlyLink ? null : <input type="file" className={styles.hidden} ref={hiddenFileInput} onChange={handleImageAdded} />}
       </div>
       {/* todo: maybe remove base and use url -> need url for upload from ~Azure */}
       {curImage?.base || curImage?.url ? (
         <div className={styles.lowercontentcontainer}>
           <div className={styles.picrutepreviewcontainer}>
-            <div
-              style={{ backgroundImage: `url(` + `${curImage?.base}` + `)` }}
-            />
+            <div style={{ backgroundImage: `url(${curImage?.base})` }} />
           </div>
           <div className={styles.altcontainer}>
             <TextArea
@@ -322,23 +269,13 @@ const AdditionalInfoPicturesContent = ({
               label={i18n.t("additionalInfo.pictureLabel")}
               helperText={i18n.t("additionalInfo.pictureHelperText")}
               required
-              tooltipButtonLabel={i18n.t(
-                "additionalInfo.generalTooptipButtonLabel"
-              )}
+              tooltipButtonLabel={i18n.t("additionalInfo.generalTooptipButtonLabel")}
               tooltipLabel={i18n.t("additionalInfo.generalTooptipLabel")}
               tooltipText={i18n.t("additionalInfo.altToolTipContent")}
-              onKeyUp={(e: React.KeyboardEvent<HTMLTextAreaElement>) =>
-                handleAddAlt(e, "fi", compId)
-              }
-              defaultValue={curImage?.fi ?? null}
-              invalid={
-                currentInvalids?.invalidAnswers?.includes("fi") ? true : false
-              }
-              errorText={
-                currentInvalids?.invalidAnswers?.includes("fi")
-                  ? "PH: olkaa hyvä ja syöttäkää kuvateksti"
-                  : ""
-              }
+              onKeyUp={(e: React.KeyboardEvent<HTMLTextAreaElement>) => handleAddAlt(e, "fi", compId)}
+              defaultValue={curImage.altText.fi ?? ""}
+              invalid={!!currentInvalids?.invalidAnswers?.includes("fi")}
+              errorText={currentInvalids?.invalidAnswers?.includes("fi") ? "PH: olkaa hyvä ja syöttäkää kuvateksti" : ""}
             />
             <div className={styles.altLabel}>
               <QuestionInfo
@@ -352,10 +289,8 @@ const AdditionalInfoPicturesContent = ({
                   id={`text-sv-${currentId}`}
                   label={i18n.t("additionalInfo.pictureLabelSwe")}
                   helperText={i18n.t("additionalInfo.pictureHelperTextSwe")}
-                  onKeyUp={(e: React.KeyboardEvent<HTMLTextAreaElement>) =>
-                    handleAddAlt(e, "sv", compId)
-                  }
-                  defaultValue={curImage?.sv ? curImage.sv : ""}
+                  onKeyUp={(e: React.KeyboardEvent<HTMLTextAreaElement>) => handleAddAlt(e, "sv", compId)}
+                  defaultValue={curImage.altText.sv ?? ""}
                 />
               </QuestionInfo>
             </div>
@@ -371,31 +306,21 @@ const AdditionalInfoPicturesContent = ({
                   id={`text-eng-${currentId}`}
                   label={i18n.t("additionalInfo.pictureLabelEng")}
                   helperText={i18n.t("additionalInfo.pictureHelperTextEng")}
-                  onKeyUp={(e: React.KeyboardEvent<HTMLTextAreaElement>) =>
-                    handleAddAlt(e, "en", compId)
-                  }
-                  defaultValue={curImage?.en ? curImage.en : ""}
+                  onKeyUp={(e: React.KeyboardEvent<HTMLTextAreaElement>) => handleAddAlt(e, "en", compId)}
+                  defaultValue={curImage.altText.en ?? ""}
                 />
               </QuestionInfo>
             </div>
           </div>
           <div className={styles.picturetermscontainer}>
-            <SelectionGroup
-              label={i18n.t("additionalInfo.sharePictureLicenseLabel")}
-            >
+            <SelectionGroup label={i18n.t("additionalInfo.sharePictureLicenseLabel")}>
               <Checkbox
                 id={`picture-license-${currentId}`}
-                label={`${i18n.t(
-                  "additionalInfo.sharePictureLicenseText"
-                )} ${i18n.t("additionalInfo.sharePictureLicense")}}`}
+                label={`${i18n.t("additionalInfo.sharePictureLicenseText")} ${i18n.t("additionalInfo.sharePictureLicense")}}`}
                 name="agreeToPictureTerms"
                 checked={termsChecked}
                 onChange={onCheckChange}
-                errorText={
-                  currentInvalids?.invalidAnswers?.includes("sharelicense")
-                    ? i18n.t("additionalInfo.pictureTermsErrorText")
-                    : ""
-                }
+                errorText={currentInvalids?.invalidAnswers?.includes("sharelicense") ? i18n.t("additionalInfo.pictureTermsErrorText") : ""}
               />
             </SelectionGroup>
             <Tooltip> {i18n.t("additionalInfo.pictureTermsInfoText")} </Tooltip>
@@ -410,16 +335,8 @@ const AdditionalInfoPicturesContent = ({
               onChange={onSourceChange}
               required
               defaultValue={curImage?.source ? curImage?.source : ""}
-              invalid={
-                currentInvalids?.invalidAnswers?.includes("source")
-                  ? true
-                  : false
-              }
-              errorText={
-                currentInvalids?.invalidAnswers?.includes("source")
-                  ? i18n.t("additionalInfo.picureSourceErrorText")
-                  : ""
-              }
+              invalid={!!currentInvalids?.invalidAnswers?.includes("source")}
+              errorText={currentInvalids?.invalidAnswers?.includes("source") ? i18n.t("additionalInfo.picureSourceErrorText") : ""}
             />
           </div>
         </div>

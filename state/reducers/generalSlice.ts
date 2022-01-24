@@ -1,4 +1,5 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
+import type { PayloadAction } from "@reduxjs/toolkit";
 
 interface generalSliceProps {
   coordinates: [number, number];
@@ -46,18 +47,12 @@ export const generalSlice = createSlice({
         currentlyEditingBlockAddinfo: action.payload,
       };
     },
-    setServicepointLocation: (
-      state,
-      action: PayloadAction<{ coordinates: [number, number] }>
-    ) => {
-      const coordinates = action.payload.coordinates;
+    setServicepointLocation: (state, action: PayloadAction<{ coordinates: [number, number] }>) => {
+      const { coordinates } = action.payload;
       return { ...state, coordinates };
     },
-    setServicepointLocationWGS84: (
-      state,
-      action: PayloadAction<{ coordinatesWGS84: [number, number] }>
-    ) => {
-      const coordinatesWGS84 = action.payload.coordinatesWGS84;
+    setServicepointLocationWGS84: (state, action: PayloadAction<{ coordinatesWGS84: [number, number] }>) => {
+      const { coordinatesWGS84 } = action.payload;
       return { ...state, coordinatesWGS84 };
     },
 

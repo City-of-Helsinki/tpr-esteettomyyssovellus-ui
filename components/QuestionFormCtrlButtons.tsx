@@ -1,34 +1,14 @@
 import React from "react";
 import { IconArrowRight, IconArrowLeft, Card } from "hds-react";
+import router from "next/router";
+import { useI18n } from "next-localization";
 import Button from "./QuestionButton";
 import { QuestionFormCtrlButtonsProps } from "../types/general";
 import styles from "./QuestionFormCtrlButtons.module.scss";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
-import router from "next/router";
-import { useI18n } from "next-localization";
-import publicIp from "public-ip";
-import {
-  API_FETCH_ANSWER_LOGS,
-  API_FETCH_QUESTION_ANSWERS,
-  API_FETCH_SERVICEPOINTS,
-  FRONT_URL_BASE
-} from "../types/constants";
-import {
-  setFormFinished,
-  setInvalid,
-  unsetFormFinished,
-  unsetInvalid
-} from "../state/reducers/formSlice";
-import {
-  getCurrentDate,
-  postData,
-  postAdditionalInfo
-} from "../utils/utilFunctions";
-
-export const getClientIp = async () =>
-  await publicIp.v4({
-    fallbackUrls: ["https://ifconfig.co/ip"]
-  });
+import { API_FETCH_ANSWER_LOGS, API_FETCH_QUESTION_ANSWERS, API_FETCH_SERVICEPOINTS, API_URL_BASE, FRONT_URL_BASE } from "../types/constants";
+import { setFormFinished, setInvalid, unsetFormFinished, unsetInvalid } from "../state/reducers/formSlice";
+import { getCurrentDate, postData, postAdditionalInfo, getClientIp } from "../utils/utilFunctions";
 
 // usage: Form control buttons: return, save / draft, preview, validate
 const QuestionFormCtrlButtons = ({
@@ -37,75 +17,55 @@ const QuestionFormCtrlButtons = ({
   hasSaveDraftButton,
   hasPreviewButton,
   visibleBlocks,
-  visibleQuestionChoices
+  visibleQuestionChoices,
 }: QuestionFormCtrlButtonsProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
 
-  let curAnsweredChoices = useAppSelector(
-    (state) => state.formReducer.answeredChoices
-  );
-  let curServicepointId = useAppSelector(
-    (state) => state.formReducer.currentServicepointId
-  );
-  const startedAnswering = useAppSelector(
-    (state) => state.formReducer.startedAnswering
-  );
-  const curEntranceId = useAppSelector(
-    (state) => state.formReducer.currentEntranceId
-  );
-  const finishedBlocks = useAppSelector(
-    (state) => state.formReducer.finishedBlocks
-  );
-  const isContinueClicked = useAppSelector(
-    (state) => state.formReducer.isContinueClicked
-  );
+  const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
+  const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
+  const startedAnswering = useAppSelector((state) => state.formReducer.startedAnswering);
+  const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
+  const finishedBlocks = useAppSelector((state) => state.formReducer.finishedBlocks);
+  const isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
   const additionalInfo = useAppSelector((state) => state.additionalInfoReducer);
   const contacts = useAppSelector((state) => state.formReducer.contacts);
 
   const handleCancel = (): void => {
     // TODO: Add errorpage
-    const url =
-      curServicepointId == -1
-        ? FRONT_URL_BASE
-        : FRONT_URL_BASE + i18n.locale() + "/details/" + curServicepointId;
+    const url = curServicepointId === -1 ? FRONT_URL_BASE : `${FRONT_URL_BASE + i18n.locale()}/details/${curServicepointId}`;
     window.location.href = url;
   };
   const isPreviewActive = curAnsweredChoices.length > 1;
 
-  const updateAccessibilityContacts = async (contacts: any) => {
+  const updateAccessibilityContacts = async (updatedContacts: { [key: string]: [string, boolean] }) => {
     const updateContactsOptions = {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        accessibility_phone: contacts["phoneNumber"][1]
-          ? contacts["phoneNumber"][0]
-          : null,
-        accessibility_email: contacts["email"][1] ? contacts["email"][0] : null,
-        accessibility_www: contacts["www"][1] ? contacts["www"][0] : null,
+        accessibility_phone: updatedContacts.phoneNumber[1] ? updatedContacts.phoneNumber[0] : null,
+        accessibility_email: updatedContacts.email[1] ? updatedContacts.email[0] : null,
+        accessibility_www: updatedContacts.www[1] ? updatedContacts.www[0] : null,
         modified_by: "placeholder",
         // TODO: Add user here
-        modified: getCurrentDate()
-      })
+        modified: getCurrentDate(),
+      }),
     };
     const updateContactsUrl = `${API_FETCH_SERVICEPOINTS}${curServicepointId}/update_accessibility_contacts/`;
 
-    await fetch(updateContactsUrl, updateContactsOptions)
-      .then((response) => response.json())
-      .then((data) => {});
+    await fetch(updateContactsUrl, updateContactsOptions);
   };
 
   // TODO: MAKE INTO SMALLER FUNCTIONS
-  const saveDraft = async () => {
-    let logId: any;
-
+  const saveDraft = async (): Promise<void> => {
     // DATE FOR FINISHED ANSWERING
     const finishedAnswering = getCurrentDate();
 
     // THIS RETURNS THE IP ADDRESS OF THE CLIENT USED IN THE ANSWER LOG
     const ipAddress = await getClientIp();
+
     // POST ANSWER LOG
     // TODO: ERRORCHECK VALUES
     const requestOptions = {
@@ -120,47 +80,34 @@ const QuestionFormCtrlButtons = ({
         form_cancelled: "N",
         // TODO: GET CURRENT USER HERE
         accessibility_editor: "Leba",
-        entrance: curEntranceId
-      })
+        entrance: curEntranceId,
+      }),
     };
 
     updateAccessibilityContacts(contacts);
+
     // POST TO AR_X_ANSWER_LOG. RETURNS NEW LOG_ID USED FOR OTHER POST REQUESTS
-    await fetch(API_FETCH_ANSWER_LOGS, requestOptions)
-      .then((response) => response.json())
-      .then((data) => {
-        logId = data;
-      });
+    const response = await fetch(API_FETCH_ANSWER_LOGS, requestOptions);
+    const logId = await (response.json() as Promise<number>);
 
     // CHECK IF RETURNED LOG_ID IS A NUMBER. IF NOT A NUMBER STOP EXECUTING
-    if (!isNaN(logId)) {
+    if (!Number.isNaN(logId)) {
       // POST ALL QUESTION ANSWERS
       const filteredAnswerChoices = curAnsweredChoices.filter((choice) => {
-        if (
-          visibleQuestionChoices
-            ?.map((elem) => {
-              return elem.question_choice_id;
-            })
-            .includes(Number(choice))
-        )
-          return choice;
+        return visibleQuestionChoices
+          ?.map((elem) => {
+            return elem.question_choice_id;
+          })
+          .includes(Number(choice));
       });
       const questionAnswerData = { log: logId, data: filteredAnswerChoices };
-      await postData(API_FETCH_QUESTION_ANSWERS, questionAnswerData);
+      await postData(API_FETCH_QUESTION_ANSWERS, JSON.stringify(questionAnswerData));
+
       // GENERATE SENTENCES
-      const parsedAdditionalInfos = Object.keys(additionalInfo).map((key) => {
-        if (!isNaN(Number(key))) return [key, additionalInfo[key]];
-      });
-      if (parsedAdditionalInfos != undefined) {
-        await postAdditionalInfo(logId, parsedAdditionalInfos);
-      }
+      await postAdditionalInfo(logId, additionalInfo.additionalInfo);
+
       const generateData = { entrance_id: curEntranceId, form_submitted: "D" };
-      await postData(
-        "http://localhost:8000/api/GenerateSentences/",
-        generateData
-      );
-    } else {
-      return -1;
+      await postData(`${API_URL_BASE}GenerateSentences/`, JSON.stringify(generateData));
     }
   };
 
@@ -171,7 +118,7 @@ const QuestionFormCtrlButtons = ({
   const validateForm = () => {
     // VALIDATE BLOCKS
     visibleBlocks?.forEach((elem) => {
-      if (elem != null) {
+      if (elem !== null) {
         if (!finishedBlocks.includes(Number(elem?.key?.toString()))) {
           dispatch(setInvalid(Number(elem?.key?.toString())));
           dispatch(unsetFormFinished());
@@ -182,11 +129,9 @@ const QuestionFormCtrlButtons = ({
     });
   };
 
-  const invalidBlocks = useAppSelector(
-    (state) => state.formReducer.invalidBlocks
-  );
+  const invalidBlocks = useAppSelector((state) => state.formReducer.invalidBlocks);
 
-  if (invalidBlocks.length == 0) {
+  if (invalidBlocks.length === 0) {
     dispatch(setFormFinished());
   } else {
     dispatch(unsetFormFinished());
@@ -201,18 +146,14 @@ const QuestionFormCtrlButtons = ({
     await saveDraft();
     // TODO: TÄSSÄ KOHTAA MAHDOLLISESTI PITÄÄ POSTATA TIEDOT APIIN/KANTAAN, ETTÄ PREVIEW SIVULLE
     // SAADAAN NÄKYMÄÄN JUURI TÄYTETYT TIEDOT.
-    router.push("/preview/" + curServicepointId);
+    router.push(`/preview/${curServicepointId}`);
   };
 
   return (
     <Card className={styles.container}>
       <div className={styles.left}>
         {hasCancelButton ? (
-          <Button
-            variant="secondary"
-            iconLeft={<IconArrowLeft />}
-            onClickHandler={handleCancel}
-          >
+          <Button variant="secondary" iconLeft={<IconArrowLeft />} onClickHandler={handleCancel}>
             {i18n.t("questionFormControlButtons.quit")}
           </Button>
         ) : null}

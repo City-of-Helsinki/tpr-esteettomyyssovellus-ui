@@ -1,11 +1,11 @@
 // this files code from marketing project: needs editing or deleting
 
-import React, { ReactElement, ReactNode, useEffect, useRef } from "react";
+import React, { ReactElement } from "react";
 import { useI18n } from "next-localization";
+import { IconArrowRight, IconSignin } from "hds-react";
+// import { useRouter } from "next/router";
 import styles from "./AddNewEntranceNotice.module.scss";
 import QuestionButton from "../QuestionButton";
-import { IconArrowRight, IconSignin } from "hds-react";
-import { useRouter } from "next/router";
 
 // usage: in preview page, add new entrances component
 // notice: derived from Notice (marketing), removed props due to single use only
@@ -13,7 +13,7 @@ import { useRouter } from "next/router";
 // if the functionality changes enough
 const AddNewEntranceNotice = (): ReactElement => {
   const i18n = useI18n();
-  const router = useRouter();
+  // const router = useRouter();
 
   const handleAddAdditionalEntrance = async () => {
     // todo: add url to add additional entrance
@@ -41,23 +41,13 @@ const AddNewEntranceNotice = (): ReactElement => {
         <p>{i18n.t("PreviewPage.addNewEntranceBody")}</p>
       </div>
       <div className={styles.flexButtonsContainer}>
-        <QuestionButton
-          variant="primary"
-          onClickHandler={handleAddAdditionalEntrance}
-          iconRight={<IconArrowRight size="l" aria-hidden />}
-        >
+        <QuestionButton variant="primary" onClickHandler={handleAddAdditionalEntrance} iconRight={<IconArrowRight size="l" aria-hidden />}>
           {i18n.t("PreviewPage.addNewEntranceButton")}
         </QuestionButton>
-        <QuestionButton
-          variant="secondary"
-          onClickHandler={handleReturnToDetailspage}
-        >
+        <QuestionButton variant="secondary" onClickHandler={handleReturnToDetailspage}>
           {i18n.t("PreviewPage.addNewEntranceNoEntrances")}
         </QuestionButton>
-        <QuestionButton
-          variant="secondary"
-          onClickHandler={handleReturnToDetailspage}
-        >
+        <QuestionButton variant="secondary" onClickHandler={handleReturnToDetailspage}>
           {i18n.t("PreviewPage.addNewEntranceContinueLater")}
         </QuestionButton>
       </div>

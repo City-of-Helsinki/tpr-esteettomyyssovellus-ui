@@ -4,14 +4,7 @@ import styles from "./QuestionInfo.module.scss";
 import { QuestionInfoProps } from "../types/general";
 
 // usage: display info (dropdown) for each question respectively
-const QuestionInfo = ({
-  openText,
-  openIcon,
-  closeText,
-  closeIcon,
-  textOnBottom = false,
-  children,
-}: QuestionInfoProps): JSX.Element => {
+const QuestionInfo = ({ openText, openIcon, closeText, closeIcon, textOnBottom = false, children }: QuestionInfoProps): JSX.Element => {
   const i18n = useI18n();
 
   const [showContent, setShowContent] = useState(false);

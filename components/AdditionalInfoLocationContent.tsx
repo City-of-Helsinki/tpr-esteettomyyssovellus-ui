@@ -23,26 +23,22 @@ const AdditionalInfoLocationContent = ({
   // geodocing related -> delete if not used in final production
   //   const [addressErrorText, setAddressErrorText] = useState("");
 
-  const fallbackLocation =
-    !initValue && !isMainLocPicComponent
-      ? useAppSelector((state) => state.generalSlice.coordinatesWGS84)
-      : initValue;
+  const coordinatesWGS84 = useAppSelector((state) => state.generalSlice.coordinatesWGS84);
+  const fallbackLocation = !initValue && !isMainLocPicComponent ? coordinatesWGS84 : (initValue as [number, number]);
 
-  const coords: [number, number] = !isMainLocPicComponent
-    ? useAppSelector(
-        (state) =>
-          state.additionalInfoReducer[questionId].locations?.coordinates
-      )
-    : fallbackLocation;
+  const coordinates = useAppSelector((state) => state.additionalInfoReducer.additionalInfo[questionId].locations?.coordinates);
+  const coords = !isMainLocPicComponent && coordinates ? coordinates : fallbackLocation;
+
+  const handleRemoveLocation = () => {
+    dispatch(removeLocation({ questionId }));
+  };
 
   // on delete button clicked chain delete location from store and delete component cb
   const handleOnDelete = () => {
     handleRemoveLocation();
-    onDelete ? onDelete() : null;
-  };
-
-  const handleRemoveLocation = () => {
-    dispatch(removeLocation({ questionId }));
+    if (onDelete) {
+      onDelete();
+    }
   };
 
   // So this (geocoding) was doned but then decided to drop it out
@@ -98,12 +94,12 @@ const AdditionalInfoLocationContent = ({
         initCenter={coords}
         initLocation={coords}
         initZoom={14}
-        draggableMarker={true}
+        draggableMarker
         questionId={questionId}
         isMainLocPicComponent={isMainLocPicComponent}
       />
     );
-  }, [coords]);
+  }, [coords, isMainLocPicComponent, questionId]);
 
   return (
     <div className={styles.maincontainer}>
@@ -131,11 +127,7 @@ const AdditionalInfoLocationContent = ({
           PH: Hae osoite kartalle
         </QuestionButton> */}
         {canDelete ? (
-          <QuestionButton
-            variant="secondary"
-            iconRight={<IconCross />}
-            onClickHandler={() => handleOnDelete()}
-          >
+          <QuestionButton variant="secondary" iconRight={<IconCross />} onClickHandler={() => handleOnDelete()}>
             {i18n.t("additionalInfo.cancelLocation")}
           </QuestionButton>
         ) : null}

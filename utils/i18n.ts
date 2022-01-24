@@ -2,13 +2,8 @@
 
 export const defaultLocale = "fi";
 
-const i18nLoader = async (
-  locale: string,
-  isModeration?: boolean
-): Promise<{ [locale: string]: { [key: string]: unknown } }> => {
-  const { default: lngDict = {} } = await import(
-    `../locales/${locale || defaultLocale}.json`
-  );
+const i18nLoader = async (locale: string): Promise<{ [locale: string]: { [key: string]: unknown } }> => {
+  const { default: lngDict = {} } = await import(`../locales/${locale || defaultLocale}.json`);
 
   return {
     [locale]: {
@@ -21,26 +16,23 @@ const i18nLoader = async (
       QuestionFormImportExistingData: lngDict.QuestionFormImportExistingData,
       ContactInformation: lngDict.ContactInformation,
       PreviewPage: lngDict.PreviewPage,
-      AddressChangedPage: lngDict.AddressChangedPage
-    }
+      AddressChangedPage: lngDict.AddressChangedPage,
+    },
   };
 };
 
-export const i18nLoaderMultiple = async (
-  locales?: string[],
-  isModeration?: boolean
-): Promise<{ [locale: string]: { [key: string]: unknown } }> => {
+export const i18nLoaderMultiple = async (locales?: string[]): Promise<{ [locale: string]: { [key: string]: unknown } }> => {
   if (locales && locales.length > 0) {
     const promises = Promise.all(
       locales.map((locale) => {
-        return i18nLoader(locale, isModeration);
+        return i18nLoader(locale);
       })
     );
     return (await promises).reduce((acc, item) => {
       return { ...acc, ...item };
     }, {});
   }
-  return i18nLoader(defaultLocale, isModeration);
+  return i18nLoader(defaultLocale);
 };
 
 export default i18nLoaderMultiple;
