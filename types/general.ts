@@ -102,9 +102,14 @@ export interface QuestionAdditionalInfoCtrlButtonProps {
   curState: boolean;
 }
 
-export interface ServicepointLandingSummaryProps {
+export interface ServicepointLandingSummaryContactProps {
   header: string;
-  data: Servicepoint | AccessibilityData;
+  data: Servicepoint;
+}
+
+export interface ServicepointLandingSummaryAccessibilityProps {
+  header: string;
+  data: AccessibilityData;
 }
 
 export interface PreviewPageLandingSummaryProps {

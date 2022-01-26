@@ -5,7 +5,8 @@ import { GetServerSideProps } from "next";
 import { StatusLabel, IconCrossCircle, IconQuestionCircle } from "hds-react";
 import Layout from "../../components/common/Layout";
 import i18nLoader from "../../utils/i18n";
-import ServicepointLandingSummary from "../../components/ServicepointLandingSummary";
+import ServicepointLandingSummaryAccessibility from "../../components/ServicepointLandingSummaryAccessibility";
+import ServicepointLandingSummaryContact from "../../components/ServicepointLandingSummaryContact";
 import styles from "./details.module.scss";
 import ServicepointLandingSummaryCtrlButtons from "../../components/ServicepointLandingSummaryCtrlButtons";
 import QuestionInfo from "../../components/QuestionInfo";
@@ -148,8 +149,8 @@ const Details = ({ servicepointData, accessibilityData, entranceData, hasExistin
               </span>
             </div>
             <div>
-              <ServicepointLandingSummary header={i18n.t("servicepoint.contactInfoHeader")} data={servicepointData} />
-              <ServicepointLandingSummary header={i18n.t("servicepoint.contactFormSummaryHeader")} data={filteredAccessibilityData} />
+              <ServicepointLandingSummaryContact header={i18n.t("servicepoint.contactInfoHeader")} data={servicepointData} />
+              <ServicepointLandingSummaryAccessibility header={i18n.t("servicepoint.contactFormSummaryHeader")} data={filteredAccessibilityData} />
             </div>
             <ServicepointLandingSummaryCtrlButtons hasData={hasExistingFormData} />
           </div>
