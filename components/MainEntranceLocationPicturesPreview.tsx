@@ -14,7 +14,7 @@ const MainEntranceLocationPicturesPreview = (): JSX.Element => {
       <div className={styles.mapcontainer}>
         <h4>{i18n.t("servicepoint.mainEntranceLocationLabel")}</h4>
         <div className={styles.map}>
-          <Map initCenter={coordinates} initLocation={coordinates} initZoom={17} draggableMarker={false} questionId={-1} makeStatic isPreview />
+          <Map initCenter={coordinates} initLocation={coordinates} initZoom={17} draggableMarker={false} questionId={-1} makeStatic />
           {coordinates && coordinates.length === 2 ? (
             <p>{`${i18n.t("servicepoint.mainEntranceLocationCoordinatesLabel")}: E ${coordinates[0].toFixed(2)}, N ${coordinates[1].toFixed(2)}`}</p>
           ) : null}

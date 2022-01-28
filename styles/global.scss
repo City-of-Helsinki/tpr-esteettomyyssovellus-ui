@@ -44,10 +44,6 @@ body {
 h1 {
   font-size: $fontsize-heading-xl !important;
 
-  &.moderation {
-    font-size: $fontsize-heading-l !important;
-  }
-
   @include media(xs) {
     font-size: $fontsize-heading-l !important;
   }
@@ -56,10 +52,6 @@ h1 {
 h2 {
   font-size: $fontsize-heading-l !important;
 
-  &.moderation {
-    font-size: $fontsize-heading-m !important;
-  }
-
   @include media(xs) {
     font-size: $fontsize-heading-m !important;
   }
@@ -67,10 +59,6 @@ h2 {
 
 h3 {
   font-size: $fontsize-heading-m !important;
-
-  &.moderation {
-    font-size: $fontsize-heading-s !important;
-  }
 
   @include media(xs) {
     font-size: $fontsize-heading-s !important;
@@ -81,10 +69,6 @@ h4 {
   font-size: $fontsize-heading-s !important;
   margin: 0;
 
-  &.moderation {
-    font-size: $fontsize-heading-xs !important;
-  }
-
   @include media(xs) {
     font-size: $fontsize-heading-xs !important;
   }
@@ -93,10 +77,6 @@ h4 {
 h5 {
   font-size: $fontsize-heading-xs !important;
   margin: 0;
-
-  &.moderation {
-    font-size: $fontsize-heading-xxs !important;
-  }
 
   @include media(xs) {
     font-size: $fontsize-heading-xxs !important;
@@ -111,82 +91,6 @@ textarea {
 .disabledTextColor textarea[disabled],
 .disabledTextColor input[type="checkbox"][disabled] + label {
   color: $color-black-70 !important;
-}
-
-.formSection {
-  margin-bottom: $spacing-layout-l;
-}
-
-.narrowSection {
-  @include media(xl) {
-    max-width: $container-width-l;
-    margin-left: $spacing-layout-l;
-  }
-}
-
-.formInput {
-  margin-bottom: $spacing-layout-s;
-}
-
-.formNotification {
-  z-index: auto !important;
-}
-
-.gridLayoutContainer {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax($spacing-3-xl, 1fr));
-  margin-bottom: $spacing-layout-s;
-
-  &.moderation {
-    padding-left: $spacing-s;
-  }
-
-  @include media(xs) {
-    column-gap: $spacing-xs;
-    row-gap: $spacing-xs;
-  }
-
-  @include media(s) {
-    column-gap: $spacing-s;
-    row-gap: $spacing-s;
-  }
-
-  @include media(m, l, xl) {
-    column-gap: $spacing-m;
-    row-gap: $spacing-m;
-  }
-}
-
-.gridHeader {
-  background-color: $color-fog-light;
-  padding: $spacing-xs;
-}
-
-// Note: these column definitions are only used for moderation task components
-.gridColumn1 {
-  grid-column: 1 / span 2;
-}
-
-.gridColumn2 {
-  grid-column: 3 / span 2;
-}
-
-.gridColumn3 {
-  grid-column: 5 / 5;
-}
-
-.languageSection {
-  border: solid $color-copper-light 0;
-  border-left-width: $spacing-2-xs;
-  padding-left: $spacing-2-xs;
-
-  &.moderation {
-    padding-left: $spacing-2-xs;
-  }
-
-  h3 {
-    color: $color-bus;
-  }
 }
 
 .flexSpace {
