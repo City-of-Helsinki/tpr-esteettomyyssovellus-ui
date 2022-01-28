@@ -2,20 +2,20 @@ import React, { ReactElement } from "react";
 import { useI18n } from "next-localization";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
-import { StatusLabel, IconCrossCircle, IconQuestionCircle } from "hds-react";
+import { StatusLabel, IconCrossCircle, IconQuestionCircle, Tabs, TabList, Tab, TabPanel } from "hds-react";
 import Layout from "../../components/common/Layout";
 import i18nLoader from "../../utils/i18n";
 import ServicepointLandingSummaryAccessibility from "../../components/ServicepointLandingSummaryAccessibility";
 import ServicepointLandingSummaryContact from "../../components/ServicepointLandingSummaryContact";
 import styles from "./details.module.scss";
-import ServicepointLandingSummaryCtrlButtons from "../../components/ServicepointLandingSummaryCtrlButtons";
+// import ServicepointLandingSummaryCtrlButtons from "../../components/ServicepointLandingSummaryCtrlButtons";
 import QuestionInfo from "../../components/QuestionInfo";
 import ServicepointMainInfoContent from "../../components/ServicepointMainInfoContent";
 import PathTreeComponent from "../../components/PathTreeComponent";
 import { useAppDispatch, useAppSelector, useLoading } from "../../state/hooks";
 import {
   setServicepointId,
-  setEntranceId,
+  // setEntranceId,
   setPhoneNumber,
   setEmail,
   clearFormState,
@@ -25,11 +25,17 @@ import {
 } from "../../state/reducers/formSlice";
 import { getFinnishDate, filterByLanguage, convertCoordinates } from "../../utils/utilFunctions";
 import { clearGeneralState, setServicepointLocation, setServicepointLocationWGS84 } from "../../state/reducers/generalSlice";
-import { API_FETCH_ANSWER_LOGS, API_FETCH_ENTRANCES, API_FETCH_SENTENCE_LANGS, API_FETCH_SERVICEPOINTS } from "../../types/constants";
+import {
+  API_FETCH_ANSWER_LOGS,
+  API_FETCH_BACKEND_ENTRANCE,
+  API_FETCH_ENTRANCES,
+  API_FETCH_SENTENCE_LANGS,
+  API_FETCH_SERVICEPOINTS,
+} from "../../types/constants";
 import LoadSpinner from "../../components/common/LoadSpinner";
 import { clearAddinfoState } from "../../state/reducers/additionalInfoSlice";
-import { AnswerLog, EntranceResults, Servicepoint, StoredSentence } from "../../types/backendModels";
-import { AccessibilityData, DetailsProps } from "../../types/general";
+import { AnswerLog, BackendEntrance, EntranceResults, Servicepoint, StoredSentence } from "../../types/backendModels";
+import { AccessibilityData, DetailsProps, EntranceData } from "../../types/general";
 
 // usage: the details / landing page of servicepoint
 const Details = ({ servicepointData, accessibilityData, entranceData, hasExistingFormData, isFinished }: DetailsProps): ReactElement => {
@@ -46,7 +52,7 @@ const Details = ({ servicepointData, accessibilityData, entranceData, hasExistin
   dispatch(clearAddinfoState());
   dispatch(clearFormState());
 
-  const hasData = Object.keys(entranceData).length !== 0 || Object.keys(servicepointData).length !== 0;
+  const hasData = Object.keys(servicepointData).length > 0 && Object.keys(entranceData).length > 0;
 
   // set coordinates from data to state gerenalSlice for e.g. leafletmaps
   if (servicepointData && servicepointData.loc_northing && servicepointData.loc_easting) {
@@ -71,27 +77,27 @@ const Details = ({ servicepointData, accessibilityData, entranceData, hasExistin
   }
 
   // Filter by language
+  // Make sure that the main entrance is listed before the side entrances.
   const filteredAccessibilityData: AccessibilityData = Object.keys(accessibilityData).reduce((acc, key) => {
     return {
       ...acc,
       [key]: filterByLanguage(accessibilityData[key], i18n.locale()),
     };
   }, {});
+  const entranceKeys = Object.keys(filteredAccessibilityData);
 
   // Update entranceId and servicepointId to redux state
-  if (servicepointData && entranceData.results && accessibilityData.main.length !== 0) {
+  if (servicepointData) {
     dispatch(setServicepointId(servicepointData.servicepoint_id));
+  }
+  if (hasData && accessibilityData.main.length !== 0) {
     // TODO: Logic for when editing additional entrance vs main entrance
-    dispatch(setEntranceId(accessibilityData.main[0].entrance_id));
+    // dispatch(setEntranceId(accessibilityData.main[0].entrance_id));
     if (accessibilityData.main[0].form_submitted === "Y") {
       dispatch(setFormFinished());
       dispatch(setContinue());
       dispatch(setFormSubmitted());
     }
-  } else if (servicepointData && entranceData.results) {
-    dispatch(setServicepointId(servicepointData.servicepoint_id));
-    // TODO: Logic for when editing additional entrance vs main entrance
-    dispatch(setEntranceId(entranceData.results[0].entrance_id));
   }
 
   if (hasData && !formInited) {
@@ -118,6 +124,7 @@ const Details = ({ servicepointData, accessibilityData, entranceData, hasExistin
             <div className={styles.treecontainer}>
               <PathTreeComponent treeItems={treeItems} />
             </div>
+
             <div className={styles.infocontainer}>
               <QuestionInfo
                 openText={i18n.t("common.generalMainInfoIsClose")}
@@ -129,13 +136,9 @@ const Details = ({ servicepointData, accessibilityData, entranceData, hasExistin
                 <ServicepointMainInfoContent />
               </QuestionInfo>
             </div>
+
             <div className={styles.headingcontainer}>
               <h1>{servicepointData.servicepoint_name}</h1>
-              <h2>
-                {i18n.t("common.mainEntrance")}
-                {": "}
-                {servicepointData.address_street_name} {servicepointData.address_no}, {servicepointData.address_city}
-              </h2>
               <span className={styles.statuslabel}>
                 {isFinished ? (
                   <StatusLabel type="success"> {i18n.t("common.statusReady")} </StatusLabel>
@@ -147,12 +150,49 @@ const Details = ({ servicepointData, accessibilityData, entranceData, hasExistin
                   {i18n.t("common.updated")} {finnishDate}
                 </p>
               </span>
+              <h2>{`${i18n.t("servicepoint.contactFormSummaryHeader")} (${entranceKeys.length})`}</h2>
             </div>
+
             <div>
-              <ServicepointLandingSummaryContact header={i18n.t("servicepoint.contactInfoHeader")} data={servicepointData} />
-              <ServicepointLandingSummaryAccessibility header={i18n.t("servicepoint.contactFormSummaryHeader")} data={filteredAccessibilityData} />
+              <Tabs>
+                <TabList>
+                  {entranceKeys.map((key, index) => {
+                    return (
+                      <Tab key={`tabheader_${key}`}>
+                        {key === "main" ? i18n.t("common.mainEntrance") : `${i18n.t("common.additionalEntrance")} ${index > 1 ? index : ""}`}
+                      </Tab>
+                    );
+                  })}
+                </TabList>
+                {entranceKeys.map((key) => {
+                  const hasAccessibilityData = accessibilityData && accessibilityData[key] && accessibilityData[key].length > 0;
+
+                  return (
+                    <TabPanel key={`tabpanel_${key}`}>
+                      {key === "main" && (
+                        <ServicepointLandingSummaryContact
+                          servicepointData={servicepointData}
+                          entranceData={entranceData[key]}
+                          hasData={hasAccessibilityData}
+                        />
+                      )}
+
+                      <ServicepointLandingSummaryAccessibility
+                        entranceKey={key}
+                        entranceData={entranceData[key]}
+                        servicepointData={servicepointData}
+                        accessibilityData={filteredAccessibilityData}
+                        hasData={hasAccessibilityData}
+                      />
+                    </TabPanel>
+                  );
+                })}
+              </Tabs>
             </div>
+
+            {/*
             <ServicepointLandingSummaryCtrlButtons hasData={hasExistingFormData} />
+            */}
           </div>
         </main>
       )}
@@ -164,50 +204,56 @@ const Details = ({ servicepointData, accessibilityData, entranceData, hasExistin
 export const getServerSideProps: GetServerSideProps = async ({ params, locales }) => {
   const lngDict = await i18nLoader(locales);
 
-  let accessibilityData = {};
-  let entranceData;
-  let servicepointData;
+  let accessibilityData: AccessibilityData = {};
+  let entranceData: EntranceData = {};
+  let servicepointData: Servicepoint = {} as Servicepoint;
   let hasExistingFormData = false;
   let isFinished = false;
+
   if (params !== undefined) {
     try {
       const servicepointResp = await fetch(`${API_FETCH_SERVICEPOINTS}${params.servicepointId}/?format=json`);
       servicepointData = await (servicepointResp.json() as Promise<Servicepoint>);
 
-      const entranceResp = await fetch(`${API_FETCH_ENTRANCES}?servicepoint=${servicepointData.servicepoint_id}&format=json`);
-      entranceData = await (entranceResp.json() as Promise<EntranceResults>);
+      const servicepointEntranceResp = await fetch(`${API_FETCH_ENTRANCES}?servicepoint=${servicepointData.servicepoint_id}&format=json`);
+      const servicepointEntranceData = await (servicepointEntranceResp.json() as Promise<EntranceResults>);
 
-      // Since await should not be used in a loop, the following code has been changed to use Promise.all instead
-      /*
-      let i = 0;
-      let j = 1;
-      let mainEntranceId = 0;
-      // Use while, because map function does not work with await
-      while (i < entranceData.results.length) {
-        const SentenceResp = await fetch(`${API_FETCH_SENTENCE_LANGS}?entrance_id=${entranceData.results[i].entrance_id}&format=json`);
-        const sentenceData = await SentenceResp.json();
-        if (entranceData.results[i].is_main_entrance === "Y") {
-          accessibilityData.main = sentenceData;
-          mainEntranceId = entranceData.results[i].entrance_id;
-        } else {
-          accessibilityData[`side${j}`] = sentenceData;
-          j++;
-        }
-        i++;
-      }
-      */
+      const entranceResultDetails = await Promise.all(
+        servicepointEntranceData.results.map(async (entranceResult) => {
+          const entranceDetailResp = await fetch(`${API_FETCH_BACKEND_ENTRANCE}?entrance_id=${entranceResult.entrance_id}&format=json`);
+          const entranceDetail = await (entranceDetailResp.json() as Promise<BackendEntrance[]>);
+          return { entranceResult, entranceDetail };
+        })
+      );
+
+      const mainEntranceDetails = entranceResultDetails.find((resultDetails) => resultDetails.entranceResult.is_main_entrance === "Y");
+
+      const sideEntranceDetails = entranceResultDetails
+        .filter((resultDetails) => resultDetails.entranceResult.is_main_entrance !== "Y")
+        .reduce((acc, resultDetails, j) => {
+          return {
+            ...acc,
+            ...(resultDetails.entranceDetail && resultDetails.entranceDetail.length > 0 && { [`side${j + 1}`]: resultDetails.entranceDetail[0] }),
+          };
+        }, {});
+
+      entranceData = {
+        ...(mainEntranceDetails?.entranceDetail &&
+          mainEntranceDetails?.entranceDetail.length > 0 && { main: mainEntranceDetails?.entranceDetail[0] }),
+        ...sideEntranceDetails,
+      };
 
       const entranceResultSentences = await Promise.all(
-        entranceData.results.map(async (entranceResult) => {
+        servicepointEntranceData.results.map(async (entranceResult) => {
           const sentenceResp = await fetch(`${API_FETCH_SENTENCE_LANGS}?entrance_id=${entranceResult.entrance_id}&format=json`);
           const sentenceData = await (sentenceResp.json() as Promise<StoredSentence[]>);
           return { entranceResult, sentenceData };
         })
       );
 
-      const mainResultSentences = entranceResultSentences.find((resultSentence) => resultSentence.entranceResult.is_main_entrance === "Y");
+      const mainEntranceSentences = entranceResultSentences.find((resultSentence) => resultSentence.entranceResult.is_main_entrance === "Y");
 
-      const sideEntrances = entranceResultSentences
+      const sideEntranceSentences = entranceResultSentences
         .filter((resultSentence) => resultSentence.entranceResult.is_main_entrance !== "Y")
         .reduce((acc, resultSentence, j) => {
           return {
@@ -217,12 +263,12 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         }, {});
 
       accessibilityData = {
-        main: mainResultSentences?.sentenceData,
-        ...sideEntrances,
+        main: mainEntranceSentences?.sentenceData || [],
+        ...sideEntranceSentences,
       };
 
-      if (entranceData.results.length !== 0 && mainResultSentences?.entranceResult) {
-        const logResp = await fetch(`${API_FETCH_ANSWER_LOGS}?entrance=${mainResultSentences?.entranceResult.entrance_id}&format=json`);
+      if (servicepointEntranceData.results.length !== 0 && mainEntranceSentences?.entranceResult) {
+        const logResp = await fetch(`${API_FETCH_ANSWER_LOGS}?entrance=${mainEntranceSentences?.entranceResult.entrance_id}&format=json`);
         const logData = await (logResp.json() as Promise<AnswerLog[]>);
 
         // TODO: Should this be true even if the form has not been submitted
@@ -230,7 +276,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         isFinished = logData.some((e) => e.form_submitted === "Y");
       }
     } catch (err) {
-      servicepointData = {};
+      servicepointData = {} as Servicepoint;
       accessibilityData = {};
       entranceData = {};
     }

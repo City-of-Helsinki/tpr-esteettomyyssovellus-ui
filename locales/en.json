@@ -45,8 +45,9 @@
       "returnNoSave": "Exit without saving"
     },
     "mainEntrance": "Main entrance",
-    "mainEntranceLocation": "Mainentrance location",
+    "mainEntranceLocation": "Main entrance location",
     "additionalEntrance": "Additional entrance",
+    "entrance": "Entrance",
     "updated": "Updated",
     "search": "Search",
     "formFilledCorrectly": "Form filled correctly",
@@ -66,21 +67,22 @@
   "servicepoint": {
     "buttons": {
       "createServicepoint": "Fill accessibility form",
-      "editServicepoint": "Edit accessibility form",
+      "editServicepoint": "Edit",
       "mainCtrlReturn": "Return to search",
       "mainCtrlDelete": "Delete accessibility data"
     },
-    "contactInfoHeader": "Servicepoint contact information",
-    "contactFormSummaryHeader": "Servicepoint accessibility information",
+    "contactInfoHeader": "Contact information",
+    "contactFormSummaryHeader": "Accessibility information",
     "noDataContactinfo": "No contact details for accessibility issues have been provided to the office",
     "phoneNumber": "Phone number",
     "email": "Email address",
     "www": "Webpage",
     "noInfo": "(no information)",
-
-    "mainEntranceLocationLabel" : "Location of the entrance on the map",
-    "mainEntranceLocationCoordinatesLabel" : "Coordinates",
-    "mainEntrancePicturesLabel": "Photos of the main entrance"
+    "mainEntranceLocationLabel": "Main entrance location",
+    "entranceLocationLabel": "Entrance location",
+    "mainEntranceLocationCoordinatesLabel": "Coordinates",
+    "mainEntrancePicturesLabel": "Main entrance photo",
+    "entrancePicturesLabel": "Entrance photo"
   },
   "questionFormControlButtons": {
     "quit": "Quit",

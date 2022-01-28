@@ -1,38 +1,29 @@
 import React from "react";
 import { IconAlertCircle } from "hds-react";
 import { useI18n } from "next-localization";
-import router from "next/router";
-import Button from "./QuestionButton";
 import ServicepointLandingSummaryContent from "./ServicepointLandingSummaryContent";
+import ServicepointLandingSummaryLocationPicture from "./ServicepointLandingSummaryLocationPicture";
+import ServicepointLandingSummaryModifyButton from "./ServicepointLandingSummaryModifyButton";
 import { ServicepointLandingSummaryAccessibilityProps } from "../types/general";
-import styles from "./ServicepointLandingSummary.module.scss";
-import { useAppDispatch, useAppSelector } from "../state/hooks";
-import { setStartDate } from "../state/reducers/formSlice";
-import { FRONT_URL_BASE } from "../types/constants";
-import { getCurrentDate } from "../utils/utilFunctions";
-import MainEntranceLocationPicturesPreview from "./MainEntranceLocationPicturesPreview";
+import styles from "./ServicepointLandingSummaryAccessibility.module.scss";
 
 // usage: used in details/landing page to create a summary block of sentences etc
 // this component more like a container -> used with ServicepointLandingSummaryContent
-const ServicepointLandingSummaryAccessibility = ({ header, data: accessibilityData }: ServicepointLandingSummaryAccessibilityProps): JSX.Element => {
+const ServicepointLandingSummaryAccessibility = ({
+  entranceKey,
+  entranceData,
+  servicepointData,
+  accessibilityData,
+  hasData,
+}: ServicepointLandingSummaryAccessibilityProps): JSX.Element => {
   const i18n = useI18n();
-  const dispatch = useAppDispatch();
-  const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
+  const curLocale = i18n.locale();
 
-  const handleEditorAddPointData = () => {
-    if (accessibilityData) {
-      const startedAnswering = getCurrentDate();
-      dispatch(setStartDate(startedAnswering));
-      const url = `${FRONT_URL_BASE}accessibilityEdit/${curEntranceId}`;
-      router.push(url);
-    } else {
-      // todo: todo (?)
-      console.log("create servicepoint data clicked, todo create logic");
-    }
-  };
-
-  const hasData = accessibilityData !== undefined && accessibilityData.main !== undefined && accessibilityData.main.length !== 0;
-  const keys = Object.keys(accessibilityData);
+  const entranceName = entranceData ? entranceData[`name_${curLocale}`] : "";
+  const header =
+    entranceKey === "main"
+      ? `${i18n.t("common.mainEntrance")}: ${servicepointData.address_street_name} ${servicepointData.address_no}, ${servicepointData.address_city}`
+      : `${i18n.t("common.entrance")}: ${entranceName}`;
 
   const getItemList = (key: string) => {
     const itemList: JSX.Element[] = [];
@@ -54,32 +45,21 @@ const ServicepointLandingSummaryAccessibility = ({ header, data: accessibilityDa
     return itemList;
   };
 
-  // Make sure that the main entrance is listed before the side entrances.
   return (
     <div className={styles.maincontainer}>
       <div className={styles.headercontainer}>
-        <h2>{header}</h2>
-        <Button variant="primary" onClickHandler={handleEditorAddPointData}>
-          {!hasData ? i18n.t("servicepoint.buttons.createServicepoint") : i18n.t("servicepoint.buttons.editServicepoint")}
-        </Button>
+        <h3>{header}</h3>
+        {entranceKey !== "main" && <ServicepointLandingSummaryModifyButton entranceData={entranceData} hasData={hasData} />}
       </div>
       <div>
         {hasData ? (
           <>
-            <ServicepointLandingSummaryContent contentHeader={i18n.t("common.mainEntranceLocation")}>
-              <MainEntranceLocationPicturesPreview />
+            <ServicepointLandingSummaryContent>
+              <ServicepointLandingSummaryLocationPicture entranceKey={entranceKey} entranceData={entranceData} />
             </ServicepointLandingSummaryContent>
-            <ServicepointLandingSummaryContent contentHeader={i18n.t("common.mainEntrance")}>
-              <ul>{getItemList("main")}</ul>
+            <ServicepointLandingSummaryContent key={entranceKey}>
+              <ul>{getItemList(entranceKey)}</ul>
             </ServicepointLandingSummaryContent>
-
-            {keys
-              .filter((key) => key !== "main")
-              .map((key) => (
-                <ServicepointLandingSummaryContent key={key} contentHeader={i18n.t("common.additionalEntrance")}>
-                  <ul>{getItemList(key)}</ul>
-                </ServicepointLandingSummaryContent>
-              ))}
           </>
         ) : (
           <div className={styles.nodatacontainer}>
@@ -91,6 +71,10 @@ const ServicepointLandingSummaryAccessibility = ({ header, data: accessibilityDa
             </ServicepointLandingSummaryContent>
           </div>
         )}
+      </div>
+
+      <div>
+        <ServicepointLandingSummaryModifyButton entranceData={entranceData} hasData={hasData} />
       </div>
     </div>
   );

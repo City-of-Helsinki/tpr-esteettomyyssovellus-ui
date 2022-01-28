@@ -21,6 +21,7 @@ export const API_FETCH_ANSWER_LOGS = `${API_URL_BASE}ArXAnswerLog/`;
 export const API_FETCH_QUESTION_ANSWERS = `${API_URL_BASE}ArXQuestionAnswer/`;
 export const API_CHOP_ADDRESS = `${API_URL_BASE}ChopAddress/`;
 export const API_FETCH_ENTRANCES = `${API_URL_BASE}ArEntrances/`;
+export const API_FETCH_BACKEND_ENTRANCE = `${API_URL_BASE}ArBackendEntrance/`;
 export const API_FETCH_BACKEND_ENTRANCE_ANSWERS = `${API_URL_BASE}ArBackendEntranceAnswer/`;
 export const API_FETCH_QUESTION_ANSWER_COMMENTS = `${API_URL_BASE}ArXQuestionAnswerComment/`;
 export const API_FETCH_QUESTION_ANSWER_LOCATIONS = `${API_URL_BASE}ArXQuestionAnswerLocation/`;

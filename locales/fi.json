@@ -47,6 +47,7 @@
     "mainEntrance": "Pääsisäänkäynti",
     "mainEntranceLocation": "Pääsisäänkäynnin sijainti",
     "additionalEntrance": "Lisäsisäänkäynti",
+    "entrance": "Sisäänkäynti",
     "updated": "Päivitetty",
     "search": "Haku",
     "formFilledCorrectly": "Lomake täytetty oikein",
@@ -66,20 +67,22 @@
   "servicepoint": {
     "buttons": {
       "createServicepoint": "Täytä esteettömyyslomake",
-      "editServicepoint": "Muuta esteettömyystietoja",
+      "editServicepoint": "Muokkaa",
       "mainCtrlReturn": "Palaa hakuun",
       "mainCtrlDelete": "Poista esteettömyystieto"
     },
-    "contactInfoHeader": "Toimipisteen esteettömyyden yhteystiedot",
-    "contactFormSummaryHeader": "Toimipisteen esteettömyystiedot",
+    "contactInfoHeader": "Yhteystiedot",
+    "contactFormSummaryHeader": "Esteettömyystiedot",
     "noDataContactinfo": "Toimipisteelle ei ole annettu esteettömyysasioiden yhteystietoja",
     "phoneNumber": "Puhelinnumero",
     "email": "Sähköpostiosoite",
     "www": "Nettisivu",
     "noInfo": "(ei tietoa)",
-    "mainEntranceLocationLabel" : "Pääsisäänkäynnin sijainti kartalla",
-    "mainEntranceLocationCoordinatesLabel" : "Koordinaatit",
-    "mainEntrancePicturesLabel": "Pääsisäänkäynnin valokuvat"
+    "mainEntranceLocationLabel": "Pääsisäänkäynnin sijainti",
+    "entranceLocationLabel": "Sisäänkäynnin sijainti",
+    "mainEntranceLocationCoordinatesLabel": "Koordinaatit",
+    "mainEntrancePicturesLabel": "Pääsisäänkäynnin kuva",
+    "entrancePicturesLabel": "Sisäänkäynnin kuva"
   },
   "questionFormControlButtons": {
     "quit": "Keskeytä",

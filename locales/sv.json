@@ -40,9 +40,14 @@
     "generalMainInfoIsClose": "Instruktioner för tillhandahållande av tillgänglighetsinformation",
     "generalChoose": "Välja",
     "generalExplanation": "Förklaring",
+    "buttons": {
+      "saveAndReturn": "spara och returnera",
+      "returnNoSave": "avsluta utan att spara"
+    },
     "mainEntrance": "Huvudingången",
     "mainEntranceLocation": "Platsen för huvudentren",
     "additionalEntrance": "Alternativ ingång",
+    "entrance": "Ingång",
     "updated": "Uppdaterad",
     "search": "Sök",
     "formFilledCorrectly": "Formuläret fyllt i korrekt",
@@ -56,31 +61,28 @@
     "statusReady": "Färdiga",
     "statusNotReady": "Inte färdig"
   },
-  "buttons": {
-    "saveAndReturn": "spara och returnera",
-    "returnNoSave": "avsluta utan att spara"
-  },
   "question": {
     "something": "something"
   },
   "servicepoint": {
     "buttons": {
       "createServicepoint": "Fyll i tillgänglighetsformuläret",
-      "editServicepoint": "Ändra tillgänglighetsinformation",
+      "editServicepoint": "Redigera",
       "mainCtrlReturn": "Återgå till sökningen",
       "mainCtrlDelete": "Ta bort tillgänglighetsinformation"
     },
-    "contactInfoHeader": "Kontaktinformation för tillgänglighet på kontoret",
-    "contactFormSummaryHeader": "Servicepoint tillgänglighetsinformation",
+    "contactInfoHeader": "Kontaktinformation",
+    "contactFormSummaryHeader": "Tillgänglighetsinformation",
     "noDataContactinfo": "Inga kontaktuppgifter för tillgänglighetsfrågor har lämnats till kontoret",
     "phoneNumber": "Telefonnummer",
     "email": "E-postadress",
     "www": "www-adress",
     "noInfo": "(ingen information)",
-
-    "mainEntranceLocationLabel" : "Ingångens läge på kartan",
-    "mainEntranceLocationCoordinatesLabel" : "Koordinater",
-    "mainEntrancePicturesLabel": "Foton från huvudentrén"
+    "mainEntranceLocationLabel": "Huvudingångens läge",
+    "entranceLocationLabel": "Ingångens läge",
+    "mainEntranceLocationCoordinatesLabel": "Koordinater",
+    "mainEntrancePicturesLabel": "Huvudingångens bild",
+    "entrancePicturesLabel": "Ingångens bild"
   },
   "questionFormControlButtons": {
     "quit": "Avbryta",

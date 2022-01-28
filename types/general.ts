@@ -2,6 +2,7 @@
 
 import { LatLngExpression } from "leaflet";
 import {
+  BackendEntrance,
   BackendEntranceAnswer,
   BackendQuestion,
   BackendQuestionBlock,
@@ -103,13 +104,17 @@ export interface QuestionAdditionalInfoCtrlButtonProps {
 }
 
 export interface ServicepointLandingSummaryContactProps {
-  header: string;
-  data: Servicepoint;
+  servicepointData: Servicepoint;
+  entranceData?: BackendEntrance;
+  hasData: boolean;
 }
 
 export interface ServicepointLandingSummaryAccessibilityProps {
-  header: string;
-  data: AccessibilityData;
+  entranceKey: string;
+  entranceData?: BackendEntrance;
+  servicepointData: Servicepoint;
+  accessibilityData: AccessibilityData;
+  hasData: boolean;
 }
 
 export interface PreviewPageLandingSummaryProps {
@@ -119,6 +124,16 @@ export interface PreviewPageLandingSummaryProps {
 export interface ServicepointLandingSummaryContentProps {
   contentHeader?: string;
   children?: JSX.Element;
+}
+
+export interface ServicepointLandingSummaryLocationPictureProps {
+  entranceKey: string;
+  entranceData?: BackendEntrance;
+}
+
+export interface ServicepointLandingSummaryModifyButtonProps {
+  entranceData?: BackendEntrance;
+  hasData: boolean;
 }
 
 export interface ServicepointLandingSummaryCtrlButtonsProps {
@@ -137,7 +152,6 @@ export interface MapProps {
   draggableMarker?: boolean;
   updateLocationHandler?: (location: LatLngExpression) => void;
   makeStatic?: boolean;
-  isPreview?: boolean;
   isMainLocPicComponent?: boolean;
 }
 
@@ -347,6 +361,10 @@ export interface MainLocationAndPictureProps {
   canAddPicture: boolean;
 }
 
+export interface EntranceData {
+  [key: string]: BackendEntrance;
+}
+
 export interface AccessibilityData {
   [key: string]: StoredSentence[];
 }
@@ -354,7 +372,7 @@ export interface AccessibilityData {
 export interface DetailsProps {
   servicepointData: Servicepoint;
   accessibilityData: AccessibilityData;
-  entranceData: EntranceResults;
+  entranceData: EntranceData;
   hasExistingFormData: boolean;
   isFinished: boolean;
 }

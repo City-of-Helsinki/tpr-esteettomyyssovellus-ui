@@ -125,6 +125,20 @@ export interface QuestionAnswerPhotoTxt {
 
 // Views
 // Note: Optional id fields have been changed to mandatory according to the underlying sql of the backend views
+export interface BackendEntrance {
+  technical_id: string;
+  log_id: number;
+  entrance_id: number;
+  form_submitted: string;
+  loc_easting?: number;
+  loc_northing?: number;
+  photo_url?: string;
+  name_fi?: string;
+  name_sv?: string;
+  name_en?: string;
+  [key: string]: number | string | undefined;
+}
+
 export interface BackendEntranceAnswer {
   technical_id: string;
   log_id: number;
