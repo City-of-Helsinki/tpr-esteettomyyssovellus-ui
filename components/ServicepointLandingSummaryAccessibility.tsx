@@ -1,9 +1,10 @@
 import React from "react";
-import { IconAlertCircle } from "hds-react";
+import { Accordion, IconAlertCircle } from "hds-react";
 import { useI18n } from "next-localization";
 import ServicepointLandingSummaryContent from "./ServicepointLandingSummaryContent";
 import ServicepointLandingSummaryLocationPicture from "./ServicepointLandingSummaryLocationPicture";
 import ServicepointLandingSummaryModifyButton from "./ServicepointLandingSummaryModifyButton";
+import { StoredSentence } from "../types/backendModels";
 import { ServicepointLandingSummaryAccessibilityProps } from "../types/general";
 import styles from "./ServicepointLandingSummaryAccessibility.module.scss";
 
@@ -25,24 +26,45 @@ const ServicepointLandingSummaryAccessibility = ({
       ? `${i18n.t("common.mainEntrance")}: ${servicepointData.address_street_name} ${servicepointData.address_no}, ${servicepointData.address_city}`
       : `${i18n.t("common.entrance")}: ${entranceName}`;
 
-  const getItemList = (key: string) => {
-    const itemList: JSX.Element[] = [];
-    let currentTitle = "";
-    if (accessibilityData[key]) {
-      accessibilityData[key].forEach((x) => {
-        if (x.sentence_group_name !== currentTitle) {
-          currentTitle = x.sentence_group_name;
-          // Add h3 titles in the container
-          itemList.push(
-            <h3 key={`sentencetitle_${x.sentence_id}`} className={styles.sentenceGroupName}>
-              {currentTitle}
-            </h3>
-          );
-        }
-        itemList.push(<li key={`sentence_${x.sentence_id}`}>{x.sentence}</li>);
+  interface SentenceGroup {
+    [key: string]: StoredSentence[];
+  }
+  const getGroupedAccessibilityData = (): SentenceGroup | undefined => {
+    if (accessibilityData[entranceKey]) {
+      return accessibilityData[entranceKey].reduce((acc: SentenceGroup, sentence) => {
+        const { sentence_group_id } = sentence;
+        return {
+          ...acc,
+          [sentence_group_id]: acc[sentence_group_id] ? [...acc[sentence_group_id], sentence] : [sentence],
+        };
+      }, {});
+    }
+  };
+
+  const getSentenceGroupAccordions = () => {
+    const grouped = getGroupedAccessibilityData();
+    if (grouped) {
+      return Object.keys(grouped).map((sentenceGroupId) => {
+        const group = grouped[sentenceGroupId];
+
+        return (
+          <Accordion
+            key={`sentencegroup_${sentenceGroupId}`}
+            className={styles.accordion}
+            heading={group[0].sentence_group_name}
+            card
+            border
+            initiallyOpen
+          >
+            <ul>
+              {group.map((s) => {
+                return <li key={`sentence_${s.sentence_id}`}>{s.sentence}</li>;
+              })}
+            </ul>
+          </Accordion>
+        );
       });
     }
-    return itemList;
   };
 
   return (
@@ -57,9 +79,8 @@ const ServicepointLandingSummaryAccessibility = ({
             <ServicepointLandingSummaryContent>
               <ServicepointLandingSummaryLocationPicture entranceKey={entranceKey} entranceData={entranceData} />
             </ServicepointLandingSummaryContent>
-            <ServicepointLandingSummaryContent key={entranceKey}>
-              <ul>{getItemList(entranceKey)}</ul>
-            </ServicepointLandingSummaryContent>
+
+            {getSentenceGroupAccordions()}
           </>
         ) : (
           <div className={styles.nodatacontainer}>

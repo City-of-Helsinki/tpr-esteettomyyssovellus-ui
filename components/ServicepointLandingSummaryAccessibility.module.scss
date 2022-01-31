@@ -11,6 +11,18 @@
     justify-content: space-between;
   }
 
+  .accordion {
+    margin: $spacing-l 0;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+
+    > div:first-child {
+      background-color: $color-bus-light !important;
+      color: $color-bus;
+      padding: $spacing-m;
+    }
+  }
+
   .nodatacontainer {
     span {
       display: flex;
