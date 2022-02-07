@@ -35,8 +35,8 @@ const QuestionContainer = ({
   const dispatch = useAppDispatch();
 
   const curLocale: string = i18n.locale();
-  const questionDepth = (questionNumber?.toString().split(".") || []).length;
-  const paddingLeft = `${(questionDepth - 2) * 5}rem`;
+  // const questionDepth = (questionNumber?.toString().split(".") || []).length;
+  // const paddingLeft = `${(questionDepth - 2) * 5}rem`;
   const photoTexts = photoText?.split("<BR>");
   const questionInfos = questionInfo?.split("<BR><BR>");
   const invalidBlocks = useAppSelector((state) => state.formReducer.invalidBlocks);
@@ -48,14 +48,14 @@ const QuestionContainer = ({
   const questionStyle =
     isInvalid && curAnswers[questionId] === undefined
       ? {
-          paddingLeft,
+          // paddingLeft,
           backgroundColor,
           marginBottom: "0.1rem",
           borderStyle: "solid",
           borderColor: "#b01038",
         }
       : {
-          paddingLeft,
+          // paddingLeft,
           backgroundColor,
         };
 
