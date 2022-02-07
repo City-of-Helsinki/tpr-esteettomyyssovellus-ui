@@ -48,6 +48,7 @@
     "mainEntranceLocation": "Platsen för huvudentren",
     "additionalEntrance": "Alternativ ingång",
     "entrance": "Ingång",
+    "newEntrance": "Ny ingång",
     "updated": "Uppdaterad",
     "search": "Sök",
     "formFilledCorrectly": "Formuläret fyllt i korrekt",
@@ -67,6 +68,7 @@
   "servicepoint": {
     "buttons": {
       "createServicepoint": "Fyll i tillgänglighetsformuläret",
+      "addNewEntrance": "Lägg till en ny entré",
       "editServicepoint": "Redigera",
       "mainCtrlReturn": "Återgå till sökningen",
       "mainCtrlDelete": "Ta bort tillgänglighetsinformation"

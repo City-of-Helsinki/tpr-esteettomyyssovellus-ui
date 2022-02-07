@@ -7,6 +7,7 @@ import {
   BackendQuestion,
   BackendQuestionBlock,
   BackendQuestionChoice,
+  BackendServicepoint,
   EntranceResults,
   QuestionAnswerComment,
   QuestionAnswerLocation,
@@ -131,7 +132,12 @@ export interface ServicepointLandingSummaryLocationPictureProps {
   entranceData?: BackendEntrance;
 }
 
+export interface ServicepointLandingSummaryNewButtonProps {
+  servicepointData: Servicepoint;
+}
+
 export interface ServicepointLandingSummaryModifyButtonProps {
+  servicepointData: Servicepoint;
   entranceData?: BackendEntrance;
   hasData: boolean;
 }
@@ -372,6 +378,7 @@ export interface AccessibilityData {
 
 export interface DetailsProps {
   servicepointData: Servicepoint;
+  servicepointDetail: BackendServicepoint;
   accessibilityData: AccessibilityData;
   entranceData: EntranceData;
   hasExistingFormData: boolean;

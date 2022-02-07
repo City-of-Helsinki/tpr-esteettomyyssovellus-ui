@@ -31,7 +31,7 @@ const ServicepointLandingSummaryContact = ({ servicepointData, entranceData, has
     <div className={styles.maincontainer}>
       <div className={styles.headercontainer}>
         <h3>{i18n.t("servicepoint.contactInfoHeader")}</h3>
-        <ServicepointLandingSummaryModifyButton entranceData={entranceData} hasData={hasData} />
+        <ServicepointLandingSummaryModifyButton servicepointData={servicepointData} entranceData={entranceData} hasData={hasData} />
       </div>
 
       <div>

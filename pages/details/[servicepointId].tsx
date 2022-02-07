@@ -7,6 +7,7 @@ import Layout from "../../components/common/Layout";
 import i18nLoader from "../../utils/i18n";
 import ServicepointLandingSummaryAccessibility from "../../components/ServicepointLandingSummaryAccessibility";
 import ServicepointLandingSummaryContact from "../../components/ServicepointLandingSummaryContact";
+import ServicepointLandingSummaryNewButton from "../../components/ServicepointLandingSummaryNewButton";
 import styles from "./details.module.scss";
 // import ServicepointLandingSummaryCtrlButtons from "../../components/ServicepointLandingSummaryCtrlButtons";
 import QuestionInfo from "../../components/QuestionInfo";
@@ -28,17 +29,25 @@ import { clearGeneralState, setServicepointLocation, setServicepointLocationWGS8
 import {
   API_FETCH_ANSWER_LOGS,
   API_FETCH_BACKEND_ENTRANCE,
+  API_FETCH_BACKEND_SERVICEPOINT,
   API_FETCH_ENTRANCES,
   API_FETCH_SENTENCE_LANGS,
   API_FETCH_SERVICEPOINTS,
 } from "../../types/constants";
 import LoadSpinner from "../../components/common/LoadSpinner";
 import { clearAddinfoState } from "../../state/reducers/additionalInfoSlice";
-import { AnswerLog, BackendEntrance, EntranceResults, Servicepoint, StoredSentence } from "../../types/backendModels";
+import { AnswerLog, BackendEntrance, BackendServicepoint, EntranceResults, Servicepoint, StoredSentence } from "../../types/backendModels";
 import { AccessibilityData, DetailsProps, EntranceData } from "../../types/general";
 
 // usage: the details / landing page of servicepoint
-const Details = ({ servicepointData, accessibilityData, entranceData, hasExistingFormData, isFinished }: DetailsProps): ReactElement => {
+const Details = ({
+  servicepointData,
+  servicepointDetail,
+  accessibilityData,
+  entranceData,
+  hasExistingFormData,
+  isFinished,
+}: DetailsProps): ReactElement => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
   const isLoading = useLoading();
@@ -150,7 +159,10 @@ const Details = ({ servicepointData, accessibilityData, entranceData, hasExistin
                   {i18n.t("common.updated")} {finnishDate}
                 </p>
               </span>
-              <h2>{`${i18n.t("servicepoint.contactFormSummaryHeader")} (${entranceKeys.length})`}</h2>
+              <div className={styles.entranceHeader}>
+                <h2>{`${i18n.t("servicepoint.contactFormSummaryHeader")} (${entranceKeys.length})`}</h2>
+                {servicepointDetail.new_entrance_possible === "Y" && <ServicepointLandingSummaryNewButton servicepointData={servicepointData} />}
+              </div>
             </div>
 
             <div>
@@ -207,6 +219,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   let accessibilityData: AccessibilityData = {};
   let entranceData: EntranceData = {};
   let servicepointData: Servicepoint = {} as Servicepoint;
+  let servicepointDetail: BackendServicepoint = {} as BackendServicepoint;
   let hasExistingFormData = false;
   let isFinished = false;
 
@@ -214,6 +227,13 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
     try {
       const servicepointResp = await fetch(`${API_FETCH_SERVICEPOINTS}${params.servicepointId}/?format=json`);
       servicepointData = await (servicepointResp.json() as Promise<Servicepoint>);
+
+      const servicepointBackendDetailResp = await fetch(`${API_FETCH_BACKEND_SERVICEPOINT}?servicepoint_id=${params.servicepointId}&format=json`);
+      const servicepointBackendDetail = await (servicepointBackendDetailResp.json() as Promise<BackendServicepoint[]>);
+
+      if (servicepointBackendDetail?.length > 0) {
+        servicepointDetail = servicepointBackendDetail[0];
+      }
 
       const servicepointEntranceResp = await fetch(`${API_FETCH_ENTRANCES}?servicepoint=${servicepointData.servicepoint_id}&format=json`);
       const servicepointEntranceData = await (servicepointEntranceResp.json() as Promise<EntranceResults>);
@@ -276,7 +296,10 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         isFinished = logData.some((e) => e.form_submitted === "Y");
       }
     } catch (err) {
+      console.error("Error", err);
+
       servicepointData = {} as Servicepoint;
+      servicepointDetail = {} as BackendServicepoint;
       accessibilityData = {};
       entranceData = {};
     }
@@ -286,6 +309,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
     props: {
       lngDict,
       servicepointData,
+      servicepointDetail,
       accessibilityData,
       entranceData,
       hasExistingFormData,

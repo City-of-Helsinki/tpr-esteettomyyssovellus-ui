@@ -71,7 +71,9 @@ const ServicepointLandingSummaryAccessibility = ({
     <div className={styles.maincontainer}>
       <div className={styles.headercontainer}>
         <h3>{header}</h3>
-        {entranceKey !== "main" && <ServicepointLandingSummaryModifyButton entranceData={entranceData} hasData={hasData} />}
+        {entranceKey !== "main" && (
+          <ServicepointLandingSummaryModifyButton servicepointData={servicepointData} entranceData={entranceData} hasData={hasData} />
+        )}
       </div>
       <div>
         {hasData ? (
@@ -95,7 +97,7 @@ const ServicepointLandingSummaryAccessibility = ({
       </div>
 
       <div>
-        <ServicepointLandingSummaryModifyButton entranceData={entranceData} hasData={hasData} />
+        <ServicepointLandingSummaryModifyButton servicepointData={servicepointData} entranceData={entranceData} hasData={hasData} />
       </div>
     </div>
   );

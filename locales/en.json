@@ -48,6 +48,7 @@
     "mainEntranceLocation": "Main entrance location",
     "additionalEntrance": "Additional entrance",
     "entrance": "Entrance",
+    "newEntrance": "New entrance",
     "updated": "Updated",
     "search": "Search",
     "formFilledCorrectly": "Form filled correctly",
@@ -67,6 +68,7 @@
   "servicepoint": {
     "buttons": {
       "createServicepoint": "Fill accessibility form",
+      "addNewEntrance": "Add a new entrance",
       "editServicepoint": "Edit",
       "mainCtrlReturn": "Return to search",
       "mainCtrlDelete": "Delete accessibility data"

@@ -9,9 +9,16 @@ import { FRONT_URL_BASE } from "../types/constants";
 import { getCurrentDate } from "../utils/utilFunctions";
 
 // usage: modify button for ServicepointLandingSummary
-const ServicepointLandingSummaryModifyButton = ({ entranceData, hasData }: ServicepointLandingSummaryModifyButtonProps): JSX.Element => {
+const ServicepointLandingSummaryModifyButton = ({
+  servicepointData,
+  entranceData,
+  hasData,
+}: ServicepointLandingSummaryModifyButtonProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
+
+  // const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
+  const { servicepoint_id: curServicepointId } = servicepointData;
   // const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
   const { entrance_id: curEntranceId } = entranceData || {};
 
@@ -19,7 +26,7 @@ const ServicepointLandingSummaryModifyButton = ({ entranceData, hasData }: Servi
     if (entranceData) {
       const startedAnswering = getCurrentDate();
       dispatch(setStartDate(startedAnswering));
-      const url = `${FRONT_URL_BASE}accessibilityEdit/${curEntranceId}`;
+      const url = `${FRONT_URL_BASE}entranceAccessibility/${curServicepointId}/${curEntranceId}`;
       router.push(url);
     } else {
       // todo: todo (?)

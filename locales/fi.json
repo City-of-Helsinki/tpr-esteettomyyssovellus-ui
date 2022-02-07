@@ -48,6 +48,7 @@
     "mainEntranceLocation": "Pääsisäänkäynnin sijainti",
     "additionalEntrance": "Lisäsisäänkäynti",
     "entrance": "Sisäänkäynti",
+    "newEntrance": "Uusi sisäänkäynti",
     "updated": "Päivitetty",
     "search": "Haku",
     "formFilledCorrectly": "Lomake täytetty oikein",
@@ -67,6 +68,7 @@
   "servicepoint": {
     "buttons": {
       "createServicepoint": "Täytä esteettömyyslomake",
+      "addNewEntrance": "Lisää uusi sisäänkäynti",
       "editServicepoint": "Muokkaa",
       "mainCtrlReturn": "Palaa hakuun",
       "mainCtrlDelete": "Poista esteettömyystieto"
