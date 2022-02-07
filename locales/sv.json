@@ -157,7 +157,8 @@
     "closeGuidance": "Nära hjälp",
     "additionalInfoPreviewHeader": "Ytterligare information",
     "additionalInfoPreviewAltText": "Bild: ",
-    "additionalInfoPreviewSourceText": "Källa: "
+    "additionalInfoPreviewSourceText": "Källa: ",
+    "optional": "frivillig"
   },
   "QuestionFormImportExistingData": {
     "chooseServicepoint": "Välj ett kontor",

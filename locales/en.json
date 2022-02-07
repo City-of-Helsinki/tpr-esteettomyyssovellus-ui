@@ -157,7 +157,8 @@
     "closeGuidance": "Close help",
     "additionalInfoPreviewHeader": "Additional Information",
     "additionalInfoPreviewAltText": "Picture: ",
-    "additionalInfoPreviewSourceText": "Source: "
+    "additionalInfoPreviewSourceText": "Source: ",
+    "optional": "optional"
   },
   "QuestionFormImportExistingData": {
     "chooseServicepoint": "Choose servicepoint",

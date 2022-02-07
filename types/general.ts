@@ -35,6 +35,16 @@ export interface QuestionContainerProps {
   isMainLocPicComponent?: boolean;
 }
 
+export interface QuestionExtraFieldProps {
+  questionBlockId: number;
+  fieldNumber?: number;
+  questionText?: string;
+  questionInfo?: string | null;
+  isMandatory: boolean;
+  children: JSX.Element;
+  backgroundColor: string;
+}
+
 export interface HeadlineQuestionContainerProps {
   text?: string;
   initOpen?: boolean;
@@ -93,10 +103,14 @@ export interface QuestionFormCtrlButtonsProps {
   visibleQuestionChoices?: BackendQuestionChoice[] | undefined;
 }
 
-// todo: add type for questionlist
 export interface QuestionsListProps {
   additionalInfoVisible: boolean;
   questions?: BackendQuestion[] | null;
+  answers?: BackendQuestionChoice[] | null;
+}
+
+export interface QuestionBlockExtraFieldListProps {
+  extraFields?: BackendQuestionBlockField[] | null;
   answers?: BackendQuestionChoice[] | null;
 }
 

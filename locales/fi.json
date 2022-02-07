@@ -157,7 +157,8 @@
     "closeGuidance": "Sulje ohje ",
     "additionalInfoPreviewHeader": "Lisätiedot",
     "additionalInfoPreviewAltText": "Kuva: ",
-    "additionalInfoPreviewSourceText": "Lähde: "
+    "additionalInfoPreviewSourceText": "Lähde: ",
+    "optional": "vapaaehtoinen"
   },
   "QuestionFormImportExistingData": {
     "chooseServicepoint": "Valitse toimipiste",

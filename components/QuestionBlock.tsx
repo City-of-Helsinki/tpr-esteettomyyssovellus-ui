@@ -2,6 +2,7 @@ import { Button, IconAngleDown, IconAngleUp, IconArrowRight } from "hds-react";
 import React, { useState } from "react";
 import { useI18n } from "next-localization";
 import QuestionAdditionalInfoCtrlButton from "./QuestionAdditionalInfoCtrlButton";
+import QuestionBlockExtraFieldList from "./QuestionBlockExtraFieldList";
 import QuestionFormImportExistingData from "./QuestionFormImportExistingData";
 import styles from "./QuestionBlock.module.scss";
 import QuestionInfo from "./QuestionInfo";
@@ -96,11 +97,13 @@ const QuestionBlock = ({ description, questions, answers, extraFields, photoUrl,
         </p>
       )}
 
-      {/* TODO: add QuestionBlockExtraFieldList component here, using the extraFields prop */}
+      <QuestionBlockExtraFieldList extraFields={extraFields} />
+
       {/* TODO: add QuestionBlockLocationPictureContent component here */}
 
       {/* QtionList loops the single question row(s) */}
       <QuestionsList additionalInfoVisible={showAdditionalInfo} questions={filteredQuestions} answers={answers} />
+
       {hasInfoAndButtons || !showContinue ? null : (
         <div className={styles.continueButton}>
           <Button variant="primary" iconRight={<IconArrowRight />} onClick={onClick} disabled={!continueActive}>
