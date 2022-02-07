@@ -17,6 +17,7 @@ export const API_FETCH_QUESTION_URL = `${API_URL_BASE}ArBackendQuestions/?format
 export const API_FETCH_QUESTIONCHOICES = `${API_URL_BASE}ArBackendQuestionChoice/?format=json&form_id=`;
 export const API_FETCH_SYSTEMS = `${API_URL_BASE}ArSystems/?format=json&system_id=`;
 export const API_FETCH_SERVICEPOINTS = `${API_URL_BASE}ArServicepoints/`;
+export const API_FETCH_BACKEND_SERVICEPOINT = `${API_URL_BASE}ArBackendServicepoint/`;
 export const API_FETCH_ANSWER_LOGS = `${API_URL_BASE}ArXAnswerLog/`;
 export const API_FETCH_QUESTION_ANSWERS = `${API_URL_BASE}ArXQuestionAnswer/`;
 export const API_CHOP_ADDRESS = `${API_URL_BASE}ChopAddress/`;

@@ -1,0 +1,21 @@
+@import "~hds-design-tokens/lib/all.scss";
+@import "../../../styles/mixins.scss";
+
+.maincontainer {
+  margin-top: $spacing-m;
+
+  .infocontainer {
+    margin: $spacing-m 0;
+  }
+
+  .treecontainer {
+    display: flex;
+    align-items: center;
+  }
+
+  .headingcontainer {
+    h1 {
+      word-break: break-word;
+    }
+  }
+}

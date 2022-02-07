@@ -1,50 +1,54 @@
-// note: copied from accessibilityEdit page -> edit accordingly
-
 import React, { ReactElement } from "react";
-/*
 import { useI18n } from "next-localization";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
 import { IconCrossCircle, IconQuestionCircle } from "hds-react";
-import Layout from "../../components/common/Layout";
-import i18nLoader from "../../utils/i18n";
-import QuestionInfo from "../../components/QuestionInfo";
-import styles from "./additionalEntrance.module.scss";
-import ServicepointMainInfoContent from "../../components/ServicepointMainInfoContent";
+import Layout from "../../../components/common/Layout";
+import i18nLoader from "../../../utils/i18n";
+import QuestionInfo from "../../../components/QuestionInfo";
+import styles from "./entranceAccessibility.module.scss";
+import ServicepointMainInfoContent from "../../../components/ServicepointMainInfoContent";
 import {
-  API_FETCH_QUESTIONBLOCK_URL,
-  API_FETCH_QUESTIONCHOICES,
-  API_FETCH_QUESTION_URL,
-  PHONE_REGEX,
-  EMAIL_REGEX,
-  API_FETCH_ENTRANCES,
+  API_FETCH_BACKEND_ENTRANCE,
   API_FETCH_BACKEND_ENTRANCE_ANSWERS,
-  API_FETCH_SERVICEPOINTS,
+  API_FETCH_BACKEND_QUESTIONBLOCK_FIELD,
+  API_FETCH_BACKEND_SERVICEPOINT,
+  API_FETCH_ENTRANCES,
   API_FETCH_QUESTION_ANSWER_COMMENTS,
   API_FETCH_QUESTION_ANSWER_LOCATIONS,
-  API_FETCH_QUESTION_ANSWER_PHOTOS,
   API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS,
+  API_FETCH_QUESTION_ANSWER_PHOTOS,
+  API_FETCH_QUESTION_URL,
+  API_FETCH_QUESTIONBLOCK_URL,
+  API_FETCH_QUESTIONCHOICES,
+  API_FETCH_SERVICEPOINTS,
+  EMAIL_REGEX,
+  PHONE_REGEX,
   LanguageLocales,
-} from "../../types/constants";
-import { useAppSelector, useAppDispatch, useLoading } from "../../state/hooks";
-import QuestionBlock from "../../components/QuestionBlock";
+} from "../../../types/constants";
+import { useAppSelector, useAppDispatch, useLoading } from "../../../state/hooks";
+import QuestionBlock from "../../../components/QuestionBlock";
 import {
+  BackendEntrance,
   BackendEntranceAnswer,
   BackendQuestion,
   BackendQuestionBlock,
+  BackendQuestionBlockField,
   BackendQuestionChoice,
+  BackendServicepoint,
   Entrance,
+  EntranceResults,
   QuestionAnswerComment,
   QuestionAnswerLocation,
   QuestionAnswerPhoto,
   QuestionAnswerPhotoTxt,
   Servicepoint,
-} from "../../types/backendModels";
-import { MainEntranceFormProps } from "../../types/general";
-import HeadlineQuestionContainer from "../../components/HeadlineQuestionContainer";
+} from "../../../types/backendModels";
+import { MainEntranceFormProps } from "../../../types/general";
+import HeadlineQuestionContainer from "../../../components/HeadlineQuestionContainer";
 
-import QuestionFormCtrlButtons from "../../components/QuestionFormCtrlButtons";
-import PathTreeComponent from "../../components/PathTreeComponent";
+import QuestionFormCtrlButtons from "../../../components/QuestionFormCtrlButtons";
+import PathTreeComponent from "../../../components/PathTreeComponent";
 import {
   setAnswer,
   setAnsweredChoice,
@@ -58,8 +62,8 @@ import {
   setEntranceId,
   setStartDate,
   setWwwAddress,
-} from "../../state/reducers/formSlice";
-// import ContactInformationQuestionContainer from "../../components/ContactInformationQuestionContainer";
+} from "../../../state/reducers/formSlice";
+// import ContactInformationQuestionContainer from "../../../components/ContactInformationQuestionContainer";
 import {
   addComment,
   addComponent,
@@ -68,25 +72,23 @@ import {
   clearEditingInitialState,
   setAlt,
   setInitAdditionalInfoFromDb,
-} from "../../state/reducers/additionalInfoSlice";
-import { getCurrentDate } from "../../utils/utilFunctions";
-import { setCurrentlyEditingBlock, setCurrentlyEditingQuestion } from "../../state/reducers/generalSlice";
-import LoadSpinner from "../../components/common/LoadSpinner";
+} from "../../../state/reducers/additionalInfoSlice";
+import { getCurrentDate } from "../../../utils/utilFunctions";
+import { setCurrentlyEditingBlock, setCurrentlyEditingQuestion } from "../../../state/reducers/generalSlice";
+import LoadSpinner from "../../../components/common/LoadSpinner";
 
 // usage: the main form / pääsisäänkäynti page
-const AdditionalEntrance = ({
+const EntranceAccessibility = ({
   questionsData,
   questionChoicesData,
   questionBlocksData,
   questionAnswerData,
+  entranceData,
   servicepointData,
   additionalInfosData,
-  form_id,
-  entrance_id,
+  // entrance_id,
+  formId,
 }: MainEntranceFormProps): ReactElement => {
-  console.log("tää on formiiiii");
-  console.log(form_id);
-
   const i18n = useI18n();
   const curLocale: string = i18n.locale();
   const dispatch = useAppDispatch();
@@ -106,10 +108,12 @@ const AdditionalEntrance = ({
   const startedAnswering = useAppSelector((state) => state.formReducer.startedAnswering);
   const curAnswers = useAppSelector((state) => state.formReducer.answers);
 
-  const treeItems = [servicepointData.servicepoint_name, "PH: Esteettömyystiedot"];
+  const treeItems = [servicepointData.servicepoint_name, i18n.t("servicepoint.contactFormSummaryHeader")];
+
+  const hasData = Object.keys(servicepointData).length > 0 && Object.keys(entranceData).length > 0;
 
   // validates contactinfo data and sets to state
-  if (servicepointData !== undefined && !formInited) {
+  if (hasData && !formInited) {
     const phoneNumber = servicepointData.accessibility_phone ?? "";
     const email = servicepointData.accessibility_email ?? "";
     const www = servicepointData.accessibility_www ?? "";
@@ -121,7 +125,8 @@ const AdditionalEntrance = ({
     dispatch(setEmail(email));
     dispatch(setWwwAddress(www));
     dispatch(setServicepointId(servicepointData.servicepoint_id));
-    dispatch(setEntranceId(Number(entrance_id)));
+    // dispatch(setEntranceId(Number(entrance_id)));
+    dispatch(setEntranceId(entranceData.entrance_id));
     if (startedAnswering === "") dispatch(setStartDate(getCurrentDate()));
 
     // VALIDATE PHONE
@@ -335,6 +340,13 @@ const AdditionalEntrance = ({
 
   const formSubmitted = useAppSelector((state) => state.formReducer.formSubmitted);
 
+  const entranceName = entranceData ? entranceData[`name_${curLocale}`] : "";
+  const entranceHeader =
+    formId === 0
+      ? `${i18n.t("common.mainEntrance")}: ${servicepointData.address_street_name} ${servicepointData.address_no}, ${servicepointData.address_city}`
+      : `${i18n.t("common.entrance")}: ${entranceName}`;
+  const header = hasData ? entranceHeader : i18n.t("common.newEntrance");
+
   return (
     <Layout>
       <Head>
@@ -348,6 +360,7 @@ const AdditionalEntrance = ({
             <div className={styles.treecontainer}>
               <PathTreeComponent treeItems={treeItems} />
             </div>
+
             <div className={styles.infocontainer}>
               <QuestionInfo
                 openText={i18n.t("common.generalMainInfoIsClose")}
@@ -359,10 +372,12 @@ const AdditionalEntrance = ({
                 <ServicepointMainInfoContent />
               </QuestionInfo>
             </div>
+
             <div className={styles.headingcontainer}>
               <h1>{servicepointData.servicepoint_name}</h1>
-              <h2>{form_id === 0 ? i18n.t("common.mainEntrance") : i18n.t("common.additionalEntrance")}</h2>
+              <h2>{header}</h2>
             </div>
+
             <div>
               {visibleBlocks}
               <QuestionFormCtrlButtons
@@ -385,94 +400,123 @@ const AdditionalEntrance = ({
 export const getServerSideProps: GetServerSideProps = async ({ params, locales }) => {
   const lngDict = await i18nLoader(locales);
 
-  let questionsData;
-  let questionChoicesData;
-  let questionBlocksData;
-  let questionAnswerData;
-  let entranceData;
-  let servicepointData;
+  let questionsData: BackendQuestion[] = [];
+  let questionChoicesData: BackendQuestionChoice[] = [];
+  let questionBlocksData: BackendQuestionBlock[] = [];
+  let questionAnswerData: BackendEntranceAnswer[] = [];
+  let entranceData: BackendEntrance = {} as BackendEntrance;
+  let servicepointData: Servicepoint = {} as Servicepoint;
   let additionalInfosData = {};
   let addInfoCommentsData;
   let addInfoLocationsData;
   let addInfoPhotosData;
   let addInfoPhotoTextsData;
-  const form_id = 1;
-  let entrance_id: string | string[] | undefined = "";
+  let formId = -1;
+  // let entrance_id: string | string[] | undefined = "";
+
   if (params !== undefined) {
     try {
-      entrance_id = params.entranceId;
-      const entranceResp = await fetch(`${API_FETCH_ENTRANCES}${entrance_id}/?format=json`);
-      entranceData = await (entranceResp.json() as Promise<Entrance>);
-
-      const servicepoint_id = entranceData.servicepoint;
-      //   form_id = EntranceData["form"];
-
-      const questionsResp = await fetch(API_FETCH_QUESTION_URL + form_id);
-      const questionChoicesResp = await fetch(API_FETCH_QUESTIONCHOICES + form_id);
-      const questionBlocksResp = await fetch(API_FETCH_QUESTIONBLOCK_URL + form_id);
-      const questionAnswersResp = await fetch(`${API_FETCH_BACKEND_ENTRANCE_ANSWERS}?entrance_id=${entrance_id}&format=json`);
-      const servicepointResp = await fetch(`${API_FETCH_SERVICEPOINTS}${servicepoint_id}/?format=json`);
-
-      questionsData = await (questionsResp.json() as Promise<BackendQuestion[]>);
-      questionChoicesData = await (questionChoicesResp.json() as Promise<BackendQuestionChoice[]>);
-      questionBlocksData = await (questionBlocksResp.json() as Promise<BackendQuestionBlock[]>);
-      questionAnswerData = await (questionAnswersResp.json() as Promise<BackendEntranceAnswer[]>);
+      const servicepointResp = await fetch(`${API_FETCH_SERVICEPOINTS}${params.servicepointId}/?format=json`);
       servicepointData = await (servicepointResp.json() as Promise<Servicepoint>);
+      const servicepointBackendDetailResp = await fetch(`${API_FETCH_BACKEND_SERVICEPOINT}?servicepoint_id=${params.servicepointId}&format=json`);
+      const servicepointBackendDetail = await (servicepointBackendDetailResp.json() as Promise<BackendServicepoint[]>);
+      const servicepointDetail = servicepointBackendDetail?.length > 0 ? servicepointBackendDetail[0] : undefined;
 
-      if (questionAnswerData.length !== 0) {
-        const logId =
-          questionAnswerData.sort((a: BackendEntranceAnswer, b: BackendEntranceAnswer) => {
-            return (b.log_id ?? 0) - (a.log_id ?? 0);
-          })[0].log_id ?? -1;
+      if (!params.entranceId && servicepointDetail?.new_entrance_possible === "Y") {
+        // New entrance
+        const entranceResp = await fetch(`${API_FETCH_ENTRANCES}?servicepoint=${params.servicepointId}&format=json`);
+        const entranceResults = await (entranceResp.json() as Promise<EntranceResults>);
 
-        if (logId && logId >= 0) {
-          const addInfoComments = await fetch(`${API_FETCH_QUESTION_ANSWER_COMMENTS}?log=${logId}`);
-          const addInfoLocations = await fetch(`${API_FETCH_QUESTION_ANSWER_LOCATIONS}?log=${logId}`);
-          const addInfoPhotos = await fetch(`${API_FETCH_QUESTION_ANSWER_PHOTOS}?log=${logId}`);
-          const addInfoPhotoTexts = await fetch(`${API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS}?log=${logId}`);
+        if (entranceResults?.results?.length === 0) {
+          // No entrance results, so make a new main entrance
+          formId = 0;
+        } else {
+          // Check the results, and make a new main entrance if not existing, otherwise an additional entrance
+          const mainEntranceExists = entranceResults?.results?.some((result) => result.is_main_entrance === "Y");
+          formId = !mainEntranceExists ? 0 : 1;
+        }
+      } else if (!!params.entranceId) {
+        // Existing entrance
+        const entranceResp = await fetch(`${API_FETCH_ENTRANCES}${params.entranceId}/?format=json`);
+        const entrance = await (entranceResp.json() as Promise<Entrance>);
 
-          addInfoCommentsData = await (addInfoComments.json() as Promise<QuestionAnswerComment[]>);
-          addInfoLocationsData = await (addInfoLocations.json() as Promise<QuestionAnswerLocation[]>);
-          addInfoPhotosData = await (addInfoPhotos.json() as Promise<QuestionAnswerPhoto[]>);
-          addInfoPhotoTextsData = await (addInfoPhotoTexts.json() as Promise<QuestionAnswerPhotoTxt[]>);
+        // Use the form id from the entrance if available
+        formId = entrance ? entrance.form : -1;
 
-          additionalInfosData = {
-            comments: addInfoCommentsData,
-            locations: addInfoLocationsData,
-            photos: addInfoPhotosData,
-            phototexts: addInfoPhotoTextsData,
-          };
+        const entranceDetailResp = await fetch(`${API_FETCH_BACKEND_ENTRANCE}?entrance_id=${params.entranceId}&format=json`);
+        const entranceDetail = await (entranceDetailResp.json() as Promise<BackendEntrance[]>);
+        if (entranceDetail.length > 0) {
+          entranceData = entranceDetail[0];
+        }
+      }
+
+      if (formId >= 0) {
+        const questionsResp = await fetch(`${API_FETCH_QUESTION_URL}${formId}`);
+        const questionChoicesResp = await fetch(`${API_FETCH_QUESTIONCHOICES}${formId}`);
+        const questionBlocksResp = await fetch(`${API_FETCH_QUESTIONBLOCK_URL}${formId}`);
+        const questionBlockFieldResp = await fetch(`${API_FETCH_BACKEND_QUESTIONBLOCK_FIELD}${formId}`);
+
+        questionsData = await (questionsResp.json() as Promise<BackendQuestion[]>);
+        questionChoicesData = await (questionChoicesResp.json() as Promise<BackendQuestionChoice[]>);
+        questionBlocksData = await (questionBlocksResp.json() as Promise<BackendQuestionBlock[]>);
+      }
+
+      if (!!params.entranceId) {
+        const questionAnswersResp = await fetch(`${API_FETCH_BACKEND_ENTRANCE_ANSWERS}?entrance_id=${params.entranceId}&format=json`);
+        questionAnswerData = await (questionAnswersResp.json() as Promise<BackendEntranceAnswer[]>);
+
+        if (questionAnswerData?.length > 0) {
+          const logId =
+            questionAnswerData.sort((a: BackendEntranceAnswer, b: BackendEntranceAnswer) => {
+              return (b.log_id ?? 0) - (a.log_id ?? 0);
+            })[0].log_id ?? -1;
+
+          if (logId && logId >= 0) {
+            const addInfoComments = await fetch(`${API_FETCH_QUESTION_ANSWER_COMMENTS}?log=${logId}`);
+            const addInfoLocations = await fetch(`${API_FETCH_QUESTION_ANSWER_LOCATIONS}?log=${logId}`);
+            const addInfoPhotos = await fetch(`${API_FETCH_QUESTION_ANSWER_PHOTOS}?log=${logId}`);
+            const addInfoPhotoTexts = await fetch(`${API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS}?log=${logId}`);
+
+            addInfoCommentsData = await (addInfoComments.json() as Promise<QuestionAnswerComment[]>);
+            addInfoLocationsData = await (addInfoLocations.json() as Promise<QuestionAnswerLocation[]>);
+            addInfoPhotosData = await (addInfoPhotos.json() as Promise<QuestionAnswerPhoto[]>);
+            addInfoPhotoTextsData = await (addInfoPhotoTexts.json() as Promise<QuestionAnswerPhotoTxt[]>);
+
+            additionalInfosData = {
+              comments: addInfoCommentsData,
+              locations: addInfoLocationsData,
+              photos: addInfoPhotosData,
+              phototexts: addInfoPhotoTextsData,
+            };
+          }
         }
       }
     } catch (e) {
-      questionsData = {};
-      questionChoicesData = {};
-      questionBlocksData = {};
-      questionAnswerData = {};
-      entranceData = {};
-      servicepointData = {};
+      console.error("Error", e);
+
+      questionsData = [];
+      questionChoicesData = [];
+      questionBlocksData = [];
+      questionAnswerData = [];
+      entranceData = {} as BackendEntrance;
+      servicepointData = {} as Servicepoint;
       additionalInfosData = {};
     }
   }
   return {
     props: {
-      form_id,
+      formId,
       questionsData,
       questionChoicesData,
       questionBlocksData,
       questionAnswerData,
+      entranceData,
       servicepointData,
       additionalInfosData,
-      entrance_id,
+      // entrance_id,
       lngDict,
     },
   };
 };
-*/
 
-// NOTE: this page has been replaced by entranceAccessibility/[servicepointId]/[[...entranceId]].tsx
-const AdditionalEntrance = (): ReactElement => {
-  return <></>;
-};
-
-export default AdditionalEntrance;
+export default EntranceAccessibility;

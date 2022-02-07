@@ -257,11 +257,12 @@ export interface MainEntranceFormProps {
   questionsData: BackendQuestion[];
   questionChoicesData: BackendQuestionChoice[];
   questionBlocksData: BackendQuestionBlock[];
+  entranceData: BackendEntrance;
   servicepointData: Servicepoint;
   questionAnswerData: BackendEntranceAnswer[];
   additionalInfosData: FetchAdditionalInfos;
-  form_id: number;
-  entrance_id: string;
+  formId: number;
+  // entrance_id: string;
 }
 
 interface FetchAdditionalInfos {

@@ -1,4 +1,5 @@
 import React, { ReactElement } from "react";
+/*
 import { useI18n } from "next-localization";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
@@ -461,6 +462,12 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       lngDict,
     },
   };
+};
+*/
+
+// NOTE: this page has been replaced by entranceAccessibility/[servicepointId]/[[...entranceId]].tsx
+const AccessibilityEdit = (): ReactElement => {
+  return <></>;
 };
 
 export default AccessibilityEdit;

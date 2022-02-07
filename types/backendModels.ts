@@ -125,6 +125,20 @@ export interface QuestionAnswerPhotoTxt {
 
 // Views
 // Note: Optional id fields have been changed to mandatory according to the underlying sql of the backend views
+export interface BackendServicepoint {
+  technical_id: string;
+  log_id: number;
+  servicepoint_id: number;
+  main_entrance_id: number;
+  form_submitted?: string;
+  contact_person_fi?: string;
+  contact_person_sv?: string;
+  contact_person_en?: string;
+  accessibility_phone?: string;
+  accessibility_email?: string;
+  new_entrance_possible: string;
+}
+
 export interface BackendEntrance {
   technical_id: string;
   log_id: number;
