@@ -15,6 +15,7 @@ export const FRONT_URL_BASE = "http://localhost:3000/";
 export const API_FETCH_QUESTIONBLOCK_URL = `${API_URL_BASE}ArBackendQuestionBlocks/?format=json&form_id=`;
 export const API_FETCH_QUESTION_URL = `${API_URL_BASE}ArBackendQuestions/?format=json&form_id=`;
 export const API_FETCH_QUESTIONCHOICES = `${API_URL_BASE}ArBackendQuestionChoice/?format=json&form_id=`;
+export const API_FETCH_BACKEND_QUESTIONBLOCK_FIELD = `${API_URL_BASE}ArBackendQuestionBlockField/?format=json&form_id=`;
 export const API_FETCH_SYSTEMS = `${API_URL_BASE}ArSystems/?format=json&system_id=`;
 export const API_FETCH_SERVICEPOINTS = `${API_URL_BASE}ArServicepoints/`;
 export const API_FETCH_BACKEND_SERVICEPOINT = `${API_URL_BASE}ArBackendServicepoint/`;

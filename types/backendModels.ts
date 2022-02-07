@@ -206,6 +206,18 @@ export interface BackendQuestionBlock {
   photo_text?: string;
 }
 
+export interface BackendQuestionBlockField {
+  technical_id: string;
+  form_id: number;
+  language_id: number;
+  question_block_id: number;
+  field_number: number;
+  field_name?: string;
+  field_title?: string;
+  obligatory?: string;
+  description?: string;
+}
+
 export interface BackendQuestionChoice {
   technical_id: string;
   form_id: number;

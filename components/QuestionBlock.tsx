@@ -12,7 +12,7 @@ import { setContinue, setFinished, unsetFinished } from "../state/reducers/formS
 
 // usage: in form groups up all questions under a single "question block" / accordion
 // notes: used under headlineQuestionContainer in main form
-const QuestionBlock = ({ description, questions, answers, photoUrl, photoText }: QuestionBlockProps): JSX.Element => {
+const QuestionBlock = ({ description, questions, answers, extraFields, photoUrl, photoText }: QuestionBlockProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
   const [showAdditionalInfo, setShowAdditionalInfo] = useState(false);
@@ -95,6 +95,10 @@ const QuestionBlock = ({ description, questions, answers, photoUrl, photoText }:
           voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupi
         </p>
       )}
+
+      {/* TODO: add QuestionBlockExtraFieldList component here, using the extraFields prop */}
+      {/* TODO: add QuestionBlockLocationPictureContent component here */}
+
       {/* QtionList loops the single question row(s) */}
       <QuestionsList additionalInfoVisible={showAdditionalInfo} questions={filteredQuestions} answers={answers} />
       {hasInfoAndButtons || !showContinue ? null : (

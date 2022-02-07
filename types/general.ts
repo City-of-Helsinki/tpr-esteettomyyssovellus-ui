@@ -6,6 +6,7 @@ import {
   BackendEntranceAnswer,
   BackendQuestion,
   BackendQuestionBlock,
+  BackendQuestionBlockField,
   BackendQuestionChoice,
   BackendServicepoint,
   EntranceResults,
@@ -263,6 +264,7 @@ export interface MainEntranceFormProps {
   questionsData: BackendQuestion[];
   questionChoicesData: BackendQuestionChoice[];
   questionBlocksData: BackendQuestionBlock[];
+  questionBlockFieldData: BackendQuestionBlockField[];
   entranceData: BackendEntrance;
   servicepointData: Servicepoint;
   questionAnswerData: BackendEntranceAnswer[];
@@ -278,44 +280,14 @@ interface FetchAdditionalInfos {
   phototexts?: QuestionAnswerPhotoTxt[];
 }
 
-// todo: added ? optional questionmark to all, remove where mandatory
-/*
-export interface QuestionProps {
-  can_add_comment?: string;
-  can_add_location?: string;
-  can_add_photo_max_count?: number;
-  description?: string;
-  form_id: number;
-  language_id: number;
-  photo_text?: string | null;
-  photo_url?: string | null;
-  question_block_id: number;
-  question_code: string;
-  question_id: number;
-  question_level: number;
-  question_order_text: string;
-  technical_id: string;
-  text: string;
-  visible_if_question_choice: string;
-  yes_no_question: string;
-}
-*/
-
 export interface QuestionBlockProps {
   questions?: BackendQuestion[] | null;
   answers?: BackendQuestionChoice[] | null;
+  extraFields?: BackendQuestionBlockField[] | null;
   description?: string | null;
   photoUrl?: string | null;
   photoText?: string | null;
 }
-
-// TODO: add type for questionlist and question
-/*
-export interface QuestionBlockProps {
-  mainInfoText?: string;
-  // questionList: any;
-}
-*/
 
 export interface PathTreeProps {
   treeItems: (string | undefined)[];

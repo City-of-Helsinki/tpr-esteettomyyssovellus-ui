@@ -82,6 +82,7 @@ const EntranceAccessibility = ({
   questionsData,
   questionChoicesData,
   questionBlocksData,
+  questionBlockFieldData,
   questionAnswerData,
   entranceData,
   servicepointData,
@@ -272,6 +273,12 @@ const EntranceAccessibility = ({
             ? questionsData.filter((question) => question.question_block_id === block.question_block_id && question.language_id === curLocaleId)
             : null;
 
+          const blockExtraFields = isVisible
+            ? questionBlockFieldData.filter(
+                (question) => question.question_block_id === block.question_block_id && question.language_id === curLocaleId
+              )
+            : null;
+
           const answerChoices = isVisible
             ? questionChoicesData.filter((choice) => choice.question_block_id === block.question_block_id && choice.language_id === curLocaleId)
             : null;
@@ -296,6 +303,7 @@ const EntranceAccessibility = ({
                 description={block.description ?? null}
                 questions={blockQuestions}
                 answers={answerChoices}
+                extraFields={blockExtraFields}
                 photoUrl={block.photo_url}
                 photoText={block.photo_text}
               />
@@ -403,6 +411,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   let questionsData: BackendQuestion[] = [];
   let questionChoicesData: BackendQuestionChoice[] = [];
   let questionBlocksData: BackendQuestionBlock[] = [];
+  let questionBlockFieldData: BackendQuestionBlockField[] = [];
   let questionAnswerData: BackendEntranceAnswer[] = [];
   let entranceData: BackendEntrance = {} as BackendEntrance;
   let servicepointData: Servicepoint = {} as Servicepoint;
@@ -459,6 +468,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         questionsData = await (questionsResp.json() as Promise<BackendQuestion[]>);
         questionChoicesData = await (questionChoicesResp.json() as Promise<BackendQuestionChoice[]>);
         questionBlocksData = await (questionBlocksResp.json() as Promise<BackendQuestionBlock[]>);
+        questionBlockFieldData = await (questionBlockFieldResp.json() as Promise<BackendQuestionBlockField[]>);
       }
 
       if (!!params.entranceId) {
@@ -497,6 +507,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       questionsData = [];
       questionChoicesData = [];
       questionBlocksData = [];
+      questionBlockFieldData = [];
       questionAnswerData = [];
       entranceData = {} as BackendEntrance;
       servicepointData = {} as Servicepoint;
@@ -509,6 +520,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       questionsData,
       questionChoicesData,
       questionBlocksData,
+      questionBlockFieldData,
       questionAnswerData,
       entranceData,
       servicepointData,
