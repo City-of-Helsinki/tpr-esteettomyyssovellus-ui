@@ -166,23 +166,6 @@
     "addAdditionalInfo": "Lisää kuva, sijainti tai lisäteksti",
     "hideAddButtons": "Piilota lisää -painikkeet"
   },
-  "ContactInformation": {
-    "contactInformationText": "Täytä tähän yhteistiedot toimipisteen esteettömyystietojen lisätietojen kysymystä varten.",
-    "contactInformation": "Yhteystiedot",
-    "contactPerson": "Yhteyshenkilö",
-    "phoneNumber": "Puhelinnumero",
-    "email": "Sähköpostiosoite",
-    "www": "Nettisivu",
-    "personPlaceholder": "Esim. vahtimestari tai Etunimi Sukunimi",
-    "phonePlaceholder": "Esim. +358 50 123 4567",
-    "emailPlaceholder": "Esim. osoite@maili.fi",
-    "wwwPlaceholder": "Esim. www.address.fi",
-
-    "personValidationErrorText": "Olkaa hyvä ja syöttäkää yhteyshenkilö",
-    "phoneNumberValidationErrorText": "Olkaa hyvä ja syöttäkää validi numero",
-    "emailValidationErrorText": "Olkaa hyvä ja syöttäkää validi sähköposti",
-    "wwwValidationErrorText": "Olkaa hyvä ja syöttäkää www-osoite"
-  },
   "PreviewPage": {
     "continueEditing": "Jatka muokkaamista",
     "saveAndSend": "Tallenna ja lähetä",

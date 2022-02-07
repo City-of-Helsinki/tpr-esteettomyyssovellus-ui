@@ -316,10 +316,6 @@ export interface QuestionAdditionalInfoProps {
   isMainLocPicComponent?: boolean;
 }
 
-export interface ContactInformationProps {
-  blockNumber?: number;
-}
-
 export interface AdditionalInfoPageProps {
   questionId: number;
   questionData?: BackendQuestion[];

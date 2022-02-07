@@ -166,23 +166,6 @@
     "addAdditionalInfo": "Add picture, location or additional text",
     "hideAddButtons": "Hide add info -buttons"
   },
-  "ContactInformation": {
-    "contactInformationText": "PH: Fill in contact information....",
-    "contactInformation": "Contact information",
-    "contactPerson": "Contact person",
-    "phoneNumber": "Phone number",
-    "email": "Email address",
-    "www": "Webpage",
-    "personPlaceholder": "Eg. janitor",
-    "phonePlaceholder": "Eg. +358 50 123 4567",
-    "emailPlaceholder": "Eg. address@mail.com",
-    "wwwPlaceholder": "Eg. www.address.fi",
-
-    "personValidationErrorText": "Please enter a contact person",
-    "phoneNumberValidationErrorText": "Please enter a valid number",
-    "emailValidationErrorText": "Please enter a valid email",
-    "wwwValidationErrorText": "Please enter a web address"
-  },
   "PreviewPage": {
     "continueEditing": "Continue editing",
     "saveAndSend": "Save and send",

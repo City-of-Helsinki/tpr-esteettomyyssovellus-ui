@@ -63,7 +63,6 @@ import {
   setStartDate,
   setWwwAddress,
 } from "../../../state/reducers/formSlice";
-// import ContactInformationQuestionContainer from "../../../components/ContactInformationQuestionContainer";
 import {
   addComment,
   addComponent,
@@ -311,27 +310,6 @@ const EntranceAccessibility = ({
           ) : null;
         })
       : null;
-
-  // special case for contact info block for it's not coming from db
-  // todo: should isContinueClicked be removed due to the button removed which caused this,
-  // also todo: maybe remove this code block and possibly the whole ContactInformationQuestionContainer component
-  //
-  // if (isContinueClicked) {
-  //   visibleBlocks?.push(
-  //     <HeadlineQuestionContainer
-  //       key={99}
-  //       number={99}
-  //       text={i18n.t("ContactInformation.contactInformation")}
-  //       initOpen={false}
-  //       isValid={!curInvalidBlocks.includes(99)}
-  //     >
-  //       <ContactInformationQuestionContainer
-  //         key={99}
-  //         blockNumber={Number(lastBlockNumber) + 1}
-  //       />{" "}
-  //     </HeadlineQuestionContainer>
-  //   );
-  // }
 
   const visibleQuestionChoices = questionChoicesData?.filter((choice) => {
     return !!choice.question_block_id && visibleBlocks?.map((elem) => Number(elem?.key)).includes(choice.question_block_id);

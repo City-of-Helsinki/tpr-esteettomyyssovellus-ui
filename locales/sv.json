@@ -166,23 +166,6 @@
     "addAdditionalInfo": "Lägg till en bild, plats eller ytterligare text",
     "hideAddButtons": "Dölj lägg till knappar"
   },
-  "ContactInformation": {
-    "contactInformationText": "Fyll i...",
-    "contactInformation": "Kontaktinformation",
-    "contactPerson": "Kontaktperson",
-    "phoneNumber": "Telefonnummer",
-    "email": "E-postadress",
-    "www": "www-adress",
-    "personPlaceholder": "t.ex. vaktmästare eller Förnamn Efternamn",
-    "phonePlaceholder": "t.ex. +358 50 123 4567",
-    "emailPlaceholder": "t.ex. osoite@maili.fi",
-    "wwwPlaceholder": "Et.ex. www.address.fi",
-
-    "personValidationErrorText": "Ange en kontaktperson",
-    "phoneNumberValidationErrorText": "var vänlig skriv in ett giltigt nummer",
-    "emailValidationErrorText": "Ange ett giltigt mejl",
-    "wwwValidationErrorText": "Ange en webbadress"
-  },
   "PreviewPage": {
     "continueEditing": "Fortsätt redigera",
     "saveAndSend": "Spara och skicka",
