@@ -15,7 +15,6 @@ const QuestionExtraField = ({
   questionInfo,
   isMandatory,
   children,
-  backgroundColor,
 }: QuestionExtraFieldProps): JSX.Element => {
   const i18n = useI18n();
   const router = useRouter();
@@ -32,14 +31,11 @@ const QuestionExtraField = ({
     // isInvalid && curAnswers[questionId] === undefined
     isInvalid
       ? {
-          backgroundColor,
           marginBottom: "0.1rem",
           borderStyle: "solid",
           borderColor: "#b01038",
         }
-      : {
-          backgroundColor,
-        };
+      : {};
 
   return (
     <div className={styles.maincontainer} style={questionStyle} id={`fieldnumber-${fieldNumber}`}>

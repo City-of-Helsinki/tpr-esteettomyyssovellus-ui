@@ -2,9 +2,9 @@
 @import "../styles/mixins.scss";
 
 .mappreviewcontainer {
-  width: 28rem;
+  // width: 28rem;
   @include media(xs, s, m) {
-    width: 24rem;
+    // width: 24rem;
   }
 }
 

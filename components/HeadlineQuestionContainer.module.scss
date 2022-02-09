@@ -2,18 +2,7 @@
 @import "../styles/mixins.scss";
 
 .headline {
-  padding: $spacing-s $spacing-s;
-  margin: auto;
-
-  @include media(xs, s) {
-    width: 100%;
-    border-bottom: 1px solid $color-black-20;
-  }
-
-  .mainInfo {
-    padding: $spacing-s;
-    width: 70%;
-  }
+  margin-bottom: $spacing-s;
 
   .importAddinfoContainer {
     display: flex;
@@ -21,6 +10,7 @@
     align-items: flex-start;
     justify-content: space-between;
     flex-wrap: wrap;
+
     @include media(l, xl) {
       flex-direction: row;
       align-items: flex-end;
@@ -30,32 +20,34 @@
   .headlineButton {
     display: flex;
     flex-direction: row;
-    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-    @include media(xs, s) {
-      border: none;
-      color: $color-black;
-      display: flex;
-      flex-direction: row;
-      flex-wrap: nowrap;
-      justify-content: space-between;
-    }
+
     .blockHeadline {
       display: flex;
       align-items: center;
+
       .heading {
+        font-size: $fontsize-heading-s;
         padding-right: 1rem;
       }
     }
+
+    // Fix for right icon in xs screen size
+    svg {
+      min-width: 24px;
+    }
   }
+
   :focus::after {
-    --focus-outline-width: 0.3rem;
-    --focus-outline-color: var(--color-coat-of-arms);
-    --focus-outline-border-radius: 0.2rem;
     margin-left: -0.95rem;
   }
+
   .card {
     padding: 0;
+
+    > div:nth-child(2n) {
+      background-color: $color-bus-light;
+    }
   }
 }

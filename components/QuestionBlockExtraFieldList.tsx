@@ -1,6 +1,6 @@
 import React from "react";
-import { TextInput } from "hds-react";
 import QuestionExtraField from "./QuestionExtraField";
+import QuestionTextInput from "./QuestionTextInput";
 import { BackendQuestionBlockField } from "../types/backendModels";
 import { QuestionBlockExtraFieldListProps } from "../types/general";
 
@@ -8,7 +8,7 @@ import { QuestionBlockExtraFieldListProps } from "../types/general";
 const QuestionBlockExtraFieldList = ({ extraFields, answers }: QuestionBlockExtraFieldListProps): JSX.Element => {
   return (
     <>
-      {extraFields?.map((extraField: BackendQuestionBlockField, ind: number) => {
+      {extraFields?.map((extraField: BackendQuestionBlockField) => {
         /*
         const answerChoices = answers
           ?.filter((answer) => answer.question_id === extraField.field_number)
@@ -20,7 +20,6 @@ const QuestionBlockExtraFieldList = ({ extraFields, answers }: QuestionBlockExtr
           });
         */
 
-        const backgroundColor: string = ind % 2 === 0 ? "#f2f2fc" : "#ffffff";
         return (
           <QuestionExtraField
             key={extraField.field_number}
@@ -29,10 +28,9 @@ const QuestionBlockExtraFieldList = ({ extraFields, answers }: QuestionBlockExtr
             questionText={extraField.field_title}
             questionInfo={extraField.description ?? null}
             isMandatory={extraField.obligatory === "Y"}
-            backgroundColor={backgroundColor}
           >
-            {/* TODO: convert this to a QuestionText component when the answer handling is done */}
-            <TextInput id={extraField.field_name as string} />
+            {/* TODO: implement answer handling */}
+            <QuestionTextInput id={extraField.field_name as string} />
           </QuestionExtraField>
         );
       })}

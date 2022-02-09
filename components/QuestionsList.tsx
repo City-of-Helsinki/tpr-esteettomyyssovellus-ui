@@ -9,7 +9,7 @@ import { QuestionsListProps } from "../types/general";
 const QuestionsList = ({ additionalInfoVisible, questions, answers }: QuestionsListProps): JSX.Element => {
   return (
     <>
-      {questions?.map((question: BackendQuestion, ind: number) => {
+      {questions?.map((question: BackendQuestion) => {
         const answerChoices = answers
           ?.filter((answer) => answer.question_id === question.question_id)
           .map((choice) => {
@@ -19,7 +19,6 @@ const QuestionsList = ({ additionalInfoVisible, questions, answers }: QuestionsL
             };
           });
 
-        const backgroundColor: string = ind % 2 === 0 ? "#f2f2fc" : "#ffffff";
         return (
           <QuestionContainer
             key={question.question_id}
@@ -32,7 +31,6 @@ const QuestionsList = ({ additionalInfoVisible, questions, answers }: QuestionsL
               additionalInfoVisible &&
               (question.can_add_location === "Y" || question.can_add_comment === "Y" || question.can_add_photo_max_count !== 0)
             }
-            backgroundColor={backgroundColor}
             canAddLocation={question.can_add_location === "Y"}
             canAddComment={question.can_add_comment === "Y"}
             canAddPhotoMaxCount={question.can_add_photo_max_count}
@@ -41,24 +39,20 @@ const QuestionsList = ({ additionalInfoVisible, questions, answers }: QuestionsL
           >
             {/* For checking if the component is yes_or_no question -> data from db */}
             {question.yes_no_question === "Y" ? (
-              <>
-                <QuestionRadioButtons
-                  key={question.question_code}
-                  options={answerChoices}
-                  value={question.question_id}
-                  firstButtonLabel={answerChoices ? answerChoices[0].label : undefined}
-                  secondButtonLabel={answerChoices ? answerChoices[1].label : undefined}
-                />
-              </>
+              <QuestionRadioButtons
+                key={question.question_code}
+                options={answerChoices}
+                value={question.question_id}
+                firstButtonLabel={answerChoices ? answerChoices[0].label : undefined}
+                secondButtonLabel={answerChoices ? answerChoices[1].label : undefined}
+              />
             ) : (
-              <>
-                <QuestionDropdown
-                  key={question.question_id}
-                  options={answerChoices}
-                  questionNumber={question.question_id}
-                  blockId={question.question_block_id}
-                />
-              </>
+              <QuestionDropdown
+                key={question.question_id}
+                options={answerChoices}
+                questionNumber={question.question_id}
+                blockId={question.question_block_id}
+              />
             )}
           </QuestionContainer>
         );

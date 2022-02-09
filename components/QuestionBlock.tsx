@@ -69,6 +69,7 @@ const QuestionBlock = ({ description, questions, answers, extraFields, photoUrl,
       {hasInfoAndButtons ? (
         <div className={styles.mainInfo}>
           <p>{desc ?? null}</p>
+
           {photoText === null && photoUrl === null ? null : (
             <QuestionInfo
               openText={i18n.t("common.questionBlockShowMoreMainEntrance")}
@@ -82,19 +83,17 @@ const QuestionBlock = ({ description, questions, answers, extraFields, photoUrl,
               </div>
             </QuestionInfo>
           )}
-        </div>
-      ) : null}
-      {hasInfoAndButtons ? (
-        <div className={styles.importAddinfoContainer}>
-          <QuestionFormImportExistingData />
-          <QuestionAdditionalInfoCtrlButton curState={showAdditionalInfo} onClick={handleAdditionalInfoToggle} />
+
+          <div className={styles.importAddinfoContainer}>
+            <QuestionFormImportExistingData />
+            <QuestionAdditionalInfoCtrlButton curState={showAdditionalInfo} onClick={handleAdditionalInfoToggle} />
+          </div>
         </div>
       ) : (
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-          veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
-          voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupi
-        </p>
+        <div>
+          <p>{i18n.t("accessibilityForm.generalInfo1")}</p>
+          <p>{i18n.t("accessibilityForm.generalInfo2")}</p>
+        </div>
       )}
 
       <QuestionBlockExtraFieldList extraFields={extraFields} />

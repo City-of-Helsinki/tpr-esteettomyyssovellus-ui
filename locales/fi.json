@@ -151,6 +151,8 @@
     }
   },
   "accessibilityForm": {
+    "generalInfo1": "Kysymyksiin vastaaminen vie aikaa toimipisteestä ja sisäänkäynnistä riippuen noin 5 - 15 minuuttia. Jokaiseen avautuvaan kysymykseen täytyy vastata ellei toisin mainita. Vastausten perusteella muodostuu esteettömyyslauseet suomeksi, ruotsiksi ja englanniksi.",
+    "generalInfo2": "Valitse ensin toimipisteen tapahtumapaikka, muut kysymykset riippuvat tästä valinnasta.",
     "choose": "--Valitse--",
     "continue": "Jatka",
     "whatDoesThisMean": "Mitä tämä tarkoittaa?",

@@ -87,7 +87,7 @@ const Header = ({ children }: HeaderProps): ReactElement => {
       >
         {children}
         <Navigation.Actions>
-          <div className={styles.choices} role="region" aria-label="Pages">
+          <div className={styles.choices} role="region">
             <Navigation.Row>
               <Navigation.Item
                 role="button"

@@ -17,7 +17,7 @@ const QuestionInfo = ({ openText, openIcon, closeText, closeIcon, textOnBottom =
       {children && !showContent ? (
         <>
           <span
-            className={styles.infobutton}
+            className={`${styles.infobutton} ${styles.closed}`}
             onClick={handleToggleContent}
             onKeyPress={handleToggleContent}
             role="button"

@@ -24,7 +24,6 @@ const QuestionContainer = ({
   photoText,
   children,
   hasAdditionalInfo,
-  backgroundColor,
   // canAddLocation,
   // canAddPhotoMaxCount,
   // canAddComment,
@@ -49,14 +48,12 @@ const QuestionContainer = ({
     isInvalid && curAnswers[questionId] === undefined
       ? {
           // paddingLeft,
-          backgroundColor,
           marginBottom: "0.1rem",
           borderStyle: "solid",
           borderColor: "#b01038",
         }
       : {
           // paddingLeft,
-          backgroundColor,
         };
 
   if (isMainLocPicComponent) {
@@ -100,13 +97,15 @@ const QuestionContainer = ({
                   const key = `br_${index}`;
                   return <p key={key}>{e}</p>;
                 })}
-                {photoUrl !== null ? <img src={photoUrl} alt="" className={styles.infoPicture} /> : null}
-                <p>{photoTexts}</p>
+                {photoUrl && <img src={photoUrl} alt="" className={styles.infoPicture} />}
+                {photoTexts && <p>{photoTexts}</p>}
               </div>
             </QuestionInfo>
           ) : null}
         </div>
+
         <div className={styles.children}>{children}</div>
+
         {hasAdditionalInfo && questionId !== undefined ? (
           <QuestionAdditionalInformation
             // key={`${questionNumber}a`}
@@ -120,11 +119,12 @@ const QuestionContainer = ({
         ) : null}
         {isInvalid && curAnswers[questionId] === undefined ? <IconAlertCircle className={styles.alertCircle} aria-hidden /> : null}
       </div>
+
       {/* code under loops additional infos to the form if question has addinfo */}
       {curQuestionAddinfos && curQuestionAddinfos.components && curQuestionAddinfos.components.length !== 0 ? (
-        <div className={styles.addinfos} style={{ backgroundColor }}>
+        <div className={styles.addinfos}>
           <>
-            <div className={styles.addinfos} style={{ backgroundColor }}>
+            <div className={styles.addinfos}>
               <h4>{i18n.t("accessibilityForm.additionalInfoPreviewHeader")}</h4>
               {curQuestionAddinfos.comments && curQuestionAddinfos?.comments.fi !== "" ? (
                 <div className={styles.addinfopreviewcontainer}>

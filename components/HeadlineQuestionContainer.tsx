@@ -12,15 +12,14 @@ const HeadlineQuestionContainer = ({ text, number, initOpen = false, children, i
     initiallyOpen: initOpen,
   });
   const curFinishedBlocks = useAppSelector((state) => state.formReducer.finishedBlocks);
-  const isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
+  // const isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
   const curInvalidBlocks = useAppSelector((state) => state.formReducer.invalidBlocks);
+
   // Change icon based on accordion open state
   const icon = isOpen ? <IconMinus aria-hidden /> : <IconPlus aria-hidden />;
   let iconLeft = curFinishedBlocks.includes(Number(number)) ? <IconCheckCircleFill aria-hidden /> : null;
   iconLeft = !isValid ? <IconAlertCircle aria-hidden color="#b01038" /> : iconLeft;
   let buttonVariant: "primary" | "secondary" | "danger" = isOpen ? "primary" : "secondary";
-
-  const buttonStyle = number !== undefined && curInvalidBlocks.includes(number) && !isOpen ? { borderColor: "#b01038", borderWidth: "0.2rem" } : {};
   buttonVariant = number !== undefined && curInvalidBlocks.includes(number) && isOpen ? "danger" : buttonVariant;
 
   /*
@@ -39,39 +38,22 @@ const HeadlineQuestionContainer = ({ text, number, initOpen = false, children, i
 
   return (
     <div className={styles.headline} id={id}>
-      {isContinueClicked && number === 0 ? (
-        <Button
-          id="headlineButton"
-          {...buttonProps}
-          iconRight={icon}
-          variant={buttonVariant}
-          fullWidth
-          className={styles.headlineButton}
-          onClick={() => handleOnClickAccordions()}
-          style={buttonStyle}
-        >
-          <div className={styles.blockHeadline}>
-            <p className={styles.heading}>{text}</p> {iconLeft}
-          </div>
-        </Button>
-      ) : (
-        <Button
-          id="headlineButton"
-          {...buttonProps}
-          iconRight={icon}
-          variant={buttonVariant}
-          fullWidth
-          className={styles.headlineButton}
-          style={buttonStyle}
-          onClick={() => handleOnClickAccordions()}
-        >
-          <div className={styles.blockHeadline}>
-            <p className={styles.heading}>{text}</p>
-            {iconLeft}
-          </div>
-        </Button>
-      )}
-      <Card aria-label="Advanced filters" {...contentProps} className={styles.card}>
+      <Button
+        id="headlineButton"
+        {...buttonProps}
+        iconRight={icon}
+        variant={buttonVariant}
+        fullWidth
+        className={styles.headlineButton}
+        onClick={() => handleOnClickAccordions()}
+      >
+        <div className={styles.blockHeadline}>
+          <div className={styles.heading}>{text}</div>
+          <div>{iconLeft}</div>
+        </div>
+      </Button>
+
+      <Card {...contentProps} className={styles.card}>
         {children}
       </Card>
     </div>

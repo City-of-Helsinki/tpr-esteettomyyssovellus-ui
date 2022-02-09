@@ -26,7 +26,6 @@ const BlockMainLocationPictureContent = ({ canAddLocation, canAddPicture }: Main
           questionText="PH: Pääsisäänkäynnin sijainti (teksti kannasta??)"
           questionInfo="PH: tähän jotain info (teksti kannasta??)"
           hasAdditionalInfo
-          backgroundColor="#f2f2fc"
           canAddLocation
           canAddComment={false}
           canAddPhotoMaxCount={0}
@@ -58,7 +57,6 @@ const BlockMainLocationPictureContent = ({ canAddLocation, canAddPicture }: Main
           questionText="PH: Pääsisäänkäynnin kuva (teksti kannasta?)"
           questionInfo="PH: tähän ehkä jotain infot"
           hasAdditionalInfo
-          backgroundColor="#ffffff"
           canAddLocation={false}
           canAddComment={false}
           canAddPhotoMaxCount={1}

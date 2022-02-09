@@ -26,7 +26,6 @@ export interface QuestionContainerProps {
   questionInfo?: string | null;
   children: JSX.Element;
   hasAdditionalInfo: boolean;
-  backgroundColor: string;
   canAddLocation?: boolean;
   canAddPhotoMaxCount?: number;
   canAddComment?: boolean;
@@ -42,7 +41,6 @@ export interface QuestionExtraFieldProps {
   questionInfo?: string | null;
   isMandatory: boolean;
   children: JSX.Element;
-  backgroundColor: string;
 }
 
 export interface HeadlineQuestionContainerProps {
@@ -92,6 +90,12 @@ export interface QuestionRadioButtonsProps {
   secondButtonLabel?: string;
   options?: InputOption[];
   value?: number;
+}
+
+export interface QuestionTextInputProps {
+  id: string;
+  placeholder?: string;
+  value?: string;
 }
 
 export interface QuestionFormCtrlButtonsProps {

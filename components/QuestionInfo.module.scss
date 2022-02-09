@@ -1,10 +1,18 @@
 @import "~hds-design-tokens/lib/all.scss";
+@import "../styles/mixins.scss";
 
 .infobutton {
   color: $color-bus;
   cursor: pointer;
   display: flex;
   align-items: flex-start;
+
+  &.closed {
+    @include media(xs, s) {
+      padding-bottom: $spacing-s;
+    }
+  }
+
   svg {
     height: $spacing-s;
     width: $spacing-s;
