@@ -1,6 +1,10 @@
 @import "~hds-design-tokens/lib/all.scss";
 @import "../styles/mixins.scss";
 
+.buttonContainer {
+  flex-shrink: 0;
+}
+
 .button {
   margin: $spacing-3-xs $spacing-2-xs;
   --outline-gutter: 0px;

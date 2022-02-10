@@ -13,12 +13,12 @@ import styles from "./details.module.scss";
 import QuestionInfo from "../../components/QuestionInfo";
 import ServicepointMainInfoContent from "../../components/ServicepointMainInfoContent";
 import PathTreeComponent from "../../components/PathTreeComponent";
-import { useAppDispatch, useAppSelector, useLoading } from "../../state/hooks";
+import { useAppDispatch, useLoading } from "../../state/hooks";
 import {
   setServicepointId,
   // setEntranceId,
-  setPhoneNumber,
-  setEmail,
+  // setPhoneNumber,
+  // setEmail,
   clearFormState,
   setFormFinished,
   setContinue,
@@ -53,7 +53,7 @@ const Details = ({
   const isLoading = useLoading();
   const treeItems = [servicepointData.servicepoint_name];
   const finnishDate = getFinnishDate(servicepointData.modified);
-  const formInited = useAppSelector((state) => state.formReducer.formInited);
+  // const formInited = useAppSelector((state) => state.formReducer.formInited);
 
   // clear states, if more reducers added consider creating one clearing logic
   // this done so for not many reducers and user needs to stay in state
@@ -109,6 +109,7 @@ const Details = ({
     }
   }
 
+  /*
   if (hasData && !formInited) {
     if (servicepointData.accessibility_phone !== undefined) {
       // TODO: POSSIBLY VALIDATE THESE STRAIGHT AWAY
@@ -119,6 +120,7 @@ const Details = ({
       dispatch(setEmail(servicepointData.accessibility_email));
     }
   }
+  */
 
   return (
     <Layout>
@@ -161,7 +163,7 @@ const Details = ({
               </span>
               <div className={styles.entranceHeader}>
                 <h2>{`${i18n.t("servicepoint.contactFormSummaryHeader")} (${entranceKeys.length})`}</h2>
-                {servicepointDetail.new_entrance_possible === "Y" && <ServicepointLandingSummaryNewButton servicepointData={servicepointData} />}
+                {servicepointDetail.new_entrance_possible === "Y" && <ServicepointLandingSummaryNewButton servicepointData={servicepointDetail} />}
               </div>
             </div>
 
@@ -183,7 +185,7 @@ const Details = ({
                     <TabPanel key={`tabpanel_${key}`}>
                       {key === "main" && (
                         <ServicepointLandingSummaryContact
-                          servicepointData={servicepointData}
+                          servicepointData={servicepointDetail}
                           entranceData={entranceData[key]}
                           hasData={hasAccessibilityData}
                         />
@@ -193,6 +195,7 @@ const Details = ({
                         entranceKey={key}
                         entranceData={entranceData[key]}
                         servicepointData={servicepointData}
+                        servicepointDetail={servicepointDetail}
                         accessibilityData={filteredAccessibilityData}
                         hasData={hasAccessibilityData}
                       />

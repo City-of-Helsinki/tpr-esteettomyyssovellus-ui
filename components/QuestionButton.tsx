@@ -5,7 +5,7 @@ import { QuestionButtonProps } from "../types/general";
 // usage: general customized button from HDS
 const QuestionButton = ({ children, variant, iconLeft, iconRight, disabled = false, onClickHandler, onChange }: QuestionButtonProps): JSX.Element => {
   return (
-    <div>
+    <div className={styles.buttonContainer}>
       <Button
         variant={variant}
         iconLeft={iconLeft}

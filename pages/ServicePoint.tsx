@@ -256,9 +256,9 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
             address_street_name: choppedAddress,
             address_no: choppedAddressNumber,
             address_city: choppedPostOffice,
-            accessibility_phone: null, // Set in accessibilityEdit
-            accessibility_email: null, // Set in accessibilityEdit
-            accessibility_www: null, // Set in accessibilityEdit
+            // accessibility_phone: null, // Set in accessibilityEdit
+            // accessibility_email: null, // Set in accessibilityEdit
+            // accessibility_www: null, // Set in accessibilityEdit
             is_searchable: "Y", // TODO: Y or N?
             organisation_id: query.systemId,
             loc_easting: query.easting,

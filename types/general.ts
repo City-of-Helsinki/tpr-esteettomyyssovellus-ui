@@ -124,7 +124,7 @@ export interface QuestionAdditionalInfoCtrlButtonProps {
 }
 
 export interface ServicepointLandingSummaryContactProps {
-  servicepointData: Servicepoint;
+  servicepointData: BackendServicepoint;
   entranceData?: BackendEntrance;
   hasData: boolean;
 }
@@ -133,6 +133,7 @@ export interface ServicepointLandingSummaryAccessibilityProps {
   entranceKey: string;
   entranceData?: BackendEntrance;
   servicepointData: Servicepoint;
+  servicepointDetail: BackendServicepoint;
   accessibilityData: AccessibilityData;
   hasData: boolean;
 }
@@ -152,11 +153,11 @@ export interface ServicepointLandingSummaryLocationPictureProps {
 }
 
 export interface ServicepointLandingSummaryNewButtonProps {
-  servicepointData: Servicepoint;
+  servicepointData: BackendServicepoint;
 }
 
 export interface ServicepointLandingSummaryModifyButtonProps {
-  servicepointData: Servicepoint;
+  servicepointData: BackendServicepoint;
   entranceData?: BackendEntrance;
   hasData: boolean;
 }

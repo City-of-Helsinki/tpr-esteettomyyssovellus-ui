@@ -14,6 +14,7 @@ const ServicepointLandingSummaryAccessibility = ({
   entranceKey,
   entranceData,
   servicepointData,
+  servicepointDetail,
   accessibilityData,
   hasData,
 }: ServicepointLandingSummaryAccessibilityProps): JSX.Element => {
@@ -72,7 +73,7 @@ const ServicepointLandingSummaryAccessibility = ({
       <div className={styles.headercontainer}>
         <h3>{header}</h3>
         {entranceKey !== "main" && (
-          <ServicepointLandingSummaryModifyButton servicepointData={servicepointData} entranceData={entranceData} hasData={hasData} />
+          <ServicepointLandingSummaryModifyButton servicepointData={servicepointDetail} entranceData={entranceData} hasData={hasData} />
         )}
       </div>
       <div>
@@ -97,7 +98,7 @@ const ServicepointLandingSummaryAccessibility = ({
       </div>
 
       <div>
-        <ServicepointLandingSummaryModifyButton servicepointData={servicepointData} entranceData={entranceData} hasData={hasData} />
+        <ServicepointLandingSummaryModifyButton servicepointData={servicepointDetail} entranceData={entranceData} hasData={hasData} />
       </div>
     </div>
   );

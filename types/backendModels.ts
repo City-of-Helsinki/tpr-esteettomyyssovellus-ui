@@ -24,9 +24,9 @@ export interface Servicepoint {
   address_street_name?: string;
   address_no?: string;
   address_city?: string;
-  accessibility_phone?: string;
-  accessibility_email?: string;
-  accessibility_www?: string;
+  // accessibility_phone?: string;
+  // accessibility_email?: string;
+  // accessibility_www?: string;
   is_searchable: string;
   organisation_id?: string;
   system?: string;
@@ -137,6 +137,7 @@ export interface BackendServicepoint {
   accessibility_phone?: string;
   accessibility_email?: string;
   new_entrance_possible: string;
+  [key: string]: number | string | undefined;
 }
 
 export interface BackendEntrance {

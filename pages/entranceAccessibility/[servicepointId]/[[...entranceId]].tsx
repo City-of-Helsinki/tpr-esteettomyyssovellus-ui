@@ -114,6 +114,7 @@ const EntranceAccessibility = ({
 
   // validates contactinfo data and sets to state
   if (hasData && !formInited) {
+    /*
     const phoneNumber = servicepointData.accessibility_phone ?? "";
     const email = servicepointData.accessibility_email ?? "";
     const www = servicepointData.accessibility_www ?? "";
@@ -124,11 +125,14 @@ const EntranceAccessibility = ({
     dispatch(setPhoneNumber(phoneNumber));
     dispatch(setEmail(email));
     dispatch(setWwwAddress(www));
+    */
+
     dispatch(setServicepointId(servicepointData.servicepoint_id));
     // dispatch(setEntranceId(Number(entrance_id)));
     dispatch(setEntranceId(entranceData.entrance_id));
     if (startedAnswering === "") dispatch(setStartDate(getCurrentDate()));
 
+    /*
     // VALIDATE PHONE
     if (!phonePattern.test(phoneNumber)) {
       dispatch(changePhoneNumberStatus(false));
@@ -145,6 +149,8 @@ const EntranceAccessibility = ({
 
     // CONTACTPERSON DOES NOT EXIST IN THE DATABASE YET
     dispatch(setContactPerson(""));
+    */
+
     dispatch(initForm());
   }
 
