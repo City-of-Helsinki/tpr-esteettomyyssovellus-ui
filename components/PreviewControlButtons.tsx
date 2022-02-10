@@ -23,6 +23,7 @@ const PreviewControlButtons = ({ hasHeader }: PreviewControlButtonsProps): JSX.E
   const formFinished = useAppSelector((state) => state.formReducer.formFinished);
   const formSubmitted = useAppSelector((state) => state.formReducer.formSubmitted);
   const additionalInfo = useAppSelector((state) => state.additionalInfoReducer);
+  const user = useAppSelector((state) => state.generalSlice.user);
   const handelContinueEditing = (): void => {
     dispatch(setContinue());
     // TODO: Add errorpage
@@ -51,7 +52,7 @@ const PreviewControlButtons = ({ hasHeader }: PreviewControlButtonsProps): JSX.E
         form_submitted: "D",
         form_cancelled: "Y",
         // TODO: GET CURRENT USER HERE
-        accessibility_editor: "Leba",
+        accessibility_editor: user,
         entrance: curEntranceId,
       }),
     };

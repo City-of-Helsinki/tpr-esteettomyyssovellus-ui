@@ -30,6 +30,7 @@ const QuestionFormCtrlButtons = ({
   const isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
   const additionalInfo = useAppSelector((state) => state.additionalInfoReducer);
   const contacts = useAppSelector((state) => state.formReducer.contacts);
+  const user = useAppSelector((state) => state.generalSlice.user);
 
   const handleCancel = (): void => {
     // TODO: Add errorpage
@@ -48,8 +49,7 @@ const QuestionFormCtrlButtons = ({
         accessibility_phone: updatedContacts.phoneNumber[1] ? updatedContacts.phoneNumber[0] : null,
         accessibility_email: updatedContacts.email[1] ? updatedContacts.email[0] : null,
         accessibility_www: updatedContacts.www[1] ? updatedContacts.www[0] : null,
-        modified_by: "placeholder",
-        // TODO: Add user here
+        modified_by: user,
         modified: getCurrentDate(),
       }),
     };
@@ -78,8 +78,7 @@ const QuestionFormCtrlButtons = ({
         // BECAUSE THIS IS A DRAFT
         form_submitted: "D",
         form_cancelled: "N",
-        // TODO: GET CURRENT USER HERE
-        accessibility_editor: "Leba",
+        accessibility_editor: user,
         entrance: curEntranceId,
       }),
     };

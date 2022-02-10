@@ -8,6 +8,7 @@ import { Navigation, IconSignout } from "hds-react";
 import { defaultLocale } from "../../utils/i18n";
 import getOrigin from "../../utils/request";
 import styles from "./Header.module.scss";
+import { useAppSelector } from "../../state/hooks";
 
 interface HeaderProps {
   children?: React.ReactNode;
@@ -25,6 +26,7 @@ const Header = ({ children }: HeaderProps): ReactElement => {
   const i18n = useI18n();
   const router = useRouter();
 
+  const user = useAppSelector((state) => state.generalSlice.user);
   // const currentUser = useSelector(
   //   (state: RootState) => state.generalSlice.user
   // );
@@ -118,7 +120,7 @@ const Header = ({ children }: HeaderProps): ReactElement => {
             <Navigation.User
               label={i18n.t("common.header.login")}
               authenticated /* Change to: currentUser?.authenticated} */
-              userName="PLACEHOLDER" /* Change to: currentUser?.first_name || currentUser?.email} */
+              userName={user} /* Change to: currentUser?.first_name || currentUser?.email} */
               onSignIn={signIn}
             >
               <Navigation.Item

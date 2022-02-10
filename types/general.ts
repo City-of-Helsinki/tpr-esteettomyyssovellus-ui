@@ -341,6 +341,7 @@ export interface ChangeProps {
   newAddressCity?: string;
   oldAddressCity?: string;
   user?: string;
+  skip?: boolean;
 }
 
 export interface NoticeProps {
