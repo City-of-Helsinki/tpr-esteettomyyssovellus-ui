@@ -119,7 +119,7 @@ const EntranceAccessibility = ({
   const hasData = Object.keys(servicepointData).length > 0 && Object.keys(entranceData).length > 0;
 
   // validates contactinfo data and sets to state
-  if (hasData && !formInited) {
+  if (!formInited) {
     /*
     const phoneNumber = servicepointData.accessibility_phone ?? "";
     const email = servicepointData.accessibility_email ?? "";
@@ -133,11 +133,15 @@ const EntranceAccessibility = ({
     dispatch(setWwwAddress(www));
     */
 
-    dispatch(setServicepointId(servicepointData.servicepoint_id));
-    // dispatch(setEntranceId(Number(entrance_id)));
-    dispatch(setEntranceId(entranceData.entrance_id));
-    if (startedAnswering === "") dispatch(setStartDate(getCurrentDate()));
+    if (Object.keys(servicepointData).length > 0) {
+      dispatch(setServicepointId(servicepointData.servicepoint_id));
+      if (startedAnswering === "") dispatch(setStartDate(getCurrentDate()));
+    }
 
+    if (Object.keys(entranceData).length > 0) {
+      // dispatch(setEntranceId(Number(entrance_id)));
+      dispatch(setEntranceId(entranceData.entrance_id));
+    }
     /*
     // VALIDATE PHONE
     if (!phonePattern.test(phoneNumber)) {
@@ -385,6 +389,7 @@ const EntranceAccessibility = ({
                 hasPreviewButton
                 visibleBlocks={visibleBlocks}
                 visibleQuestionChoices={visibleQuestionChoices}
+                formId={formId}
               />
             </div>
           </div>

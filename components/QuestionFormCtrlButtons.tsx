@@ -3,11 +3,19 @@ import { IconArrowRight, IconArrowLeft, Card } from "hds-react";
 import router from "next/router";
 import { useI18n } from "next-localization";
 import Button from "./QuestionButton";
+import { Entrance } from "../types/backendModels";
 import { QuestionFormCtrlButtonsProps } from "../types/general";
 import styles from "./QuestionFormCtrlButtons.module.scss";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
-import { API_FETCH_ANSWER_LOGS, API_FETCH_QUESTION_ANSWERS, API_FETCH_SERVICEPOINTS, API_URL_BASE, FRONT_URL_BASE } from "../types/constants";
-import { setFormFinished, setInvalid, unsetFormFinished, unsetInvalid } from "../state/reducers/formSlice";
+import {
+  API_FETCH_ANSWER_LOGS,
+  API_FETCH_ENTRANCES,
+  API_FETCH_QUESTION_ANSWERS,
+  // API_FETCH_SERVICEPOINTS,
+  API_URL_BASE,
+  FRONT_URL_BASE,
+} from "../types/constants";
+import { setEntranceId, setFormFinished, setInvalid, unsetFormFinished, unsetInvalid } from "../state/reducers/formSlice";
 import { getCurrentDate, postData, postAdditionalInfo, getClientIp } from "../utils/utilFunctions";
 
 // usage: Form control buttons: return, save / draft, preview, validate
@@ -18,6 +26,7 @@ const QuestionFormCtrlButtons = ({
   hasPreviewButton,
   visibleBlocks,
   visibleQuestionChoices,
+  formId,
 }: QuestionFormCtrlButtonsProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
@@ -66,48 +75,72 @@ const QuestionFormCtrlButtons = ({
     // THIS RETURNS THE IP ADDRESS OF THE CLIENT USED IN THE ANSWER LOG
     const ipAddress = await getClientIp();
 
-    // POST ANSWER LOG
-    // TODO: ERRORCHECK VALUES
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        ip_address: ipAddress,
-        started_answering: startedAnswering,
-        finished_answering: finishedAnswering,
-        // BECAUSE THIS IS A DRAFT
-        form_submitted: "D",
-        form_cancelled: "N",
-        // TODO: GET CURRENT USER HERE
-        accessibility_editor: "Leba",
-        entrance: curEntranceId,
-      }),
-    };
+    let entranceId = curEntranceId;
+    if (!entranceId || entranceId < 0) {
+      // Create an empty entrance row in the database in order to get the entrance id
+      const entranceRequestOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          created: new Date(),
+          created_by: "test", // TODO - user
+          modified: new Date(),
+          modified_by: "test", // TODO - user
+          is_main_entrance: formId === 0 ? "Y" : "N",
+          servicepoint: curServicepointId,
+          form: formId,
+        }),
+      };
+      const newEntranceResponse = await fetch(API_FETCH_ENTRANCES, entranceRequestOptions);
+      const newEntrance = await (newEntranceResponse.json() as Promise<Entrance>);
 
-    updateAccessibilityContacts(contacts);
+      entranceId = newEntrance.entrance_id;
+      dispatch(setEntranceId(newEntrance.entrance_id));
+    }
 
-    // POST TO AR_X_ANSWER_LOG. RETURNS NEW LOG_ID USED FOR OTHER POST REQUESTS
-    const response = await fetch(API_FETCH_ANSWER_LOGS, requestOptions);
-    const logId = await (response.json() as Promise<number>);
+    if (entranceId > 0) {
+      // POST ANSWER LOG
+      // TODO: ERRORCHECK VALUES
+      const requestOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ip_address: ipAddress,
+          started_answering: startedAnswering,
+          finished_answering: finishedAnswering,
+          // BECAUSE THIS IS A DRAFT
+          form_submitted: "D",
+          form_cancelled: "N",
+          // TODO: GET CURRENT USER HERE
+          accessibility_editor: "Leba",
+          entrance: entranceId,
+        }),
+      };
 
-    // CHECK IF RETURNED LOG_ID IS A NUMBER. IF NOT A NUMBER STOP EXECUTING
-    if (!Number.isNaN(logId)) {
-      // POST ALL QUESTION ANSWERS
-      const filteredAnswerChoices = curAnsweredChoices.filter((choice) => {
-        return visibleQuestionChoices
-          ?.map((elem) => {
-            return elem.question_choice_id;
-          })
-          .includes(Number(choice));
-      });
-      const questionAnswerData = { log: logId, data: filteredAnswerChoices };
-      await postData(API_FETCH_QUESTION_ANSWERS, JSON.stringify(questionAnswerData));
 
-      // GENERATE SENTENCES
-      await postAdditionalInfo(logId, additionalInfo.additionalInfo);
+      // POST TO AR_X_ANSWER_LOG. RETURNS NEW LOG_ID USED FOR OTHER POST REQUESTS
+      const response = await fetch(API_FETCH_ANSWER_LOGS, requestOptions);
+      const logId = await (response.json() as Promise<number>);
 
-      const generateData = { entrance_id: curEntranceId, form_submitted: "D" };
-      await postData(`${API_URL_BASE}GenerateSentences/`, JSON.stringify(generateData));
+      // CHECK IF RETURNED LOG_ID IS A NUMBER. IF NOT A NUMBER STOP EXECUTING
+      if (!Number.isNaN(logId)) {
+        // POST ALL QUESTION ANSWERS
+        const filteredAnswerChoices = curAnsweredChoices.filter((choice) => {
+          return visibleQuestionChoices
+            ?.map((elem) => {
+              return elem.question_choice_id;
+            })
+            .includes(Number(choice));
+        });
+        const questionAnswerData = { log: logId, data: filteredAnswerChoices };
+        await postData(API_FETCH_QUESTION_ANSWERS, JSON.stringify(questionAnswerData));
+
+        // GENERATE SENTENCES
+        await postAdditionalInfo(logId, additionalInfo.additionalInfo);
+
+        const generateData = { entrance_id: curEntranceId, form_submitted: "D" };
+        await postData(`${API_URL_BASE}GenerateSentences/`, JSON.stringify(generateData));
+      }
     }
   };
 

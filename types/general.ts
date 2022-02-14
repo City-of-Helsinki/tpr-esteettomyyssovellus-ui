@@ -105,6 +105,7 @@ export interface QuestionFormCtrlButtonsProps {
   hasPreviewButton?: boolean;
   visibleBlocks?: (JSX.Element | null)[] | null;
   visibleQuestionChoices?: BackendQuestionChoice[] | undefined;
+  formId: number;
 }
 
 export interface QuestionsListProps {
