@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import { PURGE } from "redux-persist";
 import { MainPictureProps } from "../../types/general";
 
 interface formState {
@@ -322,6 +323,11 @@ export const formSlice = createSlice({
         mainImageTemp: action.payload,
       };
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(PURGE, () => ({
+      ...initialState,
+    }));
   },
 });
 export const {

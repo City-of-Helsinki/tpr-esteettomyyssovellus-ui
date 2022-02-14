@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import { PURGE } from "redux-persist";
 
 interface generalSliceProps {
   coordinates: [number, number];
@@ -26,7 +27,6 @@ export const generalSlice = createSlice({
   name: "generalSlice",
   initialState,
   reducers: {
-    // todo maybe remove this
     clearGeneralState: (state) => {
       return {
         ...initialState,
@@ -75,6 +75,11 @@ export const generalSlice = createSlice({
         coordinatesWGS84Temp: action.payload.coordinatesWGS84,
       };
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(PURGE, () => ({
+      ...initialState,
+    }));
   },
 });
 

@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useEffect } from "react";
 import { useI18n } from "next-localization";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
@@ -72,6 +72,7 @@ import {
   setAlt,
   setInitAdditionalInfoFromDb,
 } from "../../../state/reducers/additionalInfoSlice";
+import { persistor } from "../../../state/store";
 import { getCurrentDate } from "../../../utils/utilFunctions";
 import { setCurrentlyEditingBlock, setCurrentlyEditingQuestion } from "../../../state/reducers/generalSlice";
 import LoadSpinner from "../../../components/common/LoadSpinner";
@@ -89,6 +90,11 @@ const EntranceAccessibility = ({
   // entrance_id,
   formId,
 }: MainEntranceFormProps): ReactElement => {
+  useEffect(() => {
+    // Clear the state on initial load
+    persistor.purge();
+  }, []);
+
   const i18n = useI18n();
   const curLocale: string = i18n.locale();
   const dispatch = useAppDispatch();

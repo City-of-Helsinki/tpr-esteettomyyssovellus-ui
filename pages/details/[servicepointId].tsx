@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useEffect } from "react";
 import { useI18n } from "next-localization";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
@@ -19,13 +19,12 @@ import {
   // setEntranceId,
   // setPhoneNumber,
   // setEmail,
-  clearFormState,
   setFormFinished,
   setContinue,
   setFormSubmitted,
 } from "../../state/reducers/formSlice";
 import { getFinnishDate, filterByLanguage, convertCoordinates } from "../../utils/utilFunctions";
-import { clearGeneralState, setServicepointLocation, setServicepointLocationWGS84 } from "../../state/reducers/generalSlice";
+import { setServicepointLocation, setServicepointLocationWGS84 } from "../../state/reducers/generalSlice";
 import {
   API_FETCH_ANSWER_LOGS,
   API_FETCH_BACKEND_ENTRANCE,
@@ -35,7 +34,7 @@ import {
   API_FETCH_SERVICEPOINTS,
 } from "../../types/constants";
 import LoadSpinner from "../../components/common/LoadSpinner";
-import { clearAddinfoState } from "../../state/reducers/additionalInfoSlice";
+import { persistor } from "../../state/store";
 import { AnswerLog, BackendEntrance, BackendServicepoint, EntranceResults, Servicepoint, StoredSentence } from "../../types/backendModels";
 import { AccessibilityData, DetailsProps, EntranceData } from "../../types/general";
 
@@ -55,11 +54,10 @@ const Details = ({
   const finnishDate = getFinnishDate(servicepointData.modified);
   // const formInited = useAppSelector((state) => state.formReducer.formInited);
 
-  // clear states, if more reducers added consider creating one clearing logic
-  // this done so for not many reducers and user needs to stay in state
-  dispatch(clearGeneralState());
-  dispatch(clearAddinfoState());
-  dispatch(clearFormState());
+  useEffect(() => {
+    // Clear the state on initial load
+    persistor.purge();
+  }, []);
 
   const hasData = Object.keys(servicepointData).length > 0 && Object.keys(entranceData).length > 0;
 
