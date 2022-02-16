@@ -14,10 +14,10 @@ import {
   API_FETCH_BACKEND_QUESTIONBLOCK_FIELD,
   API_FETCH_BACKEND_SERVICEPOINT,
   API_FETCH_ENTRANCES,
-  API_FETCH_QUESTION_ANSWER_COMMENTS,
-  API_FETCH_QUESTION_ANSWER_LOCATIONS,
-  API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS,
-  API_FETCH_QUESTION_ANSWER_PHOTOS,
+  // API_FETCH_QUESTION_ANSWER_COMMENTS,
+  // API_FETCH_QUESTION_ANSWER_LOCATIONS,
+  // API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS,
+  // API_FETCH_QUESTION_ANSWER_PHOTOS,
   API_FETCH_QUESTION_URL,
   API_FETCH_QUESTIONBLOCK_URL,
   API_FETCH_QUESTIONCHOICES,
@@ -38,10 +38,10 @@ import {
   BackendServicepoint,
   Entrance,
   EntranceResults,
-  QuestionAnswerComment,
-  QuestionAnswerLocation,
-  QuestionAnswerPhoto,
-  QuestionAnswerPhotoTxt,
+  // QuestionAnswerComment,
+  // QuestionAnswerLocation,
+  // QuestionAnswerPhoto,
+  // QuestionAnswerPhotoTxt,
   Servicepoint,
 } from "../../../types/backendModels";
 import { MainEntranceFormProps } from "../../../types/general";
@@ -63,6 +63,7 @@ import {
   setStartDate,
   setWwwAddress,
 } from "../../../state/reducers/formSlice";
+/*
 import {
   addComment,
   addComponent,
@@ -72,6 +73,7 @@ import {
   setAlt,
   setInitAdditionalInfoFromDb,
 } from "../../../state/reducers/additionalInfoSlice";
+*/
 import { persistor } from "../../../state/store";
 import { getCurrentDate } from "../../../utils/utilFunctions";
 import { setCurrentlyEditingBlock, setCurrentlyEditingQuestion } from "../../../state/reducers/generalSlice";
@@ -86,7 +88,7 @@ const EntranceAccessibility = ({
   questionAnswerData,
   entranceData,
   servicepointData,
-  additionalInfosData,
+  // additionalInfosData,
   // entrance_id,
   formId,
 }: MainEntranceFormProps): ReactElement => {
@@ -109,7 +111,7 @@ const EntranceAccessibility = ({
   const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
   const curInvalidBlocks = useAppSelector((state) => state.formReducer.invalidBlocks);
   const formInited = useAppSelector((state) => state.formReducer.formInited);
-  const additionalInfoInitedFromDb = useAppSelector((state) => state.additionalInfoReducer.initAddInfoFromDb);
+  // const additionalInfoInitedFromDb = useAppSelector((state) => state.additionalInfoReducer.initAddInfoFromDb);
   const isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
   const startedAnswering = useAppSelector((state) => state.formReducer.startedAnswering);
   const curAnswers = useAppSelector((state) => state.formReducer.answers);
@@ -164,6 +166,8 @@ const EntranceAccessibility = ({
     dispatch(initForm());
   }
 
+  // The additional info structure will be changing, so the frontend handling has been removed for now
+  /*
   // loop additional info to state if first landing to form page and if data found
   if (additionalInfosData && !additionalInfoInitedFromDb) {
     // dispatch(removeImproperlySavedAddInfos());
@@ -255,6 +259,7 @@ const EntranceAccessibility = ({
 
   // clear addinfo initState
   dispatch(clearEditingInitialState());
+  */
 
   if (Object.keys(questionAnswerData).length !== 0) {
     questionAnswerData.forEach((a: BackendEntranceAnswer) => {
@@ -412,11 +417,11 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   let questionAnswerData: BackendEntranceAnswer[] = [];
   let entranceData: BackendEntrance = {} as BackendEntrance;
   let servicepointData: Servicepoint = {} as Servicepoint;
-  let additionalInfosData = {};
-  let addInfoCommentsData;
-  let addInfoLocationsData;
-  let addInfoPhotosData;
-  let addInfoPhotoTextsData;
+  // let additionalInfosData = {};
+  // let addInfoCommentsData;
+  // let addInfoLocationsData;
+  // let addInfoPhotosData;
+  // let addInfoPhotoTextsData;
   let formId = -1;
   // let entrance_id: string | string[] | undefined = "";
 
@@ -472,6 +477,8 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         const questionAnswersResp = await fetch(`${API_FETCH_BACKEND_ENTRANCE_ANSWERS}?entrance_id=${params.entranceId}&format=json`);
         questionAnswerData = await (questionAnswersResp.json() as Promise<BackendEntranceAnswer[]>);
 
+        // The additional info structure will be changing, so the backend calls have been removed for now
+        /*
         if (questionAnswerData?.length > 0) {
           const logId =
             questionAnswerData.sort((a: BackendEntranceAnswer, b: BackendEntranceAnswer) => {
@@ -497,6 +504,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
             };
           }
         }
+        */
       }
     } catch (e) {
       console.error("Error", e);
@@ -508,7 +516,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       questionAnswerData = [];
       entranceData = {} as BackendEntrance;
       servicepointData = {} as Servicepoint;
-      additionalInfosData = {};
+      // additionalInfosData = {};
     }
   }
   return {
@@ -521,7 +529,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       questionAnswerData,
       entranceData,
       servicepointData,
-      additionalInfosData,
+      // additionalInfosData,
       // entrance_id,
       lngDict,
     },

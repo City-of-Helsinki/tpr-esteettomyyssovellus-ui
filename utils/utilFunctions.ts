@@ -1,6 +1,8 @@
 import proj4 from "proj4";
 import publicIp from "public-ip";
 import crypto from "crypto";
+import { StoredSentence } from "../types/backendModels";
+/*
 import { QuestionAnswerPhoto, StoredSentence } from "../types/backendModels";
 import {
   API_FETCH_QUESTION_ANSWER_COMMENTS,
@@ -9,6 +11,7 @@ import {
   API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS,
 } from "../types/constants";
 import { AdditionalInfoProps } from "../types/general";
+*/
 
 export const getCurrentDate = (): string => {
   const today = new Date();
@@ -65,6 +68,8 @@ export const getClientIp = async (): Promise<string> =>
     fallbackUrls: ["https://ifconfig.co/ip"],
   });
 
+// The additional info structure will be changing, so the backend calls have been removed for now
+/*
 export const postAdditionalInfo = async (logId: number, data: AdditionalInfoProps): Promise<void> => {
   console.log("Started posting additional info");
   Object.keys(data)
@@ -173,6 +178,7 @@ export const postAdditionalInfo = async (logId: number, data: AdditionalInfoProp
       }
     });
 };
+*/
 
 export const validateChecksum = (string: string, checksum: string | string[]): boolean => {
   const hash = crypto.createHash("sha256").update(string).digest("hex").toUpperCase();

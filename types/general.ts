@@ -288,17 +288,19 @@ export interface MainEntranceFormProps {
   entranceData: BackendEntrance;
   servicepointData: Servicepoint;
   questionAnswerData: BackendEntranceAnswer[];
-  additionalInfosData: FetchAdditionalInfos;
+  // additionalInfosData: FetchAdditionalInfos;
   formId: number;
   // entrance_id: string;
 }
 
+/*
 interface FetchAdditionalInfos {
   comments?: QuestionAnswerComment[];
   locations?: QuestionAnswerLocation[];
   photos?: QuestionAnswerPhoto[];
   phototexts?: QuestionAnswerPhotoTxt[];
 }
+*/
 
 export interface QuestionBlockProps {
   questions?: BackendQuestion[] | null;

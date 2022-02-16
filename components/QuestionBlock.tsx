@@ -1,7 +1,7 @@
 import { Button, IconAngleDown, IconAngleUp, IconArrowRight } from "hds-react";
 import React, { useState } from "react";
 import { useI18n } from "next-localization";
-import QuestionAdditionalInfoCtrlButton from "./QuestionAdditionalInfoCtrlButton";
+// import QuestionAdditionalInfoCtrlButton from "./QuestionAdditionalInfoCtrlButton";
 import QuestionBlockExtraFieldList from "./QuestionBlockExtraFieldList";
 import QuestionFormImportExistingData from "./QuestionFormImportExistingData";
 import styles from "./QuestionBlock.module.scss";
@@ -16,12 +16,17 @@ import { setContinue, setFinished, unsetFinished } from "../state/reducers/formS
 const QuestionBlock = ({ description, questions, answers, extraFields, photoUrl, photoText }: QuestionBlockProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
-  const [showAdditionalInfo, setShowAdditionalInfo] = useState(false);
+  // const [showAdditionalInfo, setShowAdditionalInfo] = useState(false);
+  const showAdditionalInfo = false;
   const isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
   const [showContinue, setShowContinue] = useState(!isContinueClicked);
+
+  /*
   const handleAdditionalInfoToggle = () => {
     setShowAdditionalInfo(!showAdditionalInfo);
   };
+  */
+
   // todo: what is this onClick? Seems obsolete?
   const onClick = () => {
     dispatch(setContinue());
@@ -86,7 +91,7 @@ const QuestionBlock = ({ description, questions, answers, extraFields, photoUrl,
 
           <div className={styles.importAddinfoContainer}>
             <QuestionFormImportExistingData />
-            <QuestionAdditionalInfoCtrlButton curState={showAdditionalInfo} onClick={handleAdditionalInfoToggle} />
+            {/*<QuestionAdditionalInfoCtrlButton curState={showAdditionalInfo} onClick={handleAdditionalInfoToggle} />*/}
           </div>
         </div>
       ) : (

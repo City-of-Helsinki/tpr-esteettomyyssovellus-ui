@@ -16,7 +16,7 @@ import {
   FRONT_URL_BASE,
 } from "../types/constants";
 import { setEntranceId, setFormFinished, setInvalid, unsetFormFinished, unsetInvalid } from "../state/reducers/formSlice";
-import { getCurrentDate, postData, postAdditionalInfo, getClientIp } from "../utils/utilFunctions";
+import { getCurrentDate, postData, getClientIp } from "../utils/utilFunctions";
 
 // usage: Form control buttons: return, save / draft, preview, validate
 const QuestionFormCtrlButtons = ({
@@ -37,8 +37,8 @@ const QuestionFormCtrlButtons = ({
   const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
   const finishedBlocks = useAppSelector((state) => state.formReducer.finishedBlocks);
   // const isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
-  const additionalInfo = useAppSelector((state) => state.additionalInfoReducer);
   const contacts = useAppSelector((state) => state.formReducer.contacts);
+  // const additionalInfo = useAppSelector((state) => state.additionalInfoReducer);
 
   const handleCancel = (): void => {
     // TODO: Add errorpage
@@ -134,10 +134,9 @@ const QuestionFormCtrlButtons = ({
         });
         const questionAnswerData = { log: logId, data: filteredAnswerChoices };
         await postData(API_FETCH_QUESTION_ANSWERS, JSON.stringify(questionAnswerData));
+        // await postAdditionalInfo(logId, additionalInfo.additionalInfo);
 
         // GENERATE SENTENCES
-        await postAdditionalInfo(logId, additionalInfo.additionalInfo);
-
         const generateData = { entrance_id: curEntranceId, form_submitted: "D" };
         await postData(`${API_URL_BASE}GenerateSentences/`, JSON.stringify(generateData));
       }
