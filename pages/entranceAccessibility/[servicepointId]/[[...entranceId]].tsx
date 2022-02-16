@@ -340,7 +340,7 @@ const EntranceAccessibility = ({
     dispatch(setCurrentlyEditingBlock(-1));
   }
 
-  const formSubmitted = useAppSelector((state) => state.formReducer.formSubmitted);
+  // const formSubmitted = useAppSelector((state) => state.formReducer.formSubmitted);
 
   const entranceName = entranceData ? entranceData[`name_${curLocale}`] : "";
   const entranceHeader =
@@ -384,8 +384,10 @@ const EntranceAccessibility = ({
               {visibleBlocks}
               <QuestionFormCtrlButtons
                 hasCancelButton
-                hasValidateButton={isContinueClicked}
-                hasSaveDraftButton={!formSubmitted}
+                //hasValidateButton={isContinueClicked}
+                hasValidateButton
+                //hasSaveDraftButton={!formSubmitted}
+                hasSaveDraftButton
                 hasPreviewButton
                 visibleBlocks={visibleBlocks}
                 visibleQuestionChoices={visibleQuestionChoices}

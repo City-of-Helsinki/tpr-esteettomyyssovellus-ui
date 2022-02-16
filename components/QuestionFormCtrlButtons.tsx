@@ -1,5 +1,5 @@
 import React from "react";
-import { IconArrowRight, IconArrowLeft, Card } from "hds-react";
+import { IconArrowRight, IconArrowLeft } from "hds-react";
 import router from "next/router";
 import { useI18n } from "next-localization";
 import Button from "./QuestionButton";
@@ -36,7 +36,7 @@ const QuestionFormCtrlButtons = ({
   const startedAnswering = useAppSelector((state) => state.formReducer.startedAnswering);
   const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
   const finishedBlocks = useAppSelector((state) => state.formReducer.finishedBlocks);
-  const isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
+  // const isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
   const additionalInfo = useAppSelector((state) => state.additionalInfoReducer);
   const contacts = useAppSelector((state) => state.formReducer.contacts);
 
@@ -45,7 +45,7 @@ const QuestionFormCtrlButtons = ({
     const url = curServicepointId === -1 ? FRONT_URL_BASE : `${FRONT_URL_BASE + i18n.locale()}/details/${curServicepointId}`;
     window.location.href = url;
   };
-  const isPreviewActive = curAnsweredChoices.length > 1;
+  // const isPreviewActive = curAnsweredChoices.length > 1;
 
   const updateAccessibilityContacts = async (updatedContacts: { [key: string]: [string, boolean] }) => {
     const updateContactsOptions = {
@@ -150,16 +150,20 @@ const QuestionFormCtrlButtons = ({
 
   const validateForm = () => {
     // VALIDATE BLOCKS
-    visibleBlocks?.forEach((elem) => {
+    const validBlocks = visibleBlocks?.map((elem) => {
       if (elem !== null) {
         if (!finishedBlocks.includes(Number(elem?.key?.toString()))) {
           dispatch(setInvalid(Number(elem?.key?.toString())));
           dispatch(unsetFormFinished());
+          return false;
         } else {
           dispatch(unsetInvalid(Number(elem?.key?.toString())));
+          return true;
         }
       }
+      return true;
     });
+    return validBlocks?.every((b) => b) || false;
   };
 
   const invalidBlocks = useAppSelector((state) => state.formReducer.invalidBlocks);
@@ -175,15 +179,16 @@ const QuestionFormCtrlButtons = ({
   };
 
   const handlePreviewClick = async () => {
-    validateForm();
-    await saveDraft();
-    // TODO: TÄSSÄ KOHTAA MAHDOLLISESTI PITÄÄ POSTATA TIEDOT APIIN/KANTAAN, ETTÄ PREVIEW SIVULLE
-    // SAADAAN NÄKYMÄÄN JUURI TÄYTETYT TIEDOT.
-    router.push(`/preview/${curServicepointId}`);
+    if (validateForm()) {
+      await saveDraft();
+      // TODO: TÄSSÄ KOHTAA MAHDOLLISESTI PITÄÄ POSTATA TIEDOT APIIN/KANTAAN, ETTÄ PREVIEW SIVULLE
+      // SAADAAN NÄKYMÄÄN JUURI TÄYTETYT TIEDOT.
+      router.push(`/preview/${curServicepointId}`);
+    }
   };
 
   return (
-    <Card className={styles.container}>
+    <div className={styles.container}>
       <div className={styles.left}>
         {hasCancelButton ? (
           <Button variant="secondary" iconLeft={<IconArrowLeft />} onClickHandler={handleCancel}>
@@ -211,14 +216,14 @@ const QuestionFormCtrlButtons = ({
           <Button
             variant="primary"
             iconRight={<IconArrowRight />}
-            disabled={!isPreviewActive || !isContinueClicked}
+            // disabled={!isPreviewActive || !isContinueClicked}
             onClickHandler={handlePreviewClick}
           >
             {i18n.t("questionFormControlButtons.preview")}
           </Button>
         ) : null}
       </div>
-    </Card>
+    </div>
   );
 };
 export default QuestionFormCtrlButtons;
