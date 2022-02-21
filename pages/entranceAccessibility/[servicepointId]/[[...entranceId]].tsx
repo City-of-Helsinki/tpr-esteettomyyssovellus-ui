@@ -261,13 +261,13 @@ const EntranceAccessibility = ({
   dispatch(clearEditingInitialState());
   */
 
-  if (Object.keys(questionAnswerData).length !== 0) {
+  if (questionAnswerData.length > 0) {
     questionAnswerData.forEach((a: BackendEntranceAnswer) => {
-      const questionNumber = a.question_id;
+      const questionId = a.question_id;
       const answer = a.question_choice_id;
-      if (!!questionNumber && !!answer && !curAnsweredChoices.includes(answer) && curAnswers[questionNumber] === undefined) {
+      if (!!questionId && !!answer && !curAnsweredChoices.includes(answer) && !curAnswers[questionId]) {
         dispatch(setAnsweredChoice(answer));
-        dispatch(setAnswer({ questionNumber, answer }));
+        dispatch(setAnswer({ questionId, answer }));
       }
     });
   }
@@ -322,7 +322,7 @@ const EntranceAccessibility = ({
                 key={block.question_block_id}
                 description={block.description ?? null}
                 questions={blockQuestions}
-                answers={answerChoices}
+                answerChoices={answerChoices}
                 extraFields={blockExtraFields}
                 photoUrl={block.photo_url}
                 photoText={block.photo_text}

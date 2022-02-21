@@ -10,26 +10,25 @@ const QuestionRadioButtons = ({
   firstButtonLabel = "",
   secondButtonLabel = "",
   options,
-  value,
+  questionId,
 }: QuestionRadioButtonsProps): JSX.Element => {
   const dispatch = useAppDispatch();
   const curAnswers = useAppSelector((state) => state.formReducer.answers);
 
-  const startState = value !== undefined && curAnswers[value] !== undefined ? curAnswers[value].toString() : "0";
+  const startState = questionId !== undefined && curAnswers[questionId] !== undefined ? curAnswers[questionId].toString() : "0";
 
   const [selectedRadioItem, setSelectedRadioItem] = useState(startState);
 
   const handleRadioClick = (e: ChangeEvent<HTMLInputElement>) => {
     setSelectedRadioItem(e.target.value);
-    const questionNumber = value || -1;
 
-    if (value && options) {
+    if (questionId && options) {
       const answer = Number(e.target.value);
-      if (curAnswers[questionNumber] !== undefined) {
-        dispatch(removeAnsweredChoice(curAnswers[questionNumber]));
+      if (curAnswers[questionId] !== undefined) {
+        dispatch(removeAnsweredChoice(curAnswers[questionId]));
       }
       dispatch(setAnsweredChoice(answer));
-      dispatch(setAnswer({ questionNumber, answer }));
+      dispatch(setAnswer({ questionId, answer }));
     }
   };
 

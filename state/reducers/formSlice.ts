@@ -79,12 +79,10 @@ export const formSlice = createSlice({
         answeredChoices: [...(state.answeredChoices?.filter((elem) => elem !== action.payload) ?? [])],
       };
     },
-    setAnswer: (state, action: PayloadAction<{ questionNumber: number; answer: number }>) => {
-      const qNumber = action.payload.questionNumber;
-      const a = action.payload.answer;
+    setAnswer: (state, action: PayloadAction<{ questionId: number; answer: number }>) => {
       return {
         ...state,
-        answers: { ...state.answers, [qNumber]: a },
+        answers: { ...state.answers, [action.payload.questionId]: action.payload.answer },
       };
     },
     setContinue: (state) => {

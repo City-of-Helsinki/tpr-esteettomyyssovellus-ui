@@ -138,6 +138,7 @@ const Header = ({ children }: HeaderProps): ReactElement => {
               <Navigation.Item
                 role="button"
                 id="fi"
+                lang="fi"
                 label="Suomeksi"
                 tabIndex={0}
                 onKeyPress={(e: KeyboardEvent<HTMLAnchorElement>) => handleKeyPress(e, "fi")}
@@ -146,6 +147,7 @@ const Header = ({ children }: HeaderProps): ReactElement => {
               <Navigation.Item
                 role="button"
                 id="sv"
+                lang="sv"
                 label="På svenska"
                 tabIndex={0}
                 onKeyPress={(e: KeyboardEvent<HTMLAnchorElement>) => handleKeyPress(e, "sv")}
@@ -154,6 +156,7 @@ const Header = ({ children }: HeaderProps): ReactElement => {
               <Navigation.Item
                 role="button"
                 id="en"
+                lang="en"
                 label="In English"
                 tabIndex={0}
                 onKeyPress={(e: KeyboardEvent<HTMLAnchorElement>) => handleKeyPress(e, "en")}
@@ -168,6 +171,7 @@ const Header = ({ children }: HeaderProps): ReactElement => {
               <Navigation.Item
                 role="button"
                 id="fim"
+                lang="fi"
                 tabIndex={0}
                 className={router.locale === "fi" ? styles.chosen : styles.unchosen}
                 label="Suomeksi (FI)"
@@ -177,6 +181,7 @@ const Header = ({ children }: HeaderProps): ReactElement => {
               <Navigation.Item
                 role="button"
                 id="svm"
+                lang="sv"
                 tabIndex={0}
                 className={router.locale === "sv" ? styles.chosen : styles.unchosen}
                 label="På svenska (SV)"
@@ -186,6 +191,7 @@ const Header = ({ children }: HeaderProps): ReactElement => {
               <Navigation.Item
                 role="button"
                 id="enm"
+                lang="en"
                 tabIndex={0}
                 className={router.locale === "en" ? styles.chosen : styles.unchosen}
                 label="In English (EN)"

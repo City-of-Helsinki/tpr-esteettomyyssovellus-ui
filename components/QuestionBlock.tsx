@@ -13,7 +13,7 @@ import { setContinue, setFinished, unsetFinished } from "../state/reducers/formS
 
 // usage: in form groups up all questions under a single "question block" / accordion
 // notes: used under headlineQuestionContainer in main form
-const QuestionBlock = ({ description, questions, answers, extraFields, photoUrl, photoText }: QuestionBlockProps): JSX.Element => {
+const QuestionBlock = ({ description, questions, answerChoices, extraFields, photoUrl, photoText }: QuestionBlockProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
   // const [showAdditionalInfo, setShowAdditionalInfo] = useState(false);
@@ -84,7 +84,7 @@ const QuestionBlock = ({ description, questions, answers, extraFields, photoUrl,
             >
               <div className={styles.infoContainer}>
                 {photoText !== null ? photoText : null}
-                {photoUrl !== null ? <img alt="wheelchair parking" src={photoUrl} className={styles.infoPicture} /> : null}
+                {photoUrl !== null ? <img alt={photoText ?? ""} src={photoUrl} className={styles.infoPicture} /> : null}
               </div>
             </QuestionInfo>
           )}
@@ -106,7 +106,7 @@ const QuestionBlock = ({ description, questions, answers, extraFields, photoUrl,
       {/* TODO: add QuestionBlockLocationPictureContent component here */}
 
       {/* QtionList loops the single question row(s) */}
-      <QuestionsList additionalInfoVisible={showAdditionalInfo} questions={filteredQuestions} answers={answers} />
+      <QuestionsList additionalInfoVisible={showAdditionalInfo} questions={filteredQuestions} answerChoices={answerChoices} />
 
       {hasInfoAndButtons || !showContinue ? null : (
         <div className={styles.continueButton}>

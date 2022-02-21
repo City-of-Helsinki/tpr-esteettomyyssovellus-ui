@@ -57,11 +57,11 @@ export interface InputOption {
   label?: string;
 }
 
-export interface DropdownQuestionProps {
+export interface QuestionDropdownQuestionProps {
   options?: InputOption[];
   label?: string;
   placeholder?: string;
-  questionNumber?: number;
+  questionId?: number;
   blockId?: number;
 }
 
@@ -111,7 +111,7 @@ export interface QuestionFormCtrlButtonsProps {
 export interface QuestionsListProps {
   additionalInfoVisible: boolean;
   questions?: BackendQuestion[] | null;
-  answers?: BackendQuestionChoice[] | null;
+  answerChoices?: BackendQuestionChoice[] | null;
 }
 
 export interface QuestionBlockExtraFieldListProps {
@@ -304,7 +304,7 @@ interface FetchAdditionalInfos {
 
 export interface QuestionBlockProps {
   questions?: BackendQuestion[] | null;
-  answers?: BackendQuestionChoice[] | null;
+  answerChoices?: BackendQuestionChoice[] | null;
   extraFields?: BackendQuestionBlockField[] | null;
   description?: string | null;
   photoUrl?: string | null;

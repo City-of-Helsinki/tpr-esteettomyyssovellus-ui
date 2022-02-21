@@ -6,12 +6,12 @@ import { BackendQuestion } from "../types/backendModels";
 import { QuestionsListProps } from "../types/general";
 
 // usage: list questions component, should be called once per question block
-const QuestionsList = ({ additionalInfoVisible, questions, answers }: QuestionsListProps): JSX.Element => {
+const QuestionsList = ({ additionalInfoVisible, questions, answerChoices }: QuestionsListProps): JSX.Element => {
   return (
     <>
       {questions?.map((question: BackendQuestion) => {
-        const answerChoices = answers
-          ?.filter((answer) => answer.question_id === question.question_id)
+        const answerOptions = answerChoices
+          ?.filter((choice) => choice.question_id === question.question_id)
           .map((choice) => {
             return {
               label: choice.text,
@@ -41,16 +41,16 @@ const QuestionsList = ({ additionalInfoVisible, questions, answers }: QuestionsL
             {question.yes_no_question === "Y" ? (
               <QuestionRadioButtons
                 key={question.question_code}
-                options={answerChoices}
-                value={question.question_id}
-                firstButtonLabel={answerChoices ? answerChoices[0].label : undefined}
-                secondButtonLabel={answerChoices ? answerChoices[1].label : undefined}
+                options={answerOptions}
+                questionId={question.question_id}
+                firstButtonLabel={answerOptions ? answerOptions[0].label : undefined}
+                secondButtonLabel={answerOptions ? answerOptions[1].label : undefined}
               />
             ) : (
               <QuestionDropdown
                 key={question.question_id}
-                options={answerChoices}
-                questionNumber={question.question_id}
+                options={answerOptions}
+                questionId={question.question_id}
                 blockId={question.question_block_id}
               />
             )}
