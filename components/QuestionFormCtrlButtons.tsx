@@ -134,7 +134,7 @@ const QuestionFormCtrlButtons = ({
         updateExtraFieldAnswers(logId);
 
         // GENERATE SENTENCES
-        const generateData = { entrance_id: curEntranceId, form_submitted: "D" };
+        const generateData = { entrance_id: entranceId, form_submitted: "D" };
         postData(`${API_URL_BASE}GenerateSentences/`, JSON.stringify(generateData));
       }
     }
