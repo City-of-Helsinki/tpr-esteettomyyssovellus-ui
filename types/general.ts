@@ -4,16 +4,17 @@ import { LatLngExpression } from "leaflet";
 import {
   BackendEntrance,
   BackendEntranceAnswer,
+  BackendEntranceField,
   BackendQuestion,
   BackendQuestionBlock,
   BackendQuestionBlockField,
   BackendQuestionChoice,
   BackendServicepoint,
   EntranceResults,
-  QuestionAnswerComment,
-  QuestionAnswerLocation,
-  QuestionAnswerPhoto,
-  QuestionAnswerPhotoTxt,
+  // QuestionAnswerComment,
+  // QuestionAnswerLocation,
+  // QuestionAnswerPhoto,
+  // QuestionAnswerPhotoTxt,
   Servicepoint,
   StoredSentence,
 } from "./backendModels";
@@ -36,6 +37,7 @@ export interface QuestionContainerProps {
 
 export interface QuestionExtraFieldProps {
   questionBlockId: number;
+  questionBlockFieldId: number;
   fieldNumber?: number;
   questionText?: string;
   questionInfo?: string | null;
@@ -89,13 +91,13 @@ export interface QuestionRadioButtonsProps {
   firstButtonLabel?: string;
   secondButtonLabel?: string;
   options?: InputOption[];
-  value?: number;
+  questionId?: number;
 }
 
 export interface QuestionTextInputProps {
   id: string;
+  questionBlockFieldId: number;
   placeholder?: string;
-  value?: string;
 }
 
 export interface QuestionFormCtrlButtonsProps {
@@ -116,7 +118,6 @@ export interface QuestionsListProps {
 
 export interface QuestionBlockExtraFieldListProps {
   extraFields?: BackendQuestionBlockField[] | null;
-  answers?: BackendQuestionChoice[] | null;
 }
 
 export interface QuestionAdditionalInfoCtrlButtonProps {
@@ -288,6 +289,7 @@ export interface MainEntranceFormProps {
   entranceData: BackendEntrance;
   servicepointData: Servicepoint;
   questionAnswerData: BackendEntranceAnswer[];
+  questionExtraAnswerData: BackendEntranceField[];
   // additionalInfosData: FetchAdditionalInfos;
   formId: number;
   // entrance_id: string;

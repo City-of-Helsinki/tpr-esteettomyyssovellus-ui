@@ -11,6 +11,7 @@ import ServicepointMainInfoContent from "../../../components/ServicepointMainInf
 import {
   API_FETCH_BACKEND_ENTRANCE,
   API_FETCH_BACKEND_ENTRANCE_ANSWERS,
+  API_FETCH_BACKEND_ENTRANCE_FIELD,
   API_FETCH_BACKEND_QUESTIONBLOCK_FIELD,
   API_FETCH_BACKEND_SERVICEPOINT,
   API_FETCH_ENTRANCES,
@@ -22,8 +23,6 @@ import {
   API_FETCH_QUESTIONBLOCK_URL,
   API_FETCH_QUESTIONCHOICES,
   API_FETCH_SERVICEPOINTS,
-  EMAIL_REGEX,
-  PHONE_REGEX,
   LanguageLocales,
 } from "../../../types/constants";
 import { useAppSelector, useAppDispatch, useLoading } from "../../../state/hooks";
@@ -31,6 +30,7 @@ import QuestionBlock from "../../../components/QuestionBlock";
 import {
   BackendEntrance,
   BackendEntranceAnswer,
+  BackendEntranceField,
   BackendQuestion,
   BackendQuestionBlock,
   BackendQuestionBlockField,
@@ -50,18 +50,13 @@ import HeadlineQuestionContainer from "../../../components/HeadlineQuestionConta
 import QuestionFormCtrlButtons from "../../../components/QuestionFormCtrlButtons";
 import PathTreeComponent from "../../../components/PathTreeComponent";
 import {
+  initForm,
   setAnswer,
   setAnsweredChoice,
-  setEmail,
-  setPhoneNumber,
-  setServicepointId,
-  initForm,
-  setContactPerson,
-  changePhoneNumberStatus,
-  changeEmailStatus,
   setEntranceId,
+  setExtraAnswer,
+  setServicepointId,
   setStartDate,
-  setWwwAddress,
 } from "../../../state/reducers/formSlice";
 /*
 import {
@@ -86,6 +81,7 @@ const EntranceAccessibility = ({
   questionBlocksData,
   questionBlockFieldData,
   questionAnswerData,
+  questionExtraAnswerData,
   entranceData,
   servicepointData,
   // additionalInfosData,
@@ -115,26 +111,13 @@ const EntranceAccessibility = ({
   const isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
   const startedAnswering = useAppSelector((state) => state.formReducer.startedAnswering);
   const curAnswers = useAppSelector((state) => state.formReducer.answers);
+  const curExtraAnswers = useAppSelector((state) => state.formReducer.extraAnswers);
 
   const treeItems = [servicepointData.servicepoint_name, i18n.t("servicepoint.contactFormSummaryHeader")];
 
   const hasData = Object.keys(servicepointData).length > 0 && Object.keys(entranceData).length > 0;
 
-  // validates contactinfo data and sets to state
   if (!formInited) {
-    /*
-    const phoneNumber = servicepointData.accessibility_phone ?? "";
-    const email = servicepointData.accessibility_email ?? "";
-    const www = servicepointData.accessibility_www ?? "";
-
-    const phonePattern = new RegExp(PHONE_REGEX);
-    const emailPattern = new RegExp(EMAIL_REGEX);
-
-    dispatch(setPhoneNumber(phoneNumber));
-    dispatch(setEmail(email));
-    dispatch(setWwwAddress(www));
-    */
-
     if (Object.keys(servicepointData).length > 0) {
       dispatch(setServicepointId(servicepointData.servicepoint_id));
       if (startedAnswering === "") dispatch(setStartDate(getCurrentDate()));
@@ -144,24 +127,6 @@ const EntranceAccessibility = ({
       // dispatch(setEntranceId(Number(entrance_id)));
       dispatch(setEntranceId(entranceData.entrance_id));
     }
-    /*
-    // VALIDATE PHONE
-    if (!phonePattern.test(phoneNumber)) {
-      dispatch(changePhoneNumberStatus(false));
-    } else {
-      dispatch(changePhoneNumberStatus(true));
-    }
-
-    // VALIDATE EMAIL
-    if (!emailPattern.test(email)) {
-      dispatch(changeEmailStatus(false));
-    } else {
-      dispatch(changeEmailStatus(true));
-    }
-
-    // CONTACTPERSON DOES NOT EXIST IN THE DATABASE YET
-    dispatch(setContactPerson(""));
-    */
 
     dispatch(initForm());
   }
@@ -261,6 +226,7 @@ const EntranceAccessibility = ({
   dispatch(clearEditingInitialState());
   */
 
+  // Put existing answers into the state
   if (questionAnswerData.length > 0) {
     questionAnswerData.forEach((a: BackendEntranceAnswer) => {
       const questionId = a.question_id;
@@ -268,6 +234,18 @@ const EntranceAccessibility = ({
       if (!!questionId && !!answer && !curAnsweredChoices.includes(answer) && !curAnswers[questionId]) {
         dispatch(setAnsweredChoice(answer));
         dispatch(setAnswer({ questionId, answer }));
+      }
+    });
+  }
+
+  // Put existing extra field answers into the state
+  if (questionExtraAnswerData.length > 0) {
+    questionExtraAnswerData.forEach((ea: BackendEntranceField) => {
+      const questionBlockFieldId = ea.question_block_field_id;
+      const answer = ea.entry;
+      if (!!questionBlockFieldId && !!answer && !curExtraAnswers[questionBlockFieldId]) {
+        console.log("oh no", questionBlockFieldId, answer);
+        dispatch(setExtraAnswer({ questionBlockFieldId, answer }));
       }
     });
   }
@@ -415,6 +393,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   let questionBlocksData: BackendQuestionBlock[] = [];
   let questionBlockFieldData: BackendQuestionBlockField[] = [];
   let questionAnswerData: BackendEntranceAnswer[] = [];
+  let questionExtraAnswerData: BackendEntranceField[] = [];
   let entranceData: BackendEntrance = {} as BackendEntrance;
   let servicepointData: Servicepoint = {} as Servicepoint;
   // let additionalInfosData = {};
@@ -474,8 +453,18 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       }
 
       if (!!params.entranceId) {
-        const questionAnswersResp = await fetch(`${API_FETCH_BACKEND_ENTRANCE_ANSWERS}?entrance_id=${params.entranceId}&format=json`);
-        questionAnswerData = await (questionAnswersResp.json() as Promise<BackendEntranceAnswer[]>);
+        const allQuestionAnswersResp = await fetch(`${API_FETCH_BACKEND_ENTRANCE_ANSWERS}?entrance_id=${params.entranceId}&format=json`);
+        const allQuestionAnswerData = await (allQuestionAnswersResp.json() as Promise<BackendEntranceAnswer[]>);
+
+        if (allQuestionAnswerData?.length > 0) {
+          // Return answer data for the highest log id only, in case both published and draft data exists (form_submitted = 'Y' and 'D')
+          const maxLogId =
+            allQuestionAnswerData.sort((a: BackendEntranceAnswer, b: BackendEntranceAnswer) => {
+              return (b.log_id ?? 0) - (a.log_id ?? 0);
+            })[0].log_id ?? -1;
+
+          questionAnswerData = allQuestionAnswerData.filter((a) => a.log_id === maxLogId);
+        }
 
         // The additional info structure will be changing, so the backend calls have been removed for now
         /*
@@ -505,6 +494,20 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
           }
         }
         */
+
+        const allQuestionExtraAnswersResp = await fetch(`${API_FETCH_BACKEND_ENTRANCE_FIELD}?entrance_id=${params.entranceId}&format=json`);
+        const allQuestionExtraAnswerData = await (allQuestionExtraAnswersResp.json() as Promise<BackendEntranceField[]>);
+
+        if (allQuestionExtraAnswerData?.length > 0) {
+          // Return extra answer data for the highest log id only, in case both published and draft data exists (form_submitted = 'Y' and 'D')
+          // Note: This log id value may be different from the main answer data log id
+          const maxLogId =
+            allQuestionExtraAnswerData.sort((a: BackendEntranceAnswer, b: BackendEntranceAnswer) => {
+              return (b.log_id ?? 0) - (a.log_id ?? 0);
+            })[0].log_id ?? -1;
+
+          questionExtraAnswerData = allQuestionExtraAnswerData.filter((a) => a.log_id === maxLogId);
+        }
       }
     } catch (e) {
       console.error("Error", e);
@@ -514,6 +517,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       questionBlocksData = [];
       questionBlockFieldData = [];
       questionAnswerData = [];
+      questionExtraAnswerData = [];
       entranceData = {} as BackendEntrance;
       servicepointData = {} as Servicepoint;
       // additionalInfosData = {};
@@ -527,6 +531,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       questionBlocksData,
       questionBlockFieldData,
       questionAnswerData,
+      questionExtraAnswerData,
       entranceData,
       servicepointData,
       // additionalInfosData,

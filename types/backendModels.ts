@@ -173,6 +173,17 @@ export interface BackendEntranceAnswer {
   photo_text_en?: string;
 }
 
+export interface BackendEntranceField {
+  technical_id: string;
+  log_id: number;
+  entrance_id: number;
+  form_submitted?: string;
+  question_block_id: number;
+  question_block_field_id: number;
+  field_number?: number;
+  entry?: string;
+}
+
 export interface BackendQuestion {
   technical_id: string;
   form_id: number;
@@ -212,6 +223,7 @@ export interface BackendQuestionBlockField {
   form_id: number;
   language_id: number;
   question_block_id: number;
+  question_block_field_id: number;
   field_number: number;
   field_name?: string;
   field_title?: string;

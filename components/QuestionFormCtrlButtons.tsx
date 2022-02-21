@@ -11,7 +11,7 @@ import {
   API_FETCH_ANSWER_LOGS,
   API_FETCH_ENTRANCES,
   API_FETCH_QUESTION_ANSWERS,
-  // API_FETCH_SERVICEPOINTS,
+  API_FETCH_QUESTION_BLOCK_ANSWER_FIELD,
   API_URL_BASE,
   FRONT_URL_BASE,
 } from "../types/constants";
@@ -32,12 +32,12 @@ const QuestionFormCtrlButtons = ({
   const dispatch = useAppDispatch();
 
   const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
+  const curExtraAnswers = useAppSelector((state) => state.formReducer.extraAnswers);
   const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
   const startedAnswering = useAppSelector((state) => state.formReducer.startedAnswering);
   const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
   const finishedBlocks = useAppSelector((state) => state.formReducer.finishedBlocks);
   // const isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
-  const contacts = useAppSelector((state) => state.formReducer.contacts);
   // const additionalInfo = useAppSelector((state) => state.additionalInfoReducer);
 
   const handleCancel = (): void => {
@@ -47,24 +47,20 @@ const QuestionFormCtrlButtons = ({
   };
   // const isPreviewActive = curAnsweredChoices.length > 1;
 
-  const updateAccessibilityContacts = async (updatedContacts: { [key: string]: [string, boolean] }) => {
-    const updateContactsOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        accessibility_phone: updatedContacts.phoneNumber[1] ? updatedContacts.phoneNumber[0] : null,
-        accessibility_email: updatedContacts.email[1] ? updatedContacts.email[0] : null,
-        accessibility_www: updatedContacts.www[1] ? updatedContacts.www[0] : null,
-        modified_by: "placeholder",
-        // TODO: Add user here
-        modified: getCurrentDate(),
-      }),
-    };
-    const updateContactsUrl = `${API_FETCH_SERVICEPOINTS}${curServicepointId}/update_accessibility_contacts/`;
+  const updateExtraFieldAnswers = async (logId: number) => {
+    Object.keys(curExtraAnswers).forEach((questionBlockFieldIdStr) => {
+      const questionBlockFieldId = Number(questionBlockFieldIdStr);
+      const extraAnswer = curExtraAnswers[questionBlockFieldId];
 
-    await fetch(updateContactsUrl, updateContactsOptions);
+      postData(
+        API_FETCH_QUESTION_BLOCK_ANSWER_FIELD,
+        JSON.stringify({
+          log_id: logId,
+          question_block_field_id: questionBlockFieldId,
+          entry: extraAnswer,
+        })
+      );
+    });
   };
 
   // TODO: MAKE INTO SMALLER FUNCTIONS
@@ -117,13 +113,12 @@ const QuestionFormCtrlButtons = ({
         }),
       };
 
-
       // POST TO AR_X_ANSWER_LOG. RETURNS NEW LOG_ID USED FOR OTHER POST REQUESTS
       const response = await fetch(API_FETCH_ANSWER_LOGS, requestOptions);
       const logId = await (response.json() as Promise<number>);
 
       // CHECK IF RETURNED LOG_ID IS A NUMBER. IF NOT A NUMBER STOP EXECUTING
-      if (!Number.isNaN(logId)) {
+      if (!!logId && logId > 0) {
         // POST ALL QUESTION ANSWERS
         const filteredAnswerChoices = curAnsweredChoices.filter((choice) => {
           return visibleQuestionChoices
@@ -133,12 +128,14 @@ const QuestionFormCtrlButtons = ({
             .includes(Number(choice));
         });
         const questionAnswerData = { log: logId, data: filteredAnswerChoices };
-        await postData(API_FETCH_QUESTION_ANSWERS, JSON.stringify(questionAnswerData));
+        postData(API_FETCH_QUESTION_ANSWERS, JSON.stringify(questionAnswerData));
         // await postAdditionalInfo(logId, additionalInfo.additionalInfo);
+
+        updateExtraFieldAnswers(logId);
 
         // GENERATE SENTENCES
         const generateData = { entrance_id: curEntranceId, form_submitted: "D" };
-        await postData(`${API_URL_BASE}GenerateSentences/`, JSON.stringify(generateData));
+        postData(`${API_URL_BASE}GenerateSentences/`, JSON.stringify(generateData));
       }
     }
   };
