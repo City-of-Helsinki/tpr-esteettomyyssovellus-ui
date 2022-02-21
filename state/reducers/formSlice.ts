@@ -13,7 +13,6 @@ interface formState {
   finishedBlocks: number[];
   startedAnswering: string;
   invalidBlocks: number[];
-  formInited: boolean;
   formFinished: boolean;
   formSubmitted: boolean;
   mainImageElement: string;
@@ -33,7 +32,6 @@ const initialState: formState = {
   finishedBlocks: [],
   startedAnswering: "",
   invalidBlocks: [],
-  formInited: false,
   formFinished: false,
   formSubmitted: false,
   mainImageElement: "",
@@ -98,12 +96,6 @@ export const formSlice = createSlice({
       return {
         ...state,
         isContinueClicked: false,
-      };
-    },
-    initForm: (state) => {
-      return {
-        ...state,
-        formInited: true,
       };
     },
     setFinished: (state, action: PayloadAction<number>) => {
@@ -271,7 +263,6 @@ export const {
   setStartDate,
   setInvalid,
   unsetInvalid,
-  initForm,
   setFormFinished,
   unsetFormFinished,
   setFormSubmitted,
