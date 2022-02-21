@@ -1,5 +1,5 @@
 import { Button, IconAngleDown, IconAngleUp, IconArrowRight } from "hds-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useI18n } from "next-localization";
 // import QuestionAdditionalInfoCtrlButton from "./QuestionAdditionalInfoCtrlButton";
 import QuestionBlockExtraFieldList from "./QuestionBlockExtraFieldList";
@@ -52,16 +52,18 @@ const QuestionBlock = ({ description, questions, answerChoices, extraFields, pho
   const curAnswers = useAppSelector((state) => state.formReducer.answers);
   const keys = Object.keys(curAnswers);
 
-  // check if block is finished (all visible questions are answered), also used to display icon if finished and with validation
-  const blockFinished = filteredQuestions?.every((element) => {
-    return element.question_id ? keys.includes(element.question_id.toString()) : false;
-  });
+  useEffect(() => {
+    // check if block is finished (all visible questions are answered), also used to display icon if finished and with validation
+    const blockFinished = filteredQuestions?.every((element) => {
+      return element.question_id ? keys.includes(element.question_id.toString()) : false;
+    });
 
-  if (blockFinished) {
-    dispatch(setFinished(blockId));
-  } else {
-    dispatch(unsetFinished(blockId));
-  }
+    if (blockFinished) {
+      dispatch(setFinished(blockId));
+    } else {
+      dispatch(unsetFinished(blockId));
+    }
+  }, [blockId, filteredQuestions, keys, dispatch]);
 
   // Turn "<BR>" to linebreaks
   const desc = description?.split("<BR>").map((elem, index) => {
