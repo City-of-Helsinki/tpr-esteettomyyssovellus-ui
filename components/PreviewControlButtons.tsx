@@ -7,7 +7,7 @@ import styles from "./PreviewControlButtons.module.scss";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
 import { API_FETCH_ANSWER_LOGS, API_FETCH_QUESTION_ANSWERS, API_URL_BASE, FRONT_URL_BASE } from "../types/constants";
 import { setContinue } from "../state/reducers/formSlice";
-import { getCurrentDate, postData, getClientIp, postAdditionalInfo } from "../utils/utilFunctions";
+import { getCurrentDate, postData, getClientIp } from "../utils/utilFunctions";
 import AddNewEntranceNotice from "./common/AddNewEntranceNotice";
 import { PreviewControlButtonsProps } from "../types/general";
 
@@ -22,7 +22,7 @@ const PreviewControlButtons = ({ hasHeader }: PreviewControlButtonsProps): JSX.E
   const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
   const formFinished = useAppSelector((state) => state.formReducer.formFinished);
   const formSubmitted = useAppSelector((state) => state.formReducer.formSubmitted);
-  const additionalInfo = useAppSelector((state) => state.additionalInfoReducer);
+  // const additionalInfo = useAppSelector((state) => state.additionalInfoReducer);
   const user = useAppSelector((state) => state.generalSlice.user);
   const handelContinueEditing = (): void => {
     dispatch(setContinue());
@@ -66,7 +66,7 @@ const PreviewControlButtons = ({ hasHeader }: PreviewControlButtonsProps): JSX.E
       // POST ALL QUESTION ANSWERS
       const data = { log: logId, data: curAnsweredChoices };
       postData(API_FETCH_QUESTION_ANSWERS, JSON.stringify(data));
-      await postAdditionalInfo(logId, additionalInfo.additionalInfo);
+      // await postAdditionalInfo(logId, additionalInfo.additionalInfo);
       const generateData = { entrance_id: curEntranceId };
       postData(`${API_URL_BASE}GenerateSentences/`, JSON.stringify(generateData));
       window.location.href = FRONT_URL_BASE;

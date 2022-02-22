@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
+import { PURGE } from "redux-persist";
 import { MainPictureProps } from "../../types/general";
 
 interface formState {
@@ -7,15 +8,11 @@ interface formState {
   currentEntranceId: number;
   answeredChoices: number[];
   answers: { [key: number]: number };
+  extraAnswers: { [key: number]: string };
   isContinueClicked: boolean;
   finishedBlocks: number[];
-  // A dictionary of all the necessary contact information.
-  // The arrays corresponding to the keys have the value and a boolean which
-  // indicates wheter the value is valid.
-  contacts: { [key: string]: [string, boolean] };
   startedAnswering: string;
   invalidBlocks: number[];
-  formInited: boolean;
   formFinished: boolean;
   formSubmitted: boolean;
   mainImageElement: string;
@@ -30,12 +27,11 @@ const initialState: formState = {
   currentEntranceId: -1,
   answeredChoices: [],
   answers: {},
+  extraAnswers: {},
   isContinueClicked: false,
   finishedBlocks: [],
-  contacts: {},
   startedAnswering: "",
   invalidBlocks: [],
-  formInited: false,
   formFinished: false,
   formSubmitted: false,
   mainImageElement: "",
@@ -78,12 +74,16 @@ export const formSlice = createSlice({
         answeredChoices: [...(state.answeredChoices?.filter((elem) => elem !== action.payload) ?? [])],
       };
     },
-    setAnswer: (state, action: PayloadAction<{ questionNumber: number; answer: number }>) => {
-      const qNumber = action.payload.questionNumber;
-      const a = action.payload.answer;
+    setAnswer: (state, action: PayloadAction<{ questionId: number; answer: number }>) => {
       return {
         ...state,
-        answers: { ...state.answers, [qNumber]: a },
+        answers: { ...state.answers, [action.payload.questionId]: action.payload.answer },
+      };
+    },
+    setExtraAnswer: (state, action: PayloadAction<{ questionBlockFieldId: number; answer: string }>) => {
+      return {
+        ...state,
+        extraAnswers: { ...state.extraAnswers, [action.payload.questionBlockFieldId]: action.payload.answer },
       };
     },
     setContinue: (state) => {
@@ -96,12 +96,6 @@ export const formSlice = createSlice({
       return {
         ...state,
         isContinueClicked: false,
-      };
-    },
-    initForm: (state) => {
-      return {
-        ...state,
-        formInited: true,
       };
     },
     setFinished: (state, action: PayloadAction<number>) => {
@@ -121,85 +115,10 @@ export const formSlice = createSlice({
         finishedBlocks: [...(state.finishedBlocks?.filter((elem) => elem !== action.payload) ?? [])],
       };
     },
-    setContactPerson: (state, action: PayloadAction<string>) => {
-      return {
-        ...state,
-        contacts: {
-          ...state.contacts,
-          // Sets the contact person. The contact person is always valid at the start
-          // and changes to invalid if the validation fails
-          contactPerson: [action.payload, false],
-        },
-      };
-    },
-    setPhoneNumber: (state, action: PayloadAction<string>) => {
-      return {
-        ...state,
-        contacts: {
-          ...state.contacts,
-          // Sets the phone number. The phone number is always valid at the start
-          // and changes to invalid if the validation fails. TODO: POSSIBLY VALIDATE
-          // WHEN SET
-          phoneNumber: [action.payload, false],
-        },
-      };
-    },
-    setEmail: (state, action: PayloadAction<string>) => {
-      return {
-        ...state,
-        // Sets the email. The email is always valid at the start
-        // and changes to invalid if the validation fails
-        contacts: { ...state.contacts, email: [action.payload, false] },
-      };
-    },
-    setWwwAddress: (state, action: PayloadAction<string>) => {
-      return {
-        ...state,
-        // Sets the email. The email is always valid at the start
-        // and changes to invalid if the validation fails
-        contacts: { ...state.contacts, www: [action.payload, false] },
-      };
-    },
     setStartDate: (state, action: PayloadAction<string>) => {
       return {
         ...state,
         startedAnswering: action.payload,
-      };
-    },
-    changeContactPersonStatus: (state, action: PayloadAction<boolean>) => {
-      return {
-        ...state,
-        contacts: {
-          ...state.contacts,
-          contactPerson: [state.contacts.contactPerson[0], action.payload],
-        },
-      };
-    },
-    changePhoneNumberStatus: (state, action: PayloadAction<boolean>) => {
-      return {
-        ...state,
-        contacts: {
-          ...state.contacts,
-          phoneNumber: [state.contacts.phoneNumber[0], action.payload],
-        },
-      };
-    },
-    changeEmailStatus: (state, action: PayloadAction<boolean>) => {
-      return {
-        ...state,
-        contacts: {
-          ...state.contacts,
-          email: [state.contacts.email[0], action.payload],
-        },
-      };
-    },
-    changeWwwStatus: (state, action: PayloadAction<boolean>) => {
-      return {
-        ...state,
-        contacts: {
-          ...state.contacts,
-          www: [state.contacts.www[0], action.payload],
-        },
       };
     },
     setInvalid: (state, action: PayloadAction<number>) => {
@@ -323,6 +242,11 @@ export const formSlice = createSlice({
       };
     },
   },
+  extraReducers: (builder) => {
+    builder.addCase(PURGE, () => ({
+      ...initialState,
+    }));
+  },
 });
 export const {
   clearFormState,
@@ -331,24 +255,16 @@ export const {
   setAnsweredChoice,
   removeAnsweredChoice,
   setAnswer,
+  setExtraAnswer,
   setContinue,
   unsetContinue,
   setFinished,
   unsetFinished,
-  setContactPerson,
-  setPhoneNumber,
-  setEmail,
   setStartDate,
-  changeContactPersonStatus,
-  changePhoneNumberStatus,
-  changeEmailStatus,
   setInvalid,
   unsetInvalid,
-  initForm,
   setFormFinished,
   unsetFormFinished,
-  setWwwAddress,
-  changeWwwStatus,
   setFormSubmitted,
   addMainImageElement,
   addMainImageTempElement,

@@ -1,7 +1,7 @@
 import React from "react";
 import { Select } from "hds-react";
 import { useI18n } from "next-localization";
-import { DropdownQuestionProps, InputOption } from "../types/general";
+import { InputOption, QuestionDropdownQuestionProps } from "../types/general";
 import style from "./QuestionDropdown.module.scss";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
 import { setAnsweredChoice, setAnswer, removeAnsweredChoice } from "../state/reducers/formSlice";
@@ -10,28 +10,28 @@ import { setAnsweredChoice, setAnswer, removeAnsweredChoice } from "../state/red
 // notes: this component uses HDS Select, HDS says:
 // if 1) more than 8 options 2) needs filtering by typing create&use HDS Combobox
 // this project doesn't yet have Combobox, maybe not needed also
-const QuestionDropdown = ({ options, placeholder = "--Valitse--", label = "", questionNumber, blockId }: DropdownQuestionProps): JSX.Element => {
+const QuestionDropdown = ({ options, placeholder = "--Valitse--", label = "", questionId, blockId }: QuestionDropdownQuestionProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
 
   // handle add/remove answer from state
   const handleChange = (selected: InputOption) => {
     const answer = selected.value;
-    if (answer !== undefined && questionNumber !== undefined && options) {
+    if (answer !== undefined && questionId !== undefined && options) {
       options.forEach((element: InputOption) => {
         if (element.value !== undefined) {
           dispatch(removeAnsweredChoice(element.value));
         }
       });
-      dispatch(setAnswer({ questionNumber, answer }));
+      dispatch(setAnswer({ questionId, answer }));
       dispatch(setAnsweredChoice(answer));
     }
   };
 
-  const currentValues = useAppSelector((state) => state.formReducer);
-  const { answers, invalidBlocks } = currentValues;
+  const curAnswers = useAppSelector((state) => state.formReducer.answers);
+  const curInvalidBlocks = useAppSelector((state) => state.formReducer.invalidBlocks);
 
-  const value = questionNumber !== undefined && answers[questionNumber] !== undefined ? answers[questionNumber] : -1;
+  const value = questionId !== undefined && curAnswers[questionId] !== undefined ? curAnswers[questionId] : -1;
   const currentLabel = options?.find((element) => {
     return element.value === value;
   });
@@ -41,7 +41,7 @@ const QuestionDropdown = ({ options, placeholder = "--Valitse--", label = "", qu
     value,
   };
 
-  const isInvalid = value === -1 && !!blockId && invalidBlocks.includes(blockId);
+  const isInvalid = value === -1 && !!blockId && curInvalidBlocks.includes(blockId);
 
   return options ? (
     <Select

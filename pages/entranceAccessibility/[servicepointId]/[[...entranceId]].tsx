@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useEffect } from "react";
 import { useI18n } from "next-localization";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
@@ -11,19 +11,18 @@ import ServicepointMainInfoContent from "../../../components/ServicepointMainInf
 import {
   API_FETCH_BACKEND_ENTRANCE,
   API_FETCH_BACKEND_ENTRANCE_ANSWERS,
+  API_FETCH_BACKEND_ENTRANCE_FIELD,
   API_FETCH_BACKEND_QUESTIONBLOCK_FIELD,
   API_FETCH_BACKEND_SERVICEPOINT,
   API_FETCH_ENTRANCES,
-  API_FETCH_QUESTION_ANSWER_COMMENTS,
-  API_FETCH_QUESTION_ANSWER_LOCATIONS,
-  API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS,
-  API_FETCH_QUESTION_ANSWER_PHOTOS,
+  // API_FETCH_QUESTION_ANSWER_COMMENTS,
+  // API_FETCH_QUESTION_ANSWER_LOCATIONS,
+  // API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS,
+  // API_FETCH_QUESTION_ANSWER_PHOTOS,
   API_FETCH_QUESTION_URL,
   API_FETCH_QUESTIONBLOCK_URL,
   API_FETCH_QUESTIONCHOICES,
   API_FETCH_SERVICEPOINTS,
-  EMAIL_REGEX,
-  PHONE_REGEX,
   LanguageLocales,
 } from "../../../types/constants";
 import { useAppSelector, useAppDispatch, useLoading } from "../../../state/hooks";
@@ -31,6 +30,7 @@ import QuestionBlock from "../../../components/QuestionBlock";
 import {
   BackendEntrance,
   BackendEntranceAnswer,
+  BackendEntranceField,
   BackendQuestion,
   BackendQuestionBlock,
   BackendQuestionBlockField,
@@ -38,10 +38,10 @@ import {
   BackendServicepoint,
   Entrance,
   EntranceResults,
-  QuestionAnswerComment,
-  QuestionAnswerLocation,
-  QuestionAnswerPhoto,
-  QuestionAnswerPhotoTxt,
+  // QuestionAnswerComment,
+  // QuestionAnswerLocation,
+  // QuestionAnswerPhoto,
+  // QuestionAnswerPhotoTxt,
   Servicepoint,
 } from "../../../types/backendModels";
 import { MainEntranceFormProps } from "../../../types/general";
@@ -49,20 +49,8 @@ import HeadlineQuestionContainer from "../../../components/HeadlineQuestionConta
 
 import QuestionFormCtrlButtons from "../../../components/QuestionFormCtrlButtons";
 import PathTreeComponent from "../../../components/PathTreeComponent";
-import {
-  setAnswer,
-  setAnsweredChoice,
-  setEmail,
-  setPhoneNumber,
-  setServicepointId,
-  initForm,
-  setContactPerson,
-  changePhoneNumberStatus,
-  changeEmailStatus,
-  setEntranceId,
-  setStartDate,
-  setWwwAddress,
-} from "../../../state/reducers/formSlice";
+import { setAnswer, setAnsweredChoice, setEntranceId, setExtraAnswer, setServicepointId, setStartDate } from "../../../state/reducers/formSlice";
+/*
 import {
   addComment,
   addComponent,
@@ -72,6 +60,8 @@ import {
   setAlt,
   setInitAdditionalInfoFromDb,
 } from "../../../state/reducers/additionalInfoSlice";
+*/
+import { persistor } from "../../../state/store";
 import { getCurrentDate } from "../../../utils/utilFunctions";
 import { setCurrentlyEditingBlock, setCurrentlyEditingQuestion } from "../../../state/reducers/generalSlice";
 import LoadSpinner from "../../../components/common/LoadSpinner";
@@ -83,12 +73,18 @@ const EntranceAccessibility = ({
   questionBlocksData,
   questionBlockFieldData,
   questionAnswerData,
+  questionExtraAnswerData,
   entranceData,
   servicepointData,
-  additionalInfosData,
+  // additionalInfosData,
   // entrance_id,
   formId,
 }: MainEntranceFormProps): ReactElement => {
+  useEffect(() => {
+    // Clear the state on initial load
+    persistor.purge();
+  }, []);
+
   const i18n = useI18n();
   const curLocale: string = i18n.locale();
   const dispatch = useAppDispatch();
@@ -101,160 +97,144 @@ const EntranceAccessibility = ({
 
   const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
   const curInvalidBlocks = useAppSelector((state) => state.formReducer.invalidBlocks);
-  const formInited = useAppSelector((state) => state.formReducer.formInited);
-  const additionalInfoInitedFromDb = useAppSelector((state) => state.additionalInfoReducer.initAddInfoFromDb);
+  // const additionalInfoInitedFromDb = useAppSelector((state) => state.additionalInfoReducer.initAddInfoFromDb);
   const isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
   const startedAnswering = useAppSelector((state) => state.formReducer.startedAnswering);
-  const curAnswers = useAppSelector((state) => state.formReducer.answers);
 
   const treeItems = [servicepointData.servicepoint_name, i18n.t("servicepoint.contactFormSummaryHeader")];
 
   const hasData = Object.keys(servicepointData).length > 0 && Object.keys(entranceData).length > 0;
 
-  // validates contactinfo data and sets to state
-  if (hasData && !formInited) {
-    /*
-    const phoneNumber = servicepointData.accessibility_phone ?? "";
-    const email = servicepointData.accessibility_email ?? "";
-    const www = servicepointData.accessibility_www ?? "";
-
-    const phonePattern = new RegExp(PHONE_REGEX);
-    const emailPattern = new RegExp(EMAIL_REGEX);
-
-    dispatch(setPhoneNumber(phoneNumber));
-    dispatch(setEmail(email));
-    dispatch(setWwwAddress(www));
-    */
-
-    dispatch(setServicepointId(servicepointData.servicepoint_id));
-    // dispatch(setEntranceId(Number(entrance_id)));
-    dispatch(setEntranceId(entranceData.entrance_id));
-    if (startedAnswering === "") dispatch(setStartDate(getCurrentDate()));
-
-    /*
-    // VALIDATE PHONE
-    if (!phonePattern.test(phoneNumber)) {
-      dispatch(changePhoneNumberStatus(false));
-    } else {
-      dispatch(changePhoneNumberStatus(true));
+  useEffect(() => {
+    // Update servicepointId and entranceId in redux state
+    if (Object.keys(servicepointData).length > 0) {
+      dispatch(setServicepointId(servicepointData.servicepoint_id));
+      if (startedAnswering === "") {
+        dispatch(setStartDate(getCurrentDate()));
+      }
+    }
+    if (Object.keys(entranceData).length > 0) {
+      dispatch(setEntranceId(entranceData.entrance_id));
     }
 
-    // VALIDATE EMAIL
-    if (!emailPattern.test(email)) {
-      dispatch(changeEmailStatus(false));
-    } else {
-      dispatch(changeEmailStatus(true));
-    }
-
-    // CONTACTPERSON DOES NOT EXIST IN THE DATABASE YET
-    dispatch(setContactPerson(""));
-    */
-
-    dispatch(initForm());
-  }
-
-  // loop additional info to state if first landing to form page and if data found
-  if (additionalInfosData && !additionalInfoInitedFromDb) {
-    // dispatch(removeImproperlySavedAddInfos());
-    dispatch(setInitAdditionalInfoFromDb({ isInited: true }));
-    if (additionalInfosData.comments) {
-      additionalInfosData.comments.forEach((comment) => {
-        const curLangStr = LanguageLocales[comment.language];
-        dispatch(
-          addComment({
-            questionId: comment.question,
-            language: curLangStr,
-            value: comment.comment ?? "",
-          })
-        );
-        // little hacky, only add component for the 1st language => fi (mandatory) for not adding 3 components if all languages
-        if (curLangStr === "fi") {
+    // The additional info structure will be changing, so the frontend handling has been removed for now
+    /*
+    // loop additional info to state if first landing to form page and if data found
+    if (additionalInfosData && !additionalInfoInitedFromDb) {
+      // dispatch(removeImproperlySavedAddInfos());
+      dispatch(setInitAdditionalInfoFromDb({ isInited: true }));
+      if (additionalInfosData.comments) {
+        additionalInfosData.comments.forEach((comment) => {
+          const curLangStr = LanguageLocales[comment.language];
           dispatch(
-            addComponent({
+            addComment({
               questionId: comment.question,
-              type: "comment",
-              id: comment.answer_comment_id,
+              language: curLangStr,
+              value: comment.comment ?? "",
             })
           );
-        }
-      });
-    }
-    if (additionalInfosData.locations) {
-      additionalInfosData.locations.forEach((location) => {
-        dispatch(
-          addLocation({
-            questionId: location.question,
-            coordinates: [location.loc_northing ?? 0, location.loc_easting ?? 0],
-            locNorthing: location.loc_northing ?? 0,
-            locEasting: location.loc_easting ?? 0,
-          })
-        );
-        dispatch(
-          addComponent({
-            questionId: location.question,
-            type: "location",
-            id: location.answer_location_id,
-          })
-        );
-      });
-    }
-
-    if (additionalInfosData.photos) {
-      additionalInfosData.photos.forEach((photo: QuestionAnswerPhoto) => {
-        const picture = {
-          qNumber: photo.question,
-          id: photo.answer_photo_id,
-          base: photo.photo_url,
-          url: photo.photo_url,
-          altText: {
-            fi: "",
-            sv: "",
-            en: "",
-          },
-        };
-
-        dispatch(addPicture(picture));
-        dispatch(
-          addComponent({
-            questionId: photo.question,
-            type: "link",
-            id: photo.answer_photo_id,
-          })
-        );
-
-        if (additionalInfosData.phototexts) {
-          const curPhotoAlts = additionalInfosData.phototexts.filter((phototext) => phototext.answer_photo === photo.answer_photo_id);
-          if (curPhotoAlts) {
-            curPhotoAlts.forEach((alt: QuestionAnswerPhotoTxt) => {
-              const curLangStr = LanguageLocales[alt.language];
-              dispatch(
-                setAlt({
-                  questionId: photo.question,
-                  language: curLangStr,
-                  value: alt.photo_text ?? "",
-                  compId: photo.answer_photo_id,
-                })
-              );
-            });
+          // little hacky, only add component for the 1st language => fi (mandatory) for not adding 3 components if all languages
+          if (curLangStr === "fi") {
+            dispatch(
+              addComponent({
+                questionId: comment.question,
+                type: "comment",
+                id: comment.answer_comment_id,
+              })
+            );
           }
+        });
+      }
+      if (additionalInfosData.locations) {
+        additionalInfosData.locations.forEach((location) => {
+          dispatch(
+            addLocation({
+              questionId: location.question,
+              coordinates: [location.loc_northing ?? 0, location.loc_easting ?? 0],
+              locNorthing: location.loc_northing ?? 0,
+              locEasting: location.loc_easting ?? 0,
+            })
+          );
+          dispatch(
+            addComponent({
+              questionId: location.question,
+              type: "location",
+              id: location.answer_location_id,
+            })
+          );
+        });
+      }
+
+      if (additionalInfosData.photos) {
+        additionalInfosData.photos.forEach((photo: QuestionAnswerPhoto) => {
+          const picture = {
+            qNumber: photo.question,
+            id: photo.answer_photo_id,
+            base: photo.photo_url,
+            url: photo.photo_url,
+            altText: {
+              fi: "",
+              sv: "",
+              en: "",
+            },
+          };
+
+          dispatch(addPicture(picture));
+          dispatch(
+            addComponent({
+              questionId: photo.question,
+              type: "link",
+              id: photo.answer_photo_id,
+            })
+          );
+
+          if (additionalInfosData.phototexts) {
+            const curPhotoAlts = additionalInfosData.phototexts.filter((phototext) => phototext.answer_photo === photo.answer_photo_id);
+            if (curPhotoAlts) {
+              curPhotoAlts.forEach((alt: QuestionAnswerPhotoTxt) => {
+                const curLangStr = LanguageLocales[alt.language];
+                dispatch(
+                  setAlt({
+                    questionId: photo.question,
+                    language: curLangStr,
+                    value: alt.photo_text ?? "",
+                    compId: photo.answer_photo_id,
+                  })
+                );
+              });
+            }
+          }
+        });
+      }
+    }
+
+    // clear addinfo initState
+    dispatch(clearEditingInitialState());
+    */
+
+    // Put existing answers into redux state
+    if (questionAnswerData.length > 0) {
+      questionAnswerData.forEach((a: BackendEntranceAnswer) => {
+        const questionId = a.question_id;
+        const answer = a.question_choice_id;
+        if (!!questionId && !!answer) {
+          dispatch(setAnsweredChoice(answer));
+          dispatch(setAnswer({ questionId, answer }));
         }
       });
     }
-  }
 
-  // clear addinfo initState
-  dispatch(clearEditingInitialState());
-
-  if (Object.keys(questionAnswerData).length !== 0) {
-    questionAnswerData.forEach((a: BackendEntranceAnswer) => {
-      const questionNumber = a.question_id;
-      const answer = a.question_choice_id;
-      if (!!questionNumber && !!answer && !curAnsweredChoices.includes(answer) && curAnswers[questionNumber] === undefined) {
-        dispatch(setAnsweredChoice(answer));
-        dispatch(setAnswer({ questionNumber, answer }));
-      }
-    });
-  }
+    // Put existing extra field answers into redux state
+    if (questionExtraAnswerData.length > 0) {
+      questionExtraAnswerData.forEach((ea: BackendEntranceField) => {
+        const questionBlockFieldId = ea.question_block_field_id;
+        const answer = ea.entry;
+        if (!!questionBlockFieldId && !!answer) {
+          dispatch(setExtraAnswer({ questionBlockFieldId, answer }));
+        }
+      });
+    }
+  }, [servicepointData, entranceData, questionAnswerData, questionExtraAnswerData, startedAnswering, dispatch]);
 
   // map visible blocks & questions & answers
   const nextBlock = 0;
@@ -306,7 +286,7 @@ const EntranceAccessibility = ({
                 key={block.question_block_id}
                 description={block.description ?? null}
                 questions={blockQuestions}
-                answers={answerChoices}
+                answerChoices={answerChoices}
                 extraFields={blockExtraFields}
                 photoUrl={block.photo_url}
                 photoText={block.photo_text}
@@ -329,7 +309,7 @@ const EntranceAccessibility = ({
     dispatch(setCurrentlyEditingBlock(-1));
   }
 
-  const formSubmitted = useAppSelector((state) => state.formReducer.formSubmitted);
+  // const formSubmitted = useAppSelector((state) => state.formReducer.formSubmitted);
 
   const entranceName = entranceData ? entranceData[`name_${curLocale}`] : "";
   const entranceHeader =
@@ -373,11 +353,14 @@ const EntranceAccessibility = ({
               {visibleBlocks}
               <QuestionFormCtrlButtons
                 hasCancelButton
-                hasValidateButton={isContinueClicked}
-                hasSaveDraftButton={!formSubmitted}
+                //hasValidateButton={isContinueClicked}
+                hasValidateButton
+                //hasSaveDraftButton={!formSubmitted}
+                hasSaveDraftButton
                 hasPreviewButton
                 visibleBlocks={visibleBlocks}
                 visibleQuestionChoices={visibleQuestionChoices}
+                formId={formId}
               />
             </div>
           </div>
@@ -396,13 +379,14 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   let questionBlocksData: BackendQuestionBlock[] = [];
   let questionBlockFieldData: BackendQuestionBlockField[] = [];
   let questionAnswerData: BackendEntranceAnswer[] = [];
+  let questionExtraAnswerData: BackendEntranceField[] = [];
   let entranceData: BackendEntrance = {} as BackendEntrance;
   let servicepointData: Servicepoint = {} as Servicepoint;
-  let additionalInfosData = {};
-  let addInfoCommentsData;
-  let addInfoLocationsData;
-  let addInfoPhotosData;
-  let addInfoPhotoTextsData;
+  // let additionalInfosData = {};
+  // let addInfoCommentsData;
+  // let addInfoLocationsData;
+  // let addInfoPhotosData;
+  // let addInfoPhotoTextsData;
   let formId = -1;
   // let entrance_id: string | string[] | undefined = "";
 
@@ -455,9 +439,21 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       }
 
       if (!!params.entranceId) {
-        const questionAnswersResp = await fetch(`${API_FETCH_BACKEND_ENTRANCE_ANSWERS}?entrance_id=${params.entranceId}&format=json`);
-        questionAnswerData = await (questionAnswersResp.json() as Promise<BackendEntranceAnswer[]>);
+        const allQuestionAnswersResp = await fetch(`${API_FETCH_BACKEND_ENTRANCE_ANSWERS}?entrance_id=${params.entranceId}&format=json`);
+        const allQuestionAnswerData = await (allQuestionAnswersResp.json() as Promise<BackendEntranceAnswer[]>);
 
+        if (allQuestionAnswerData?.length > 0) {
+          // Return answer data for the highest log id only, in case both published and draft data exists (form_submitted = 'Y' and 'D')
+          const maxLogId =
+            allQuestionAnswerData.sort((a: BackendEntranceAnswer, b: BackendEntranceAnswer) => {
+              return (b.log_id ?? 0) - (a.log_id ?? 0);
+            })[0].log_id ?? -1;
+
+          questionAnswerData = allQuestionAnswerData.filter((a) => a.log_id === maxLogId);
+        }
+
+        // The additional info structure will be changing, so the backend calls have been removed for now
+        /*
         if (questionAnswerData?.length > 0) {
           const logId =
             questionAnswerData.sort((a: BackendEntranceAnswer, b: BackendEntranceAnswer) => {
@@ -483,6 +479,21 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
             };
           }
         }
+        */
+
+        const allQuestionExtraAnswersResp = await fetch(`${API_FETCH_BACKEND_ENTRANCE_FIELD}?entrance_id=${params.entranceId}&format=json`);
+        const allQuestionExtraAnswerData = await (allQuestionExtraAnswersResp.json() as Promise<BackendEntranceField[]>);
+
+        if (allQuestionExtraAnswerData?.length > 0) {
+          // Return extra answer data for the highest log id only, in case both published and draft data exists (form_submitted = 'Y' and 'D')
+          // Note: This log id value may be different from the main answer data log id
+          const maxLogId =
+            allQuestionExtraAnswerData.sort((a: BackendEntranceAnswer, b: BackendEntranceAnswer) => {
+              return (b.log_id ?? 0) - (a.log_id ?? 0);
+            })[0].log_id ?? -1;
+
+          questionExtraAnswerData = allQuestionExtraAnswerData.filter((a) => a.log_id === maxLogId);
+        }
       }
     } catch (e) {
       console.error("Error", e);
@@ -492,9 +503,10 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       questionBlocksData = [];
       questionBlockFieldData = [];
       questionAnswerData = [];
+      questionExtraAnswerData = [];
       entranceData = {} as BackendEntrance;
       servicepointData = {} as Servicepoint;
-      additionalInfosData = {};
+      // additionalInfosData = {};
     }
   }
   return {
@@ -505,9 +517,10 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       questionBlocksData,
       questionBlockFieldData,
       questionAnswerData,
+      questionExtraAnswerData,
       entranceData,
       servicepointData,
-      additionalInfosData,
+      // additionalInfosData,
       // entrance_id,
       lngDict,
     },

@@ -85,7 +85,6 @@ const QuestionContainer = ({
           </p>
           {questionInfo ? (
             <QuestionInfo
-              // key={questionNumber}
               openText={i18n.t("accessibilityForm.whatDoesThisMean")}
               openIcon={<IconInfoCircle aria-hidden />}
               closeText={i18n.t("accessibilityForm.closeGuidance")}
@@ -108,7 +107,6 @@ const QuestionContainer = ({
 
         {hasAdditionalInfo && questionId !== undefined ? (
           <QuestionAdditionalInformation
-            // key={`${questionNumber}a`}
             questionId={questionId}
             blockId={questionBlockId}
             // canAddLocation={canAddLocation}

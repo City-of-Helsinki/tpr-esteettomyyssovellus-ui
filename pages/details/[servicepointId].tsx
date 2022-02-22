@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useEffect } from "react";
 import { useI18n } from "next-localization";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
@@ -17,15 +17,12 @@ import { useAppDispatch, useLoading } from "../../state/hooks";
 import {
   setServicepointId,
   // setEntranceId,
-  // setPhoneNumber,
-  // setEmail,
-  clearFormState,
   setFormFinished,
   setContinue,
   setFormSubmitted,
 } from "../../state/reducers/formSlice";
 import { getFinnishDate, filterByLanguage, convertCoordinates } from "../../utils/utilFunctions";
-import { clearGeneralState, setServicepointLocation, setServicepointLocationWGS84 } from "../../state/reducers/generalSlice";
+import { setServicepointLocation, setServicepointLocationWGS84 } from "../../state/reducers/generalSlice";
 import {
   API_FETCH_ANSWER_LOGS,
   API_FETCH_BACKEND_ENTRANCE,
@@ -35,7 +32,7 @@ import {
   API_FETCH_SERVICEPOINTS,
 } from "../../types/constants";
 import LoadSpinner from "../../components/common/LoadSpinner";
-import { clearAddinfoState } from "../../state/reducers/additionalInfoSlice";
+import { persistor } from "../../state/store";
 import { AnswerLog, BackendEntrance, BackendServicepoint, EntranceResults, Servicepoint, StoredSentence } from "../../types/backendModels";
 import { AccessibilityData, DetailsProps, EntranceData } from "../../types/general";
 
@@ -53,37 +50,48 @@ const Details = ({
   const isLoading = useLoading();
   const treeItems = [servicepointData.servicepoint_name];
   const finnishDate = getFinnishDate(servicepointData.modified);
-  // const formInited = useAppSelector((state) => state.formReducer.formInited);
 
-  // clear states, if more reducers added consider creating one clearing logic
-  // this done so for not many reducers and user needs to stay in state
-  dispatch(clearGeneralState());
-  dispatch(clearAddinfoState());
-  dispatch(clearFormState());
+  useEffect(() => {
+    // Clear the state on initial load
+    persistor.purge();
+  }, []);
 
-  const hasData = Object.keys(servicepointData).length > 0 && Object.keys(entranceData).length > 0;
+  useEffect(() => {
+    // set coordinates from data to state gerenalSlice for e.g. leafletmaps
+    if (servicepointData && servicepointData.loc_northing && servicepointData.loc_easting) {
+      const northing: number = servicepointData.loc_northing;
+      const easthing: number = servicepointData.loc_easting;
+      const coordinates: [number, number] = [easthing, northing];
+      // @ts-ignore : ignore types because .reverse() returns number[]
+      const coordinatesWGS84: [number, number] =
+        coordinates && coordinates !== undefined ? convertCoordinates("EPSG:3067", "WGS84", coordinates).reverse() : coordinates;
 
-  // set coordinates from data to state gerenalSlice for e.g. leafletmaps
-  if (servicepointData && servicepointData.loc_northing && servicepointData.loc_easting) {
-    const northing: number = servicepointData.loc_northing;
-    const easthing: number = servicepointData.loc_easting;
-    const coordinates: [number, number] = [easthing, northing];
-    // @ts-ignore : ignore types because .reverse() returns number[]
-    const coordinatesWGS84: [number, number] =
-      coordinates && coordinates !== undefined ? convertCoordinates("EPSG:3067", "WGS84", coordinates).reverse() : coordinates;
+      dispatch(
+        setServicepointLocation({
+          coordinates,
+        })
+      );
 
-    dispatch(
-      setServicepointLocation({
-        coordinates,
-      })
-    );
+      dispatch(
+        setServicepointLocationWGS84({
+          coordinatesWGS84,
+        })
+      );
+    }
 
-    dispatch(
-      setServicepointLocationWGS84({
-        coordinatesWGS84,
-      })
-    );
-  }
+    // Update servicepointId in redux state
+    if (servicepointData) {
+      dispatch(setServicepointId(servicepointData.servicepoint_id));
+    }
+
+    const hasData = Object.keys(servicepointData).length > 0 && Object.keys(entranceData).length > 0;
+
+    if (hasData && accessibilityData.main.length !== 0 && accessibilityData.main[0].form_submitted === "Y") {
+      dispatch(setFormFinished());
+      dispatch(setContinue());
+      dispatch(setFormSubmitted());
+    }
+  }, [servicepointData, entranceData, accessibilityData, dispatch]);
 
   // Filter by language
   // Make sure that the main entrance is listed before the side entrances.
@@ -94,33 +102,6 @@ const Details = ({
     };
   }, {});
   const entranceKeys = Object.keys(filteredAccessibilityData);
-
-  // Update entranceId and servicepointId to redux state
-  if (servicepointData) {
-    dispatch(setServicepointId(servicepointData.servicepoint_id));
-  }
-  if (hasData && accessibilityData.main.length !== 0) {
-    // TODO: Logic for when editing additional entrance vs main entrance
-    // dispatch(setEntranceId(accessibilityData.main[0].entrance_id));
-    if (accessibilityData.main[0].form_submitted === "Y") {
-      dispatch(setFormFinished());
-      dispatch(setContinue());
-      dispatch(setFormSubmitted());
-    }
-  }
-
-  /*
-  if (hasData && !formInited) {
-    if (servicepointData.accessibility_phone !== undefined) {
-      // TODO: POSSIBLY VALIDATE THESE STRAIGHT AWAY
-      dispatch(setPhoneNumber(servicepointData.accessibility_phone));
-    }
-    if (servicepointData.accessibility_email !== undefined) {
-      // TODO: POSSIBLY VALIDATE THESE STRAIGHT AWAY
-      dispatch(setEmail(servicepointData.accessibility_email));
-    }
-  }
-  */
 
   return (
     <Layout>

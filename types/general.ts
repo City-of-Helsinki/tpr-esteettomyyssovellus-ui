@@ -4,16 +4,17 @@ import { LatLngExpression } from "leaflet";
 import {
   BackendEntrance,
   BackendEntranceAnswer,
+  BackendEntranceField,
   BackendQuestion,
   BackendQuestionBlock,
   BackendQuestionBlockField,
   BackendQuestionChoice,
   BackendServicepoint,
   EntranceResults,
-  QuestionAnswerComment,
-  QuestionAnswerLocation,
-  QuestionAnswerPhoto,
-  QuestionAnswerPhotoTxt,
+  // QuestionAnswerComment,
+  // QuestionAnswerLocation,
+  // QuestionAnswerPhoto,
+  // QuestionAnswerPhotoTxt,
   Servicepoint,
   StoredSentence,
 } from "./backendModels";
@@ -36,6 +37,7 @@ export interface QuestionContainerProps {
 
 export interface QuestionExtraFieldProps {
   questionBlockId: number;
+  questionBlockFieldId: number;
   fieldNumber?: number;
   questionText?: string;
   questionInfo?: string | null;
@@ -57,11 +59,11 @@ export interface InputOption {
   label?: string;
 }
 
-export interface DropdownQuestionProps {
+export interface QuestionDropdownQuestionProps {
   options?: InputOption[];
   label?: string;
   placeholder?: string;
-  questionNumber?: number;
+  questionId?: number;
   blockId?: number;
 }
 
@@ -89,13 +91,13 @@ export interface QuestionRadioButtonsProps {
   firstButtonLabel?: string;
   secondButtonLabel?: string;
   options?: InputOption[];
-  value?: number;
+  questionId?: number;
 }
 
 export interface QuestionTextInputProps {
   id: string;
+  questionBlockFieldId: number;
   placeholder?: string;
-  value?: string;
 }
 
 export interface QuestionFormCtrlButtonsProps {
@@ -105,17 +107,17 @@ export interface QuestionFormCtrlButtonsProps {
   hasPreviewButton?: boolean;
   visibleBlocks?: (JSX.Element | null)[] | null;
   visibleQuestionChoices?: BackendQuestionChoice[] | undefined;
+  formId: number;
 }
 
 export interface QuestionsListProps {
   additionalInfoVisible: boolean;
   questions?: BackendQuestion[] | null;
-  answers?: BackendQuestionChoice[] | null;
+  answerChoices?: BackendQuestionChoice[] | null;
 }
 
 export interface QuestionBlockExtraFieldListProps {
   extraFields?: BackendQuestionBlockField[] | null;
-  answers?: BackendQuestionChoice[] | null;
 }
 
 export interface QuestionAdditionalInfoCtrlButtonProps {
@@ -287,21 +289,24 @@ export interface MainEntranceFormProps {
   entranceData: BackendEntrance;
   servicepointData: Servicepoint;
   questionAnswerData: BackendEntranceAnswer[];
-  additionalInfosData: FetchAdditionalInfos;
+  questionExtraAnswerData: BackendEntranceField[];
+  // additionalInfosData: FetchAdditionalInfos;
   formId: number;
   // entrance_id: string;
 }
 
+/*
 interface FetchAdditionalInfos {
   comments?: QuestionAnswerComment[];
   locations?: QuestionAnswerLocation[];
   photos?: QuestionAnswerPhoto[];
   phototexts?: QuestionAnswerPhotoTxt[];
 }
+*/
 
 export interface QuestionBlockProps {
   questions?: BackendQuestion[] | null;
-  answers?: BackendQuestionChoice[] | null;
+  answerChoices?: BackendQuestionChoice[] | null;
   extraFields?: BackendQuestionBlockField[] | null;
   description?: string | null;
   photoUrl?: string | null;
