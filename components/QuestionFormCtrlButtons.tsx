@@ -37,16 +37,18 @@ const QuestionFormCtrlButtons = ({
   const startedAnswering = useAppSelector((state) => state.formReducer.startedAnswering);
   const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
   const finishedBlocks = useAppSelector((state) => state.formReducer.finishedBlocks);
+  
   // const isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
   // const additionalInfo = useAppSelector((state) => state.additionalInfoReducer);
 
+  const user = useAppSelector((state) => state.generalSlice.user);
   const handleCancel = (): void => {
     // TODO: Add errorpage
     const url = curServicepointId === -1 ? FRONT_URL_BASE : `${FRONT_URL_BASE + i18n.locale()}/details/${curServicepointId}`;
     window.location.href = url;
   };
-  // const isPreviewActive = curAnsweredChoices.length > 1;
 
+  // const isPreviewActive = curAnsweredChoices.length > 1;
   const updateExtraFieldAnswers = async (logId: number) => {
     Object.keys(curExtraAnswers).forEach((questionBlockFieldIdStr) => {
       const questionBlockFieldId = Number(questionBlockFieldIdStr);
@@ -71,6 +73,7 @@ const QuestionFormCtrlButtons = ({
     // THIS RETURNS THE IP ADDRESS OF THE CLIENT USED IN THE ANSWER LOG
     const ipAddress = await getClientIp();
 
+
     let entranceId = curEntranceId;
     if (!entranceId || entranceId < 0) {
       // Create an empty entrance row in the database in order to get the entrance id
@@ -79,9 +82,9 @@ const QuestionFormCtrlButtons = ({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           created: new Date(),
-          created_by: "test", // TODO - user
+          created_by: user,
           modified: new Date(),
-          modified_by: "test", // TODO - user
+          modified_by: user,
           is_main_entrance: formId === 0 ? "Y" : "N",
           servicepoint: curServicepointId,
           form: formId,
@@ -107,8 +110,7 @@ const QuestionFormCtrlButtons = ({
           // BECAUSE THIS IS A DRAFT
           form_submitted: "D",
           form_cancelled: "N",
-          // TODO: GET CURRENT USER HERE
-          accessibility_editor: "Leba",
+          accessibility_editor: user,
           entrance: entranceId,
         }),
       };

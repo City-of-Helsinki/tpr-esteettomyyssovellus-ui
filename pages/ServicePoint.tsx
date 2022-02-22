@@ -17,11 +17,13 @@ import {
   API_FETCH_EXTERNAL_SERVICEPOINTS,
 } from "../types/constants";
 import { ChangeProps } from "../types/general";
+import { useAppDispatch, useLoading } from "../state/hooks";
 import styles from "./ServicePoint.module.scss";
 
 import { getCurrentDate, validateChecksum } from "../utils/utilFunctions";
 import { checksumSecretTPRTesti } from "../utils/checksumSecret";
 import { Servicepoint, SystemForm } from "../types/backendModels";
+import { setUser } from "../state/reducers/generalSlice";
 
 // usage: not sure if this is obsolete?
 const Servicepoints = ({
@@ -35,13 +37,19 @@ const Servicepoints = ({
   newAddressCity,
   oldAddressCity,
   user,
+  skip
 }: ChangeProps): ReactElement => {
   const i18n = useI18n();
   const startState = "0";
   const radioButtonYesText = "PH: Kyllä blaablaa";
   const radioButtonNoText = "PH: EI blaablaa";
   const [selectedRadioItem, setSelectedRadioItem] = useState(startState);
+  const dispatch = useAppDispatch();
+  if (user != undefined)
+   dispatch(setUser(user))
 
+  if (skip)
+    router.push(FRONT_URL_BASE + "details/" + servicepointId);
   const handleRadioClick = (e: ChangeEvent<HTMLInputElement>) => {
     setSelectedRadioItem(e.target.value);
   };
@@ -362,6 +370,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
               newAddressNumber,
               newAddressCity,
               user: query.user,
+              skip: false,
             },
           };
         }
@@ -401,9 +410,9 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
       // osoite ja sijainti taulussa ar_servicepoint kuitenkin päivitetään.
 
       return {
-        redirect: {
-          permanent: false,
-          destination: `${FRONT_URL_BASE}details/${servicepointId}`,
+        props: {
+          servicepointId,
+          skip: true,
         },
       };
 
@@ -415,6 +424,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
   return {
     props: {
       lngDict,
+      skip: false
     },
   };
 };

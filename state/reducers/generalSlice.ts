@@ -77,8 +77,9 @@ export const generalSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(PURGE, () => ({
+    builder.addCase(PURGE, (state) => ({
       ...initialState,
+      user: state.user,
     }));
   },
 });
