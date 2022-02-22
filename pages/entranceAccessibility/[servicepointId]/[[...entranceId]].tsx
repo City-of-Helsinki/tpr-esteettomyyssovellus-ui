@@ -95,7 +95,6 @@ const EntranceAccessibility = ({
   const curLocaleId: number = LanguageLocales[curLocale as keyof typeof LanguageLocales];
 
   const isLoading = useLoading();
-
   const curEditingQuestionAddInfoNumber = useAppSelector((state) => state.generalSlice.currentlyEditingQuestionAddinfo);
 
   const curEditingBlockAddInfoNumber = useAppSelector((state) => state.generalSlice.currentlyEditingBlockAddinfo);

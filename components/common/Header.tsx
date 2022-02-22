@@ -115,12 +115,11 @@ const Header = ({ children }: HeaderProps): ReactElement => {
             </Navigation.Row>
           </div>
 
-          {/* Placeholders to authenticated and username */}
           {
             <Navigation.User
               label={i18n.t("common.header.login")}
-              authenticated /* Change to: currentUser?.authenticated} */
-              userName={user} /* Change to: currentUser?.first_name || currentUser?.email} */
+              authenticated
+              userName={user}
               onSignIn={signIn}
             >
               <Navigation.Item
