@@ -5,7 +5,7 @@ import { PURGE } from "redux-persist";
 interface generalSliceProps {
   coordinates: [number, number];
   coordinatesWGS84: [number, number];
-  user: string | string[];
+  user: string;
   currentlyEditingQuestionAddinfo: number;
   currentlyEditingBlockAddinfo: number;
   coordinatesTemp?: [number, number];
@@ -27,12 +27,6 @@ export const generalSlice = createSlice({
   name: "generalSlice",
   initialState,
   reducers: {
-    clearGeneralState: (state) => {
-      return {
-        ...initialState,
-        user: state.user,
-      };
-    },
     // used to store question number to state when going/coming from addinfo page, to be able to init screen to correct place
     setCurrentlyEditingQuestion: (state, action: PayloadAction<number>) => {
       return {
@@ -56,7 +50,7 @@ export const generalSlice = createSlice({
       return { ...state, coordinatesWGS84 };
     },
 
-    setUser: (state, action: PayloadAction<string | string[]>) => {
+    setUser: (state, action: PayloadAction<string>) => {
       return {
         ...state,
         user: action.payload,
@@ -85,7 +79,6 @@ export const generalSlice = createSlice({
 });
 
 export const {
-  clearGeneralState,
   setServicepointLocation,
   setServicepointLocationWGS84,
   setCurrentlyEditingBlock,

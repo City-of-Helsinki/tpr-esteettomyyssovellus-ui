@@ -41,7 +41,7 @@ const QuestionDropdown = ({ options, placeholder = "--Valitse--", label = "", qu
     value,
   };
 
-  const isInvalid = value === -1 && !!blockId && curInvalidBlocks.includes(blockId);
+  const isInvalid = value === -1 && blockId !== undefined && curInvalidBlocks.includes(blockId);
 
   return options ? (
     <Select

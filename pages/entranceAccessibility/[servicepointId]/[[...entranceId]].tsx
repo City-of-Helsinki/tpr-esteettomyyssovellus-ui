@@ -63,10 +63,10 @@ import {
 */
 import { persistor } from "../../../state/store";
 import { getCurrentDate } from "../../../utils/utilFunctions";
-import { setCurrentlyEditingBlock, setCurrentlyEditingQuestion } from "../../../state/reducers/generalSlice";
+// import { setCurrentlyEditingBlock, setCurrentlyEditingQuestion } from "../../../state/reducers/generalSlice";
 import LoadSpinner from "../../../components/common/LoadSpinner";
 
-// usage: the main form / pääsisäänkäynti page
+// usage: the main form / entrance page
 const EntranceAccessibility = ({
   questionsData,
   questionChoicesData,
@@ -77,23 +77,21 @@ const EntranceAccessibility = ({
   entranceData,
   servicepointData,
   // additionalInfosData,
-  // entrance_id,
   formId,
 }: MainEntranceFormProps): ReactElement => {
+  const i18n = useI18n();
+  const curLocale: string = i18n.locale();
+  const dispatch = useAppDispatch();
+  const curLocaleId: number = LanguageLocales[curLocale as keyof typeof LanguageLocales];
+  const isLoading = useLoading();
+
   useEffect(() => {
     // Clear the state on initial load
     persistor.purge();
   }, []);
 
-  const i18n = useI18n();
-  const curLocale: string = i18n.locale();
-  const dispatch = useAppDispatch();
-  const curLocaleId: number = LanguageLocales[curLocale as keyof typeof LanguageLocales];
-
-  const isLoading = useLoading();
-  const curEditingQuestionAddInfoNumber = useAppSelector((state) => state.generalSlice.currentlyEditingQuestionAddinfo);
-
-  const curEditingBlockAddInfoNumber = useAppSelector((state) => state.generalSlice.currentlyEditingBlockAddinfo);
+  // const curEditingQuestionAddInfoNumber = useAppSelector((state) => state.generalSlice.currentlyEditingQuestionAddinfo);
+  // const curEditingBlockAddInfoNumber = useAppSelector((state) => state.generalSlice.currentlyEditingBlockAddinfo);
 
   const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
   const curInvalidBlocks = useAppSelector((state) => state.formReducer.invalidBlocks);
@@ -217,7 +215,7 @@ const EntranceAccessibility = ({
       questionAnswerData.forEach((a: BackendEntranceAnswer) => {
         const questionId = a.question_id;
         const answer = a.question_choice_id;
-        if (!!questionId && !!answer) {
+        if (questionId !== undefined && answer !== undefined) {
           dispatch(setAnsweredChoice(answer));
           dispatch(setAnswer({ questionId, answer }));
         }
@@ -229,7 +227,7 @@ const EntranceAccessibility = ({
       questionExtraAnswerData.forEach((ea: BackendEntranceField) => {
         const questionBlockFieldId = ea.question_block_field_id;
         const answer = ea.entry;
-        if (!!questionBlockFieldId && !!answer) {
+        if (questionBlockFieldId !== undefined && answer !== undefined) {
           dispatch(setExtraAnswer({ questionBlockFieldId, answer }));
         }
       });
@@ -237,7 +235,7 @@ const EntranceAccessibility = ({
   }, [servicepointData, entranceData, questionAnswerData, questionExtraAnswerData, startedAnswering, dispatch]);
 
   // map visible blocks & questions & answers
-  const nextBlock = 0;
+  // const nextBlock = 0;
   // const lastBlockNumber = "";
   const visibleBlocks =
     questionBlocksData && questionsData && questionChoicesData
@@ -276,11 +274,13 @@ const EntranceAccessibility = ({
               number={block.question_block_id}
               text={`${block.question_block_code} ${block.text}`}
               id={`questionblockid-${block.question_block_id}`}
+              /*
               initOpen={
                 curEditingBlockAddInfoNumber && curEditingBlockAddInfoNumber === block.question_block_id
                   ? true
                   : block.question_block_id === nextBlock
               }
+              */
               isValid={!curInvalidBlocks.includes(block.question_block_id)}
             >
               <QuestionBlock
@@ -298,9 +298,10 @@ const EntranceAccessibility = ({
       : null;
 
   const visibleQuestionChoices = questionChoicesData?.filter((choice) => {
-    return !!choice.question_block_id && visibleBlocks?.map((elem) => Number(elem?.key)).includes(choice.question_block_id);
+    return choice.question_block_id !== undefined && visibleBlocks?.map((elem) => Number(elem?.key)).includes(choice.question_block_id);
   });
 
+  /*
   // if returning from additional info page -> init page to correct location / question
   // when the window.location.hash is set -> set states of question and block numbers to -1
   // (useEffect [] didn't work for some reason)
@@ -309,6 +310,7 @@ const EntranceAccessibility = ({
     dispatch(setCurrentlyEditingQuestion(-1));
     dispatch(setCurrentlyEditingBlock(-1));
   }
+  */
 
   // const formSubmitted = useAppSelector((state) => state.formReducer.formSubmitted);
 
@@ -393,7 +395,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   // let addInfoPhotosData;
   // let addInfoPhotoTextsData;
   let formId = -1;
-  // let entrance_id: string | string[] | undefined = "";
 
   if (params !== undefined) {
     try {
@@ -403,7 +404,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       const servicepointBackendDetail = await (servicepointBackendDetailResp.json() as Promise<BackendServicepoint[]>);
       const servicepointDetail = servicepointBackendDetail?.length > 0 ? servicepointBackendDetail[0] : undefined;
 
-      if (!params.entranceId && servicepointDetail?.new_entrance_possible === "Y") {
+      if (params.entranceId === undefined && servicepointDetail?.new_entrance_possible === "Y") {
         // New entrance
         const entranceResp = await fetch(`${API_FETCH_ENTRANCES}?servicepoint=${params.servicepointId}&format=json`);
         const entranceResults = await (entranceResp.json() as Promise<EntranceResults>);
@@ -416,7 +417,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
           const mainEntranceExists = entranceResults?.results?.some((result) => result.is_main_entrance === "Y");
           formId = !mainEntranceExists ? 0 : 1;
         }
-      } else if (!!params.entranceId) {
+      } else if (params.entranceId !== undefined) {
         // Existing entrance
         const entranceResp = await fetch(`${API_FETCH_ENTRANCES}${params.entranceId}/?format=json`);
         const entrance = await (entranceResp.json() as Promise<Entrance>);
@@ -427,7 +428,13 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         const entranceDetailResp = await fetch(`${API_FETCH_BACKEND_ENTRANCE}?entrance_id=${params.entranceId}&format=json`);
         const entranceDetail = await (entranceDetailResp.json() as Promise<BackendEntrance[]>);
         if (entranceDetail.length > 0) {
-          entranceData = entranceDetail[0];
+          // Return entrance data for the highest log id only, in case both published and draft data exists (form_submitted = 'Y' and 'D')
+          const maxLogId =
+            entranceDetail.sort((a: BackendEntrance, b: BackendEntrance) => {
+              return (b.log_id ?? 0) - (a.log_id ?? 0);
+            })[0].log_id ?? -1;
+
+          entranceData = entranceDetail.find((a) => a.log_id === maxLogId) as BackendEntrance;
         }
       }
 
@@ -443,7 +450,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         questionBlockFieldData = await (questionBlockFieldResp.json() as Promise<BackendQuestionBlockField[]>);
       }
 
-      if (!!params.entranceId) {
+      if (params.entranceId !== undefined) {
         const allQuestionAnswersResp = await fetch(`${API_FETCH_BACKEND_ENTRANCE_ANSWERS}?entrance_id=${params.entranceId}&format=json`);
         const allQuestionAnswerData = await (allQuestionAnswersResp.json() as Promise<BackendEntranceAnswer[]>);
 
@@ -493,7 +500,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
           // Return extra answer data for the highest log id only, in case both published and draft data exists (form_submitted = 'Y' and 'D')
           // Note: This log id value may be different from the main answer data log id
           const maxLogId =
-            allQuestionExtraAnswerData.sort((a: BackendEntranceAnswer, b: BackendEntranceAnswer) => {
+            allQuestionExtraAnswerData.sort((a: BackendEntranceField, b: BackendEntranceField) => {
               return (b.log_id ?? 0) - (a.log_id ?? 0);
             })[0].log_id ?? -1;
 
@@ -526,7 +533,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       entranceData,
       servicepointData,
       // additionalInfosData,
-      // entrance_id,
       lngDict,
     },
   };

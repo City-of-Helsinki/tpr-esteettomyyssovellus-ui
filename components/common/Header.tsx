@@ -116,12 +116,7 @@ const Header = ({ children }: HeaderProps): ReactElement => {
           </div>
 
           {
-            <Navigation.User
-              label={i18n.t("common.header.login")}
-              authenticated
-              userName={user}
-              onSignIn={signIn}
-            >
+            <Navigation.User label={i18n.t("common.header.login")} authenticated userName={user} onSignIn={signIn}>
               <Navigation.Item
                 as="a"
                 href="#"

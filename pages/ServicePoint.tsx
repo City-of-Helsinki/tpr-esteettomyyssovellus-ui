@@ -17,7 +17,7 @@ import {
   API_FETCH_EXTERNAL_SERVICEPOINTS,
 } from "../types/constants";
 import { ChangeProps } from "../types/general";
-import { useAppDispatch, useLoading } from "../state/hooks";
+import { useAppDispatch } from "../state/hooks";
 import styles from "./ServicePoint.module.scss";
 
 import { getCurrentDate, validateChecksum } from "../utils/utilFunctions";
@@ -37,7 +37,7 @@ const Servicepoints = ({
   newAddressCity,
   oldAddressCity,
   user,
-  skip
+  skip,
 }: ChangeProps): ReactElement => {
   const i18n = useI18n();
   const startState = "0";
@@ -45,11 +45,13 @@ const Servicepoints = ({
   const radioButtonNoText = "PH: EI blaablaa";
   const [selectedRadioItem, setSelectedRadioItem] = useState(startState);
   const dispatch = useAppDispatch();
-  if (user != undefined)
-   dispatch(setUser(user))
+  if (user != undefined) {
+    dispatch(setUser(user));
+  }
 
-  if (skip)
+  if (skip) {
     router.push(FRONT_URL_BASE + "details/" + servicepointId);
+  }
   const handleRadioClick = (e: ChangeEvent<HTMLInputElement>) => {
     setSelectedRadioItem(e.target.value);
   };
@@ -424,7 +426,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
   return {
     props: {
       lngDict,
-      skip: false
+      skip: false,
     },
   };
 };

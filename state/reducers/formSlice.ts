@@ -45,11 +45,6 @@ export const formSlice = createSlice({
   name: "mainForm",
   initialState,
   reducers: {
-    clearFormState: () => {
-      return {
-        ...initialState,
-      };
-    },
     setServicepointId: (state, action: PayloadAction<number>) => {
       return {
         ...state,
@@ -249,7 +244,6 @@ export const formSlice = createSlice({
   },
 });
 export const {
-  clearFormState,
   setServicepointId,
   setEntranceId,
   setAnsweredChoice,

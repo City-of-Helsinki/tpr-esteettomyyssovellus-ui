@@ -44,11 +44,6 @@ export const additionalInfoSlice = createSlice({
   name: "additionalInfo",
   initialState,
   reducers: {
-    clearAddinfoState: () => {
-      return {
-        ...initialState,
-      };
-    },
     setInitAdditionalInfoFromDb: (
       state,
       action: PayloadAction<{
@@ -414,7 +409,6 @@ export const additionalInfoSlice = createSlice({
 });
 
 export const {
-  clearAddinfoState,
   setEditingInitialState,
   clearEditingInitialState,
   addLocation,

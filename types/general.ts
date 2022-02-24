@@ -295,7 +295,6 @@ export interface MainEntranceFormProps {
   questionExtraAnswerData: BackendEntranceField[];
   // additionalInfosData: FetchAdditionalInfos;
   formId: number;
-  // entrance_id: string;
 }
 
 /*
