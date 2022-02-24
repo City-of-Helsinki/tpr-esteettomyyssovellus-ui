@@ -1,5 +1,6 @@
 // place for custom typescript interfaces/"models"
 
+import { Dispatch, SetStateAction } from "react";
 import { LatLngExpression } from "leaflet";
 import {
   BackendEntrance,
@@ -10,7 +11,6 @@ import {
   BackendQuestionBlockField,
   BackendQuestionChoice,
   BackendServicepoint,
-  EntranceResults,
   // QuestionAnswerComment,
   // QuestionAnswerLocation,
   // QuestionAnswerPhoto,
@@ -129,6 +129,7 @@ export interface ServicepointLandingSummaryContactProps {
   servicepointData: BackendServicepoint;
   entranceData?: BackendEntrance;
   hasData: boolean;
+  hasModifyButton?: boolean;
 }
 
 export interface ServicepointLandingSummaryAccessibilityProps {
@@ -138,6 +139,7 @@ export interface ServicepointLandingSummaryAccessibilityProps {
   servicepointDetail: BackendServicepoint;
   accessibilityData: AccessibilityData;
   hasData: boolean;
+  hasModifyButton?: boolean;
 }
 
 export interface PreviewPageLandingSummaryProps {
@@ -169,7 +171,7 @@ export interface ServicepointLandingSummaryCtrlButtonsProps {
 }
 
 export interface PreviewControlButtonsProps {
-  hasHeader: boolean;
+  setSendingComplete: Dispatch<SetStateAction<boolean>>;
 }
 
 export interface MapProps {
@@ -356,6 +358,11 @@ export interface NoticeProps {
   button?: JSX.Element;
 }
 
+export interface SaveSpinnerProps {
+  savingText: string;
+  savingFinishedText: string;
+}
+
 export interface MainLocationAndPictureProps {
   canAddLocation: boolean;
   canAddPicture: boolean;
@@ -380,8 +387,11 @@ export interface DetailsProps {
 
 export interface PreviewProps {
   servicepointData: Servicepoint;
+  servicepointDetail: BackendServicepoint;
   accessibilityData: AccessibilityData;
-  entranceData: EntranceResults;
+  entranceData: EntranceData;
+  questionAnswerData: BackendEntranceAnswer[];
+  questionExtraAnswerData: BackendEntranceField[];
 }
 
 export interface ElementCountProps {

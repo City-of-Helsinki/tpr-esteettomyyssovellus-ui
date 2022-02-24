@@ -1,16 +1,8 @@
 @import "~hds-design-tokens/lib/all.scss";
 @import "../styles/mixins.scss";
 
-.previewButtonHeader {
-  margin-left: -2rem;
-  padding-bottom: 1rem;
-  h2 {
-    width: 70%;
-    color: $color-bus;
-    font-size: $fontsize-heading-l !important;
-  }
-}
 .previewControlButtons {
   display: flex;
-  margin-left: -2.4rem;
+  flex-direction: row;
+  flex-wrap: wrap;
 }

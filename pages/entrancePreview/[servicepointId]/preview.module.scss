@@ -1,0 +1,32 @@
+@import "~hds-design-tokens/lib/all.scss";
+@import "../../../styles/mixins.scss";
+
+.maincontainer {
+  margin-top: $spacing-m;
+
+  .treecontainer {
+    display: flex;
+    align-items: center;
+  }
+
+  .infocontainer {
+    margin: $spacing-m 0;
+  }
+
+  .headingcontainer {
+    h1 {
+      word-break: break-word;
+    }
+    h2 {
+      color: $color-bus;
+    }
+
+    .entranceHeader {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+}

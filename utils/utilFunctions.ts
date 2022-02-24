@@ -2,6 +2,7 @@ import proj4 from "proj4";
 import publicIp from "public-ip";
 import crypto from "crypto";
 import { StoredSentence } from "../types/backendModels";
+import { API_FETCH_ANSWER_LOGS, API_FETCH_QUESTION_ANSWERS, API_FETCH_QUESTION_BLOCK_ANSWER_FIELD, API_URL_BASE } from "../types/constants";
 /*
 import { QuestionAnswerPhoto, StoredSentence } from "../types/backendModels";
 import {
@@ -67,6 +68,80 @@ export const getClientIp = async (): Promise<string> =>
   publicIp.v4({
     fallbackUrls: ["https://ifconfig.co/ip"],
   });
+
+interface KeyValue {
+  [key: number]: string;
+}
+
+const saveExtraFieldAnswers = async (logId: number, extraAnswers: KeyValue) => {
+  const extraFieldPosts = Object.keys(extraAnswers).map(async (questionBlockFieldIdStr) => {
+    const questionBlockFieldId = Number(questionBlockFieldIdStr);
+    const extraAnswer = extraAnswers[questionBlockFieldId];
+
+    await postData(
+      API_FETCH_QUESTION_BLOCK_ANSWER_FIELD,
+      JSON.stringify({
+        log_id: logId,
+        question_block_field_id: questionBlockFieldId,
+        entry: extraAnswer,
+      })
+    );
+  });
+
+  await Promise.all(extraFieldPosts);
+};
+
+export const saveFormData = async (
+  entranceId: number,
+  answeredChoices: number[],
+  extraAnswers: KeyValue,
+  startedAnswering: string,
+  user: string,
+  isDraft: boolean
+): Promise<void> => {
+  // DATE FOR FINISHED ANSWERING
+  const finishedAnswering = getCurrentDate();
+
+  // THIS RETURNS THE IP ADDRESS OF THE CLIENT USED IN THE ANSWER LOG
+  const ipAddress = await getClientIp();
+
+  if (entranceId > 0) {
+    // POST ANSWER LOG
+    // TODO: ERRORCHECK VALUES
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        ip_address: ipAddress,
+        started_answering: startedAnswering,
+        finished_answering: finishedAnswering,
+        form_submitted: isDraft ? "D" : "Y",
+        form_cancelled: "N",
+        accessibility_editor: user,
+        entrance: entranceId,
+      }),
+    };
+
+    // POST TO AR_X_ANSWER_LOG. RETURNS NEW LOG_ID USED FOR OTHER POST REQUESTS
+    const response = await fetch(API_FETCH_ANSWER_LOGS, requestOptions);
+    const logId = await (response.json() as Promise<number>);
+
+    // CHECK IF RETURNED LOG_ID IS A NUMBER. IF NOT A NUMBER STOP EXECUTING
+    if (logId > 0) {
+      // POST ALL QUESTION ANSWERS
+      const questionAnswerData = { log: logId, data: answeredChoices };
+      await postData(API_FETCH_QUESTION_ANSWERS, JSON.stringify(questionAnswerData));
+
+      // await postAdditionalInfo(logId, additionalInfo.additionalInfo);
+      await saveExtraFieldAnswers(logId, extraAnswers);
+
+      // GENERATE SENTENCES
+      // This may take a few seconds, so use await before continuing
+      const generateData = { entrance_id: entranceId, form_submitted: isDraft ? "D" : "Y" };
+      await postData(`${API_URL_BASE}GenerateSentences/`, JSON.stringify(generateData));
+    }
+  }
+};
 
 // The additional info structure will be changing, so the backend calls have been removed for now
 /*

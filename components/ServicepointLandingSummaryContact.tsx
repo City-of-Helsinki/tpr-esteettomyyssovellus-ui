@@ -7,7 +7,12 @@ import { ServicepointLandingSummaryContactProps } from "../types/general";
 import styles from "./ServicepointLandingSummaryContact.module.scss";
 
 // usage: used in details/landing page for main contact information
-const ServicepointLandingSummaryContact = ({ servicepointData, entranceData, hasData }: ServicepointLandingSummaryContactProps): JSX.Element => {
+const ServicepointLandingSummaryContact = ({
+  servicepointData,
+  entranceData,
+  hasData,
+  hasModifyButton,
+}: ServicepointLandingSummaryContactProps): JSX.Element => {
   const i18n = useI18n();
   const curLocale = i18n.locale();
 
@@ -15,7 +20,9 @@ const ServicepointLandingSummaryContact = ({ servicepointData, entranceData, has
     <div className={styles.maincontainer}>
       <div className={styles.headercontainer}>
         <h3>{i18n.t("servicepoint.contactInfoHeader")}</h3>
-        <ServicepointLandingSummaryModifyButton servicepointData={servicepointData} entranceData={entranceData} hasData={hasData} />
+        {hasModifyButton && (
+          <ServicepointLandingSummaryModifyButton servicepointData={servicepointData} entranceData={entranceData} hasData={hasData} />
+        )}
       </div>
 
       <div>
@@ -24,15 +31,15 @@ const ServicepointLandingSummaryContact = ({ servicepointData, entranceData, has
             <div className={styles.contactInformation}>
               <div className={styles.infocontainer}>
                 <h4>{i18n.t("servicepoint.contactPerson")}</h4>
-                <p>{servicepointData[`contact_person_${curLocale}`] ?? i18n.t("servicepoint.noInfo")}</p>
+                <p>{entranceData?.[`contact_person_${curLocale}`] ?? i18n.t("servicepoint.noInfo")}</p>
               </div>
               <div className={styles.infocontainer}>
                 <h4>{i18n.t("servicepoint.phoneNumber")}</h4>
-                <p>{servicepointData.accessibility_phone ?? i18n.t("servicepoint.noInfo")}</p>
+                <p>{entranceData?.accessibility_phone ?? i18n.t("servicepoint.noInfo")}</p>
               </div>
               <div className={styles.infocontainer}>
                 <h4>{i18n.t("servicepoint.email")}</h4>
-                <p>{servicepointData.accessibility_email ?? i18n.t("servicepoint.noInfo")}</p>
+                <p>{entranceData?.accessibility_email ?? i18n.t("servicepoint.noInfo")}</p>
               </div>
             </div>
           </ServicepointLandingSummaryContent>

@@ -1,4 +1,5 @@
 import React, { ReactElement } from "react";
+/*
 import { useI18n } from "next-localization";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
@@ -120,7 +121,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       entranceData = await (entranceResp.json() as Promise<EntranceResults>);
 
       // Since await should not be used in a loop, the following code has been changed to use Promise.all instead
-      /*
+      */ /*
       let i = 0;
       let j = 1;
       let mainEntranceId = 0;
@@ -137,7 +138,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         }
         i++;
       }
-      */
+      */ /*
 
       const entranceResultSentences = await Promise.all(
         entranceData.results.map(async (entranceResult) => {
@@ -188,6 +189,12 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       isFinished,
     },
   };
+};
+*/
+
+// NOTE: this page has been replaced by entrancePreview/[servicepointId]/[entranceId].tsx
+const Preview = (): ReactElement => {
+  return <></>;
 };
 
 export default Preview;

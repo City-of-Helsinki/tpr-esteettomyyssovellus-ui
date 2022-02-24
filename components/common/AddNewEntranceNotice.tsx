@@ -3,9 +3,10 @@
 import React, { ReactElement } from "react";
 import { useI18n } from "next-localization";
 import { IconArrowRight, IconSignin } from "hds-react";
-// import { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import styles from "./AddNewEntranceNotice.module.scss";
 import QuestionButton from "../QuestionButton";
+import { useAppSelector } from "../../state/hooks";
 
 // usage: in preview page, add new entrances component
 // notice: derived from Notice (marketing), removed props due to single use only
@@ -13,18 +14,16 @@ import QuestionButton from "../QuestionButton";
 // if the functionality changes enough
 const AddNewEntranceNotice = (): ReactElement => {
   const i18n = useI18n();
-  // const router = useRouter();
+  const router = useRouter();
+
+  const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
 
   const handleAddAdditionalEntrance = async () => {
-    // todo: add url to add additional entrance
-    // router.push("/additionalEntrance/" + maybeIdDunno);
+    router.push(`/entranceAccessibility/${curServicepointId}`);
   };
 
-  // note: should both buttons "ei lisää sisäänkäyntejä" and "jatkan myöhemmin"
-  // return to details -> if so why 2 buttons if not where should they go?
   const handleReturnToDetailspage = async () => {
-    // todo: add url to return to details page
-    // router.push("/details/" + detailsIdHereFromProps?);
+    router.push(`/details/${curServicepointId}`);
   };
 
   return (

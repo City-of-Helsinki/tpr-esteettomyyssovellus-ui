@@ -51,7 +51,8 @@
     "newEntrance": "New entrance",
     "updated": "Updated",
     "search": "Search",
-    "formFilledCorrectly": "Form filled correctly",
+    "formSaved": "Accessibility information saved",
+    "formSentAndSaved": "The information has been sent and saved successfully",
     "GoToAdditionalInfoEdit": "Add additionalinformation",
     "questionBlockShowMoreMainEntrance": "See more about the main entrance routes",
     "hideInfo": "Hide info",
@@ -90,6 +91,8 @@
     "quit": "Quit",
     "verifyInformation": "Verify information",
     "saveAsIncomplete": "Save as incomplete",
+    "saving": "Saving",
+    "savingFinished": "Saved",
     "preview": "Preview"
   },
   "additionalInfo": {

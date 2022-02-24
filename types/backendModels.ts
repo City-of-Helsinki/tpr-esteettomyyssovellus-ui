@@ -151,6 +151,11 @@ export interface BackendEntrance {
   name_fi?: string;
   name_sv?: string;
   name_en?: string;
+  contact_person_fi?: string;
+  contact_person_sv?: string;
+  contact_person_en?: string;
+  accessibility_phone?: string;
+  accessibility_email?: string;
   [key: string]: number | string | undefined;
 }
 

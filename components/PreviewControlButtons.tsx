@@ -1,125 +1,103 @@
-import React from "react";
-import { IconArrowLeft, Card, Notification } from "hds-react";
+import React, { useState } from "react";
+import { IconArrowLeft } from "hds-react";
 import router from "next/router";
 import { useI18n } from "next-localization";
+import SaveSpinner from "./common/SaveSpinner";
 import Button from "./QuestionButton";
 import styles from "./PreviewControlButtons.module.scss";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
-import { API_FETCH_ANSWER_LOGS, API_FETCH_QUESTION_ANSWERS, API_URL_BASE, FRONT_URL_BASE } from "../types/constants";
+import { FRONT_URL_BASE } from "../types/constants";
 import { setContinue } from "../state/reducers/formSlice";
-import { getCurrentDate, postData, getClientIp } from "../utils/utilFunctions";
-import AddNewEntranceNotice from "./common/AddNewEntranceNotice";
+import { saveFormData } from "../utils/utilFunctions";
 import { PreviewControlButtonsProps } from "../types/general";
 
 // usage: controls for preview page
-const PreviewControlButtons = ({ hasHeader }: PreviewControlButtonsProps): JSX.Element => {
+const PreviewControlButtons = ({ setSendingComplete }: PreviewControlButtonsProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
 
+  const [isSavingDraft, setSavingDraft] = useState(false);
+  const [isSavingFinal, setSavingFinal] = useState(false);
+
   const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
+  const curExtraAnswers = useAppSelector((state) => state.formReducer.extraAnswers);
   const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
   const startedAnswering = useAppSelector((state) => state.formReducer.startedAnswering);
   const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
-  const formFinished = useAppSelector((state) => state.formReducer.formFinished);
-  const formSubmitted = useAppSelector((state) => state.formReducer.formSubmitted);
+  // const formFinished = useAppSelector((state) => state.formReducer.formFinished);
+  // const formSubmitted = useAppSelector((state) => state.formReducer.formSubmitted);
   // const additionalInfo = useAppSelector((state) => state.additionalInfoReducer);
   const user = useAppSelector((state) => state.generalSlice.user);
-  const handelContinueEditing = (): void => {
+
+  const handleContinueEditing = (): void => {
     dispatch(setContinue());
     // TODO: Add errorpage
-    const url = curServicepointId === -1 ? FRONT_URL_BASE : `${FRONT_URL_BASE}accessibilityEdit/${curEntranceId}`;
+    const url = curServicepointId === -1 ? FRONT_URL_BASE : `${FRONT_URL_BASE}entranceAccessibility/${curServicepointId}/${curEntranceId}`;
     router.push(url);
   };
 
-  // TODO: MAKE INTO SMALLER FUNCTIONS
-  const handleSaveDraftClick = async (): Promise<void> => {
-    // DATE FOR FINISHED ANSWERING
-    const finishedAnswering = getCurrentDate();
-
-    // THIS RETURNS THE IP ADDRESS OF THE CLIENT USED IN THE ANSWER LOG
-    const ipAddress = await getClientIp();
-
-    // POST ANSWER LOG
-    // TODO: ERRORCHECK VALUES
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        ip_address: ipAddress,
-        started_answering: startedAnswering,
-        finished_answering: finishedAnswering,
-        // BECAUSE THIS IS A DRAFT
-        form_submitted: "D",
-        form_cancelled: "Y",
-        // TODO: GET CURRENT USER HERE
-        accessibility_editor: user,
-        entrance: curEntranceId,
-      }),
-    };
-
-    // POST TO AR_X_ANSWER_LOG. RETURNS NEW LOG_ID USED FOR OTHER POST REQUESTS
-    const response = await fetch(API_FETCH_ANSWER_LOGS, requestOptions);
-    const logId = await (response.json() as Promise<number>);
-
-    // CHECK IF RETURNED LOG_ID IS A NUMBER. IF NOT A NUMBER STOP EXECUTING
-    if (!Number.isNaN(logId)) {
-      // POST ALL QUESTION ANSWERS
-      const data = { log: logId, data: curAnsweredChoices };
-      postData(API_FETCH_QUESTION_ANSWERS, JSON.stringify(data));
-      // await postAdditionalInfo(logId, additionalInfo.additionalInfo);
-      const generateData = { entrance_id: curEntranceId };
-      postData(`${API_URL_BASE}GenerateSentences/`, JSON.stringify(generateData));
-      window.location.href = FRONT_URL_BASE;
+  const saveData = async (isDraft: boolean): Promise<void> => {
+    if (curEntranceId > 0) {
+      await saveFormData(curEntranceId, curAnsweredChoices, curExtraAnswers, startedAnswering, user, isDraft);
     }
-
-    // TODO: POST ALL ADDITIONAL INFO
-    // TODO: CREATE SENTENCES WITH FUNCTION CALL
   };
 
-  // todo: todo
-  const handleSaveAndSend = () => {
-    return true;
+  const handleSaveDraftClick = async () => {
+    setSavingDraft(true);
+    await saveData(true);
+    setSavingDraft(false);
+  };
+
+  const handleSaveAndSend = async () => {
+    setSavingFinal(true);
+    await saveData(false);
+    setSavingFinal(false);
+
+    // Show the sent successfully message
+    setSendingComplete(true);
   };
 
   return (
-    <Card className={styles.container}>
-      {hasHeader ? (
-        <div className={styles.previewButtonHeader}>
-          <h2>{i18n.t("PreviewPage.previewAccessibilityInformation")}</h2>
-          {formFinished ? (
-            <>
-              <Notification label="Form done" type="success">
-                {i18n.t("common.formFilledCorrectly")}
-              </Notification>
-              {/* todo: check that this functionality/workflow is correct */}
-            </>
-          ) : (
-            <>
-              <Notification label="Missing information" type="error">
-                {i18n.t("PreviewPage.errorNotice")}
-              </Notification>
-              <AddNewEntranceNotice />
-            </>
-          )}
-        </div>
-      ) : (
-        ""
-      )}
-
+    <div className={styles.container}>
       <div className={styles.previewControlButtons}>
-        <Button variant="primary" iconLeft={<IconArrowLeft />} onClickHandler={handelContinueEditing}>
+        <Button variant="primary" iconLeft={<IconArrowLeft />} onClickHandler={handleContinueEditing} disabled={isSavingDraft || isSavingFinal}>
           {i18n.t("PreviewPage.continueEditing")}
         </Button>
-        {formSubmitted ? null : (
-          <Button variant="secondary" onClickHandler={handleSaveDraftClick}>
-            {i18n.t("questionFormControlButtons.saveAsIncomplete")}
-          </Button>
-        )}
-        <Button variant="primary" disabled={!formFinished} onClickHandler={handleSaveAndSend}>
+
+        <Button
+          variant="secondary"
+          onClickHandler={handleSaveDraftClick}
+          disabled={isSavingDraft || isSavingFinal}
+          iconRight={
+            isSavingDraft ? (
+              <SaveSpinner
+                savingText={i18n.t("questionFormControlButtons.saving")}
+                savingFinishedText={i18n.t("questionFormControlButtons.savingFinished")}
+              />
+            ) : undefined
+          }
+        >
+          {i18n.t("questionFormControlButtons.saveAsIncomplete")}
+        </Button>
+
+        <Button
+          variant="primary"
+          onClickHandler={handleSaveAndSend}
+          //disabled={!formFinished}
+          disabled={isSavingDraft || isSavingFinal}
+          iconRight={
+            isSavingFinal ? (
+              <SaveSpinner
+                savingText={i18n.t("questionFormControlButtons.saving")}
+                savingFinishedText={i18n.t("questionFormControlButtons.savingFinished")}
+              />
+            ) : undefined
+          }
+        >
           {i18n.t("PreviewPage.saveAndSend")}
         </Button>
       </div>
-    </Card>
+    </div>
   );
 };
 

@@ -51,7 +51,8 @@
     "newEntrance": "Uusi sisäänkäynti",
     "updated": "Päivitetty",
     "search": "Haku",
-    "formFilledCorrectly": "Lomake täytetty oikein",
+    "formSaved": "Esteettömyystiedot tallennettu",
+    "formSentAndSaved": "Tiedot on lähetetty ja tallennettu onnistuneesti",
     "GoToAdditionalInfoEdit": "Lisää lisätieto",
     "questionBlockShowMoreMainEntrance": "Näytä lisää pääsisäänkäynnin kulkureiteistä",
     "hideInfo": "Pienennä ohje",
@@ -90,6 +91,8 @@
     "quit": "Keskeytä",
     "verifyInformation": "Tarkista tiedot",
     "saveAsIncomplete": "Tallenna keskeneräisenä",
+    "saving": "Tallennetaan",
+    "savingFinished": "Tallennettu",
     "preview": "Esikatsele"
   },
   "additionalInfo": {

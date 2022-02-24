@@ -51,7 +51,8 @@
     "newEntrance": "Ny ingång",
     "updated": "Uppdaterad",
     "search": "Sök",
-    "formFilledCorrectly": "Formuläret fyllt i korrekt",
+    "formSaved": "Tillgänglighetsinformation sparad",
+    "formSentAndSaved": "Data har skickats och sparats framgångsrikt",
     "GoToAdditionalInfoEdit": "Lägg till mer information",
     "questionBlockShowMoreMainEntrance": "Se mer om huvudingångsvägarna",
     "hideInfo": "Minimera hjälp",
@@ -90,6 +91,8 @@
     "quit": "Avbryta",
     "verifyInformation": "Kolla informationen",
     "saveAsIncomplete": "Spara som oavslutad",
+    "saving": "Sparande",
+    "savingFinished": "Sparad",
     "preview": "Förhandsvisning"
   },
   "additionalInfo": {

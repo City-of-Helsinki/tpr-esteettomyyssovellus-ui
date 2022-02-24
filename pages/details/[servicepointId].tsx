@@ -14,13 +14,7 @@ import QuestionInfo from "../../components/QuestionInfo";
 import ServicepointMainInfoContent from "../../components/ServicepointMainInfoContent";
 import PathTreeComponent from "../../components/PathTreeComponent";
 import { useAppDispatch, useLoading } from "../../state/hooks";
-import {
-  setServicepointId,
-  // setEntranceId,
-  setFormFinished,
-  setContinue,
-  setFormSubmitted,
-} from "../../state/reducers/formSlice";
+import { setServicepointId, setFormFinished, setContinue, setFormSubmitted } from "../../state/reducers/formSlice";
 import { getFinnishDate, filterByLanguage, convertCoordinates } from "../../utils/utilFunctions";
 import { setServicepointLocation, setServicepointLocationWGS84 } from "../../state/reducers/generalSlice";
 import {
@@ -42,7 +36,7 @@ const Details = ({
   servicepointDetail,
   accessibilityData,
   entranceData,
-  hasExistingFormData,
+  // hasExistingFormData,
   isFinished,
 }: DetailsProps): ReactElement => {
   const i18n = useI18n();
@@ -169,6 +163,7 @@ const Details = ({
                           servicepointData={servicepointDetail}
                           entranceData={entranceData[key]}
                           hasData={hasAccessibilityData}
+                          hasModifyButton
                         />
                       )}
 
@@ -179,6 +174,7 @@ const Details = ({
                         servicepointDetail={servicepointDetail}
                         accessibilityData={filteredAccessibilityData}
                         hasData={hasAccessibilityData}
+                        hasModifyButton
                       />
                     </TabPanel>
                   );
@@ -222,11 +218,13 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       const servicepointEntranceResp = await fetch(`${API_FETCH_ENTRANCES}?servicepoint=${servicepointData.servicepoint_id}&format=json`);
       const servicepointEntranceData = await (servicepointEntranceResp.json() as Promise<EntranceResults>);
 
+      // Use the published entrance
       const entranceResultDetails = await Promise.all(
         servicepointEntranceData.results.map(async (entranceResult) => {
           const entranceDetailResp = await fetch(`${API_FETCH_BACKEND_ENTRANCE}?entrance_id=${entranceResult.entrance_id}&format=json`);
           const entranceDetail = await (entranceDetailResp.json() as Promise<BackendEntrance[]>);
-          return { entranceResult, entranceDetail };
+          const entrance = entranceDetail.find((e) => e.form_submitted === "Y");
+          return { entranceResult, entrance };
         })
       );
 
@@ -237,19 +235,18 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         .reduce((acc, resultDetails, j) => {
           return {
             ...acc,
-            ...(resultDetails.entranceDetail && resultDetails.entranceDetail.length > 0 && { [`side${j + 1}`]: resultDetails.entranceDetail[0] }),
+            ...(resultDetails.entrance && { [`side${j + 1}`]: resultDetails.entrance }),
           };
         }, {});
 
       entranceData = {
-        ...(mainEntranceDetails?.entranceDetail &&
-          mainEntranceDetails?.entranceDetail.length > 0 && { main: mainEntranceDetails?.entranceDetail[0] }),
+        ...(mainEntranceDetails?.entrance && { main: mainEntranceDetails?.entrance }),
         ...sideEntranceDetails,
       };
 
       const entranceResultSentences = await Promise.all(
         servicepointEntranceData.results.map(async (entranceResult) => {
-          const sentenceResp = await fetch(`${API_FETCH_SENTENCE_LANGS}?entrance_id=${entranceResult.entrance_id}&format=json`);
+          const sentenceResp = await fetch(`${API_FETCH_SENTENCE_LANGS}?entrance_id=${entranceResult.entrance_id}&form_submitted=Y&format=json`);
           const sentenceData = await (sentenceResp.json() as Promise<StoredSentence[]>);
           return { entranceResult, sentenceData };
         })
