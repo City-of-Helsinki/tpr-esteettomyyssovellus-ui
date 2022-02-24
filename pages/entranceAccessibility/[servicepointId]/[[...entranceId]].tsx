@@ -98,7 +98,7 @@ const EntranceAccessibility = ({
   const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
   const curInvalidBlocks = useAppSelector((state) => state.formReducer.invalidBlocks);
   // const additionalInfoInitedFromDb = useAppSelector((state) => state.additionalInfoReducer.initAddInfoFromDb);
-  const isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
+  // const isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
   const startedAnswering = useAppSelector((state) => state.formReducer.startedAnswering);
 
   const treeItems = [servicepointData.servicepoint_name, i18n.t("servicepoint.contactFormSummaryHeader")];
@@ -251,7 +251,8 @@ const EntranceAccessibility = ({
 
           const isVisible =
             (block.visible_if_question_choice === null && block.language_id === curLocaleId) ||
-            (answersIncludeAllVisibleQuestions && block.language_id === curLocaleId && isContinueClicked);
+            //(answersIncludeAllVisibleQuestions && block.language_id === curLocaleId && isContinueClicked);
+            (answersIncludeAllVisibleQuestions && block.language_id === curLocaleId);
 
           const blockQuestions = isVisible
             ? questionsData.filter((question) => question.question_block_id === block.question_block_id && question.language_id === curLocaleId)
@@ -318,6 +319,9 @@ const EntranceAccessibility = ({
       : `${i18n.t("common.entrance")}: ${entranceName}`;
   const header = hasData ? entranceHeader : i18n.t("common.newEntrance");
 
+  // const hasTopLevelAnswer = curAnsweredChoices.length === 0;
+  const hasTopLevelAnswer = true;
+
   return (
     <Layout>
       <Head>
@@ -354,10 +358,11 @@ const EntranceAccessibility = ({
               <QuestionFormCtrlButtons
                 hasCancelButton
                 //hasValidateButton={isContinueClicked}
-                hasValidateButton
+                hasValidateButton={hasTopLevelAnswer}
                 //hasSaveDraftButton={!formSubmitted}
-                hasSaveDraftButton
-                hasPreviewButton
+                hasSaveDraftButton={hasTopLevelAnswer}
+                hasPreviewButton={hasTopLevelAnswer}
+                hasContinueButton={!hasTopLevelAnswer}
                 visibleBlocks={visibleBlocks}
                 visibleQuestionChoices={visibleQuestionChoices}
                 formId={formId}

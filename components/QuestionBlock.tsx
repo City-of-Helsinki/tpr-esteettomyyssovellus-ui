@@ -18,8 +18,8 @@ const QuestionBlock = ({ description, questions, answerChoices, extraFields, pho
   const dispatch = useAppDispatch();
   // const [showAdditionalInfo, setShowAdditionalInfo] = useState(false);
   const showAdditionalInfo = false;
-  const isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
-  const [showContinue, setShowContinue] = useState(!isContinueClicked);
+  // const isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
+  // const [showContinue, setShowContinue] = useState(!isContinueClicked);
 
   /*
   const handleAdditionalInfoToggle = () => {
@@ -28,17 +28,19 @@ const QuestionBlock = ({ description, questions, answerChoices, extraFields, pho
   */
 
   // todo: what is this onClick? Seems obsolete?
+  /*
   const onClick = () => {
     dispatch(setContinue());
     setShowContinue(false);
     // TODO: route to main form
     // window.location.reload(false)
   };
+  */
 
   const blockId = questions && questions.length > 0 && questions[0].question_block_id !== undefined ? questions[0].question_block_id : -1;
   const hasInfoAndButtons = questions && questions.length > 0 ? blockId !== 0 : true;
   const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
-  const continueActive = curAnsweredChoices.length !== 0;
+  // const continueActive = curAnsweredChoices.length !== 0;
 
   // filter questions to get only correct ones with curAnsweredChoices
   const filteredQuestions = questions
@@ -110,13 +112,13 @@ const QuestionBlock = ({ description, questions, answerChoices, extraFields, pho
       {/* QtionList loops the single question row(s) */}
       <QuestionsList additionalInfoVisible={showAdditionalInfo} questions={filteredQuestions} answerChoices={answerChoices} />
 
-      {hasInfoAndButtons || !showContinue ? null : (
+      {/*hasInfoAndButtons || !showContinue ? null : (
         <div className={styles.continueButton}>
           <Button variant="primary" iconRight={<IconArrowRight />} onClick={onClick} disabled={!continueActive}>
             {i18n.t("accessibilityForm.continue")}
           </Button>
         </div>
-      )}
+      )*/}
     </>
   );
 };

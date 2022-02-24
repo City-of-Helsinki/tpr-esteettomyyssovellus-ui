@@ -105,6 +105,7 @@ export interface QuestionFormCtrlButtonsProps {
   hasValidateButton?: boolean;
   hasSaveDraftButton?: boolean;
   hasPreviewButton?: boolean;
+  hasContinueButton?: boolean;
   visibleBlocks?: (JSX.Element | null)[] | null;
   visibleQuestionChoices?: BackendQuestionChoice[] | undefined;
   formId: number;

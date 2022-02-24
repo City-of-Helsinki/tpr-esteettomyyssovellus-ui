@@ -18,6 +18,7 @@ const QuestionFormCtrlButtons = ({
   hasValidateButton,
   hasSaveDraftButton,
   hasPreviewButton,
+  hasContinueButton,
   visibleBlocks,
   // visibleQuestionChoices,
   formId,
@@ -143,6 +144,10 @@ const QuestionFormCtrlButtons = ({
     }
   };
 
+  const handleContinueClick = () => {
+    // TODO - continue click
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.left}>
@@ -200,6 +205,12 @@ const QuestionFormCtrlButtons = ({
             }
           >
             {i18n.t("questionFormControlButtons.preview")}
+          </Button>
+        ) : null}
+
+        {hasContinueButton ? (
+          <Button variant="primary" iconRight={<IconArrowRight />} onClickHandler={handleContinueClick}>
+            {i18n.t("accessibilityForm.continue")}
           </Button>
         ) : null}
       </div>
