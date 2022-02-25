@@ -26,6 +26,7 @@ import {
   API_FETCH_ENTRANCES,
   API_FETCH_SENTENCE_LANGS,
   API_FETCH_SERVICEPOINTS,
+  API_URL_BASE,
 } from "../../../types/constants";
 import { persistor } from "../../../state/store";
 import {
@@ -197,22 +198,24 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
 
   if (params !== undefined) {
     try {
-      const servicepointResp = await fetch(`${API_FETCH_SERVICEPOINTS}${params.servicepointId}/?format=json`);
+      const servicepointResp = await fetch(`${API_URL_BASE}${API_FETCH_SERVICEPOINTS}${params.servicepointId}/?format=json`);
       servicepointData = await (servicepointResp.json() as Promise<Servicepoint>);
 
-      const servicepointBackendDetailResp = await fetch(`${API_FETCH_BACKEND_SERVICEPOINT}?servicepoint_id=${params.servicepointId}&format=json`);
+      const servicepointBackendDetailResp = await fetch(
+        `${API_URL_BASE}${API_FETCH_BACKEND_SERVICEPOINT}?servicepoint_id=${params.servicepointId}&format=json`
+      );
       const servicepointBackendDetail = await (servicepointBackendDetailResp.json() as Promise<BackendServicepoint[]>);
 
       if (servicepointBackendDetail?.length > 0) {
         servicepointDetail = servicepointBackendDetail[0];
       }
 
-      const servicepointEntranceResp = await fetch(`${API_FETCH_ENTRANCES}${params.entranceId}?format=json`);
+      const servicepointEntranceResp = await fetch(`${API_URL_BASE}${API_FETCH_ENTRANCES}${params.entranceId}?format=json`);
       const servicepointEntranceData = await (servicepointEntranceResp.json() as Promise<Entrance>);
       const entranceKey = servicepointEntranceData?.is_main_entrance === "N" ? "side" : "main";
 
       // Use the draft entrance
-      const entranceDetailResp = await fetch(`${API_FETCH_BACKEND_ENTRANCE}?entrance_id=${params.entranceId}&format=json`);
+      const entranceDetailResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE}?entrance_id=${params.entranceId}&format=json`);
       const entranceDetail = await (entranceDetailResp.json() as Promise<BackendEntrance[]>);
       const entrance = entranceDetail.find((e) => e.form_submitted === "D");
       if (entrance) {
@@ -222,14 +225,16 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       }
 
       // Get the draft entrance answer data needed for saving purposes
-      const allQuestionAnswersResp = await fetch(`${API_FETCH_BACKEND_ENTRANCE_ANSWERS}?entrance_id=${params.entranceId}&format=json`);
+      const allQuestionAnswersResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE_ANSWERS}?entrance_id=${params.entranceId}&format=json`);
       const allQuestionAnswerData = await (allQuestionAnswersResp.json() as Promise<BackendEntranceAnswer[]>);
 
       if (allQuestionAnswerData?.length > 0) {
         questionAnswerData = allQuestionAnswerData.filter((a) => a.form_submitted === "D");
       }
 
-      const allQuestionExtraAnswersResp = await fetch(`${API_FETCH_BACKEND_ENTRANCE_FIELD}?entrance_id=${params.entranceId}&format=json`);
+      const allQuestionExtraAnswersResp = await fetch(
+        `${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE_FIELD}?entrance_id=${params.entranceId}&format=json`
+      );
       const allQuestionExtraAnswerData = await (allQuestionExtraAnswersResp.json() as Promise<BackendEntranceField[]>);
 
       if (allQuestionExtraAnswerData?.length > 0) {
@@ -237,7 +242,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       }
 
       // Get the draft sentences for this entrance
-      const sentenceResp = await fetch(`${API_FETCH_SENTENCE_LANGS}?entrance_id=${params.entranceId}&form_submitted=D&format=json`);
+      const sentenceResp = await fetch(`${API_URL_BASE}${API_FETCH_SENTENCE_LANGS}?entrance_id=${params.entranceId}&form_submitted=D&format=json`);
       const sentenceData = await (sentenceResp.json() as Promise<StoredSentence[]>);
       accessibilityData = {
         [entranceKey]: sentenceData,
@@ -245,7 +250,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
 
       /*
       if (servicepointEntranceData.results.length !== 0 && mainEntranceSentences?.entranceResult) {
-        const logResp = await fetch(`${API_FETCH_ANSWER_LOGS}?entrance=${mainEntranceSentences?.entranceResult.entrance_id}&format=json`);
+        const logResp = await fetch(`${API_URL_BASE}${API_FETCH_ANSWER_LOGS}?entrance=${mainEntranceSentences?.entranceResult.entrance_id}&format=json`);
         const logData = await (logResp.json() as Promise<AnswerLog[]>);
 
         // TODO: Should this be true even if the form has not been submitted

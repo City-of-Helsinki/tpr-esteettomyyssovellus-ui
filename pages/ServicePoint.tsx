@@ -2,7 +2,7 @@ import React, { ChangeEvent, ReactElement, useState } from "react";
 import { useI18n } from "next-localization";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
-import router from "next/router";
+import { useRouter } from "next/router";
 // import { getPreciseDistance } from "geolib";
 import { Button, RadioButton, SelectionGroup } from "hds-react";
 import Layout from "../components/common/Layout";
@@ -12,14 +12,14 @@ import {
   API_FETCH_ENTRANCES,
   API_FETCH_SERVICEPOINTS,
   // API_FETCH_SYSTEMS,
-  FRONT_URL_BASE,
   API_FETCH_SYSTEM_FORMS,
   API_FETCH_EXTERNAL_SERVICEPOINTS,
+  API_URL_BASE,
 } from "../types/constants";
 import { ChangeProps } from "../types/general";
 import { useAppDispatch } from "../state/hooks";
 import styles from "./ServicePoint.module.scss";
-
+import getOrigin from "../utils/request";
 import { getCurrentDate, validateChecksum } from "../utils/utilFunctions";
 import { checksumSecretTPRTesti } from "../utils/checksumSecret";
 import { Servicepoint, SystemForm } from "../types/backendModels";
@@ -41,16 +41,16 @@ const Servicepoints = ({
 }: ChangeProps): ReactElement => {
   const i18n = useI18n();
   const startState = "0";
-  const radioButtonYesText = "PH: Kyllä blaablaa";
-  const radioButtonNoText = "PH: EI blaablaa";
   const [selectedRadioItem, setSelectedRadioItem] = useState(startState);
   const dispatch = useAppDispatch();
+  const router = useRouter();
+
   if (user != undefined) {
     dispatch(setUser(user));
   }
 
   if (skip) {
-    router.push(FRONT_URL_BASE + "details/" + servicepointId);
+    router.push("/details/" + servicepointId);
   }
   const handleRadioClick = (e: ChangeEvent<HTMLInputElement>) => {
     setSelectedRadioItem(e.target.value);
@@ -76,7 +76,7 @@ const Servicepoints = ({
           modified_by: user,
         }),
       };
-      const updateAddressUrl = `${API_FETCH_SERVICEPOINTS}${servicepointId}/update_address/`;
+      const updateAddressUrl = `${getOrigin(router)}/${API_FETCH_SERVICEPOINTS}${servicepointId}/update_address/`;
 
       await fetch(updateAddressUrl, updateAddressOptions);
       const url = `details/${servicepointId}`;
@@ -111,7 +111,7 @@ const Servicepoints = ({
                 <RadioButton
                   id="v-radio1"
                   name="v-radio"
-                  label={radioButtonYesText}
+                  label={i18n.t("AddressChangedPage.radioButtonYes")}
                   value="1"
                   checked={selectedRadioItem === "1"}
                   onChange={handleRadioClick}
@@ -119,7 +119,7 @@ const Servicepoints = ({
                 <RadioButton
                   id="v-radio2"
                   name="v-radio"
-                  label={radioButtonNoText}
+                  label={i18n.t("AddressChangedPage.radioButtonNo")}
                   value="2"
                   checked={selectedRadioItem === "2"}
                   onChange={handleRadioClick}
@@ -179,8 +179,8 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
     }
     try {
       let servicepointId = 0;
-      // const systemResp = await fetch(API_FETCH_SYSTEMS + query.systemId);
-      const servicepointResp = await fetch(`${API_FETCH_SERVICEPOINTS}?format=json&ext_servicepoint_id=${query.servicePointId}`);
+      // const systemResp = await fetch(`${API_URL_BASE}${API_FETCH_SYSTEMS}${query.systemId}`);
+      const servicepointResp = await fetch(`${API_URL_BASE}${API_FETCH_SERVICEPOINTS}?format=json&ext_servicepoint_id=${query.servicePointId}`);
       // const systemData = await (systemResp.json() as Promise<System>);
       const servicepointData = await (servicepointResp.json() as Promise<Servicepoint[]>);
 
@@ -212,7 +212,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
       }
       console.log("Checksums matched.");
 
-      const systemFormResp = await fetch(`${API_FETCH_SYSTEM_FORMS}`);
+      const systemFormResp = await fetch(`${API_URL_BASE}${API_FETCH_SYSTEM_FORMS}`);
       const systemFormData = await (systemFormResp.json() as Promise<SystemForm[]>);
 
       const canUseForm = systemFormData.some((system: SystemForm) => system.system === query.systemId && (system.form === 0 || system.form === 1));
@@ -230,7 +230,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
           postOffice: query.postOffice,
         }),
       };
-      const addressResponse = await fetch(API_CHOP_ADDRESS, addressRequestOptions);
+      const addressResponse = await fetch(`${API_URL_BASE}${API_CHOP_ADDRESS}`, addressRequestOptions);
       const addressData = await (addressResponse.json() as Promise<string[]>);
       const [choppedAddress = "", choppedAddressNumber = "", choppedPostOffice = ""] = addressData || [];
 
@@ -280,7 +280,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
 
         // POST TO ARSERVICEPOINT. RETURNS NEW SERVICEPOINTID USED FOR OTHER POST REQUESTS
         console.log("Create new servicepoint");
-        const newServicepointResp = await fetch(API_FETCH_SERVICEPOINTS, servicepointRequestOptions);
+        const newServicepointResp = await fetch(`${API_URL_BASE}${API_FETCH_SERVICEPOINTS}`, servicepointRequestOptions);
         const newServicepointData = await (newServicepointResp.json() as Promise<Servicepoint>);
         servicepointId = newServicepointData.servicepoint_id;
 
@@ -296,7 +296,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
           }),
         };
 
-        await fetch(API_FETCH_EXTERNAL_SERVICEPOINTS, externalServicepointOptions);
+        await fetch(`${API_URL_BASE}${API_FETCH_EXTERNAL_SERVICEPOINTS}`, externalServicepointOptions);
         console.log("Created new external servicepoint");
 
         const entranceRequestOptions = {
@@ -322,7 +322,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
           }),
         };
 
-        await fetch(API_FETCH_ENTRANCES, entranceRequestOptions);
+        await fetch(`${API_URL_BASE}${API_FETCH_ENTRANCES}`, entranceRequestOptions);
         console.log("Create new entrance");
 
         console.log("New servicepoint and entrance inserted to the database");
@@ -417,8 +417,6 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
           skip: true,
         },
       };
-
-      // router.push(FRONT_URL_BASE + "details/" + params.servicePointId);
     } catch (err) {
       console.log(err);
     }

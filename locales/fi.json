@@ -189,6 +189,8 @@
     "errorHasOccured": "Sovelluksessa tapahtui virhe",
     "hasServicepointMoved": "Onko toimipiste muuttanu uusiin tiloihin?",
     "headerSentence1": "Toimipisteen ",
-    "headerSentence2": " sijainti on muuttunut."
+    "headerSentence2": " sijainti on muuttunut.",
+    "radioButtonYes": "Kyllä",
+    "radioButtonNo": "Ei"
   }
 }

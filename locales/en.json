@@ -189,6 +189,8 @@
     "errorHasOccured": "An error has occured in the software",
     "hasServicepointMoved": "Has the servicepoint moved to new premises?",
     "headerSentence1": "The location of ",
-    "headerSentence2": " servicepoint has changed."
+    "headerSentence2": " servicepoint has changed.",
+    "radioButtonYes": "Yes",
+    "radioButtonNo": "No"
   }
 }

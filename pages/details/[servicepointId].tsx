@@ -24,6 +24,7 @@ import {
   API_FETCH_ENTRANCES,
   API_FETCH_SENTENCE_LANGS,
   API_FETCH_SERVICEPOINTS,
+  API_URL_BASE,
 } from "../../types/constants";
 import LoadSpinner from "../../components/common/LoadSpinner";
 import { persistor } from "../../state/store";
@@ -205,23 +206,29 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
 
   if (params !== undefined) {
     try {
-      const servicepointResp = await fetch(`${API_FETCH_SERVICEPOINTS}${params.servicepointId}/?format=json`);
+      const servicepointResp = await fetch(`${API_URL_BASE}${API_FETCH_SERVICEPOINTS}${params.servicepointId}/?format=json`);
       servicepointData = await (servicepointResp.json() as Promise<Servicepoint>);
 
-      const servicepointBackendDetailResp = await fetch(`${API_FETCH_BACKEND_SERVICEPOINT}?servicepoint_id=${params.servicepointId}&format=json`);
+      const servicepointBackendDetailResp = await fetch(
+        `${API_URL_BASE}${API_FETCH_BACKEND_SERVICEPOINT}?servicepoint_id=${params.servicepointId}&format=json`
+      );
       const servicepointBackendDetail = await (servicepointBackendDetailResp.json() as Promise<BackendServicepoint[]>);
 
       if (servicepointBackendDetail?.length > 0) {
         servicepointDetail = servicepointBackendDetail[0];
       }
 
-      const servicepointEntranceResp = await fetch(`${API_FETCH_ENTRANCES}?servicepoint=${servicepointData.servicepoint_id}&format=json`);
+      const servicepointEntranceResp = await fetch(
+        `${API_URL_BASE}${API_FETCH_ENTRANCES}?servicepoint=${servicepointData.servicepoint_id}&format=json`
+      );
       const servicepointEntranceData = await (servicepointEntranceResp.json() as Promise<EntranceResults>);
 
       // Use the published entrance
       const entranceResultDetails = await Promise.all(
         servicepointEntranceData.results.map(async (entranceResult) => {
-          const entranceDetailResp = await fetch(`${API_FETCH_BACKEND_ENTRANCE}?entrance_id=${entranceResult.entrance_id}&format=json`);
+          const entranceDetailResp = await fetch(
+            `${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE}?entrance_id=${entranceResult.entrance_id}&format=json`
+          );
           const entranceDetail = await (entranceDetailResp.json() as Promise<BackendEntrance[]>);
           const entrance = entranceDetail.find((e) => e.form_submitted === "Y");
           return { entranceResult, entrance };
@@ -246,7 +253,9 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
 
       const entranceResultSentences = await Promise.all(
         servicepointEntranceData.results.map(async (entranceResult) => {
-          const sentenceResp = await fetch(`${API_FETCH_SENTENCE_LANGS}?entrance_id=${entranceResult.entrance_id}&form_submitted=Y&format=json`);
+          const sentenceResp = await fetch(
+            `${API_URL_BASE}${API_FETCH_SENTENCE_LANGS}?entrance_id=${entranceResult.entrance_id}&form_submitted=Y&format=json`
+          );
           const sentenceData = await (sentenceResp.json() as Promise<StoredSentence[]>);
           return { entranceResult, sentenceData };
         })
@@ -269,7 +278,9 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       };
 
       if (servicepointEntranceData.results.length !== 0 && mainEntranceSentences?.entranceResult) {
-        const logResp = await fetch(`${API_FETCH_ANSWER_LOGS}?entrance=${mainEntranceSentences?.entranceResult.entrance_id}&format=json`);
+        const logResp = await fetch(
+          `${API_URL_BASE}${API_FETCH_ANSWER_LOGS}?entrance=${mainEntranceSentences?.entranceResult.entrance_id}&format=json`
+        );
         const logData = await (logResp.json() as Promise<AnswerLog[]>);
 
         // TODO: Should this be true even if the form has not been submitted

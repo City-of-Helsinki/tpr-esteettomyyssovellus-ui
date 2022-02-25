@@ -10,7 +10,6 @@ import styles from "./index.module.scss";
 import SearchBoxWithButtons from "../components/SearchBoxWithButtons";
 import SearchBoxWithButtonsMobile from "../components/SearchBoxWithButtonsMobile";
 import { Hero, HeroShallow } from "../components/common/Hero";
-import { FRONT_URL_BASE } from "../types/constants";
 
 const useStyles = makeStyles((theme) => ({
   navi: {
@@ -51,7 +50,7 @@ const Main = (): ReactElement => {
   const heroTitle = i18n.t("common.landing.title");
   const heroText = "";
 
-  const heroUrl = `${FRONT_URL_BASE}homepagephoto.png`;
+  const heroUrl = "/homepagephoto.png";
 
   // TODO: isHero variable can be removed if the hero component is placed directly to index.tsx. If it is placed into a page templ
   // let isHero = true;

@@ -1,8 +1,10 @@
+import { NextRouter } from "next/router";
 import proj4 from "proj4";
 import publicIp from "public-ip";
 import crypto from "crypto";
+import getOrigin from "./request";
 import { StoredSentence } from "../types/backendModels";
-import { API_FETCH_ANSWER_LOGS, API_FETCH_QUESTION_ANSWERS, API_FETCH_QUESTION_BLOCK_ANSWER_FIELD, API_URL_BASE } from "../types/constants";
+import { API_FETCH_ANSWER_LOGS, API_FETCH_QUESTION_ANSWERS, API_FETCH_QUESTION_BLOCK_ANSWER_FIELD, API_GENERATE_SENTENCES } from "../types/constants";
 /*
 import { QuestionAnswerPhoto, StoredSentence } from "../types/backendModels";
 import {
@@ -54,14 +56,14 @@ export const convertCoordinates = (
   return proj4(fromProjection, toProjection, coordinates);
 };
 
-export const postData = async (url: string, dataToPost: string): Promise<void> => {
+export const postData = async (url: string, dataToPost: string, router: NextRouter): Promise<void> => {
   const postAnswerOptions = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     // body: JSON.stringify(dataToPost),
     body: dataToPost,
   };
-  await fetch(url, postAnswerOptions);
+  await fetch(`${getOrigin(router)}/${url}`, postAnswerOptions);
 };
 
 export const getClientIp = async (): Promise<string> =>
@@ -73,7 +75,7 @@ interface KeyValue {
   [key: number]: string;
 }
 
-const saveExtraFieldAnswers = async (logId: number, extraAnswers: KeyValue) => {
+const saveExtraFieldAnswers = async (logId: number, extraAnswers: KeyValue, router: NextRouter) => {
   const extraFieldPosts = Object.keys(extraAnswers).map(async (questionBlockFieldIdStr) => {
     const questionBlockFieldId = Number(questionBlockFieldIdStr);
     const extraAnswer = extraAnswers[questionBlockFieldId];
@@ -84,7 +86,8 @@ const saveExtraFieldAnswers = async (logId: number, extraAnswers: KeyValue) => {
         log_id: logId,
         question_block_field_id: questionBlockFieldId,
         entry: extraAnswer,
-      })
+      }),
+      router
     );
   });
 
@@ -97,7 +100,8 @@ export const saveFormData = async (
   extraAnswers: KeyValue,
   startedAnswering: string,
   user: string,
-  isDraft: boolean
+  isDraft: boolean,
+  router: NextRouter
 ): Promise<void> => {
   // DATE FOR FINISHED ANSWERING
   const finishedAnswering = getCurrentDate();
@@ -123,22 +127,22 @@ export const saveFormData = async (
     };
 
     // POST TO AR_X_ANSWER_LOG. RETURNS NEW LOG_ID USED FOR OTHER POST REQUESTS
-    const response = await fetch(API_FETCH_ANSWER_LOGS, requestOptions);
+    const response = await fetch(`${getOrigin(router)}/${API_FETCH_ANSWER_LOGS}`, requestOptions);
     const logId = await (response.json() as Promise<number>);
 
     // CHECK IF RETURNED LOG_ID IS A NUMBER. IF NOT A NUMBER STOP EXECUTING
     if (logId > 0) {
       // POST ALL QUESTION ANSWERS
       const questionAnswerData = { log: logId, data: answeredChoices };
-      await postData(API_FETCH_QUESTION_ANSWERS, JSON.stringify(questionAnswerData));
+      await postData(API_FETCH_QUESTION_ANSWERS, JSON.stringify(questionAnswerData), router);
 
       // await postAdditionalInfo(logId, additionalInfo.additionalInfo);
-      await saveExtraFieldAnswers(logId, extraAnswers);
+      await saveExtraFieldAnswers(logId, extraAnswers, router);
 
       // GENERATE SENTENCES
       // This may take a few seconds, so use await before continuing
       const generateData = { entrance_id: entranceId, form_submitted: isDraft ? "D" : "Y" };
-      await postData(`${API_URL_BASE}GenerateSentences/`, JSON.stringify(generateData));
+      await postData(API_GENERATE_SENTENCES, JSON.stringify(generateData), router);
     }
   }
 };
@@ -158,7 +162,6 @@ export const postAdditionalInfo = async (logId: number, data: AdditionalInfoProp
         // COMMENTS
         if (comments !== undefined) {
           Object.keys(comments).forEach((key) => {
-            const url = API_FETCH_QUESTION_ANSWER_COMMENTS;
             const comment = comments[key];
             let language = 0;
             switch (key) {
@@ -180,7 +183,7 @@ export const postAdditionalInfo = async (logId: number, data: AdditionalInfoProp
               question,
               language,
             };
-            postData(url, JSON.stringify(commentData));
+            postData(API_FETCH_QUESTION_ANSWER_COMMENTS, JSON.stringify(commentData), router);
             console.log("Posted additionalinfo comments for question ", question[0]);
           });
         }
@@ -193,7 +196,7 @@ export const postAdditionalInfo = async (logId: number, data: AdditionalInfoProp
             log: logId,
             question: question[0],
           };
-          postData(API_FETCH_QUESTION_ANSWER_LOCATIONS, JSON.stringify(locationData));
+          postData(API_FETCH_QUESTION_ANSWER_LOCATIONS, JSON.stringify(locationData), router);
           console.log("Posted additionalinfo location for question ", question[0]);
         }
 
@@ -210,7 +213,7 @@ export const postAdditionalInfo = async (logId: number, data: AdditionalInfoProp
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify(pictureData),
             };
-            const response = await fetch(API_FETCH_QUESTION_ANSWER_PHOTOS, requestOptions);
+            const response = await fetch(`${getOrigin(router)}/${API_FETCH_QUESTION_ANSWER_PHOTOS}`, requestOptions);
             const responseData = await (response.json() as Promise<QuestionAnswerPhoto>);
             console.log("Posted additionalinfo pictures for question ", question[0]);
             const photoId = responseData !== null ? responseData.answer_photo_id : null;
@@ -225,7 +228,7 @@ export const postAdditionalInfo = async (logId: number, data: AdditionalInfoProp
                   answer_photo: photoId,
                   language: 1,
                 };
-                postData(API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS, JSON.stringify(pictureTextData));
+                postData(API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS, JSON.stringify(pictureTextData), router);
                 // console.log("Posted additionalinfo picture text in fi for question ", question[0]);
               }
               if (svComment !== "") {
@@ -234,7 +237,7 @@ export const postAdditionalInfo = async (logId: number, data: AdditionalInfoProp
                   answer_photo: photoId,
                   language: 2,
                 };
-                postData(API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS, JSON.stringify(pictureTextData));
+                postData(API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS, JSON.stringify(pictureTextData), router);
                 // console.log("Posted additionalinfo picture text in sv ");
               }
               if (enComment !== "") {
@@ -243,7 +246,7 @@ export const postAdditionalInfo = async (logId: number, data: AdditionalInfoProp
                   answer_photo: photoId,
                   language: 3,
                 };
-                postData(API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS, JSON.stringify(pictureTextData));
+                postData(API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS, JSON.stringify(pictureTextData), router);
                 // console.log("Posted additionalinfo picture text in en");
               }
               console.log("Posted additionalinfo picture texts for question ", question[0]);

@@ -3,7 +3,6 @@ import { useI18n } from "next-localization";
 import { PathTreeProps } from "../types/general";
 import styles from "./PathTreeComponent.module.scss";
 import { useAppSelector } from "../state/hooks";
-import { FRONT_URL_BASE } from "../types/constants";
 
 // usage: general breadcrumb component
 const PathTreeComponent = ({ treeItems }: PathTreeProps): JSX.Element => {
@@ -21,7 +20,7 @@ const PathTreeComponent = ({ treeItems }: PathTreeProps): JSX.Element => {
       ) : (
         <div key={key}>
           {" > "}
-          <a className={styles.link} href={`${FRONT_URL_BASE + i18n.locale()}/details/${curServicepointId}`}>
+          <a className={styles.link} href={`/details/${curServicepointId}`}>
             {elem}
           </a>
         </div>
@@ -32,7 +31,7 @@ const PathTreeComponent = ({ treeItems }: PathTreeProps): JSX.Element => {
 
   return (
     <>
-      <a href={FRONT_URL_BASE} className={styles.link}>
+      <a href="/" className={styles.link}>
         {i18n.t("common.search")}
       </a>
       {pathTree}

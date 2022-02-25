@@ -17,7 +17,7 @@ import { addComponent, removeAllInvalids, removeComponent, setEditingInitialStat
 import { useAppSelector, useAppDispatch, useLoading } from "../../state/hooks";
 import { BackendQuestion } from "../../types/backendModels";
 import { AdditionalComponentProps, AdditionalInfoPageProps, ElementCountProps } from "../../types/general";
-import { LanguageLocales, API_FETCH_BACKEND_QUESTIONS } from "../../types/constants";
+import { LanguageLocales, API_FETCH_BACKEND_QUESTIONS, API_URL_BASE } from "../../types/constants";
 import { setCurrentlyEditingQuestion } from "../../state/reducers/generalSlice";
 import LoadSpinner from "../../components/common/LoadSpinner";
 
@@ -255,7 +255,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
 
   const questionId = Number(params?.questionId) ?? null;
 
-  const questionDataReq = await fetch(`${API_FETCH_BACKEND_QUESTIONS}?question_id=${questionId}&format=json`);
+  const questionDataReq = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_QUESTIONS}?question_id=${questionId}&format=json`);
   const questionData = await (questionDataReq.json() as Promise<BackendQuestion[]>);
 
   return {

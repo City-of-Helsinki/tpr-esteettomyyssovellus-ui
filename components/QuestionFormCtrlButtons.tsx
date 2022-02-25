@@ -1,15 +1,16 @@
 import React, { useState } from "react";
 import { IconArrowRight, IconArrowLeft } from "hds-react";
-import router from "next/router";
+import { useRouter } from "next/router";
 import { useI18n } from "next-localization";
 import SaveSpinner from "./common/SaveSpinner";
 import Button from "./QuestionButton";
 import { Entrance } from "../types/backendModels";
+import { API_FETCH_ENTRANCES } from "../types/constants";
 import { QuestionFormCtrlButtonsProps } from "../types/general";
 import styles from "./QuestionFormCtrlButtons.module.scss";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
-import { API_FETCH_ENTRANCES, FRONT_URL_BASE } from "../types/constants";
 import { setEntranceId, setInvalid, unsetInvalid } from "../state/reducers/formSlice";
+import getOrigin from "../utils/request";
 import { saveFormData } from "../utils/utilFunctions";
 
 // usage: Form control buttons: return, save / draft, preview, validate
@@ -25,6 +26,7 @@ const QuestionFormCtrlButtons = ({
 }: QuestionFormCtrlButtonsProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
+  const router = useRouter();
 
   const [isSavingDraft, setSavingDraft] = useState(false);
   const [isSavingPreview, setSavingPreview] = useState(false);
@@ -41,7 +43,7 @@ const QuestionFormCtrlButtons = ({
 
   const handleCancel = (): void => {
     // TODO: Add errorpage
-    const url = curServicepointId === -1 ? FRONT_URL_BASE : `${FRONT_URL_BASE + i18n.locale()}/details/${curServicepointId}`;
+    const url = curServicepointId === -1 ? "/" : `/details/${curServicepointId}/`;
     window.location.href = url;
   };
 
@@ -63,7 +65,7 @@ const QuestionFormCtrlButtons = ({
           form: formId,
         }),
       };
-      const newEntranceResponse = await fetch(API_FETCH_ENTRANCES, entranceRequestOptions);
+      const newEntranceResponse = await fetch(`${getOrigin(router)}/${API_FETCH_ENTRANCES}`, entranceRequestOptions);
       const newEntrance = await (newEntranceResponse.json() as Promise<Entrance>);
 
       return newEntrance.entrance_id;
@@ -89,7 +91,7 @@ const QuestionFormCtrlButtons = ({
       });
       */
 
-      await saveFormData(entranceId, curAnsweredChoices, curExtraAnswers, startedAnswering, user, true);
+      await saveFormData(entranceId, curAnsweredChoices, curExtraAnswers, startedAnswering, user, true, router);
     }
 
     return entranceId;

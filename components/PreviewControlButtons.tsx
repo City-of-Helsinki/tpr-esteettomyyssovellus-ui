@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import { IconArrowLeft } from "hds-react";
-import router from "next/router";
+import { useRouter } from "next/router";
 import { useI18n } from "next-localization";
 import SaveSpinner from "./common/SaveSpinner";
 import Button from "./QuestionButton";
 import styles from "./PreviewControlButtons.module.scss";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
-import { FRONT_URL_BASE } from "../types/constants";
 import { setContinue } from "../state/reducers/formSlice";
 import { saveFormData } from "../utils/utilFunctions";
 import { PreviewControlButtonsProps } from "../types/general";
@@ -15,6 +14,7 @@ import { PreviewControlButtonsProps } from "../types/general";
 const PreviewControlButtons = ({ setSendingComplete }: PreviewControlButtonsProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
+  const router = useRouter();
 
   const [isSavingDraft, setSavingDraft] = useState(false);
   const [isSavingFinal, setSavingFinal] = useState(false);
@@ -32,13 +32,13 @@ const PreviewControlButtons = ({ setSendingComplete }: PreviewControlButtonsProp
   const handleContinueEditing = (): void => {
     dispatch(setContinue());
     // TODO: Add errorpage
-    const url = curServicepointId === -1 ? FRONT_URL_BASE : `${FRONT_URL_BASE}entranceAccessibility/${curServicepointId}/${curEntranceId}`;
+    const url = curServicepointId === -1 ? "/" : `/entranceAccessibility/${curServicepointId}/${curEntranceId}`;
     router.push(url);
   };
 
   const saveData = async (isDraft: boolean): Promise<void> => {
     if (curEntranceId > 0) {
-      await saveFormData(curEntranceId, curAnsweredChoices, curExtraAnswers, startedAnswering, user, isDraft);
+      await saveFormData(curEntranceId, curAnsweredChoices, curExtraAnswers, startedAnswering, user, isDraft, router);
     }
   };
 

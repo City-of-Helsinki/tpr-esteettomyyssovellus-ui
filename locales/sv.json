@@ -189,6 +189,8 @@
     "errorHasOccured": "Ett fel har uppstått i programvaran",
     "hasServicepointMoved": "Har kontoret flyttat till nya lokaler?",
     "headerSentence1": "Platsen för ",
-    "headerSentence2": " har ändrats."
+    "headerSentence2": " har ändrats.",
+    "radioButtonYes": "Ja",
+    "radioButtonNo": "Nej"
   }
 }
