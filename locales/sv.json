@@ -32,9 +32,8 @@
       "en": "på engelska"
     },
     "opensInANewTab": "(öppnar i ny flik)",
-    "todo": "TODO - TEXT HERE",
     "landing": {
-      "title": "PH: Välkommen till uppdatering av tillgänglighetsinformation"
+      "title": "Välkommen till uppdatering av tillgänglighetsinformation"
     },
     "generalMainInfoIsOpen": "Nära hjälp",
     "generalMainInfoIsClose": "Instruktioner för tillhandahållande av tillgänglighetsinformation",
@@ -62,9 +61,6 @@
     "openInfoWhatIsThis": "Visa mig vad det här är",
     "statusReady": "Färdiga",
     "statusNotReady": "Inte färdig"
-  },
-  "question": {
-    "something": "something"
   },
   "servicepoint": {
     "buttons": {

@@ -32,7 +32,6 @@
       "en": "englanniksi"
     },
     "opensInANewTab": "(aukeaa uuteen välilehteen)",
-    "todo": "TODO - TEXT HERE",
     "landing": {
       "title": "Tervetuloa päivittämään esteettömyystietoja"
     },
@@ -62,9 +61,6 @@
     "openInfoWhatIsThis": "Näytä mikä tämä on",
     "statusReady": "Valmis",
     "statusNotReady": "Kesken"
-  },
-  "question": {
-    "something": "something"
   },
   "servicepoint": {
     "buttons": {

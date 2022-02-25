@@ -4,9 +4,8 @@ import React, { KeyboardEvent, ReactElement, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useI18n } from "next-localization";
-import { Navigation, IconSignout } from "hds-react";
+import { IconSignout, Navigation } from "hds-react";
 import { defaultLocale } from "../../utils/i18n";
-import getOrigin from "../../utils/request";
 import styles from "./Header.module.scss";
 import { useAppSelector } from "../../state/hooks";
 
@@ -27,28 +26,14 @@ const Header = ({ children }: HeaderProps): ReactElement => {
   const router = useRouter();
 
   const user = useAppSelector((state) => state.generalSlice.user);
-  // const currentUser = useSelector(
-  //   (state: RootState) => state.generalSlice.user
-  // );
 
   const changeLanguage = (locale: string) => {
     // Use the shallow option to avoid a server-side render in order to preserve the state
     router.push(router.pathname, router.asPath, { locale, shallow: true });
   };
 
-  // this files code from marketing project: needs editing or deleting
-  const signIn = () => {
-    const {
-      location: { pathname },
-    } = window;
-
-    window.open(`${getOrigin(router)}/helauth/login/?next=${pathname}`, "_self");
-  };
-
   const signOut = async () => {
-    // TODO: Improve logout: remove cookies?
-    await fetch(`${getOrigin(router)}/api/user/logout`);
-    window.open("https://api.hel.fi/sso/openid/end-session/", "_self");
+    // Nothing to do
   };
 
   const handleKeyPress = (evt: KeyboardEvent<HTMLAnchorElement>, id: string) => {
@@ -116,7 +101,7 @@ const Header = ({ children }: HeaderProps): ReactElement => {
           </div>
 
           {
-            <Navigation.User label={i18n.t("common.header.login")} authenticated userName={user} onSignIn={signIn}>
+            <Navigation.User label={i18n.t("common.header.login")} authenticated userName={user}>
               <Navigation.Item
                 as="a"
                 href="#"

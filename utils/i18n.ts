@@ -8,7 +8,6 @@ const i18nLoader = async (locale: string): Promise<{ [locale: string]: { [key: s
   return {
     [locale]: {
       common: lngDict.common,
-      question: lngDict.question,
       servicepoint: lngDict.servicepoint,
       additionalInfo: lngDict.additionalInfo,
       questionFormControlButtons: lngDict.questionFormControlButtons,

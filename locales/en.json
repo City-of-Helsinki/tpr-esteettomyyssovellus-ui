@@ -32,9 +32,8 @@
       "en": "in English"
     },
     "opensInANewTab": "(Open in a new tab)",
-    "todo": "TODO - TEXT HERE",
     "landing": {
-      "title": "PH: Welcome to updating accessibity information"
+      "title": "Welcome to updating accessibity information"
     },
     "generalMainInfoIsOpen": "Close instructions",
     "generalMainInfoIsClose": "Instructions for filling accessibility information",
@@ -62,9 +61,6 @@
     "openInfoWhatIsThis": "Show me what this is",
     "statusReady": "Finished",
     "statusNotReady": "Not Finished"
-  },
-  "question": {
-    "something": "something"
   },
   "servicepoint": {
     "buttons": {

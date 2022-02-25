@@ -32,7 +32,7 @@ const FiCardContent = withStyles({
 const DynamicKoros = dynamic(() => import("hds-react").then((hds) => hds.Koros), { ssr: false });
 // import { drupalUrl } from "../config";
 
-const drupalUrl = process.env.REACT_APP_DRUPAL_URL;
+// const drupalUrl = process.env.REACT_APP_DRUPAL_URL;
 
 // TODO: Move styles to Hero.module.scss
 const useStyles = makeStyles((theme) => ({
@@ -169,7 +169,8 @@ export const Hero = (props: HeroProps): JSX.Element => {
   const classes = useStyles();
   const { title, text, imageUrl } = props;
 
-  const imagePath = imageUrl && (imageUrl.startsWith("https") || imageUrl.startsWith("http")) ? imageUrl : drupalUrl + imageUrl;
+  // const imagePath = imageUrl && (imageUrl.startsWith("https") || imageUrl.startsWith("http")) ? imageUrl : drupalUrl + imageUrl;
+  const imagePath = imageUrl;
 
   return (
     <>
@@ -236,7 +237,8 @@ export const HeroShallow = (props: HeroShallowProps): JSX.Element => {
   const classes = useStyles();
   const { title, imageUrl } = props;
 
-  const imagePath = imageUrl && (imageUrl.startsWith("https") || imageUrl.startsWith("http")) ? imageUrl : drupalUrl + imageUrl;
+  // const imagePath = imageUrl && (imageUrl.startsWith("https") || imageUrl.startsWith("http")) ? imageUrl : drupalUrl + imageUrl;
+  const imagePath = imageUrl;
 
   return (
     <Container className={classes.shallowContainer}>
