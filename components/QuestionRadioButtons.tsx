@@ -1,5 +1,5 @@
 import { SelectionGroup, RadioButton } from "hds-react";
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { QuestionRadioButtonsProps } from "../types/general";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { removeAnsweredChoice, setAnswer, setAnsweredChoice } from "../state/reducers/formSlice";
@@ -15,9 +15,12 @@ const QuestionRadioButtons = ({
   const dispatch = useAppDispatch();
   const curAnswers = useAppSelector((state) => state.formReducer.answers);
 
-  const startState = questionId !== undefined && curAnswers[questionId] !== undefined ? curAnswers[questionId].toString() : "0";
+  const [selectedRadioItem, setSelectedRadioItem] = useState("0");
 
-  const [selectedRadioItem, setSelectedRadioItem] = useState(startState);
+  useEffect(() => {
+    const startState = questionId !== undefined && curAnswers[questionId] !== undefined ? curAnswers[questionId].toString() : "0";
+    setSelectedRadioItem(startState);
+  }, [questionId, curAnswers]);
 
   const handleRadioClick = (e: ChangeEvent<HTMLInputElement>) => {
     setSelectedRadioItem(e.target.value);
