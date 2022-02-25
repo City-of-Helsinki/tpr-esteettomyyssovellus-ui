@@ -16,6 +16,8 @@ const ServicepointLandingSummaryLocationPicture = ({ entranceKey, entranceData }
   // @ts-ignore : ignore types because .reverse() returns number[]
   const coordinates: [number, number] = convertCoordinates("EPSG:3067", "WGS84", entranceCoordinates).reverse();
 
+  const isDevelopment = false;
+
   return (
     <div className={styles.maincontainer}>
       <div className={styles.mapcontainer}>
@@ -31,12 +33,17 @@ const ServicepointLandingSummaryLocationPicture = ({ entranceKey, entranceData }
       <div className={styles.picturescontainer}>
         <h4>{entranceKey === "main" ? i18n.t("servicepoint.mainEntrancePicturesLabel") : i18n.t("servicepoint.entrancePicturesLabel")}</h4>
         <div className={styles.picture}>
-          {photo_url && <img alt="" src={photo_url} />}
+          {photo_url && (
+            <img
+              alt={entranceKey === "main" ? i18n.t("servicepoint.mainEntrancePicturesLabel") : i18n.t("servicepoint.entrancePicturesLabel")}
+              src={photo_url}
+            />
+          )}
 
           {/* Placeholder photo for development */}
-          {!photo_url && (
+          {!photo_url && isDevelopment && (
             <img
-              alt=""
+              alt={entranceKey === "main" ? i18n.t("servicepoint.mainEntrancePicturesLabel") : i18n.t("servicepoint.entrancePicturesLabel")}
               src="https://images.unsplash.com/photo-1531989417401-0f85f7e673f8?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80"
             />
           )}

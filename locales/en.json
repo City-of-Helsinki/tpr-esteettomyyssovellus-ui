@@ -46,7 +46,7 @@
     "mainEntrance": "Main entrance",
     "mainEntranceLocation": "Main entrance location",
     "additionalEntrance": "Additional entrance",
-    "entrance": "Entrance",
+    "entrance": "Additional entrance",
     "newEntrance": "New entrance",
     "updated": "Updated",
     "search": "Search",
@@ -78,10 +78,10 @@
     "email": "Email address",
     "noInfo": "(no information)",
     "mainEntranceLocationLabel": "Main entrance location",
-    "entranceLocationLabel": "Entrance location",
+    "entranceLocationLabel": "Additional entrance location",
     "mainEntranceLocationCoordinatesLabel": "Coordinates",
     "mainEntrancePicturesLabel": "Main entrance photo",
-    "entrancePicturesLabel": "Entrance photo"
+    "entrancePicturesLabel": "Additional entrance photo"
   },
   "questionFormControlButtons": {
     "quit": "Quit",

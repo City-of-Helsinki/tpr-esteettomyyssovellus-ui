@@ -46,7 +46,7 @@
     "mainEntrance": "Pääsisäänkäynti",
     "mainEntranceLocation": "Pääsisäänkäynnin sijainti",
     "additionalEntrance": "Lisäsisäänkäynti",
-    "entrance": "Sisäänkäynti",
+    "entrance": "Lisäsisäänkäynti",
     "newEntrance": "Uusi sisäänkäynti",
     "updated": "Päivitetty",
     "search": "Haku",
@@ -78,10 +78,10 @@
     "email": "Sähköpostiosoite",
     "noInfo": "(ei tietoa)",
     "mainEntranceLocationLabel": "Pääsisäänkäynnin sijainti",
-    "entranceLocationLabel": "Sisäänkäynnin sijainti",
+    "entranceLocationLabel": "Lisäsisäänkäynnin sijainti",
     "mainEntranceLocationCoordinatesLabel": "Koordinaatit",
     "mainEntrancePicturesLabel": "Pääsisäänkäynnin kuva",
-    "entrancePicturesLabel": "Sisäänkäynnin kuva"
+    "entrancePicturesLabel": "Lisäsisäänkäynnin kuva"
   },
   "questionFormControlButtons": {
     "quit": "Keskeytä",
