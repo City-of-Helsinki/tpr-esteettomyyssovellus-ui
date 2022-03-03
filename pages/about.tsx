@@ -7,6 +7,7 @@ import i18nLoader from "../utils/i18n";
 import Layout from "../components/common/Layout";
 import styles from "./index.module.scss";
 import { Hero, HeroShallow } from "../components/common/Hero";
+import homepagephoto from "../public/homepagephoto.png";
 
 const useStyles = makeStyles((theme) => ({
   navi: {
@@ -32,7 +33,8 @@ const Main = (): ReactElement => {
   const heroTitle = i18n.t("common.header.information");
   const heroText = "";
 
-  const heroUrl = "/homepagephoto.png";
+  // const heroUrl = "/homepagephoto.png";
+  const heroUrl = homepagephoto.src;
 
   const heroShallow = false;
   const classes = useStyles({ heroShallow });

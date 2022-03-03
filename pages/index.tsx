@@ -9,6 +9,7 @@ import styles from "./index.module.scss";
 // import SearchBoxWithButtons from "../components/SearchBoxWithButtons";
 // import SearchBoxWithButtonsMobile from "../components/SearchBoxWithButtonsMobile";
 import { Hero, HeroShallow } from "../components/common/Hero";
+import homepagephoto from "../public/homepagephoto.png";
 
 const useStyles = makeStyles((theme) => ({
   navi: {
@@ -51,7 +52,8 @@ const Main = (): ReactElement => {
   const heroTitle = i18n.t("common.landing.title");
   const heroText = "";
 
-  const heroUrl = "/homepagephoto.png";
+  // const heroUrl = "/homepagephoto.png";
+  const heroUrl = homepagephoto.src;
 
   const heroShallow = false;
   const classes = useStyles({ heroShallow });
