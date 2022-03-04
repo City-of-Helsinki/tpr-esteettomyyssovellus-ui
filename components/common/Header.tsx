@@ -7,7 +7,8 @@ import { useI18n } from "next-localization";
 import { IconSignout, Navigation } from "hds-react";
 import { defaultLocale } from "../../utils/i18n";
 import styles from "./Header.module.scss";
-import { useAppSelector } from "../../state/hooks";
+import { useAppSelector, useAppDispatch } from "../../state/hooks";
+import { setUser } from "../../state/reducers/generalSlice";
 
 interface HeaderProps {
   children?: React.ReactNode;
@@ -18,13 +19,13 @@ interface HeaderProps {
 const DynamicNavigation = dynamic(
   // @ts-ignore: A dynamic import must be used to force client-side rendering regardless of the typescript errors
   () => import("hds-react").then((hds) => hds.Navigation),
-  { ssr: false }
+  { ssr: false },
 );
 
 const Header = ({ children }: HeaderProps): ReactElement => {
   const i18n = useI18n();
   const router = useRouter();
-
+  const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.generalSlice.user);
 
   const changeLanguage = (locale: string) => {
@@ -34,6 +35,8 @@ const Header = ({ children }: HeaderProps): ReactElement => {
 
   const signOut = async () => {
     // Nothing to do
+    window.open("https://api.hel.fi/sso/openid/end-session/", "_self");
+    dispatch(setUser(""));
   };
 
   const handleKeyPress = (evt: KeyboardEvent<HTMLAnchorElement>, id: string) => {

@@ -77,6 +77,7 @@ const Servicepoints = ({
         }),
       };
       const updateAddressUrl = `${getOrigin(router)}/${API_FETCH_SERVICEPOINTS}${servicepointId}/update_address/`;
+      //const updateAddressUrl = `${API_URL_BASE}${API_FETCH_SERVICEPOINTS}${servicepointId}/update_address/`;
 
       await fetch(updateAddressUrl, updateAddressOptions);
       const url = `details/${servicepointId}`;
@@ -201,14 +202,14 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
 
       const checksumIsValid = validateChecksum(checksumString, query.checksum);
 
-      // TODO: UNCOMMENT WHEN MOVING TO PRODUCTION
+      // TODO: UNCOMMENT WHEN MOVING TO PRODUCTION / TESTING
       if (!checksumIsValid) {
         console.log("Checksums did not match.");
-        //   return {
-        //     props: {
-        //       lngDict
-        //     }
-        //   };
+        return {
+          props: {
+            lngDict,
+          },
+        };
       }
       console.log("Checksums matched.");
 
