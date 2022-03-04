@@ -5,6 +5,7 @@ import crypto from "crypto";
 import getOrigin from "./request";
 import { StoredSentence } from "../types/backendModels";
 import { API_FETCH_ANSWER_LOGS, API_FETCH_QUESTION_ANSWERS, API_FETCH_QUESTION_BLOCK_ANSWER_FIELD, API_GENERATE_SENTENCES } from "../types/constants";
+import { API_TOKEN } from "./checksumSecret";
 /*
 import { QuestionAnswerPhoto, StoredSentence } from "../types/backendModels";
 import {
@@ -50,7 +51,7 @@ proj4.defs("EPSG:3067", "+title=EPSG:3067 +proj=utm +zone=35 +ellps=GRS80 +datum
 export const convertCoordinates = (
   fromProjection: string,
   toProjection: string,
-  coordinates: [number, number] | number[]
+  coordinates: [number, number] | number[],
 ): [number, number] | number[] => {
   if (!isLocationValid(coordinates)) return [0, 0];
   return proj4(fromProjection, toProjection, coordinates);
@@ -87,7 +88,7 @@ const saveExtraFieldAnswers = async (logId: number, extraAnswers: KeyValue, rout
         question_block_field_id: questionBlockFieldId,
         entry: extraAnswer,
       }),
-      router
+      router,
     );
   });
 
@@ -101,7 +102,7 @@ export const saveFormData = async (
   startedAnswering: string,
   user: string,
   isDraft: boolean,
-  router: NextRouter
+  router: NextRouter,
 ): Promise<void> => {
   // DATE FOR FINISHED ANSWERING
   const finishedAnswering = getCurrentDate();
@@ -261,4 +262,9 @@ export const postAdditionalInfo = async (logId: number, data: AdditionalInfoProp
 export const validateChecksum = (string: string, checksum: string | string[]): boolean => {
   const hash = crypto.createHash("sha256").update(string).digest("hex").toUpperCase();
   return hash === checksum;
+};
+
+export const getTokenHash = () => {
+  const hash = crypto.createHash("sha256").update(API_TOKEN).digest("hex").toUpperCase();
+  return hash.toLocaleLowerCase();
 };
