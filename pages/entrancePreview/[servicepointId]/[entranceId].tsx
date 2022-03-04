@@ -40,7 +40,7 @@ import {
   StoredSentence,
 } from "../../../types/backendModels";
 import { AccessibilityData, EntranceData, PreviewProps } from "../../../types/general";
-
+import { getTokenHash } from "../../../utils/utilFunctions";
 // usage: the preview page of an entrance, displayed before saving the completed form
 const Preview = ({
   servicepointData,
@@ -198,11 +198,16 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
 
   if (params !== undefined) {
     try {
-      const servicepointResp = await fetch(`${API_URL_BASE}${API_FETCH_SERVICEPOINTS}${params.servicepointId}/?format=json`);
+      const servicepointResp = await fetch(`${API_URL_BASE}${API_FETCH_SERVICEPOINTS}${params.servicepointId}/?format=json`, {
+        headers: new Headers({ Authorization: getTokenHash() }),
+      });
       servicepointData = await (servicepointResp.json() as Promise<Servicepoint>);
 
       const servicepointBackendDetailResp = await fetch(
-        `${API_URL_BASE}${API_FETCH_BACKEND_SERVICEPOINT}?servicepoint_id=${params.servicepointId}&format=json`
+        `${API_URL_BASE}${API_FETCH_BACKEND_SERVICEPOINT}?servicepoint_id=${params.servicepointId}&format=json`,
+        {
+          headers: new Headers({ Authorization: getTokenHash() }),
+        },
       );
       const servicepointBackendDetail = await (servicepointBackendDetailResp.json() as Promise<BackendServicepoint[]>);
 
@@ -210,12 +215,16 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         servicepointDetail = servicepointBackendDetail[0];
       }
 
-      const servicepointEntranceResp = await fetch(`${API_URL_BASE}${API_FETCH_ENTRANCES}${params.entranceId}?format=json`);
+      const servicepointEntranceResp = await fetch(`${API_URL_BASE}${API_FETCH_ENTRANCES}${params.entranceId}?format=json`, {
+        headers: new Headers({ Authorization: getTokenHash() }),
+      });
       const servicepointEntranceData = await (servicepointEntranceResp.json() as Promise<Entrance>);
       const entranceKey = servicepointEntranceData?.is_main_entrance === "N" ? "side" : "main";
 
       // Use the draft entrance
-      const entranceDetailResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE}?entrance_id=${params.entranceId}&format=json`);
+      const entranceDetailResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE}?entrance_id=${params.entranceId}&format=json`, {
+        headers: new Headers({ Authorization: getTokenHash() }),
+      });
       const entranceDetail = await (entranceDetailResp.json() as Promise<BackendEntrance[]>);
       const entrance = entranceDetail.find((e) => e.form_submitted === "D");
       if (entrance) {
@@ -225,7 +234,12 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       }
 
       // Get the draft entrance answer data needed for saving purposes
-      const allQuestionAnswersResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE_ANSWERS}?entrance_id=${params.entranceId}&format=json`);
+      const allQuestionAnswersResp = await fetch(
+        `${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE_ANSWERS}?entrance_id=${params.entranceId}&format=json`,
+        {
+          headers: new Headers({ Authorization: getTokenHash() }),
+        },
+      );
       const allQuestionAnswerData = await (allQuestionAnswersResp.json() as Promise<BackendEntranceAnswer[]>);
 
       if (allQuestionAnswerData?.length > 0) {
@@ -233,7 +247,10 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       }
 
       const allQuestionExtraAnswersResp = await fetch(
-        `${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE_FIELD}?entrance_id=${params.entranceId}&format=json`
+        `${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE_FIELD}?entrance_id=${params.entranceId}&format=json`,
+        {
+          headers: new Headers({ Authorization: getTokenHash() }),
+        },
       );
       const allQuestionExtraAnswerData = await (allQuestionExtraAnswersResp.json() as Promise<BackendEntranceField[]>);
 
@@ -242,7 +259,9 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       }
 
       // Get the draft sentences for this entrance
-      const sentenceResp = await fetch(`${API_URL_BASE}${API_FETCH_SENTENCE_LANGS}?entrance_id=${params.entranceId}&form_submitted=D&format=json`);
+      const sentenceResp = await fetch(`${API_URL_BASE}${API_FETCH_SENTENCE_LANGS}?entrance_id=${params.entranceId}&form_submitted=D&format=json`, {
+        headers: new Headers({ Authorization: getTokenHash() }),
+      });
       const sentenceData = await (sentenceResp.json() as Promise<StoredSentence[]>);
       accessibilityData = {
         [entranceKey]: sentenceData,

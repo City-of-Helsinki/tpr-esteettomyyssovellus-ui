@@ -11,7 +11,7 @@ import styles from "./QuestionFormCtrlButtons.module.scss";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
 import { setEntranceId, setInvalid, unsetInvalid } from "../state/reducers/formSlice";
 import getOrigin from "../utils/request";
-import { saveFormData } from "../utils/utilFunctions";
+import { getTokenHash, saveFormData } from "../utils/utilFunctions";
 
 // usage: Form control buttons: return, save / draft, preview, validate
 const QuestionFormCtrlButtons = ({
@@ -54,7 +54,7 @@ const QuestionFormCtrlButtons = ({
       // Create an empty entrance row in the database in order to get the entrance id
       const entranceRequestOptions = {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", Authorization: getTokenHash() },
         body: JSON.stringify({
           created: new Date(),
           created_by: user,

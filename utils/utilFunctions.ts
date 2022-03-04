@@ -115,7 +115,7 @@ export const saveFormData = async (
     // TODO: ERRORCHECK VALUES
     const requestOptions = {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", Authorization: getTokenHash() },
       body: JSON.stringify({
         ip_address: ipAddress,
         started_answering: startedAnswering,

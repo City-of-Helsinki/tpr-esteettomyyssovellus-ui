@@ -51,6 +51,7 @@ import HeadlineQuestionContainer from "../../../components/HeadlineQuestionConta
 import QuestionFormCtrlButtons from "../../../components/QuestionFormCtrlButtons";
 import PathTreeComponent from "../../../components/PathTreeComponent";
 import { setAnswer, setAnsweredChoice, setEntranceId, setExtraAnswer, setServicepointId, setStartDate } from "../../../state/reducers/formSlice";
+import { getTokenHash } from "../../../utils/utilFunctions";
 /*
 import {
   addComment,
@@ -259,7 +260,7 @@ const EntranceAccessibility = ({
 
           const blockExtraFields = isVisible
             ? questionBlockFieldData.filter(
-                (question) => question.question_block_id === block.question_block_id && question.language_id === curLocaleId
+                (question) => question.question_block_id === block.question_block_id && question.language_id === curLocaleId,
               )
             : null;
 
@@ -399,17 +400,24 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
 
   if (params !== undefined) {
     try {
-      const servicepointResp = await fetch(`${API_URL_BASE}${API_FETCH_SERVICEPOINTS}${params.servicepointId}/?format=json`);
+      const servicepointResp = await fetch(`${API_URL_BASE}${API_FETCH_SERVICEPOINTS}${params.servicepointId}/?format=json`, {
+        headers: new Headers({ Authorization: getTokenHash() }),
+      });
       servicepointData = await (servicepointResp.json() as Promise<Servicepoint>);
       const servicepointBackendDetailResp = await fetch(
-        `${API_URL_BASE}${API_FETCH_BACKEND_SERVICEPOINT}?servicepoint_id=${params.servicepointId}&format=json`
+        `${API_URL_BASE}${API_FETCH_BACKEND_SERVICEPOINT}?servicepoint_id=${params.servicepointId}&format=json`,
+        {
+          headers: new Headers({ Authorization: getTokenHash() }),
+        },
       );
       const servicepointBackendDetail = await (servicepointBackendDetailResp.json() as Promise<BackendServicepoint[]>);
       const servicepointDetail = servicepointBackendDetail?.length > 0 ? servicepointBackendDetail[0] : undefined;
 
       if (params.entranceId === undefined && servicepointDetail?.new_entrance_possible === "Y") {
         // New entrance
-        const entranceResp = await fetch(`${API_URL_BASE}${API_FETCH_ENTRANCES}?servicepoint=${params.servicepointId}&format=json`);
+        const entranceResp = await fetch(`${API_URL_BASE}${API_FETCH_ENTRANCES}?servicepoint=${params.servicepointId}&format=json`, {
+          headers: new Headers({ Authorization: getTokenHash() }),
+        });
         const entranceResults = await (entranceResp.json() as Promise<EntranceResults>);
 
         if (entranceResults?.results?.length === 0) {
@@ -422,13 +430,17 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         }
       } else if (params.entranceId !== undefined) {
         // Existing entrance
-        const entranceResp = await fetch(`${API_URL_BASE}${API_FETCH_ENTRANCES}${params.entranceId}/?format=json`);
+        const entranceResp = await fetch(`${API_URL_BASE}${API_FETCH_ENTRANCES}${params.entranceId}/?format=json`, {
+          headers: new Headers({ Authorization: getTokenHash() }),
+        });
         const entrance = await (entranceResp.json() as Promise<Entrance>);
 
         // Use the form id from the entrance if available
         formId = entrance ? entrance.form : -1;
 
-        const entranceDetailResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE}?entrance_id=${params.entranceId}&format=json`);
+        const entranceDetailResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE}?entrance_id=${params.entranceId}&format=json`, {
+          headers: new Headers({ Authorization: getTokenHash() }),
+        });
         const entranceDetail = await (entranceDetailResp.json() as Promise<BackendEntrance[]>);
         if (entranceDetail.length > 0) {
           // Return entrance data for the highest log id only, in case both published and draft data exists (form_submitted = 'Y' and 'D')
@@ -442,10 +454,18 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       }
 
       if (formId >= 0) {
-        const questionsResp = await fetch(`${API_URL_BASE}${API_FETCH_QUESTION_URL}${formId}`);
-        const questionChoicesResp = await fetch(`${API_URL_BASE}${API_FETCH_QUESTIONCHOICES}${formId}`);
-        const questionBlocksResp = await fetch(`${API_URL_BASE}${API_FETCH_QUESTIONBLOCK_URL}${formId}`);
-        const questionBlockFieldResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_QUESTIONBLOCK_FIELD}${formId}`);
+        const questionsResp = await fetch(`${API_URL_BASE}${API_FETCH_QUESTION_URL}${formId}`, {
+          headers: new Headers({ Authorization: getTokenHash() }),
+        });
+        const questionChoicesResp = await fetch(`${API_URL_BASE}${API_FETCH_QUESTIONCHOICES}${formId}`, {
+          headers: new Headers({ Authorization: getTokenHash() }),
+        });
+        const questionBlocksResp = await fetch(`${API_URL_BASE}${API_FETCH_QUESTIONBLOCK_URL}${formId}`, {
+          headers: new Headers({ Authorization: getTokenHash() }),
+        });
+        const questionBlockFieldResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_QUESTIONBLOCK_FIELD}${formId}`, {
+          headers: new Headers({ Authorization: getTokenHash() }),
+        });
 
         questionsData = await (questionsResp.json() as Promise<BackendQuestion[]>);
         questionChoicesData = await (questionChoicesResp.json() as Promise<BackendQuestionChoice[]>);
@@ -455,7 +475,10 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
 
       if (params.entranceId !== undefined) {
         const allQuestionAnswersResp = await fetch(
-          `${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE_ANSWERS}?entrance_id=${params.entranceId}&format=json`
+          `${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE_ANSWERS}?entrance_id=${params.entranceId}&format=json`,
+          {
+            headers: new Headers({ Authorization: getTokenHash() }),
+          },
         );
         const allQuestionAnswerData = await (allQuestionAnswersResp.json() as Promise<BackendEntranceAnswer[]>);
 
@@ -499,7 +522,10 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         */
 
         const allQuestionExtraAnswersResp = await fetch(
-          `${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE_FIELD}?entrance_id=${params.entranceId}&format=json`
+          `${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE_FIELD}?entrance_id=${params.entranceId}&format=json`,
+          {
+            headers: new Headers({ Authorization: getTokenHash() }),
+          },
         );
         const allQuestionExtraAnswerData = await (allQuestionExtraAnswersResp.json() as Promise<BackendEntranceField[]>);
 

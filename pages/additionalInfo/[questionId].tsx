@@ -20,7 +20,7 @@ import { AdditionalComponentProps, AdditionalInfoPageProps, ElementCountProps } 
 import { LanguageLocales, API_FETCH_BACKEND_QUESTIONS, API_URL_BASE } from "../../types/constants";
 import { setCurrentlyEditingQuestion } from "../../state/reducers/generalSlice";
 import LoadSpinner from "../../components/common/LoadSpinner";
-
+import { getTokenHash } from "../../utils/utilFunctions";
 // usage: additional information page (per question)
 const AdditionalInfo = ({ questionId, questionData }: AdditionalInfoPageProps): ReactElement => {
   const i18n = useI18n();
@@ -67,7 +67,7 @@ const AdditionalInfo = ({ questionId, questionData }: AdditionalInfoPageProps): 
         questionId,
         type,
         id: increasingId,
-      })
+      }),
     );
     setIncreasingId(increasingId + 1);
   };
@@ -100,7 +100,7 @@ const AdditionalInfo = ({ questionId, questionData }: AdditionalInfoPageProps): 
       dispatch(
         setEditingInitialState({
           obj: { [questionId]: curAdditionalInfo },
-        })
+        }),
       );
 
       // set component amounts correct with states components to disable buttons respectively
@@ -255,7 +255,9 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
 
   const questionId = Number(params?.questionId) ?? null;
 
-  const questionDataReq = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_QUESTIONS}?question_id=${questionId}&format=json`);
+  const questionDataReq = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_QUESTIONS}?question_id=${questionId}&format=json`, {
+    headers: new Headers({ Authorization: getTokenHash() }),
+  });
   const questionData = await (questionDataReq.json() as Promise<BackendQuestion[]>);
 
   return {

@@ -24,6 +24,7 @@ import { getCurrentDate, validateChecksum } from "../utils/utilFunctions";
 import { checksumSecretTPRTesti } from "../utils/checksumSecret";
 import { Servicepoint, SystemForm } from "../types/backendModels";
 import { setUser } from "../state/reducers/generalSlice";
+import { getTokenHash } from "../utils/utilFunctions";
 
 // usage: not sure if this is obsolete?
 const Servicepoints = ({
@@ -67,6 +68,7 @@ const Servicepoints = ({
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: getTokenHash(),
         },
         body: JSON.stringify({
           address_street_name: newAddress,
@@ -181,7 +183,9 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
     try {
       let servicepointId = 0;
       // const systemResp = await fetch(`${API_URL_BASE}${API_FETCH_SYSTEMS}${query.systemId}`);
-      const servicepointResp = await fetch(`${API_URL_BASE}${API_FETCH_SERVICEPOINTS}?format=json&ext_servicepoint_id=${query.servicePointId}`);
+      const servicepointResp = await fetch(`${API_URL_BASE}${API_FETCH_SERVICEPOINTS}?format=json&ext_servicepoint_id=${query.servicePointId}`, {
+        headers: new Headers({ Authorization: getTokenHash() }),
+      });
       // const systemData = await (systemResp.json() as Promise<System>);
       const servicepointData = await (servicepointResp.json() as Promise<Servicepoint[]>);
 
@@ -213,7 +217,9 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
       }
       console.log("Checksums matched.");
 
-      const systemFormResp = await fetch(`${API_URL_BASE}${API_FETCH_SYSTEM_FORMS}`);
+      const systemFormResp = await fetch(`${API_URL_BASE}${API_FETCH_SYSTEM_FORMS}`, {
+        headers: new Headers({ Authorization: getTokenHash() }),
+      });
       const systemFormData = await (systemFormResp.json() as Promise<SystemForm[]>);
 
       const canUseForm = systemFormData.some((system: SystemForm) => system.system === query.systemId && (system.form === 0 || system.form === 1));
@@ -225,7 +231,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
       // CHOP THE ADDRESS
       const addressRequestOptions = {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", Authorization: getTokenHash() },
         body: JSON.stringify({
           address: query.streetAddress,
           postOffice: query.postOffice,
@@ -242,7 +248,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
         const date = getCurrentDate();
         const servicepointRequestOptions = {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", Authorization: getTokenHash() },
           body: JSON.stringify({
             // TODO: figure out
             // - business_id
@@ -287,7 +293,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
 
         const externalServicepointOptions = {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", Authorization: getTokenHash() },
           body: JSON.stringify({
             external_servicepoint_id: query.servicePointId,
             created: date,
@@ -302,7 +308,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
 
         const entranceRequestOptions = {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json", Authorization: getTokenHash() },
           body: JSON.stringify({
             name_fi: "",
             name_sv: null,
