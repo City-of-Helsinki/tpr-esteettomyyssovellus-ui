@@ -106,7 +106,8 @@ const EntranceAccessibility = ({
 
   const treeItems = [servicepointData.servicepoint_name, i18n.t("servicepoint.contactFormSummaryHeader")];
 
-  const hasData = Object.keys(servicepointData).length > 0 && Object.keys(entranceData).length > 0;
+  const hasData = Object.keys(servicepointData).length > 0;
+  const isExistingEntrance = hasData && Object.keys(entranceData).length > 0;
 
   useEffect(() => {
     // Update servicepointId and entranceId in redux state
@@ -324,7 +325,7 @@ const EntranceAccessibility = ({
     formId === 0
       ? `${i18n.t("common.mainEntrance")}: ${servicepointData.address_street_name} ${servicepointData.address_no}, ${servicepointData.address_city}`
       : `${i18n.t("common.entrance")}: ${entranceName}`;
-  const header = hasData ? entranceHeader : i18n.t("common.newEntrance");
+  const header = isExistingEntrance ? entranceHeader : i18n.t("common.newEntrance");
 
   // const hasTopLevelAnswer = curAnsweredChoices.length === 0;
   const hasTopLevelAnswer = true;
