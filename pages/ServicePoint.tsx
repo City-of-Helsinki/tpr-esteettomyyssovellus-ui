@@ -180,7 +180,9 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
     }
     try {
       let servicepointId = 0;
-      const systemResp = await fetch(`${API_URL_BASE}${API_FETCH_SYSTEMS}${query.systemId}`);
+      const systemResp = await fetch(`${API_URL_BASE}${API_FETCH_SYSTEMS}${query.systemId}`, {
+        headers: new Headers({ Authorization: getTokenHash() }),
+      });
       const servicepointResp = await fetch(`${API_URL_BASE}${API_FETCH_SERVICEPOINTS}?format=json&ext_servicepoint_id=${query.servicePointId}`, {
         headers: new Headers({ Authorization: getTokenHash() }),
       });
@@ -418,6 +420,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
       return {
         props: {
           servicepointId,
+          user: query.user,
           skip: true,
         },
       };
@@ -428,6 +431,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
   return {
     props: {
       lngDict,
+      user: query.user,
       skip: false,
     },
   };
