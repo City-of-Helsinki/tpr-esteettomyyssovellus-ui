@@ -67,7 +67,7 @@ const AdditionalInfo = ({ questionId, questionData }: AdditionalInfoPageProps): 
         questionId,
         type,
         id: increasingId,
-      }),
+      })
     );
     setIncreasingId(increasingId + 1);
   };
@@ -100,7 +100,7 @@ const AdditionalInfo = ({ questionId, questionData }: AdditionalInfoPageProps): 
       dispatch(
         setEditingInitialState({
           obj: { [questionId]: curAdditionalInfo },
-        }),
+        })
       );
 
       // set component amounts correct with states components to disable buttons respectively

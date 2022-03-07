@@ -15,7 +15,7 @@ import ServicepointMainInfoContent from "../../components/ServicepointMainInfoCo
 import PathTreeComponent from "../../components/PathTreeComponent";
 import { useAppDispatch, useLoading } from "../../state/hooks";
 import { setServicepointId, setFormFinished, setContinue, setFormSubmitted } from "../../state/reducers/formSlice";
-import { getFinnishDate, filterByLanguage, convertCoordinates } from "../../utils/utilFunctions";
+import { getFinnishDate, filterByLanguage, convertCoordinates, getTokenHash } from "../../utils/utilFunctions";
 import { setServicepointLocation, setServicepointLocationWGS84 } from "../../state/reducers/generalSlice";
 import {
   API_FETCH_ANSWER_LOGS,
@@ -30,7 +30,6 @@ import LoadSpinner from "../../components/common/LoadSpinner";
 import { persistor } from "../../state/store";
 import { AnswerLog, BackendEntrance, BackendServicepoint, EntranceResults, Servicepoint, StoredSentence } from "../../types/backendModels";
 import { AccessibilityData, DetailsProps, EntranceData } from "../../types/general";
-import { getTokenHash } from "../../utils/utilFunctions";
 
 // usage: the details / landing page of servicepoint
 const Details = ({
@@ -65,13 +64,13 @@ const Details = ({
       dispatch(
         setServicepointLocation({
           coordinates,
-        }),
+        })
       );
 
       dispatch(
         setServicepointLocationWGS84({
           coordinatesWGS84,
-        }),
+        })
       );
     }
 
@@ -216,7 +215,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         `${API_URL_BASE}${API_FETCH_BACKEND_SERVICEPOINT}?servicepoint_id=${params.servicepointId}&format=json`,
         {
           headers: new Headers({ Authorization: getTokenHash() }),
-        },
+        }
       );
       const servicepointBackendDetail = await (servicepointBackendDetailResp.json() as Promise<BackendServicepoint[]>);
 
@@ -228,7 +227,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         `${API_URL_BASE}${API_FETCH_ENTRANCES}?servicepoint=${servicepointData.servicepoint_id}&format=json`,
         {
           headers: new Headers({ Authorization: getTokenHash() }),
-        },
+        }
       );
       const servicepointEntranceData = await (servicepointEntranceResp.json() as Promise<EntranceResults>);
 
@@ -239,12 +238,12 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
             `${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE}?entrance_id=${entranceResult.entrance_id}&format=json`,
             {
               headers: new Headers({ Authorization: getTokenHash() }),
-            },
+            }
           );
           const entranceDetail = await (entranceDetailResp.json() as Promise<BackendEntrance[]>);
           const entrance = entranceDetail.find((e) => e.form_submitted === "Y");
           return { entranceResult, entrance };
-        }),
+        })
       );
 
       const mainEntranceDetails = entranceResultDetails.find((resultDetails) => resultDetails.entranceResult.is_main_entrance === "Y");
@@ -269,11 +268,11 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
             `${API_URL_BASE}${API_FETCH_SENTENCE_LANGS}?entrance_id=${entranceResult.entrance_id}&form_submitted=Y&format=json`,
             {
               headers: new Headers({ Authorization: getTokenHash() }),
-            },
+            }
           );
           const sentenceData = await (sentenceResp.json() as Promise<StoredSentence[]>);
           return { entranceResult, sentenceData };
-        }),
+        })
       );
 
       const mainEntranceSentences = entranceResultSentences.find((resultSentence) => resultSentence.entranceResult.is_main_entrance === "Y");
@@ -297,7 +296,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
           `${API_URL_BASE}${API_FETCH_ANSWER_LOGS}?entrance=${mainEntranceSentences?.entranceResult.entrance_id}&format=json`,
           {
             headers: new Headers({ Authorization: getTokenHash() }),
-          },
+          }
         );
         const logData = await (logResp.json() as Promise<AnswerLog[]>);
 

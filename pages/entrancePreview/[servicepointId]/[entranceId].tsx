@@ -16,7 +16,7 @@ import AddNewEntranceNotice from "../../../components/common/AddNewEntranceNotic
 import LoadSpinner from "../../../components/common/LoadSpinner";
 import { useAppDispatch, useAppSelector, useLoading } from "../../../state/hooks";
 import { setServicepointId, setEntranceId, setStartDate, setAnsweredChoice, setAnswer, setExtraAnswer } from "../../../state/reducers/formSlice";
-import { filterByLanguage, getCurrentDate } from "../../../utils/utilFunctions";
+import { filterByLanguage, getCurrentDate, getTokenHash } from "../../../utils/utilFunctions";
 import {
   // API_FETCH_ANSWER_LOGS,
   API_FETCH_BACKEND_ENTRANCE,
@@ -40,7 +40,6 @@ import {
   StoredSentence,
 } from "../../../types/backendModels";
 import { AccessibilityData, EntranceData, PreviewProps } from "../../../types/general";
-import { getTokenHash } from "../../../utils/utilFunctions";
 // usage: the preview page of an entrance, displayed before saving the completed form
 const Preview = ({
   servicepointData,
@@ -207,7 +206,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         `${API_URL_BASE}${API_FETCH_BACKEND_SERVICEPOINT}?servicepoint_id=${params.servicepointId}&format=json`,
         {
           headers: new Headers({ Authorization: getTokenHash() }),
-        },
+        }
       );
       const servicepointBackendDetail = await (servicepointBackendDetailResp.json() as Promise<BackendServicepoint[]>);
 
@@ -238,7 +237,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         `${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE_ANSWERS}?entrance_id=${params.entranceId}&format=json`,
         {
           headers: new Headers({ Authorization: getTokenHash() }),
-        },
+        }
       );
       const allQuestionAnswerData = await (allQuestionAnswersResp.json() as Promise<BackendEntranceAnswer[]>);
 
@@ -250,7 +249,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         `${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE_FIELD}?entrance_id=${params.entranceId}&format=json`,
         {
           headers: new Headers({ Authorization: getTokenHash() }),
-        },
+        }
       );
       const allQuestionExtraAnswerData = await (allQuestionExtraAnswersResp.json() as Promise<BackendEntranceField[]>);
 

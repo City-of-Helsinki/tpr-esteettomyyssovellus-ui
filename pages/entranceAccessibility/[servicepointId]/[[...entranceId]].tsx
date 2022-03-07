@@ -51,7 +51,7 @@ import HeadlineQuestionContainer from "../../../components/HeadlineQuestionConta
 import QuestionFormCtrlButtons from "../../../components/QuestionFormCtrlButtons";
 import PathTreeComponent from "../../../components/PathTreeComponent";
 import { setAnswer, setAnsweredChoice, setEntranceId, setExtraAnswer, setServicepointId, setStartDate } from "../../../state/reducers/formSlice";
-import { getTokenHash } from "../../../utils/utilFunctions";
+import { getTokenHash, getCurrentDate } from "../../../utils/utilFunctions";
 /*
 import {
   addComment,
@@ -64,7 +64,6 @@ import {
 } from "../../../state/reducers/additionalInfoSlice";
 */
 import { persistor } from "../../../state/store";
-import { getCurrentDate } from "../../../utils/utilFunctions";
 // import { setCurrentlyEditingBlock, setCurrentlyEditingQuestion } from "../../../state/reducers/generalSlice";
 import LoadSpinner from "../../../components/common/LoadSpinner";
 
@@ -260,7 +259,7 @@ const EntranceAccessibility = ({
 
           const blockExtraFields = isVisible
             ? questionBlockFieldData.filter(
-                (question) => question.question_block_id === block.question_block_id && question.language_id === curLocaleId,
+                (question) => question.question_block_id === block.question_block_id && question.language_id === curLocaleId
               )
             : null;
 
@@ -408,7 +407,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         `${API_URL_BASE}${API_FETCH_BACKEND_SERVICEPOINT}?servicepoint_id=${params.servicepointId}&format=json`,
         {
           headers: new Headers({ Authorization: getTokenHash() }),
-        },
+        }
       );
       const servicepointBackendDetail = await (servicepointBackendDetailResp.json() as Promise<BackendServicepoint[]>);
       const servicepointDetail = servicepointBackendDetail?.length > 0 ? servicepointBackendDetail[0] : undefined;
@@ -478,7 +477,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
           `${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE_ANSWERS}?entrance_id=${params.entranceId}&format=json`,
           {
             headers: new Headers({ Authorization: getTokenHash() }),
-          },
+          }
         );
         const allQuestionAnswerData = await (allQuestionAnswersResp.json() as Promise<BackendEntranceAnswer[]>);
 
@@ -525,7 +524,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
           `${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE_FIELD}?entrance_id=${params.entranceId}&format=json`,
           {
             headers: new Headers({ Authorization: getTokenHash() }),
-          },
+          }
         );
         const allQuestionExtraAnswerData = await (allQuestionExtraAnswersResp.json() as Promise<BackendEntranceField[]>);
 

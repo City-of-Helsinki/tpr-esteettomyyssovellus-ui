@@ -20,11 +20,10 @@ import { ChangeProps } from "../types/general";
 import { useAppDispatch } from "../state/hooks";
 import styles from "./ServicePoint.module.scss";
 import getOrigin from "../utils/request";
-import { getCurrentDate, validateChecksum } from "../utils/utilFunctions";
+import { getCurrentDate, getTokenHash, validateChecksum } from "../utils/utilFunctions";
 import { checksumSecretTPRTesti } from "../utils/checksumSecret";
 import { Servicepoint, SystemForm } from "../types/backendModels";
 import { setUser } from "../state/reducers/generalSlice";
-import { getTokenHash } from "../utils/utilFunctions";
 
 // usage: not sure if this is obsolete?
 const Servicepoints = ({

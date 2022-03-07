@@ -19,7 +19,7 @@ interface HeaderProps {
 const DynamicNavigation = dynamic(
   // @ts-ignore: A dynamic import must be used to force client-side rendering regardless of the typescript errors
   () => import("hds-react").then((hds) => hds.Navigation),
-  { ssr: false },
+  { ssr: false }
 );
 
 const Header = ({ children }: HeaderProps): ReactElement => {
