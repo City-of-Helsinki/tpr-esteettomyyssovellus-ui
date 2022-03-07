@@ -86,6 +86,10 @@ const EntranceAccessibility = ({
   const curLocaleId: number = LanguageLocales[curLocale as keyof typeof LanguageLocales];
   const isLoading = useLoading();
 
+  // TODO - improve this by checking user on server-side
+  const user = useAppSelector((state) => state.generalSlice.user);
+  const isUserValid = !!user && user.length > 0;
+
   useEffect(() => {
     // Clear the state on initial load
     persistor.purge();
@@ -330,9 +334,13 @@ const EntranceAccessibility = ({
       <Head>
         <title>{i18n.t("notification.title")}</title>
       </Head>
-      {isLoading ? (
-        <LoadSpinner />
-      ) : (
+      {!isUserValid && <h1>{i18n.t("common.notAuthorized")}</h1>}
+
+      {isUserValid && isLoading && <LoadSpinner />}
+
+      {isUserValid && !isLoading && !hasData && <h1>{i18n.t("common.noData")}</h1>}
+
+      {isUserValid && !isLoading && hasData && (
         <main id="content">
           <div className={styles.maincontainer}>
             <div className={styles.treecontainer}>

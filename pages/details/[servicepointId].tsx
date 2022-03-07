@@ -13,7 +13,7 @@ import styles from "./details.module.scss";
 import QuestionInfo from "../../components/QuestionInfo";
 import ServicepointMainInfoContent from "../../components/ServicepointMainInfoContent";
 import PathTreeComponent from "../../components/PathTreeComponent";
-import { useAppDispatch, useLoading } from "../../state/hooks";
+import { useAppDispatch, useAppSelector, useLoading } from "../../state/hooks";
 import { setServicepointId, setFormFinished, setContinue, setFormSubmitted } from "../../state/reducers/formSlice";
 import { getFinnishDate, filterByLanguage, convertCoordinates, getTokenHash } from "../../utils/utilFunctions";
 import { setServicepointLocation, setServicepointLocationWGS84 } from "../../state/reducers/generalSlice";
@@ -46,10 +46,16 @@ const Details = ({
   const treeItems = [servicepointData.servicepoint_name];
   const finnishDate = getFinnishDate(servicepointData.modified);
 
+  // TODO - improve this by checking user on server-side
+  const user = useAppSelector((state) => state.generalSlice.user);
+  const isUserValid = !!user && user.length > 0;
+
   useEffect(() => {
     // Clear the state on initial load
     persistor.purge();
   }, []);
+
+  const hasData = Object.keys(servicepointData).length > 0 && Object.keys(entranceData).length > 0;
 
   useEffect(() => {
     // set coordinates from data to state gerenalSlice for e.g. leafletmaps
@@ -79,14 +85,12 @@ const Details = ({
       dispatch(setServicepointId(servicepointData.servicepoint_id));
     }
 
-    const hasData = Object.keys(servicepointData).length > 0 && Object.keys(entranceData).length > 0;
-
     if (hasData && accessibilityData.main.length !== 0 && accessibilityData.main[0].form_submitted === "Y") {
       dispatch(setFormFinished());
       dispatch(setContinue());
       dispatch(setFormSubmitted());
     }
-  }, [servicepointData, entranceData, accessibilityData, dispatch]);
+  }, [servicepointData, entranceData, accessibilityData, hasData, dispatch]);
 
   // Filter by language
   // Make sure that the main entrance is listed before the side entrances.
@@ -103,9 +107,13 @@ const Details = ({
       <Head>
         <title>{i18n.t("notification.title")}</title>
       </Head>
-      {isLoading ? (
-        <LoadSpinner />
-      ) : (
+      {!isUserValid && <h1>{i18n.t("common.notAuthorized")}</h1>}
+
+      {isUserValid && isLoading && <LoadSpinner />}
+
+      {isUserValid && !isLoading && !hasData && <h1>{i18n.t("common.noData")}</h1>}
+
+      {isUserValid && !isLoading && hasData && (
         <main id="content">
           <div className={styles.maincontainer}>
             <div className={styles.treecontainer}>

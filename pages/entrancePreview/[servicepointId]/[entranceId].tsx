@@ -56,6 +56,10 @@ const Preview = ({
 
   const [isSendingComplete, setSendingComplete] = useState(false);
 
+  // TODO - improve this by checking user on server-side
+  const user = useAppSelector((state) => state.generalSlice.user);
+  const isUserValid = !!user && user.length > 0;
+
   useEffect(() => {
     // Clear the state on initial load
     persistor.purge();
@@ -101,21 +105,27 @@ const Preview = ({
     }
   }, [servicepointData, entranceData, questionAnswerData, questionExtraAnswerData, entranceKey, startedAnswering, dispatch]);
 
-  // Filter by language
-  const filteredAccessibilityData = {
-    [entranceKey]: filterByLanguage(accessibilityData[entranceKey], i18n.locale()),
-  };
+  const hasData = accessibilityData && accessibilityData[entranceKey] && accessibilityData[entranceKey].length > 0;
 
-  const hasAccessibilityData = accessibilityData && accessibilityData[entranceKey] && accessibilityData[entranceKey].length > 0;
+  // Filter by language
+  const filteredAccessibilityData = hasData
+    ? {
+        [entranceKey]: filterByLanguage(accessibilityData[entranceKey], i18n.locale()),
+      }
+    : {};
 
   return (
     <Layout>
       <Head>
         <title>{i18n.t("notification.title")}</title>
       </Head>
-      {isLoading ? (
-        <LoadSpinner />
-      ) : (
+      {!isUserValid && <h1>{i18n.t("common.notAuthorized")}</h1>}
+
+      {isUserValid && isLoading && <LoadSpinner />}
+
+      {isUserValid && !isLoading && !hasData && <h1>{i18n.t("common.noData")}</h1>}
+
+      {isUserValid && !isLoading && hasData && (
         <main id="content">
           <div className={styles.maincontainer}>
             <div className={styles.treecontainer}>
@@ -149,7 +159,7 @@ const Preview = ({
                   <ServicepointLandingSummaryContact
                     servicepointData={servicepointDetail}
                     entranceData={entranceData[entranceKey]}
-                    hasData={hasAccessibilityData}
+                    hasData={hasData}
                   />
                 )}
 
@@ -159,7 +169,7 @@ const Preview = ({
                   servicepointData={servicepointData}
                   servicepointDetail={servicepointDetail}
                   accessibilityData={filteredAccessibilityData}
-                  hasData={hasAccessibilityData}
+                  hasData={hasData}
                 />
 
                 <PreviewControlButtons setSendingComplete={setSendingComplete} />

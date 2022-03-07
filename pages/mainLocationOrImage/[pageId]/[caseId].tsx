@@ -35,6 +35,10 @@ const MainLocationOrImage = ({ pageId, caseId }: MainLocationOrImageProps): Reac
   const isLoading = useLoading();
   const dispatch = useAppDispatch();
 
+  // TODO - improve this by checking user on server-side
+  const user = useAppSelector((state) => state.generalSlice.user);
+  const isUserValid = !!user && user.length > 0;
+
   // if caseId is 1 then location page, if caseId 2 then image page
   const isLocation = caseId === 1;
 
@@ -82,9 +86,11 @@ const MainLocationOrImage = ({ pageId, caseId }: MainLocationOrImageProps): Reac
       <Head>
         <title>{i18n.t("notification.title")}</title>
       </Head>
-      {isLoading ? (
-        <LoadSpinner />
-      ) : (
+      {!isUserValid && <h1>{i18n.t("common.notAuthorized")}</h1>}
+
+      {isUserValid && isLoading && <LoadSpinner />}
+
+      {isUserValid && !isLoading && (
         <main id="content">
           <div className={styles.maincontainer}>
             <div className={styles.infocontainer}>

@@ -32,6 +32,8 @@
       "en": "på engelska"
     },
     "opensInANewTab": "(öppnar i ny flik)",
+    "notAuthorized": "Du har inte behörighet att visa den begärda sidan",
+    "noData": "Information är inte tillgänglig",
     "landing": {
       "title": "Välkommen till uppdatering av tillgänglighetsinformation"
     },

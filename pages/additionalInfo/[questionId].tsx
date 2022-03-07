@@ -21,6 +21,7 @@ import { LanguageLocales, API_FETCH_BACKEND_QUESTIONS, API_URL_BASE } from "../.
 import { setCurrentlyEditingQuestion } from "../../state/reducers/generalSlice";
 import LoadSpinner from "../../components/common/LoadSpinner";
 import { getTokenHash } from "../../utils/utilFunctions";
+
 // usage: additional information page (per question)
 const AdditionalInfo = ({ questionId, questionData }: AdditionalInfoPageProps): ReactElement => {
   const i18n = useI18n();
@@ -30,6 +31,11 @@ const AdditionalInfo = ({ questionId, questionData }: AdditionalInfoPageProps): 
   const [increasingId, setIncreasingId] = useState(0);
   const isLoading = useLoading();
   const dispatch = useAppDispatch();
+
+  // TODO - improve this by checking user on server-side
+  const user = useAppSelector((state) => state.generalSlice.user);
+  const isUserValid = !!user && user.length > 0;
+
   const curAdditionalInfo = useAppSelector((state) => state.additionalInfoReducer.additionalInfo[questionId]);
 
   // check/init addinfo can add comment / location and number of pictures able to add
@@ -118,9 +124,11 @@ const AdditionalInfo = ({ questionId, questionData }: AdditionalInfoPageProps): 
       <Head>
         <title>{i18n.t("notification.title")}</title>
       </Head>
-      {isLoading ? (
-        <LoadSpinner />
-      ) : (
+      {!isUserValid && <h1>{i18n.t("common.notAuthorized")}</h1>}
+
+      {isUserValid && isLoading && <LoadSpinner />}
+
+      {isUserValid && !isLoading && (
         <main id="content">
           <div className={styles.maincontainer}>
             <div className={styles.infocontainer}>

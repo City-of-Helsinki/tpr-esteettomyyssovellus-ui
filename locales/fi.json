@@ -32,6 +32,8 @@
       "en": "englanniksi"
     },
     "opensInANewTab": "(aukeaa uuteen välilehteen)",
+    "notAuthorized": "Sinulla ei ole lupaa tarkastella pyydettyä sivua",
+    "noData": "Tietoja ei ole saatavilla",
     "landing": {
       "title": "Tervetuloa päivittämään esteettömyystietoja"
     },
