@@ -17,6 +17,16 @@ import {
 import { AdditionalInfoProps } from "../types/general";
 */
 
+export const validateChecksum = (string: string, checksum: string | string[]): boolean => {
+  const hash = crypto.createHash("sha256").update(string).digest("hex").toUpperCase();
+  return hash === checksum;
+};
+
+export const getTokenHash = () => {
+  const hash = crypto.createHash("sha256").update(API_TOKEN).digest("hex").toUpperCase();
+  return hash.toLocaleLowerCase();
+};
+
 export const getCurrentDate = (): string => {
   const today = new Date();
   const date = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}T${today.getHours()}:${today.getMinutes()}:${today.getSeconds()}Z`;
@@ -71,16 +81,6 @@ export const getClientIp = async (): Promise<string> =>
   publicIp.v4({
     fallbackUrls: ["https://ifconfig.co/ip"],
   });
-
-export const validateChecksum = (string: string, checksum: string | string[]): boolean => {
-  const hash = crypto.createHash("sha256").update(string).digest("hex").toUpperCase();
-  return hash === checksum;
-};
-
-export const getTokenHash = () => {
-  const hash = crypto.createHash("sha256").update(API_TOKEN).digest("hex").toUpperCase();
-  return hash.toLocaleLowerCase();
-};
 
 interface KeyValue {
   [key: number]: string;
