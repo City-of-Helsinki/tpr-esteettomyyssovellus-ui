@@ -44,7 +44,7 @@ const QuestionFormCtrlButtons = ({
   const handleCancel = (): void => {
     // TODO: Add errorpage
     const url = curServicepointId === -1 ? "/" : `/details/${curServicepointId}/`;
-    window.location.href = url;
+    router.push(url);
   };
 
   // const isPreviewActive = curAnsweredChoices.length > 1;
