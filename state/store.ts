@@ -3,7 +3,8 @@ import { configureStore } from "@reduxjs/toolkit";
 import { combineReducers } from "redux";
 
 // import AsyncStorage from "@react-native-async-storage/async-storage";
-import storage from "redux-persist/lib/storage"; // defaults to localStorage for web
+// import storage from "redux-persist/lib/storage"; // defaults to localStorage for web
+import storage from "./storage";
 
 import { FLUSH, PAUSE, PERSIST, persistReducer, persistStore, PURGE, REGISTER, REHYDRATE } from "redux-persist";
 import generalSlice from "./reducers/generalSlice";
