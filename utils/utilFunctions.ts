@@ -60,7 +60,7 @@ export const convertCoordinates = (
 export const postData = async (url: string, dataToPost: string, router: NextRouter): Promise<void> => {
   const postAnswerOptions = {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", Authorization: getTokenHash() },
     // body: JSON.stringify(dataToPost),
     body: dataToPost,
   };
