@@ -11,7 +11,7 @@ import {
   API_CHOP_ADDRESS,
   API_FETCH_ENTRANCES,
   API_FETCH_SERVICEPOINTS,
-  // API_FETCH_SYSTEMS,
+  API_FETCH_SYSTEMS,
   API_FETCH_SYSTEM_FORMS,
   API_FETCH_EXTERNAL_SERVICEPOINTS,
   API_URL_BASE,
@@ -22,10 +22,9 @@ import styles from "./ServicePoint.module.scss";
 import getOrigin from "../utils/request";
 import { getCurrentDate, getTokenHash, validateChecksum } from "../utils/utilFunctions";
 import { checksumSecretTPRTesti } from "../utils/checksumSecret";
-import { Servicepoint, SystemForm } from "../types/backendModels";
+import { Servicepoint, System, SystemForm } from "../types/backendModels";
 import { setUser } from "../state/reducers/generalSlice";
 
-// usage: not sure if this is obsolete?
 const Servicepoints = ({
   changed,
   servicepointId,
@@ -181,18 +180,17 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
     }
     try {
       let servicepointId = 0;
-      // const systemResp = await fetch(`${API_URL_BASE}${API_FETCH_SYSTEMS}${query.systemId}`);
+      const systemResp = await fetch(`${API_URL_BASE}${API_FETCH_SYSTEMS}${query.systemId}`);
       const servicepointResp = await fetch(`${API_URL_BASE}${API_FETCH_SERVICEPOINTS}?format=json&ext_servicepoint_id=${query.servicePointId}`, {
         headers: new Headers({ Authorization: getTokenHash() }),
       });
-      // const systemData = await (systemResp.json() as Promise<System>);
+      const systemData = await (systemResp.json() as Promise<System[]>);
       const servicepointData = await (servicepointResp.json() as Promise<Servicepoint[]>);
 
-      // const checksumSecret = systemData[0].checksum_secret;
+      const checksumSecret = systemData && systemData.length > 0 ? systemData[0].checksum_secret : undefined;
+      const checksum = process.env.NODE_ENV === "production" ? checksumSecret ?? "" : checksumSecretTPRTesti;
       const checksumString =
-        // TODO: CHANGE TO checksumSecret when moving to production
-        // checksumSecret +
-        checksumSecretTPRTesti +
+        checksum +
         query.systemId +
         query.servicePointId +
         query.user +
