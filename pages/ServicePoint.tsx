@@ -80,7 +80,7 @@ const Servicepoints = ({
       //const updateAddressUrl = `${API_URL_BASE}${API_FETCH_SERVICEPOINTS}${servicepointId}/update_address/`;
 
       await fetch(updateAddressUrl, updateAddressOptions);
-      const url = `details/${servicepointId}`;
+      const url = `/details/${servicepointId}`;
       router.push(url);
       // TODO: Update entry in ArServicePoint and redirect to /details/x page.
     }
