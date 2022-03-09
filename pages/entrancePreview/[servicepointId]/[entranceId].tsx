@@ -167,7 +167,6 @@ const Preview = ({
                   entranceKey={entranceKey}
                   entranceData={entranceData[entranceKey]}
                   servicepointData={servicepointData}
-                  servicepointDetail={servicepointDetail}
                   accessibilityData={filteredAccessibilityData}
                   hasData={hasData}
                 />

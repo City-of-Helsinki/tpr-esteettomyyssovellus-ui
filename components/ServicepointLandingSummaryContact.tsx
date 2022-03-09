@@ -7,12 +7,7 @@ import { ServicepointLandingSummaryContactProps } from "../types/general";
 import styles from "./ServicepointLandingSummaryContact.module.scss";
 
 // usage: used in details/landing page for main contact information
-const ServicepointLandingSummaryContact = ({
-  servicepointData,
-  entranceData,
-  hasData,
-  hasModifyButton,
-}: ServicepointLandingSummaryContactProps): JSX.Element => {
+const ServicepointLandingSummaryContact = ({ entranceData, hasData, hasModifyButton }: ServicepointLandingSummaryContactProps): JSX.Element => {
   const i18n = useI18n();
   const curLocale = i18n.locale();
 
@@ -20,9 +15,7 @@ const ServicepointLandingSummaryContact = ({
     <div className={styles.maincontainer}>
       <div className={styles.headercontainer}>
         <h3>{i18n.t("servicepoint.contactInfoHeader")}</h3>
-        {hasModifyButton && (
-          <ServicepointLandingSummaryModifyButton servicepointData={servicepointData} entranceData={entranceData} hasData={hasData} />
-        )}
+        {hasModifyButton && <ServicepointLandingSummaryModifyButton entranceData={entranceData} hasData={hasData} />}
       </div>
 
       <div>

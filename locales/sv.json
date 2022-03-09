@@ -66,7 +66,7 @@
   },
   "servicepoint": {
     "buttons": {
-      "createServicepoint": "Fyll i tillgänglighetsformuläret",
+      "createServicepoint": "Fyll i tillgänglighetsinformation",
       "addNewEntrance": "Lägg till en ny entré",
       "editServicepoint": "Redigera",
       "mainCtrlReturn": "Återgå till sökningen",
@@ -75,6 +75,7 @@
     "contactInfoHeader": "Kontaktinformation",
     "contactFormSummaryHeader": "Tillgänglighetsinformation",
     "noDataContactinfo": "Inga kontaktuppgifter för tillgänglighetsfrågor har lämnats till kontoret",
+    "noDataMainEntrance": "Ingen information har lämnats till kontoret om tillgängligheten till huvudentrén",
     "contactPerson": "Tillgänglighetskontaktperson",
     "phoneNumber": "Telefonnummer",
     "email": "E-postadress",

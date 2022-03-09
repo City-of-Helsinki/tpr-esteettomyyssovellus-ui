@@ -3,35 +3,24 @@ import { useI18n } from "next-localization";
 import { useRouter } from "next/router";
 import Button from "./QuestionButton";
 import { ServicepointLandingSummaryModifyButtonProps } from "../types/general";
-import { useAppDispatch } from "../state/hooks";
+import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { setStartDate } from "../state/reducers/formSlice";
 import { getCurrentDate } from "../utils/utilFunctions";
 
 // usage: modify button for ServicepointLandingSummary
-const ServicepointLandingSummaryModifyButton = ({
-  servicepointData,
-  entranceData,
-  hasData,
-}: ServicepointLandingSummaryModifyButtonProps): JSX.Element => {
+const ServicepointLandingSummaryModifyButton = ({ entranceData, hasData }: ServicepointLandingSummaryModifyButtonProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  // const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
-  const { servicepoint_id: curServicepointId } = servicepointData;
-  // const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
+  const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
   const { entrance_id: curEntranceId } = entranceData || {};
 
   const handleEditorAddPointData = () => {
-    if (entranceData) {
-      const startedAnswering = getCurrentDate();
-      dispatch(setStartDate(startedAnswering));
-      const url = `/entranceAccessibility/${curServicepointId}/${curEntranceId}`;
-      router.push(url);
-    } else {
-      // todo: todo (?)
-      console.log("create servicepoint data clicked, todo create logic");
-    }
+    const startedAnswering = getCurrentDate();
+    dispatch(setStartDate(startedAnswering));
+    const url = entranceData ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}` : `/entranceAccessibility/${curServicepointId}`;
+    router.push(url);
   };
 
   return (

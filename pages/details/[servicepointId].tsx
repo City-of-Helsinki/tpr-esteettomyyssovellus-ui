@@ -55,7 +55,8 @@ const Details = ({
     persistor.purge();
   }, []);
 
-  const hasData = Object.keys(servicepointData).length > 0 && Object.keys(entranceData).length > 0;
+  // const hasData = Object.keys(servicepointData).length > 0 && Object.keys(entranceData).length > 0;
+  const hasData = Object.keys(servicepointData).length > 0;
 
   useEffect(() => {
     // set coordinates from data to state gerenalSlice for e.g. leafletmaps
@@ -147,7 +148,7 @@ const Details = ({
               </span>
               <div className={styles.entranceHeader}>
                 <h2>{`${i18n.t("servicepoint.contactFormSummaryHeader")} (${entranceKeys.length})`}</h2>
-                {servicepointDetail.new_entrance_possible === "Y" && <ServicepointLandingSummaryNewButton servicepointData={servicepointDetail} />}
+                {servicepointDetail.new_entrance_possible === "Y" && <ServicepointLandingSummaryNewButton />}
               </div>
             </div>
 
@@ -180,7 +181,6 @@ const Details = ({
                         entranceKey={key}
                         entranceData={entranceData[key]}
                         servicepointData={servicepointData}
-                        servicepointDetail={servicepointDetail}
                         accessibilityData={filteredAccessibilityData}
                         hasData={hasAccessibilityData}
                         hasModifyButton

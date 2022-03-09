@@ -15,7 +15,6 @@ const ServicepointLandingSummaryAccessibility = ({
   entranceKey,
   entranceData,
   servicepointData,
-  servicepointDetail,
   accessibilityData,
   hasData,
   hasModifyButton,
@@ -78,9 +77,7 @@ const ServicepointLandingSummaryAccessibility = ({
     <div className={styles.maincontainer}>
       <div className={styles.headercontainer}>
         <h3>{header}</h3>
-        {entranceKey !== "main" && hasModifyButton && (
-          <ServicepointLandingSummaryModifyButton servicepointData={servicepointDetail} entranceData={entranceData} hasData={hasData} />
-        )}
+        {entranceKey !== "main" && hasModifyButton && <ServicepointLandingSummaryModifyButton entranceData={entranceData} hasData={hasData} />}
       </div>
       <div>
         {hasData ? (
@@ -96,7 +93,7 @@ const ServicepointLandingSummaryAccessibility = ({
             <ServicepointLandingSummaryContent>
               <span>
                 <IconAlertCircle />
-                <p>{i18n.t("servicepoint.noDataContactinfo")}</p>
+                <p>{i18n.t("servicepoint.noDataMainEntrance")}</p>
               </span>
             </ServicepointLandingSummaryContent>
           </div>
@@ -105,7 +102,7 @@ const ServicepointLandingSummaryAccessibility = ({
 
       {hasModifyButton && (
         <div>
-          <ServicepointLandingSummaryModifyButton servicepointData={servicepointDetail} entranceData={entranceData} hasData={hasData} />
+          <ServicepointLandingSummaryModifyButton entranceData={entranceData} hasData={hasData} />
         </div>
       )}
     </div>
