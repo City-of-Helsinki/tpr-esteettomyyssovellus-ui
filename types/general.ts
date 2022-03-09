@@ -137,7 +137,6 @@ export interface ServicepointLandingSummaryAccessibilityProps {
   entranceKey: string;
   entranceData?: BackendEntrance;
   servicepointData: Servicepoint;
-  servicepointDetail: BackendServicepoint;
   accessibilityData: AccessibilityData;
   hasData: boolean;
   hasModifyButton?: boolean;
@@ -157,12 +156,7 @@ export interface ServicepointLandingSummaryLocationPictureProps {
   entranceData?: BackendEntrance;
 }
 
-export interface ServicepointLandingSummaryNewButtonProps {
-  servicepointData: BackendServicepoint;
-}
-
 export interface ServicepointLandingSummaryModifyButtonProps {
-  servicepointData: BackendServicepoint;
   entranceData?: BackendEntrance;
   hasData: boolean;
 }

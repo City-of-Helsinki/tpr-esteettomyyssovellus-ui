@@ -167,12 +167,13 @@ const Preview = ({
                   entranceKey={entranceKey}
                   entranceData={entranceData[entranceKey]}
                   servicepointData={servicepointData}
-                  servicepointDetail={servicepointDetail}
                   accessibilityData={filteredAccessibilityData}
                   hasData={hasData}
                 />
 
-                <PreviewControlButtons setSendingComplete={setSendingComplete} />
+                <div className={styles.footercontainer}>
+                  <PreviewControlButtons setSendingComplete={setSendingComplete} />
+                </div>
               </div>
             )}
 

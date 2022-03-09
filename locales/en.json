@@ -66,7 +66,7 @@
   },
   "servicepoint": {
     "buttons": {
-      "createServicepoint": "Fill accessibility form",
+      "createServicepoint": "Fill accessibility information",
       "addNewEntrance": "Add a new entrance",
       "editServicepoint": "Edit",
       "mainCtrlReturn": "Return to search",
@@ -74,7 +74,8 @@
     },
     "contactInfoHeader": "Contact information",
     "contactFormSummaryHeader": "Accessibility information",
-    "noDataContactinfo": "No contact details for accessibility issues have been provided to the office",
+    "noDataContactinfo": "No contact details for accessibility issues have been provided to the location",
+    "noDataMainEntrance": "No information has been provided about the main entrance accessibility of the location",
     "contactPerson": "Accessibility contact person",
     "phoneNumber": "Phone number",
     "email": "Email address",
@@ -183,12 +184,13 @@
   },
   "AddressChangedPage": {
     "oldAddress": "Old address",
+    "newAddress": "New address",
     "locationHasChanged": "Location has changed",
     "errorHasOccured": "An error has occured in the software",
     "hasServicepointMoved": "Has the servicepoint moved to new premises?",
     "headerSentence1": "The location of ",
     "headerSentence2": " servicepoint has changed.",
-    "radioButtonYes": "Yes",
-    "radioButtonNo": "No"
+    "radioButtonYes": "Yes, it has moved (if you select this, the old accessibility information will be deleted and new information will have to be entered for the new premises)",
+    "radioButtonNo": "No, it has not moved (if you select this, you can edit previously saved accessibility information)"
   }
 }

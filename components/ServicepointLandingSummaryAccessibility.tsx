@@ -6,6 +6,7 @@ import ServicepointLandingSummaryLocationPicture from "./ServicepointLandingSumm
 import ServicepointLandingSummaryModifyButton from "./ServicepointLandingSummaryModifyButton";
 import { StoredSentence } from "../types/backendModels";
 import { ServicepointLandingSummaryAccessibilityProps } from "../types/general";
+import { formatAddress } from "../utils/utilFunctions";
 import styles from "./ServicepointLandingSummaryAccessibility.module.scss";
 
 // usage: used in details/landing page to create a summary block of sentences etc
@@ -14,7 +15,6 @@ const ServicepointLandingSummaryAccessibility = ({
   entranceKey,
   entranceData,
   servicepointData,
-  servicepointDetail,
   accessibilityData,
   hasData,
   hasModifyButton,
@@ -25,8 +25,12 @@ const ServicepointLandingSummaryAccessibility = ({
   const entranceName = entranceData ? entranceData[`name_${curLocale}`] : "";
   const header =
     entranceKey === "main"
-      ? `${i18n.t("common.mainEntrance")}: ${servicepointData.address_street_name} ${servicepointData.address_no}, ${servicepointData.address_city}`
-      : `${i18n.t("common.entrance")}: ${entranceName}`;
+      ? `${i18n.t("common.mainEntrance")}: ${formatAddress(
+          servicepointData.address_street_name,
+          servicepointData.address_no,
+          servicepointData.address_city
+        )}`
+      : `${i18n.t("common.entrance")}: ${entranceName ?? ""}`;
 
   interface SentenceGroup {
     [key: string]: StoredSentence[];
@@ -73,9 +77,7 @@ const ServicepointLandingSummaryAccessibility = ({
     <div className={styles.maincontainer}>
       <div className={styles.headercontainer}>
         <h3>{header}</h3>
-        {entranceKey !== "main" && hasModifyButton && (
-          <ServicepointLandingSummaryModifyButton servicepointData={servicepointDetail} entranceData={entranceData} hasData={hasData} />
-        )}
+        {entranceKey !== "main" && hasModifyButton && <ServicepointLandingSummaryModifyButton entranceData={entranceData} hasData={hasData} />}
       </div>
       <div>
         {hasData ? (
@@ -91,7 +93,7 @@ const ServicepointLandingSummaryAccessibility = ({
             <ServicepointLandingSummaryContent>
               <span>
                 <IconAlertCircle />
-                <p>{i18n.t("servicepoint.noDataContactinfo")}</p>
+                <p>{i18n.t("servicepoint.noDataMainEntrance")}</p>
               </span>
             </ServicepointLandingSummaryContent>
           </div>
@@ -99,8 +101,8 @@ const ServicepointLandingSummaryAccessibility = ({
       </div>
 
       {hasModifyButton && (
-        <div>
-          <ServicepointLandingSummaryModifyButton servicepointData={servicepointDetail} entranceData={entranceData} hasData={hasData} />
+        <div className={styles.footercontainer}>
+          <ServicepointLandingSummaryModifyButton entranceData={entranceData} hasData={hasData} />
         </div>
       )}
     </div>

@@ -48,6 +48,10 @@ export const filterByLanguage = (dict: StoredSentence[], locale: string): Stored
   });
 };
 
+export const formatAddress = (streetName?: string, streetNumber?: string, city?: string) => {
+  return `${streetName ?? ""} ${streetNumber ?? ""}${streetName || streetNumber ? ", " : ""}${city ?? ""}`;
+};
+
 // Helper function
 export const isLocationValid = (coordinates: [number, number] | number[]): boolean =>
   coordinates && coordinates.length === 2 && coordinates[0] > 0 && coordinates[1] > 0;

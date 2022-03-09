@@ -66,7 +66,7 @@
   },
   "servicepoint": {
     "buttons": {
-      "createServicepoint": "Täytä esteettömyyslomake",
+      "createServicepoint": "Täytä esteettömyystiedot",
       "addNewEntrance": "Lisää uusi sisäänkäynti",
       "editServicepoint": "Muokkaa",
       "mainCtrlReturn": "Palaa hakuun",
@@ -75,6 +75,7 @@
     "contactInfoHeader": "Yhteystiedot",
     "contactFormSummaryHeader": "Esteettömyystiedot",
     "noDataContactinfo": "Toimipisteelle ei ole annettu esteettömyysasioiden yhteystietoja",
+    "noDataMainEntrance": "Toimipisteelle ei ole annettu tietoja pääsisäänkäynnin esteettömyydestä",
     "contactPerson": "Esteettömyyden yhteyshenkilö",
     "phoneNumber": "Puhelinnumero",
     "email": "Sähköpostiosoite",
@@ -183,12 +184,13 @@
   },
   "AddressChangedPage": {
     "oldAddress": "Vanha osoite",
+    "newAddress": "Uusi osoite",
     "locationHasChanged": "Lokaatio on vaihtunut",
     "errorHasOccured": "Sovelluksessa tapahtui virhe",
-    "hasServicepointMoved": "Onko toimipiste muuttanu uusiin tiloihin?",
+    "hasServicepointMoved": "Onko toimipiste muuttanut uusiin tiloihin?",
     "headerSentence1": "Toimipisteen ",
     "headerSentence2": " sijainti on muuttunut.",
-    "radioButtonYes": "Kyllä",
-    "radioButtonNo": "Ei"
+    "radioButtonYes": "Kyllä, on muuttanut (jos valitset tämän, vanhat esteettömyystiedot poistetaan ja uusille tiloille täytyy syöttää uudet tiedot)",
+    "radioButtonNo": "Ei ole muuttanut (jos valitset tämän, voit muokata aiemmin tallennettuja esteettömyystietoja)"
   }
 }

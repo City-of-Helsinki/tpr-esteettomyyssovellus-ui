@@ -51,7 +51,7 @@ import HeadlineQuestionContainer from "../../../components/HeadlineQuestionConta
 import QuestionFormCtrlButtons from "../../../components/QuestionFormCtrlButtons";
 import PathTreeComponent from "../../../components/PathTreeComponent";
 import { setAnswer, setAnsweredChoice, setEntranceId, setExtraAnswer, setServicepointId, setStartDate } from "../../../state/reducers/formSlice";
-import { getTokenHash, getCurrentDate } from "../../../utils/utilFunctions";
+import { getTokenHash, getCurrentDate, formatAddress } from "../../../utils/utilFunctions";
 /*
 import {
   addComment,
@@ -323,7 +323,11 @@ const EntranceAccessibility = ({
   const entranceName = entranceData ? entranceData[`name_${curLocale}`] : "";
   const entranceHeader =
     formId === 0
-      ? `${i18n.t("common.mainEntrance")}: ${servicepointData.address_street_name} ${servicepointData.address_no}, ${servicepointData.address_city}`
+      ? `${i18n.t("common.mainEntrance")}: ${formatAddress(
+          servicepointData.address_street_name,
+          servicepointData.address_no,
+          servicepointData.address_city
+        )}`
       : `${i18n.t("common.entrance")}: ${entranceName}`;
   const header = isExistingEntrance ? entranceHeader : i18n.t("common.newEntrance");
 
