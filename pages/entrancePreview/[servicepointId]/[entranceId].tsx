@@ -171,7 +171,9 @@ const Preview = ({
                   hasData={hasData}
                 />
 
-                <PreviewControlButtons setSendingComplete={setSendingComplete} />
+                <div className={styles.footercontainer}>
+                  <PreviewControlButtons setSendingComplete={setSendingComplete} />
+                </div>
               </div>
             )}
 

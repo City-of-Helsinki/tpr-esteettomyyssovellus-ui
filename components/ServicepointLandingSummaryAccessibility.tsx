@@ -101,7 +101,7 @@ const ServicepointLandingSummaryAccessibility = ({
       </div>
 
       {hasModifyButton && (
-        <div>
+        <div className={styles.footercontainer}>
           <ServicepointLandingSummaryModifyButton entranceData={entranceData} hasData={hasData} />
         </div>
       )}

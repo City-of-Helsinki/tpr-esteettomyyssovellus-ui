@@ -12,7 +12,7 @@
   }
 
   .accordion {
-    margin: $spacing-l 0;
+    margin-top: $spacing-l;
     padding-left: 0 !important;
     padding-right: 0 !important;
 
@@ -21,6 +21,10 @@
       color: $color-bus;
       padding: $spacing-m;
     }
+  }
+
+  .footercontainer {
+    margin-top: $spacing-l;
   }
 
   .nodatacontainer {
