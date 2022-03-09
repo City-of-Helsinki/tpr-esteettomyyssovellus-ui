@@ -20,7 +20,7 @@ import { ChangeProps } from "../types/general";
 import { useAppDispatch } from "../state/hooks";
 import styles from "./ServicePoint.module.scss";
 import getOrigin from "../utils/request";
-import { getCurrentDate, getTokenHash, validateChecksum } from "../utils/utilFunctions";
+import { formatAddress, getCurrentDate, getTokenHash, validateChecksum } from "../utils/utilFunctions";
 import { checksumSecretTPRTesti } from "../utils/checksumSecret";
 import { Servicepoint, System, SystemForm } from "../types/backendModels";
 import { setUser } from "../state/reducers/generalSlice";
@@ -101,11 +101,11 @@ const Servicepoints = ({
             </h1>
             <div className={styles.addressBlock}>
               <p>{i18n.t("AddressChangedPage.oldAddress")}:</p>
-              <h4 className={styles.address}>{`${oldAddress} ${oldAddressNumber}, ${oldAddressCity}`}</h4>
+              <h4 className={styles.address}>{formatAddress(oldAddress, oldAddressNumber, oldAddressCity)}</h4>
             </div>
             <div className={styles.addressBlock}>
               <p>{i18n.t("AddressChangedPage.oldAddress")}:</p>
-              <h4 className={styles.address}>{`${newAddress} ${newAddressNumber}, ${newAddressCity}`}</h4>
+              <h4 className={styles.address}>{formatAddress(newAddress, newAddressNumber, newAddressCity)}</h4>
             </div>
             <div className={styles.radioButtonDiv}>
               <SelectionGroup label={i18n.t("AddressChangedPage.hasServicepointMoved")}>

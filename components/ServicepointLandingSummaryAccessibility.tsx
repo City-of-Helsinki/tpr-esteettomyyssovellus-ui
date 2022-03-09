@@ -6,6 +6,7 @@ import ServicepointLandingSummaryLocationPicture from "./ServicepointLandingSumm
 import ServicepointLandingSummaryModifyButton from "./ServicepointLandingSummaryModifyButton";
 import { StoredSentence } from "../types/backendModels";
 import { ServicepointLandingSummaryAccessibilityProps } from "../types/general";
+import { formatAddress } from "../utils/utilFunctions";
 import styles from "./ServicepointLandingSummaryAccessibility.module.scss";
 
 // usage: used in details/landing page to create a summary block of sentences etc
@@ -25,8 +26,12 @@ const ServicepointLandingSummaryAccessibility = ({
   const entranceName = entranceData ? entranceData[`name_${curLocale}`] : "";
   const header =
     entranceKey === "main"
-      ? `${i18n.t("common.mainEntrance")}: ${servicepointData.address_street_name} ${servicepointData.address_no}, ${servicepointData.address_city}`
-      : `${i18n.t("common.entrance")}: ${entranceName}`;
+      ? `${i18n.t("common.mainEntrance")}: ${formatAddress(
+          servicepointData.address_street_name,
+          servicepointData.address_no,
+          servicepointData.address_city
+        )}`
+      : `${i18n.t("common.entrance")}: ${entranceName ?? ""}`;
 
   interface SentenceGroup {
     [key: string]: StoredSentence[];
