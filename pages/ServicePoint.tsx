@@ -104,7 +104,7 @@ const Servicepoints = ({
               <h4 className={styles.address}>{formatAddress(oldAddress, oldAddressNumber, oldAddressCity)}</h4>
             </div>
             <div className={styles.addressBlock}>
-              <p>{i18n.t("AddressChangedPage.oldAddress")}:</p>
+              <p>{i18n.t("AddressChangedPage.newAddress")}:</p>
               <h4 className={styles.address}>{formatAddress(newAddress, newAddressNumber, newAddressCity)}</h4>
             </div>
             <div className={styles.radioButtonDiv}>

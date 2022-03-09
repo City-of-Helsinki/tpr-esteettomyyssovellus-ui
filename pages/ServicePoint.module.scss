@@ -1,13 +1,16 @@
+@import "~hds-design-tokens/lib/all.scss";
+
 .addressBlock {
   display: flex;
   align-items: center;
+
   .address {
-    padding-left: 0.5rem;
+    padding-left: $spacing-2-xs;
   }
 }
+
 .radioButtonDiv {
-  background-color: lightcoral;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  margin-bottom: 1rem;
+  background-color: $color-error-light;
+  padding: $spacing-s;
+  margin-bottom: $spacing-s;
 }

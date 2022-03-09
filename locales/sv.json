@@ -183,12 +183,13 @@
   },
   "AddressChangedPage": {
     "oldAddress": "Gammal adress",
+    "newAddress": "Ny adress",
     "locationHasChanged": "Platsen har ändrats",
     "errorHasOccured": "Ett fel har uppstått i programvaran",
     "hasServicepointMoved": "Har kontoret flyttat till nya lokaler?",
     "headerSentence1": "Platsen för ",
     "headerSentence2": " har ändrats.",
-    "radioButtonYes": "Ja",
-    "radioButtonNo": "Nej"
+    "radioButtonYes": "Ja, har ändrats (om du väljer detta kommer den gamla tillgänglighetsinformationen att raderas och ny information måste anges för de nya faciliteterna)",
+    "radioButtonNo": "Ej ändrad (om du väljer detta kan du redigera tidigare sparad tillgänglighetsinformation)"
   }
 }
