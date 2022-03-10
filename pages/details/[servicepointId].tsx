@@ -14,7 +14,7 @@ import QuestionInfo from "../../components/QuestionInfo";
 import ServicepointMainInfoContent from "../../components/ServicepointMainInfoContent";
 import PathTreeComponent from "../../components/PathTreeComponent";
 import { useAppDispatch, useAppSelector, useLoading } from "../../state/hooks";
-import { setServicepointId, setFormFinished, setContinue, setFormSubmitted } from "../../state/reducers/formSlice";
+import { setServicepointId } from "../../state/reducers/formSlice";
 import { getFinnishDate, filterByLanguage, convertCoordinates, getTokenHash } from "../../utils/utilFunctions";
 import { setServicepointLocation, setServicepointLocationWGS84 } from "../../state/reducers/generalSlice";
 import {
@@ -86,11 +86,13 @@ const Details = ({
       dispatch(setServicepointId(servicepointData.servicepoint_id));
     }
 
+    /*
     if (hasData && accessibilityData.main.length !== 0 && accessibilityData.main[0].form_submitted === "Y") {
       dispatch(setFormFinished());
       dispatch(setContinue());
       dispatch(setFormSubmitted());
     }
+    */
   }, [servicepointData, entranceData, accessibilityData, hasData, dispatch]);
 
   // Filter by language

@@ -5,15 +5,15 @@ import { useI18n } from "next-localization";
 import SaveSpinner from "./common/SaveSpinner";
 import Button from "./QuestionButton";
 import styles from "./PreviewControlButtons.module.scss";
-import { useAppSelector, useAppDispatch } from "../state/hooks";
-import { setContinue } from "../state/reducers/formSlice";
+import { useAppSelector } from "../state/hooks";
+// import { setContinue } from "../state/reducers/formSlice";
 import { saveFormData } from "../utils/utilFunctions";
 import { PreviewControlButtonsProps } from "../types/general";
 
 // usage: controls for preview page
 const PreviewControlButtons = ({ hasSaveDraftButton, setSendingComplete }: PreviewControlButtonsProps): JSX.Element => {
   const i18n = useI18n();
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
   const router = useRouter();
 
   const [isSavingDraft, setSavingDraft] = useState(false);
@@ -30,7 +30,7 @@ const PreviewControlButtons = ({ hasSaveDraftButton, setSendingComplete }: Previ
   const user = useAppSelector((state) => state.generalSlice.user);
 
   const handleContinueEditing = (): void => {
-    dispatch(setContinue());
+    // dispatch(setContinue());
     // TODO: Add errorpage
     const url = curServicepointId === -1 ? "/" : `/entranceAccessibility/${curServicepointId}/${curEntranceId}`;
     router.push(url);

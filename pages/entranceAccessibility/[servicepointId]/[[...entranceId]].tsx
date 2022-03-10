@@ -102,7 +102,7 @@ const EntranceAccessibility = ({
   const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
   const curInvalidBlocks = useAppSelector((state) => state.formReducer.invalidBlocks);
   // const additionalInfoInitedFromDb = useAppSelector((state) => state.additionalInfoReducer.initAddInfoFromDb);
-  // const isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
+  const isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
   const startedAnswering = useAppSelector((state) => state.formReducer.startedAnswering);
 
   const treeItems = [servicepointData.servicepoint_name, i18n.t("servicepoint.contactFormSummaryHeader")];
@@ -256,8 +256,7 @@ const EntranceAccessibility = ({
 
           const isVisible =
             (block.visible_if_question_choice === null && block.language_id === curLocaleId) ||
-            //(answersIncludeAllVisibleQuestions && block.language_id === curLocaleId && isContinueClicked);
-            (answersIncludeAllVisibleQuestions && block.language_id === curLocaleId);
+            (answersIncludeAllVisibleQuestions && block.language_id === curLocaleId && (isMainEntrancePublished || isContinueClicked));
 
           const blockQuestions = isVisible
             ? questionsData.filter((question) => question.question_block_id === block.question_block_id && question.language_id === curLocaleId)
@@ -332,8 +331,10 @@ const EntranceAccessibility = ({
       : `${i18n.t("common.entrance")}: ${entranceName}`;
   const header = isExistingEntrance ? entranceHeader : i18n.t("common.newEntrance");
 
-  // const hasTopLevelAnswer = curAnsweredChoices.length === 0;
-  const hasTopLevelAnswer = true;
+  // Show the continue button if the main entrance does not exist and the top-level question has not been answered yet
+  // Show the save/preview buttons if the main entrance exists, or this is an additional entrance,
+  // or the top-level question has been answered and the continue button has been clicked
+  const hasTopLevelAnswer = isMainEntrancePublished || formId >= 1 || (curAnsweredChoices.length > 0 && isContinueClicked);
 
   return (
     <Layout>

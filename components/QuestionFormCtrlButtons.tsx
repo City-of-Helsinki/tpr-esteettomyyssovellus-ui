@@ -9,7 +9,7 @@ import { API_FETCH_ENTRANCES } from "../types/constants";
 import { QuestionFormCtrlButtonsProps } from "../types/general";
 import styles from "./QuestionFormCtrlButtons.module.scss";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
-import { setEntranceId, setInvalid, unsetInvalid } from "../state/reducers/formSlice";
+import { setContinue, setEntranceId, setInvalid, unsetInvalid } from "../state/reducers/formSlice";
 import getOrigin from "../utils/request";
 import { getTokenHash, saveFormData } from "../utils/utilFunctions";
 
@@ -147,7 +147,9 @@ const QuestionFormCtrlButtons = ({
   };
 
   const handleContinueClick = () => {
-    // TODO - continue click
+    if (validateForm()) {
+      dispatch(setContinue());
+    }
   };
 
   return (
