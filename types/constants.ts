@@ -19,7 +19,7 @@ export const API_FETCH_BACKEND_QUESTIONBLOCK_FIELD = "api/ArBackendQuestionBlock
 export const API_FETCH_SYSTEMS = "api/ArSystems/?format=json&system_id=";
 export const API_FETCH_SERVICEPOINTS = "api/ArServicepoints/";
 export const API_FETCH_BACKEND_SERVICEPOINT = "api/ArBackendServicepoint/";
-// export const API_FETCH_ANSWER_LOGS = "api/ArXAnswerLog/";
+export const API_FETCH_ANSWER_LOGS = "api/ArXAnswerLog/";
 export const API_FETCH_QUESTION_ANSWERS = "api/ArXQuestionAnswer/";
 export const API_CHOP_ADDRESS = "api/ChopAddress/";
 export const API_GENERATE_SENTENCES = "api/GenerateSentences/";
