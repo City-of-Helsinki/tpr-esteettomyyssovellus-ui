@@ -43,7 +43,7 @@ const Details = ({
   const i18n = useI18n();
   const dispatch = useAppDispatch();
   const isLoading = useLoading();
-  const treeItems = [servicepointData.servicepoint_name];
+  const treeItems = [servicepointData.servicepoint_name ?? ""];
   const finnishDate = getFinnishDate(servicepointData.modified);
 
   // TODO - improve this by checking user on server-side

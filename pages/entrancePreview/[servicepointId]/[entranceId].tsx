@@ -55,7 +55,7 @@ const Preview = ({
   const i18n = useI18n();
   const dispatch = useAppDispatch();
   const isLoading = useLoading();
-  const treeItems = [servicepointData.servicepoint_name];
+  const treeItems = [servicepointData.servicepoint_name ?? ""];
 
   const [isSendingComplete, setSendingComplete] = useState(false);
 

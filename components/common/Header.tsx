@@ -77,6 +77,7 @@ const Header = ({ children }: HeaderProps): ReactElement => {
       >
         {children}
         <Navigation.Actions>
+          {/*
           <div className={styles.choices} role="region">
             <Navigation.Row>
               <Navigation.Item
@@ -102,6 +103,7 @@ const Header = ({ children }: HeaderProps): ReactElement => {
               />
             </Navigation.Row>
           </div>
+          */}
 
           {
             <Navigation.User label={i18n.t("common.header.login")} authenticated userName={user}>

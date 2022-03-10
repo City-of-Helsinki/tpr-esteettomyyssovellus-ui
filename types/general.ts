@@ -312,7 +312,7 @@ export interface QuestionBlockProps {
 }
 
 export interface PathTreeProps {
-  treeItems: (string | undefined)[];
+  treeItems: string[];
 }
 
 export interface QuestionAdditionalInfoProps {
