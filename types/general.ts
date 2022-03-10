@@ -166,6 +166,7 @@ export interface ServicepointLandingSummaryCtrlButtonsProps {
 }
 
 export interface PreviewControlButtonsProps {
+  hasSaveDraftButton?: boolean;
   setSendingComplete: Dispatch<SetStateAction<boolean>>;
 }
 
@@ -278,7 +279,7 @@ export interface Languages {
 
 // FORMS related stuff
 
-export interface MainEntranceFormProps {
+export interface EntranceFormProps {
   questionsData: BackendQuestion[];
   questionChoicesData: BackendQuestionChoice[];
   questionBlocksData: BackendQuestionBlock[];
@@ -289,6 +290,7 @@ export interface MainEntranceFormProps {
   questionExtraAnswerData: BackendEntranceField[];
   // additionalInfosData: FetchAdditionalInfos;
   formId: number;
+  isMainEntrancePublished: boolean;
 }
 
 /*
@@ -310,7 +312,7 @@ export interface QuestionBlockProps {
 }
 
 export interface PathTreeProps {
-  treeItems: (string | undefined)[];
+  treeItems: string[];
 }
 
 export interface QuestionAdditionalInfoProps {
@@ -375,8 +377,8 @@ export interface DetailsProps {
   servicepointDetail: BackendServicepoint;
   accessibilityData: AccessibilityData;
   entranceData: EntranceData;
-  hasExistingFormData: boolean;
-  isFinished: boolean;
+  // hasExistingFormData: boolean;
+  isMainEntrancePublished: boolean;
 }
 
 export interface PreviewProps {
@@ -386,6 +388,7 @@ export interface PreviewProps {
   entranceData: EntranceData;
   questionAnswerData: BackendEntranceAnswer[];
   questionExtraAnswerData: BackendEntranceField[];
+  isMainEntrancePublished: boolean;
 }
 
 export interface ElementCountProps {

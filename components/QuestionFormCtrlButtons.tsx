@@ -9,7 +9,7 @@ import { API_FETCH_ENTRANCES } from "../types/constants";
 import { QuestionFormCtrlButtonsProps } from "../types/general";
 import styles from "./QuestionFormCtrlButtons.module.scss";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
-import { setEntranceId, setInvalid, unsetInvalid } from "../state/reducers/formSlice";
+import { setContinue, setEntranceId, setInvalid, unsetInvalid } from "../state/reducers/formSlice";
 import getOrigin from "../utils/request";
 import { getTokenHash, saveFormData } from "../utils/utilFunctions";
 
@@ -147,7 +147,9 @@ const QuestionFormCtrlButtons = ({
   };
 
   const handleContinueClick = () => {
-    // TODO - continue click
+    if (validateForm()) {
+      dispatch(setContinue());
+    }
   };
 
   return (
@@ -166,12 +168,7 @@ const QuestionFormCtrlButtons = ({
           </Button>
         ) : null}
 
-        {
-          // TODO: THIS SAVE DRAFT BUTTON SHOULD ONLY EXIST IF THE SERVICEPOINT HAS NO
-          // FINISHED FORM ENTRIES
-          // IT SHOULD ALSO ONLY EXIST IF FORM_ID IS 0 OR 1
-        }
-        {hasSaveDraftButton ? (
+        {hasSaveDraftButton && formId === 0 ? (
           <Button
             variant="secondary"
             onClickHandler={handleSaveDraftClick}
@@ -189,7 +186,7 @@ const QuestionFormCtrlButtons = ({
           </Button>
         ) : null}
 
-        {hasPreviewButton ? (
+        {hasPreviewButton && (formId === 0 || formId === 1) ? (
           <Button
             variant="primary"
             onClickHandler={handlePreviewClick}

@@ -1,42 +1,32 @@
 import React from "react";
-import { useI18n } from "next-localization";
+import Link from "next/link";
+import { Link as HdsLink } from "hds-react";
 import { PathTreeProps } from "../types/general";
-import styles from "./PathTreeComponent.module.scss";
 import { useAppSelector } from "../state/hooks";
 
 // usage: general breadcrumb component
 const PathTreeComponent = ({ treeItems }: PathTreeProps): JSX.Element => {
-  const i18n = useI18n();
-  const { length } = treeItems;
   const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
-  const pathTree = treeItems.map((elem, index) => {
-    const key = `treeitem_${index}`;
-    const treeItem =
-      treeItems.indexOf(elem) === length - 1 ? (
-        <div key={key}>
-          {" > "}
-          {elem}
-        </div>
+
+  const getPathTree = () => {
+    return treeItems.map((elem, index) => {
+      const key = `treeitem_${index}`;
+
+      return treeItems.indexOf(elem) === treeItems.length - 1 ? (
+        <div key={key}>{`${index > 0 ? " > " : ""}${elem}`}</div>
       ) : (
         <div key={key}>
-          {" > "}
-          <a className={styles.link} href={`/details/${curServicepointId}`}>
-            {elem}
-          </a>
+          <Link href={`/details/${curServicepointId}`}>
+            <HdsLink href="#" size="M" disableVisitedStyles>
+              {elem}
+            </HdsLink>
+          </Link>
         </div>
       );
+    });
+  };
 
-    return treeItem;
-  });
-
-  return (
-    <>
-      <a href="/" className={styles.link}>
-        {i18n.t("common.search")}
-      </a>
-      {pathTree}
-    </>
-  );
+  return <>{getPathTree()}</>;
 };
 
 export default PathTreeComponent;

@@ -36,10 +36,12 @@ import {
   BackendEntranceField,
   BackendServicepoint,
   Entrance,
+  EntranceResults,
   Servicepoint,
   StoredSentence,
 } from "../../../types/backendModels";
 import { AccessibilityData, EntranceData, PreviewProps } from "../../../types/general";
+
 // usage: the preview page of an entrance, displayed before saving the completed form
 const Preview = ({
   servicepointData,
@@ -48,11 +50,12 @@ const Preview = ({
   entranceData,
   questionAnswerData,
   questionExtraAnswerData,
+  isMainEntrancePublished,
 }: PreviewProps): ReactElement => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
   const isLoading = useLoading();
-  const treeItems = [servicepointData.servicepoint_name];
+  const treeItems = [servicepointData.servicepoint_name ?? ""];
 
   const [isSendingComplete, setSendingComplete] = useState(false);
 
@@ -153,7 +156,7 @@ const Preview = ({
 
             {!isSendingComplete && (
               <div>
-                <PreviewControlButtons setSendingComplete={setSendingComplete} />
+                <PreviewControlButtons hasSaveDraftButton={!isMainEntrancePublished} setSendingComplete={setSendingComplete} />
 
                 {entranceKey === "main" && (
                   <ServicepointLandingSummaryContact
@@ -172,7 +175,7 @@ const Preview = ({
                 />
 
                 <div className={styles.footercontainer}>
-                  <PreviewControlButtons setSendingComplete={setSendingComplete} />
+                  <PreviewControlButtons hasSaveDraftButton={!isMainEntrancePublished} setSendingComplete={setSendingComplete} />
                 </div>
               </div>
             )}
@@ -203,8 +206,8 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   let servicepointDetail: BackendServicepoint = {} as BackendServicepoint;
   let questionAnswerData: BackendEntranceAnswer[] = [];
   let questionExtraAnswerData: BackendEntranceField[] = [];
-  const hasExistingFormData = false;
-  const isFinished = false;
+  // const hasExistingFormData = false;
+  let isMainEntrancePublished = false;
 
   if (params !== undefined) {
     try {
@@ -225,21 +228,40 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         servicepointDetail = servicepointBackendDetail[0];
       }
 
-      const servicepointEntranceResp = await fetch(`${API_URL_BASE}${API_FETCH_ENTRANCES}${params.entranceId}?format=json`, {
+      // Get all the existing entrances for the service point
+      const servicepointEntranceResp = await fetch(`${API_URL_BASE}${API_FETCH_ENTRANCES}?servicepoint=${params.servicepointId}&format=json`, {
         headers: new Headers({ Authorization: getTokenHash() }),
       });
-      const servicepointEntranceData = await (servicepointEntranceResp.json() as Promise<Entrance>);
-      const entranceKey = servicepointEntranceData?.is_main_entrance === "N" ? "side" : "main";
+      const servicepointEntranceResults = await (servicepointEntranceResp.json() as Promise<EntranceResults>);
+
+      const mainEntrance = servicepointEntranceResults?.results?.find((result) => result.is_main_entrance === "Y");
+      if (!!mainEntrance) {
+        // The main entrance exists, but check if it's published
+        const entranceDetailResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE}?entrance_id=${mainEntrance.entrance_id}&format=json`, {
+          headers: new Headers({ Authorization: getTokenHash() }),
+        });
+        const entranceDetail = await (entranceDetailResp.json() as Promise<BackendEntrance[]>);
+        isMainEntrancePublished = entranceDetail.some((e) => e.form_submitted === "Y");
+      } else {
+        isMainEntrancePublished = false;
+      }
+
+      // Check this specific entrance
+      const entranceResp = await fetch(`${API_URL_BASE}${API_FETCH_ENTRANCES}${params.entranceId}?format=json`, {
+        headers: new Headers({ Authorization: getTokenHash() }),
+      });
+      const entrance = await (entranceResp.json() as Promise<Entrance>);
+      const entranceKey = entrance?.is_main_entrance === "N" ? "side" : "main";
 
       // Use the draft entrance
       const entranceDetailResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE}?entrance_id=${params.entranceId}&format=json`, {
         headers: new Headers({ Authorization: getTokenHash() }),
       });
       const entranceDetail = await (entranceDetailResp.json() as Promise<BackendEntrance[]>);
-      const entrance = entranceDetail.find((e) => e.form_submitted === "D");
-      if (entrance) {
+      const draftEntrance = entranceDetail.find((e) => e.form_submitted === "D");
+      if (draftEntrance) {
         entranceData = {
-          [entranceKey]: entrance,
+          [entranceKey]: draftEntrance,
         };
       }
 
@@ -284,7 +306,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
 
         // TODO: Should this be true even if the form has not been submitted
         hasExistingFormData = logData.length !== 0;
-        isFinished = logData.some((e) => e.form_submitted === "Y");
       }
       */
     } catch (err) {
@@ -308,8 +329,8 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       entranceData,
       questionAnswerData,
       questionExtraAnswerData,
-      hasExistingFormData,
-      isFinished,
+      // hasExistingFormData,
+      isMainEntrancePublished,
     },
   };
 };

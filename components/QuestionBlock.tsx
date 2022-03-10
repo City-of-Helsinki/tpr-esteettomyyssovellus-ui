@@ -1,5 +1,5 @@
-import { Button, IconAngleDown, IconAngleUp, IconArrowRight } from "hds-react";
-import React, { useEffect, useState } from "react";
+import { IconAngleDown, IconAngleUp } from "hds-react";
+import React, { useEffect } from "react";
 import { useI18n } from "next-localization";
 // import QuestionAdditionalInfoCtrlButton from "./QuestionAdditionalInfoCtrlButton";
 import QuestionBlockExtraFieldList from "./QuestionBlockExtraFieldList";
@@ -9,7 +9,7 @@ import QuestionInfo from "./QuestionInfo";
 import QuestionsList from "./QuestionsList";
 import { QuestionBlockProps } from "../types/general";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
-import { setContinue, setFinished, unsetFinished } from "../state/reducers/formSlice";
+import { setFinished, unsetFinished } from "../state/reducers/formSlice";
 
 // usage: in form groups up all questions under a single "question block" / accordion
 // notes: used under headlineQuestionContainer in main form

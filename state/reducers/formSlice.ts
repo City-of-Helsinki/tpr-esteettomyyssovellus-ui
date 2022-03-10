@@ -13,8 +13,8 @@ interface formState {
   finishedBlocks: number[];
   startedAnswering: string;
   invalidBlocks: number[];
-  formFinished: boolean;
-  formSubmitted: boolean;
+  // formFinished: boolean;
+  // formSubmitted: boolean;
   mainImageElement: string;
   mainImageTempElement?: string;
   mainImageInvalidValues: string[];
@@ -32,8 +32,8 @@ const initialState: formState = {
   finishedBlocks: [],
   startedAnswering: "",
   invalidBlocks: [],
-  formFinished: false,
-  formSubmitted: false,
+  // formFinished: false,
+  // formSubmitted: false,
   mainImageElement: "",
   mainImageTempElement: "",
   mainImageInvalidValues: [],
@@ -87,12 +87,14 @@ export const formSlice = createSlice({
         isContinueClicked: true,
       };
     },
+    /*
     unsetContinue: (state) => {
       return {
         ...state,
         isContinueClicked: false,
       };
     },
+    */
     setFinished: (state, action: PayloadAction<number>) => {
       if (!state.finishedBlocks.includes(action.payload)) {
         return {
@@ -133,6 +135,7 @@ export const formSlice = createSlice({
         invalidBlocks: [...(state.invalidBlocks?.filter((elem) => elem !== action.payload) ?? [])],
       };
     },
+    /*
     setFormFinished: (state) => {
       return {
         ...state,
@@ -145,12 +148,15 @@ export const formSlice = createSlice({
         formFinished: false,
       };
     },
+    */
+    /*
     setFormSubmitted: (state) => {
       return {
         ...state,
         formSubmitted: true,
       };
     },
+    */
     // for saving main Image (with location) element for can be upload or link
     addMainImageElement: (state, action: PayloadAction<string>) => {
       return {
@@ -251,15 +257,15 @@ export const {
   setAnswer,
   setExtraAnswer,
   setContinue,
-  unsetContinue,
+  // unsetContinue,
   setFinished,
   unsetFinished,
   setStartDate,
   setInvalid,
   unsetInvalid,
-  setFormFinished,
-  unsetFormFinished,
-  setFormSubmitted,
+  // setFormFinished,
+  // unsetFormFinished,
+  // setFormSubmitted,
   addMainImageElement,
   addMainImageTempElement,
   removeMainImageElement,

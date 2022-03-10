@@ -82,6 +82,7 @@ export interface StoredSentence {
   form_submitted?: string;
 }
 
+/*
 export interface AnswerLog {
   log_id: number;
   entrance: number;
@@ -92,6 +93,7 @@ export interface AnswerLog {
   form_cancelled?: string;
   accessibility_editor?: string;
 }
+*/
 
 export interface QuestionAnswerComment {
   answer_comment_id: number;

@@ -45,7 +45,7 @@ import {
   // QuestionAnswerPhotoTxt,
   Servicepoint,
 } from "../../../types/backendModels";
-import { MainEntranceFormProps } from "../../../types/general";
+import { EntranceFormProps } from "../../../types/general";
 import HeadlineQuestionContainer from "../../../components/HeadlineQuestionContainer";
 
 import QuestionFormCtrlButtons from "../../../components/QuestionFormCtrlButtons";
@@ -79,7 +79,8 @@ const EntranceAccessibility = ({
   servicepointData,
   // additionalInfosData,
   formId,
-}: MainEntranceFormProps): ReactElement => {
+  isMainEntrancePublished,
+}: EntranceFormProps): ReactElement => {
   const i18n = useI18n();
   const curLocale: string = i18n.locale();
   const dispatch = useAppDispatch();
@@ -101,10 +102,10 @@ const EntranceAccessibility = ({
   const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
   const curInvalidBlocks = useAppSelector((state) => state.formReducer.invalidBlocks);
   // const additionalInfoInitedFromDb = useAppSelector((state) => state.additionalInfoReducer.initAddInfoFromDb);
-  // const isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
+  const isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
   const startedAnswering = useAppSelector((state) => state.formReducer.startedAnswering);
 
-  const treeItems = [servicepointData.servicepoint_name, i18n.t("servicepoint.contactFormSummaryHeader")];
+  const treeItems = [servicepointData.servicepoint_name ?? "", i18n.t("servicepoint.contactFormSummaryHeader")];
 
   const hasData = Object.keys(servicepointData).length > 0;
   const isExistingEntrance = hasData && Object.keys(entranceData).length > 0;
@@ -255,8 +256,7 @@ const EntranceAccessibility = ({
 
           const isVisible =
             (block.visible_if_question_choice === null && block.language_id === curLocaleId) ||
-            //(answersIncludeAllVisibleQuestions && block.language_id === curLocaleId && isContinueClicked);
-            (answersIncludeAllVisibleQuestions && block.language_id === curLocaleId);
+            (answersIncludeAllVisibleQuestions && block.language_id === curLocaleId && (isMainEntrancePublished || isContinueClicked));
 
           const blockQuestions = isVisible
             ? questionsData.filter((question) => question.question_block_id === block.question_block_id && question.language_id === curLocaleId)
@@ -331,8 +331,10 @@ const EntranceAccessibility = ({
       : `${i18n.t("common.entrance")}: ${entranceName}`;
   const header = isExistingEntrance ? entranceHeader : i18n.t("common.newEntrance");
 
-  // const hasTopLevelAnswer = curAnsweredChoices.length === 0;
-  const hasTopLevelAnswer = true;
+  // Show the continue button if the main entrance does not exist and the top-level question has not been answered yet
+  // Show the save/preview buttons if the main entrance exists, or this is an additional entrance,
+  // or the top-level question has been answered and the continue button has been clicked
+  const hasTopLevelAnswer = isMainEntrancePublished || formId >= 1 || (curAnsweredChoices.length > 0 && isContinueClicked);
 
   return (
     <Layout>
@@ -374,9 +376,9 @@ const EntranceAccessibility = ({
               <QuestionFormCtrlButtons
                 hasCancelButton
                 //hasValidateButton={isContinueClicked}
-                hasValidateButton={hasTopLevelAnswer}
+                hasValidateButton={false}
                 //hasSaveDraftButton={!formSubmitted}
-                hasSaveDraftButton={hasTopLevelAnswer}
+                hasSaveDraftButton={hasTopLevelAnswer && !isMainEntrancePublished}
                 hasPreviewButton={hasTopLevelAnswer}
                 hasContinueButton={!hasTopLevelAnswer}
                 visibleBlocks={visibleBlocks}
@@ -409,6 +411,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   // let addInfoPhotosData;
   // let addInfoPhotoTextsData;
   let formId = -1;
+  let isMainEntrancePublished = false;
 
   if (params !== undefined) {
     try {
@@ -425,20 +428,33 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       const servicepointBackendDetail = await (servicepointBackendDetailResp.json() as Promise<BackendServicepoint[]>);
       const servicepointDetail = servicepointBackendDetail?.length > 0 ? servicepointBackendDetail[0] : undefined;
 
-      if (params.entranceId === undefined && servicepointDetail?.new_entrance_possible === "Y") {
-        // New entrance
-        const entranceResp = await fetch(`${API_URL_BASE}${API_FETCH_ENTRANCES}?servicepoint=${params.servicepointId}&format=json`, {
+      // Get all the existing entrances for the service point
+      const servicepointEntranceResp = await fetch(`${API_URL_BASE}${API_FETCH_ENTRANCES}?servicepoint=${params.servicepointId}&format=json`, {
+        headers: new Headers({ Authorization: getTokenHash() }),
+      });
+      const servicepointEntranceResults = await (servicepointEntranceResp.json() as Promise<EntranceResults>);
+
+      const mainEntrance = servicepointEntranceResults?.results?.find((result) => result.is_main_entrance === "Y");
+      if (!!mainEntrance) {
+        // The main entrance exists, but check if it's published
+        const entranceDetailResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE}?entrance_id=${mainEntrance.entrance_id}&format=json`, {
           headers: new Headers({ Authorization: getTokenHash() }),
         });
-        const entranceResults = await (entranceResp.json() as Promise<EntranceResults>);
+        const entranceDetail = await (entranceDetailResp.json() as Promise<BackendEntrance[]>);
+        isMainEntrancePublished = entranceDetail.some((e) => e.form_submitted === "Y");
+      } else {
+        isMainEntrancePublished = false;
+      }
 
-        if (entranceResults?.results?.length === 0) {
+      // Check this specific entrance
+      if (params.entranceId === undefined && (!servicepointDetail || servicepointDetail.new_entrance_possible === "Y")) {
+        // New entrance
+        if (!mainEntrance) {
           // No entrance results, so make a new main entrance
           formId = 0;
         } else {
           // Check the results, and make a new main entrance if not existing, otherwise an additional entrance
-          const mainEntranceExists = entranceResults?.results?.some((result) => result.is_main_entrance === "Y");
-          formId = !mainEntranceExists ? 0 : 1;
+          formId = !mainEntrance ? 0 : 1;
         }
       } else if (params.entranceId !== undefined) {
         // Existing entrance
@@ -568,7 +584,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   }
   return {
     props: {
-      formId,
+      lngDict,
       questionsData,
       questionChoicesData,
       questionBlocksData,
@@ -578,7 +594,8 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       entranceData,
       servicepointData,
       // additionalInfosData,
-      lngDict,
+      formId,
+      isMainEntrancePublished,
     },
   };
 };

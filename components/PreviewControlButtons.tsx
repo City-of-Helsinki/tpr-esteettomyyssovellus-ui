@@ -5,15 +5,15 @@ import { useI18n } from "next-localization";
 import SaveSpinner from "./common/SaveSpinner";
 import Button from "./QuestionButton";
 import styles from "./PreviewControlButtons.module.scss";
-import { useAppSelector, useAppDispatch } from "../state/hooks";
-import { setContinue } from "../state/reducers/formSlice";
+import { useAppSelector } from "../state/hooks";
+// import { setContinue } from "../state/reducers/formSlice";
 import { saveFormData } from "../utils/utilFunctions";
 import { PreviewControlButtonsProps } from "../types/general";
 
 // usage: controls for preview page
-const PreviewControlButtons = ({ setSendingComplete }: PreviewControlButtonsProps): JSX.Element => {
+const PreviewControlButtons = ({ hasSaveDraftButton, setSendingComplete }: PreviewControlButtonsProps): JSX.Element => {
   const i18n = useI18n();
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
   const router = useRouter();
 
   const [isSavingDraft, setSavingDraft] = useState(false);
@@ -30,7 +30,7 @@ const PreviewControlButtons = ({ setSendingComplete }: PreviewControlButtonsProp
   const user = useAppSelector((state) => state.generalSlice.user);
 
   const handleContinueEditing = (): void => {
-    dispatch(setContinue());
+    // dispatch(setContinue());
     // TODO: Add errorpage
     const url = curServicepointId === -1 ? "/" : `/entranceAccessibility/${curServicepointId}/${curEntranceId}`;
     router.push(url);
@@ -60,25 +60,27 @@ const PreviewControlButtons = ({ setSendingComplete }: PreviewControlButtonsProp
   return (
     <div className={styles.container}>
       <div className={styles.previewControlButtons}>
-        <Button variant="primary" iconLeft={<IconArrowLeft />} onClickHandler={handleContinueEditing} disabled={isSavingDraft || isSavingFinal}>
+        <Button variant="secondary" iconLeft={<IconArrowLeft />} onClickHandler={handleContinueEditing} disabled={isSavingDraft || isSavingFinal}>
           {i18n.t("PreviewPage.continueEditing")}
         </Button>
 
-        <Button
-          variant="secondary"
-          onClickHandler={handleSaveDraftClick}
-          disabled={isSavingDraft || isSavingFinal}
-          iconRight={
-            isSavingDraft ? (
-              <SaveSpinner
-                savingText={i18n.t("questionFormControlButtons.saving")}
-                savingFinishedText={i18n.t("questionFormControlButtons.savingFinished")}
-              />
-            ) : undefined
-          }
-        >
-          {i18n.t("questionFormControlButtons.saveAsIncomplete")}
-        </Button>
+        {hasSaveDraftButton && (
+          <Button
+            variant="secondary"
+            onClickHandler={handleSaveDraftClick}
+            disabled={isSavingDraft || isSavingFinal}
+            iconRight={
+              isSavingDraft ? (
+                <SaveSpinner
+                  savingText={i18n.t("questionFormControlButtons.saving")}
+                  savingFinishedText={i18n.t("questionFormControlButtons.savingFinished")}
+                />
+              ) : undefined
+            }
+          >
+            {i18n.t("questionFormControlButtons.saveAsIncomplete")}
+          </Button>
+        )}
 
         <Button
           variant="primary"
