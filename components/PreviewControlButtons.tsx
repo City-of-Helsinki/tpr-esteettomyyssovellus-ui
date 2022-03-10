@@ -11,7 +11,7 @@ import { saveFormData } from "../utils/utilFunctions";
 import { PreviewControlButtonsProps } from "../types/general";
 
 // usage: controls for preview page
-const PreviewControlButtons = ({ setSendingComplete }: PreviewControlButtonsProps): JSX.Element => {
+const PreviewControlButtons = ({ hasSaveDraftButton, setSendingComplete }: PreviewControlButtonsProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -60,25 +60,27 @@ const PreviewControlButtons = ({ setSendingComplete }: PreviewControlButtonsProp
   return (
     <div className={styles.container}>
       <div className={styles.previewControlButtons}>
-        <Button variant="primary" iconLeft={<IconArrowLeft />} onClickHandler={handleContinueEditing} disabled={isSavingDraft || isSavingFinal}>
+        <Button variant="secondary" iconLeft={<IconArrowLeft />} onClickHandler={handleContinueEditing} disabled={isSavingDraft || isSavingFinal}>
           {i18n.t("PreviewPage.continueEditing")}
         </Button>
 
-        <Button
-          variant="secondary"
-          onClickHandler={handleSaveDraftClick}
-          disabled={isSavingDraft || isSavingFinal}
-          iconRight={
-            isSavingDraft ? (
-              <SaveSpinner
-                savingText={i18n.t("questionFormControlButtons.saving")}
-                savingFinishedText={i18n.t("questionFormControlButtons.savingFinished")}
-              />
-            ) : undefined
-          }
-        >
-          {i18n.t("questionFormControlButtons.saveAsIncomplete")}
-        </Button>
+        {hasSaveDraftButton && (
+          <Button
+            variant="secondary"
+            onClickHandler={handleSaveDraftClick}
+            disabled={isSavingDraft || isSavingFinal}
+            iconRight={
+              isSavingDraft ? (
+                <SaveSpinner
+                  savingText={i18n.t("questionFormControlButtons.saving")}
+                  savingFinishedText={i18n.t("questionFormControlButtons.savingFinished")}
+                />
+              ) : undefined
+            }
+          >
+            {i18n.t("questionFormControlButtons.saveAsIncomplete")}
+          </Button>
+        )}
 
         <Button
           variant="primary"

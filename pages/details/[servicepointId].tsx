@@ -18,7 +18,7 @@ import { setServicepointId, setFormFinished, setContinue, setFormSubmitted } fro
 import { getFinnishDate, filterByLanguage, convertCoordinates, getTokenHash } from "../../utils/utilFunctions";
 import { setServicepointLocation, setServicepointLocationWGS84 } from "../../state/reducers/generalSlice";
 import {
-  API_FETCH_ANSWER_LOGS,
+  // API_FETCH_ANSWER_LOGS,
   API_FETCH_BACKEND_ENTRANCE,
   API_FETCH_BACKEND_SERVICEPOINT,
   API_FETCH_ENTRANCES,
@@ -28,7 +28,7 @@ import {
 } from "../../types/constants";
 import LoadSpinner from "../../components/common/LoadSpinner";
 import { persistor } from "../../state/store";
-import { AnswerLog, BackendEntrance, BackendServicepoint, EntranceResults, Servicepoint, StoredSentence } from "../../types/backendModels";
+import { BackendEntrance, BackendServicepoint, EntranceResults, Servicepoint, StoredSentence } from "../../types/backendModels";
 import { AccessibilityData, DetailsProps, EntranceData } from "../../types/general";
 
 // usage: the details / landing page of servicepoint
@@ -38,7 +38,7 @@ const Details = ({
   accessibilityData,
   entranceData,
   // hasExistingFormData,
-  isFinished,
+  isMainEntrancePublished,
 }: DetailsProps): ReactElement => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
@@ -136,7 +136,7 @@ const Details = ({
             <div className={styles.headingcontainer}>
               <h1>{servicepointData.servicepoint_name}</h1>
               <span className={styles.statuslabel}>
-                {isFinished ? (
+                {isMainEntrancePublished ? (
                   <StatusLabel type="success"> {i18n.t("common.statusReady")} </StatusLabel>
                 ) : (
                   <StatusLabel type="neutral"> {i18n.t("common.statusNotReady")} </StatusLabel>
@@ -209,8 +209,8 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   let entranceData: EntranceData = {};
   let servicepointData: Servicepoint = {} as Servicepoint;
   let servicepointDetail: BackendServicepoint = {} as BackendServicepoint;
-  let hasExistingFormData = false;
-  let isFinished = false;
+  // let hasExistingFormData = false;
+  let isMainEntrancePublished = false;
 
   if (params !== undefined) {
     try {
@@ -231,6 +231,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         servicepointDetail = servicepointBackendDetail[0];
       }
 
+      // Get all the existing entrances for the service point
       const servicepointEntranceResp = await fetch(
         `${API_URL_BASE}${API_FETCH_ENTRANCES}?servicepoint=${servicepointData.servicepoint_id}&format=json`,
         {
@@ -270,6 +271,10 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         ...sideEntranceDetails,
       };
 
+      // Check if the main entrance exists and is published
+      // No need to check if form_submitted === "Y", since this was already done above
+      isMainEntrancePublished = !!mainEntranceDetails?.entrance;
+
       const entranceResultSentences = await Promise.all(
         servicepointEntranceData.results.map(async (entranceResult) => {
           const sentenceResp = await fetch(
@@ -299,6 +304,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         ...sideEntranceSentences,
       };
 
+      /*
       if (servicepointEntranceData.results.length !== 0 && mainEntranceSentences?.entranceResult) {
         const logResp = await fetch(
           `${API_URL_BASE}${API_FETCH_ANSWER_LOGS}?entrance=${mainEntranceSentences?.entranceResult.entrance_id}&format=json`,
@@ -310,8 +316,8 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
 
         // TODO: Should this be true even if the form has not been submitted
         hasExistingFormData = logData.length !== 0;
-        isFinished = logData.some((e) => e.form_submitted === "Y");
       }
+      */
     } catch (err) {
       console.error("Error", err);
 
@@ -329,8 +335,8 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       servicepointDetail,
       accessibilityData,
       entranceData,
-      hasExistingFormData,
-      isFinished,
+      // hasExistingFormData,
+      isMainEntrancePublished,
     },
   };
 };

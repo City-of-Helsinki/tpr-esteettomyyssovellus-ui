@@ -166,12 +166,7 @@ const QuestionFormCtrlButtons = ({
           </Button>
         ) : null}
 
-        {
-          // TODO: THIS SAVE DRAFT BUTTON SHOULD ONLY EXIST IF THE SERVICEPOINT HAS NO
-          // FINISHED FORM ENTRIES
-          // IT SHOULD ALSO ONLY EXIST IF FORM_ID IS 0 OR 1
-        }
-        {hasSaveDraftButton ? (
+        {hasSaveDraftButton && formId === 0 ? (
           <Button
             variant="secondary"
             onClickHandler={handleSaveDraftClick}
@@ -189,7 +184,7 @@ const QuestionFormCtrlButtons = ({
           </Button>
         ) : null}
 
-        {hasPreviewButton ? (
+        {hasPreviewButton && (formId === 0 || formId === 1) ? (
           <Button
             variant="primary"
             onClickHandler={handlePreviewClick}
