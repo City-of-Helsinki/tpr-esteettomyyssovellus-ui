@@ -12,6 +12,7 @@ export const useLoading = (): boolean => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    /*
     const handleStart = (url: string) => {
       let siteUrl = url;
       if (siteUrl.substring(0, 3) === "/en" || siteUrl.substring(0, 3) === "/sv") {
@@ -30,6 +31,15 @@ export const useLoading = (): boolean => {
       if (siteUrl === router.asPath) {
         setLoading(false);
       }
+    };
+    */
+
+    const handleStart = () => {
+      setLoading(true);
+    };
+
+    const handleComplete = () => {
+      setLoading(false);
     };
 
     router.events.on("routeChangeStart", handleStart);
