@@ -329,7 +329,8 @@ const EntranceAccessibility = ({
           servicepointData.address_city
         )}`
       : `${i18n.t("common.entrance")}: ${entranceName}`;
-  const header = isExistingEntrance ? entranceHeader : i18n.t("common.newEntrance");
+  const newEntranceHeader = formId === 0 ? i18n.t("common.mainEntrance") : i18n.t("common.newEntrance");
+  const header = isExistingEntrance ? entranceHeader : newEntranceHeader;
 
   // Show the continue button if the main entrance does not exist and the top-level question has not been answered yet
   // Show the save/preview buttons if the main entrance exists, or this is an additional entrance,
@@ -449,13 +450,8 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       // Check this specific entrance
       if (params.entranceId === undefined && (!servicepointDetail || servicepointDetail.new_entrance_possible === "Y")) {
         // New entrance
-        if (!mainEntrance) {
-          // No entrance results, so make a new main entrance
-          formId = 0;
-        } else {
-          // Check the results, and make a new main entrance if not existing, otherwise an additional entrance
-          formId = !mainEntrance ? 0 : 1;
-        }
+        // Make a new main entrance if not existing, otherwise an additional entrance
+        formId = !mainEntrance || !servicepointDetail ? 0 : 1;
       } else if (params.entranceId !== undefined) {
         // Existing entrance
         const entranceResp = await fetch(`${API_URL_BASE}${API_FETCH_ENTRANCES}${params.entranceId}/?format=json`, {
