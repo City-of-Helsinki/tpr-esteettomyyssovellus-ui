@@ -74,6 +74,8 @@
     },
     "contactInfoHeader": "Yhteystiedot",
     "contactFormSummaryHeader": "Esteettömyystiedot",
+    "numberOfEntrances1": "sisäänkäynti",
+    "numberOfEntrances2+": "sisäänkäyntiä",
     "noDataContactinfo": "Toimipisteelle ei ole annettu esteettömyysasioiden yhteystietoja",
     "noDataMainEntrance": "Toimipisteelle ei ole annettu tietoja pääsisäänkäynnin esteettömyydestä",
     "contactPerson": "Esteettömyyden yhteyshenkilö",

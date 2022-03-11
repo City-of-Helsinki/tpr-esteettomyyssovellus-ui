@@ -16,7 +16,7 @@ import AddNewEntranceNotice from "../../../components/common/AddNewEntranceNotic
 import LoadSpinner from "../../../components/common/LoadSpinner";
 import { useAppDispatch, useAppSelector, useLoading } from "../../../state/hooks";
 import { setServicepointId, setEntranceId, setStartDate, setAnsweredChoice, setAnswer, setExtraAnswer } from "../../../state/reducers/formSlice";
-import { filterByLanguage, getCurrentDate, getTokenHash } from "../../../utils/utilFunctions";
+import { filterByLanguage, formatAddress, getCurrentDate, getTokenHash } from "../../../utils/utilFunctions";
 import {
   // API_FETCH_ANSWER_LOGS,
   API_FETCH_BACKEND_ENTRANCE,
@@ -53,6 +53,7 @@ const Preview = ({
   isMainEntrancePublished,
 }: PreviewProps): ReactElement => {
   const i18n = useI18n();
+  const curLocale = i18n.locale();
   const dispatch = useAppDispatch();
   const isLoading = useLoading();
   const treeItems = [servicepointData.servicepoint_name ?? ""];
@@ -71,6 +72,15 @@ const Preview = ({
   const startedAnswering = useAppSelector((state) => state.formReducer.startedAnswering);
 
   const entranceKey = Object.keys(accessibilityData)[0];
+  const entranceName = entranceData && entranceData[entranceKey] ? entranceData[entranceKey][`name_${curLocale}`] : "";
+  const subHeader =
+    entranceKey === "main"
+      ? `${i18n.t("common.mainEntrance")}: ${formatAddress(
+          servicepointData.address_street_name,
+          servicepointData.address_no,
+          servicepointData.address_city
+        )}`
+      : `${i18n.t("common.entrance")}: ${entranceName ?? ""}`;
 
   useEffect(() => {
     // Update servicepointId and entranceId in redux state
@@ -149,6 +159,8 @@ const Preview = ({
 
             <div className={styles.headingcontainer}>
               <h1>{servicepointData.servicepoint_name}</h1>
+              <div className={styles.subHeader}>{subHeader}</div>
+
               <div className={styles.entranceHeader}>
                 <h2>{i18n.t("servicepoint.contactFormSummaryHeader")}</h2>
               </div>

@@ -74,6 +74,8 @@
     },
     "contactInfoHeader": "Kontaktinformation",
     "contactFormSummaryHeader": "Tillgänglighetsinformation",
+    "numberOfEntrances1": "ingång",
+    "numberOfEntrances2+": "ingångar",
     "noDataContactinfo": "Inga kontaktuppgifter för tillgänglighetsfrågor har lämnats till kontoret",
     "noDataMainEntrance": "Ingen information har lämnats till kontoret om tillgängligheten till huvudentrén",
     "contactPerson": "Tillgänglighetskontaktperson",

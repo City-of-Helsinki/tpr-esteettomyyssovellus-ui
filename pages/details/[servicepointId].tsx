@@ -15,7 +15,7 @@ import ServicepointMainInfoContent from "../../components/ServicepointMainInfoCo
 import PathTreeComponent from "../../components/PathTreeComponent";
 import { useAppDispatch, useAppSelector, useLoading } from "../../state/hooks";
 import { setServicepointId } from "../../state/reducers/formSlice";
-import { getFinnishDate, filterByLanguage, convertCoordinates, getTokenHash } from "../../utils/utilFunctions";
+import { convertCoordinates, filterByLanguage, formatAddress, getFinnishDate, getTokenHash } from "../../utils/utilFunctions";
 import { setServicepointLocation, setServicepointLocationWGS84 } from "../../state/reducers/generalSlice";
 import {
   // API_FETCH_ANSWER_LOGS,
@@ -104,6 +104,11 @@ const Details = ({
     };
   }, {});
   const entranceKeys = Object.keys(filteredAccessibilityData);
+  const subHeader = `${i18n.t("common.mainEntrance")}: ${formatAddress(
+    servicepointData.address_street_name,
+    servicepointData.address_no,
+    servicepointData.address_city
+  )}`;
 
   return (
     <Layout>
@@ -137,6 +142,8 @@ const Details = ({
 
             <div className={styles.headingcontainer}>
               <h1>{servicepointData.servicepoint_name}</h1>
+              <div className={styles.subHeader}>{subHeader}</div>
+
               <span className={styles.statuslabel}>
                 {isMainEntrancePublished ? (
                   <StatusLabel type="success"> {i18n.t("common.statusReady")} </StatusLabel>
@@ -148,8 +155,12 @@ const Details = ({
                   {i18n.t("common.updated")} {finnishDate}
                 </p>
               </span>
+
               <div className={styles.entranceHeader}>
-                <h2>{`${i18n.t("servicepoint.contactFormSummaryHeader")} (${entranceKeys.length})`}</h2>
+                <h2>{`${i18n.t("servicepoint.contactFormSummaryHeader")} (${entranceKeys.length} ${
+                  entranceKeys.length === 1 ? i18n.t("servicepoint.numberOfEntrances1") : i18n.t("servicepoint.numberOfEntrances2+")
+                })`}</h2>
+
                 {servicepointDetail.new_entrance_possible === "Y" && <ServicepointLandingSummaryNewButton />}
               </div>
             </div>
