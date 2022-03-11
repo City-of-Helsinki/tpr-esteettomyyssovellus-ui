@@ -16,9 +16,20 @@
   .headingcontainer {
     h1 {
       word-break: break-word;
+      margin-bottom: 0;
     }
     h2 {
       color: $color-bus;
+    }
+
+    .subHeader {
+      font-size: $fontsize-heading-m;
+      font-weight: 700;
+      margin-bottom: $spacing-l;
+
+      @include media(xs) {
+        font-size: $fontsize-heading-s;
+      }
     }
 
     .statuslabel {

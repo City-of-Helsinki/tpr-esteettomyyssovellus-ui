@@ -451,7 +451,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       if (params.entranceId === undefined && (!servicepointDetail || servicepointDetail.new_entrance_possible === "Y")) {
         // New entrance
         // Make a new main entrance if not existing, otherwise an additional entrance
-        formId = !mainEntrance || !servicepointDetail ? 0 : 1;
+        formId = !isMainEntrancePublished || !mainEntrance || !servicepointDetail ? 0 : 1;
       } else if (params.entranceId !== undefined) {
         // Existing entrance
         const entranceResp = await fetch(`${API_URL_BASE}${API_FETCH_ENTRANCES}${params.entranceId}/?format=json`, {

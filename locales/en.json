@@ -74,6 +74,8 @@
     },
     "contactInfoHeader": "Contact information",
     "contactFormSummaryHeader": "Accessibility information",
+    "numberOfEntrances1": "entrance",
+    "numberOfEntrances2+": "entrances",
     "noDataContactinfo": "No contact details for accessibility issues have been provided to the location",
     "noDataMainEntrance": "No information has been provided about the main entrance accessibility of the location",
     "contactPerson": "Accessibility contact person",
