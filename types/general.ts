@@ -27,9 +27,9 @@ export interface QuestionContainerProps {
   questionInfo?: string | null;
   children: JSX.Element;
   hasAdditionalInfo: boolean;
-  canAddLocation?: boolean;
-  canAddPhotoMaxCount?: number;
-  canAddComment?: boolean;
+  // canAddLocation?: boolean;
+  // canAddPhotoMaxCount?: number;
+  // canAddComment?: boolean;
   photoUrl?: string | null;
   photoText?: string | null;
   isMainLocPicComponent?: boolean;
@@ -318,9 +318,9 @@ export interface PathTreeProps {
 export interface QuestionAdditionalInfoProps {
   questionId: number;
   blockId?: number;
-  canAddLocation?: boolean;
-  canAddPhotoMaxCount?: number;
-  canAddComment?: boolean;
+  // canAddLocation?: boolean;
+  // canAddPhotoMaxCount?: number;
+  // canAddComment?: boolean;
   isMainLocPicComponent?: boolean;
 }
 

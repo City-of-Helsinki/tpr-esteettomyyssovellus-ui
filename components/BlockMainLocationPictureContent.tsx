@@ -26,9 +26,9 @@ const BlockMainLocationPictureContent = ({ canAddLocation, canAddPicture }: Main
           questionText="PH: Pääsisäänkäynnin sijainti (teksti kannasta??)"
           questionInfo="PH: tähän jotain info (teksti kannasta??)"
           hasAdditionalInfo
-          canAddLocation
-          canAddComment={false}
-          canAddPhotoMaxCount={0}
+          // canAddLocation
+          // canAddComment={false}
+          // canAddPhotoMaxCount={0}
           photoText="ph: photo text"
           photoUrl="ph: photo_url"
           isMainLocPicComponent
@@ -57,9 +57,9 @@ const BlockMainLocationPictureContent = ({ canAddLocation, canAddPicture }: Main
           questionText="PH: Pääsisäänkäynnin kuva (teksti kannasta?)"
           questionInfo="PH: tähän ehkä jotain infot"
           hasAdditionalInfo
-          canAddLocation={false}
-          canAddComment={false}
-          canAddPhotoMaxCount={1}
+          // canAddLocation={false}
+          // canAddComment={false}
+          // canAddPhotoMaxCount={1}
           photoText="ph: photo text??"
           photoUrl="ph: photo_url??"
           isMainLocPicComponent

@@ -27,13 +27,14 @@ const QuestionsList = ({ additionalInfoVisible, questions, answerChoices }: Ques
             questionNumber={question.question_code}
             questionText={question.text}
             questionInfo={question.description ?? null}
-            hasAdditionalInfo={
-              additionalInfoVisible &&
-              (question.can_add_location === "Y" || question.can_add_comment === "Y" || question.can_add_photo_max_count !== 0)
-            }
-            canAddLocation={question.can_add_location === "Y"}
-            canAddComment={question.can_add_comment === "Y"}
-            canAddPhotoMaxCount={question.can_add_photo_max_count}
+            // hasAdditionalInfo={
+            //   additionalInfoVisible &&
+            //   (question.can_add_location === "Y" || question.can_add_comment === "Y" || question.can_add_photo_max_count !== 0)
+            // }
+            hasAdditionalInfo={additionalInfoVisible}
+            // canAddLocation={question.can_add_location === "Y"}
+            // canAddComment={question.can_add_comment === "Y"}
+            // canAddPhotoMaxCount={question.can_add_photo_max_count}
             photoText={question.photo_text}
             photoUrl={question.photo_url}
           >
