@@ -1,0 +1,43 @@
+@import "~hds-design-tokens/lib/all.scss";
+@import "../styles/mixins.scss";
+
+.maincontainer {
+  margin-top: $spacing-l;
+
+  .headercontainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .accordion {
+    > div:first-child {
+      font-size: $fontsize-heading-xs;
+      font-weight: 400;
+
+      div[aria-expanded="true"] {
+        font-weight: 700;
+      }
+    }
+  }
+
+  .sentence {
+    margin: $spacing-s 0;
+  }
+
+  .footercontainer {
+    margin-top: $spacing-l;
+  }
+
+  .nodatacontainer {
+    span {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      svg {
+        margin-right: $spacing-s;
+      }
+    }
+  }
+}

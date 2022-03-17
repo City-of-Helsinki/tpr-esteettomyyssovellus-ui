@@ -48,6 +48,7 @@
     "mainEntrance": "Main entrance",
     "mainEntranceLocation": "Main entrance location",
     "additionalEntrance": "Additional entrance",
+    "additionalEntrances": "Additional entrances",
     "entrance": "Additional entrance",
     "newEntrance": "New entrance",
     "updated": "Updated",
@@ -86,7 +87,10 @@
     "entranceLocationLabel": "Additional entrance location",
     "mainEntranceLocationCoordinatesLabel": "Coordinates",
     "mainEntrancePicturesLabel": "Main entrance photo",
-    "entrancePicturesLabel": "Additional entrance photo"
+    "entrancePicturesLabel": "Additional entrance photo",
+    "navigateToPage": "Navigate to page",
+    "picturesLocations": "Photos and locations",
+    "photoSource": "Source"
   },
   "questionFormControlButtons": {
     "quit": "Quit",

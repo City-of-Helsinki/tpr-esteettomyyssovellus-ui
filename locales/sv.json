@@ -48,6 +48,7 @@
     "mainEntrance": "Huvudingången",
     "mainEntranceLocation": "Platsen för huvudentren",
     "additionalEntrance": "Alternativ ingång",
+    "additionalEntrances": "Alternativ ingångar",
     "entrance": "Alternativ ingång",
     "newEntrance": "Ny ingång",
     "updated": "Uppdaterad",
@@ -86,7 +87,10 @@
     "entranceLocationLabel": "Alternativ ingångens läge",
     "mainEntranceLocationCoordinatesLabel": "Koordinater",
     "mainEntrancePicturesLabel": "Huvudingångens bild",
-    "entrancePicturesLabel": "Alternativ ingångens bild"
+    "entrancePicturesLabel": "Alternativ ingångens bild",
+    "navigateToPage": "Navigera till sidan",
+    "picturesLocations": "Foton och platser",
+    "photoSource": "Källa"
   },
   "questionFormControlButtons": {
     "quit": "Avbryta",

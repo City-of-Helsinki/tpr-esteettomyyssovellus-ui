@@ -126,6 +126,13 @@ export interface QuestionAdditionalInfoCtrlButtonProps {
   curState: boolean;
 }
 
+export interface SummarySideNavigationProps {
+  entranceKey: string;
+  entranceData?: BackendEntrance;
+  servicepointData: Servicepoint;
+  accessibilityData: AccessibilityData;
+}
+
 export interface ServicepointLandingSummaryContactProps {
   servicepointData: BackendServicepoint;
   entranceData?: BackendEntrance;
@@ -142,6 +149,11 @@ export interface ServicepointLandingSummaryAccessibilityProps {
   hasModifyButton?: boolean;
 }
 
+export interface SummaryAccessibilityProps {
+  sentenceGroup?: BackendEntranceSentence[];
+  hasData: boolean;
+}
+
 export interface PreviewPageLandingSummaryProps {
   data: AccessibilityData;
 }
@@ -154,6 +166,12 @@ export interface ServicepointLandingSummaryContentProps {
 export interface ServicepointLandingSummaryLocationPictureProps {
   entranceKey: string;
   entranceData?: BackendEntrance;
+}
+
+export interface SummaryLocationPictureProps {
+  entranceKey: string;
+  entranceData?: BackendEntrance;
+  servicepointData: Servicepoint;
 }
 
 export interface ServicepointLandingSummaryModifyButtonProps {

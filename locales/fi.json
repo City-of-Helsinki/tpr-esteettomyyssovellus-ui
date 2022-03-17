@@ -48,6 +48,7 @@
     "mainEntrance": "Pääsisäänkäynti",
     "mainEntranceLocation": "Pääsisäänkäynnin sijainti",
     "additionalEntrance": "Lisäsisäänkäynti",
+    "additionalEntrances": "Lisäsisäänkäynnit",
     "entrance": "Lisäsisäänkäynti",
     "newEntrance": "Uusi sisäänkäynti",
     "updated": "Päivitetty",
@@ -86,7 +87,10 @@
     "entranceLocationLabel": "Lisäsisäänkäynnin sijainti",
     "mainEntranceLocationCoordinatesLabel": "Koordinaatit",
     "mainEntrancePicturesLabel": "Pääsisäänkäynnin kuva",
-    "entrancePicturesLabel": "Lisäsisäänkäynnin kuva"
+    "entrancePicturesLabel": "Lisäsisäänkäynnin kuva",
+    "navigateToPage": "Siirry sivulle",
+    "picturesLocations": "Kuvat ja sijainnit",
+    "photoSource": "Lähde"
   },
   "questionFormControlButtons": {
     "quit": "Keskeytä",

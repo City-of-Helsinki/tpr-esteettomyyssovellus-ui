@@ -2,14 +2,14 @@ import React, { ReactElement, useEffect } from "react";
 import { useI18n } from "next-localization";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
-import { StatusLabel, IconCrossCircle, IconQuestionCircle, Tabs, TabList, Tab, TabPanel } from "hds-react";
+import { IconCrossCircle, IconQuestionCircle, StatusLabel } from "hds-react";
 import Layout from "../../components/common/Layout";
 import i18nLoader from "../../utils/i18n";
-import ServicepointLandingSummaryAccessibility from "../../components/ServicepointLandingSummaryAccessibility";
+import SummarySideNavigation from "../../components/SummarySideNavigation";
 import ServicepointLandingSummaryContact from "../../components/ServicepointLandingSummaryContact";
 import ServicepointLandingSummaryNewButton from "../../components/ServicepointLandingSummaryNewButton";
+import ServicepointLandingSummaryModifyButton from "../../components/ServicepointLandingSummaryModifyButton";
 import styles from "./details.module.scss";
-// import ServicepointLandingSummaryCtrlButtons from "../../components/ServicepointLandingSummaryCtrlButtons";
 import QuestionInfo from "../../components/QuestionInfo";
 import ServicepointMainInfoContent from "../../components/ServicepointMainInfoContent";
 import PathTreeComponent from "../../components/PathTreeComponent";
@@ -57,6 +57,7 @@ const Details = ({
 
   // const hasData = Object.keys(servicepointData).length > 0 && Object.keys(entranceData).length > 0;
   const hasData = Object.keys(servicepointData).length > 0;
+  const hasMainAccessibilityData = accessibilityData && accessibilityData.main && accessibilityData.main.length > 0;
 
   useEffect(() => {
     // set coordinates from data to state gerenalSlice for e.g. leafletmaps
@@ -156,6 +157,7 @@ const Details = ({
                 </p>
               </span>
 
+              {/*
               <div className={styles.entranceHeader}>
                 <h2>{`${i18n.t("servicepoint.contactFormSummaryHeader")} (${entranceKeys.length} ${
                   entranceKeys.length === 1 ? i18n.t("servicepoint.numberOfEntrances1") : i18n.t("servicepoint.numberOfEntrances2+")
@@ -163,50 +165,42 @@ const Details = ({
 
                 {servicepointDetail.new_entrance_possible === "Y" && <ServicepointLandingSummaryNewButton />}
               </div>
+              */}
+
+              <h2>{i18n.t("common.mainEntrance")}</h2>
             </div>
 
-            <div>
-              <Tabs>
-                <TabList>
-                  {entranceKeys.map((key, index) => {
-                    return (
-                      <Tab key={`tabheader_${key}`}>
-                        {key === "main" ? i18n.t("common.mainEntrance") : `${i18n.t("common.additionalEntrance")} ${index > 1 ? index : ""}`}
-                      </Tab>
-                    );
-                  })}
-                </TabList>
-                {entranceKeys.map((key) => {
-                  const hasAccessibilityData = accessibilityData && accessibilityData[key] && accessibilityData[key].length > 0;
+            <ServicepointLandingSummaryContact
+              servicepointData={servicepointDetail}
+              entranceData={entranceData.main}
+              hasData={hasMainAccessibilityData}
+              hasModifyButton
+            />
 
-                  return (
-                    <TabPanel key={`tabpanel_${key}`}>
-                      {key === "main" && (
-                        <ServicepointLandingSummaryContact
-                          servicepointData={servicepointDetail}
-                          entranceData={entranceData[key]}
-                          hasData={hasAccessibilityData}
-                          hasModifyButton
-                        />
-                      )}
+            {entranceKeys.map((key, index) => {
+              const hasAccessibilityData = accessibilityData && accessibilityData[key] && accessibilityData[key].length > 0;
 
-                      <ServicepointLandingSummaryAccessibility
-                        entranceKey={key}
-                        entranceData={entranceData[key]}
-                        servicepointData={servicepointData}
-                        accessibilityData={filteredAccessibilityData}
-                        hasData={hasAccessibilityData}
-                        hasModifyButton
-                      />
-                    </TabPanel>
-                  );
-                })}
-              </Tabs>
-            </div>
+              return (
+                <div key={`summary_${key}`} className={styles.summarycontainer}>
+                  {index === 1 && <h2>{i18n.t("common.additionalEntrances")}</h2>}
 
-            {/*
-            <ServicepointLandingSummaryCtrlButtons hasData={hasExistingFormData} />
-            */}
+                  <div className={styles.headercontainer}>
+                    <h3>{key === "main" ? i18n.t("common.mainEntrance") : `${i18n.t("common.additionalEntrance")} ${index}`}</h3>
+                    {key !== "main" && <ServicepointLandingSummaryModifyButton entranceData={entranceData[key]} hasData={hasAccessibilityData} />}
+                  </div>
+
+                  <SummarySideNavigation
+                    key={`sidenav_${key}`}
+                    entranceKey={key}
+                    entranceData={entranceData[key]}
+                    servicepointData={servicepointData}
+                    accessibilityData={filteredAccessibilityData}
+                  />
+                </div>
+              );
+            })}
+
+            <div>{servicepointDetail.new_entrance_possible === "Y" && <ServicepointLandingSummaryNewButton />}</div>
           </div>
         </main>
       )}
