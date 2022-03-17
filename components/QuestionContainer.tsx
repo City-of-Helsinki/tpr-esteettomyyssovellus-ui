@@ -159,7 +159,6 @@ const QuestionContainer = ({
                   <div className={styles.mapcontainerspacer} />
                   <div className={styles.mappreview}>
                     <Map
-                      initCenter={curQuestionAddinfos.locations.coordinates}
                       initLocation={curQuestionAddinfos.locations.coordinates}
                       initZoom={17}
                       draggableMarker={false}

@@ -10,11 +10,12 @@ import { addLocation } from "../../state/reducers/additionalInfoSlice";
 import { useAppSelector } from "../../state/hooks";
 import { convertCoordinates, isLocationValid } from "../../utils/utilFunctions";
 import { setServicepointLocation, setServicepointLocationWGS84 } from "../../state/reducers/generalSlice";
+import { MAP_INITIAL_CENTER, MAP_INITIAL_ZOOM } from "../../types/constants";
 
 interface MapWrapperProps {
   questionId: number;
   initialZoom: number;
-  initLocation?: [number, number] | number[];
+  initLocation?: [number, number];
   setMapReady?: (ready: boolean) => void;
   draggableMarker?: boolean;
   makeStatic: boolean;
@@ -89,6 +90,10 @@ const MapWrapper = ({
   // Use the icon images from the public folder
   const icon = new Icon.Default({ imagePath: `${getOrigin(router)}/` });
 
+  // Center on the marker if possible
+  const center = isLocationValid(curLocation) ? curLocation : (MAP_INITIAL_CENTER as [number, number]);
+  const zoom = isLocationValid(curLocation) ? initialZoom : MAP_INITIAL_ZOOM;
+
   // Set the initLocation in redux state after the marker is dragged to a new position
   // Note: this will cause the map to pan to centre on these coordinates
   const markerEventHandlers = {
@@ -159,7 +164,7 @@ const MapWrapper = ({
   };
 
   return (
-    <MapContainer className={styles.mapwrapper} center={curLocation} zoom={initialZoom} minZoom={5} maxZoom={18} whenReady={whenReady}>
+    <MapContainer className={styles.mapwrapper} center={center} zoom={zoom} minZoom={5} maxZoom={18} whenReady={whenReady}>
       <CustomMapHandler />
       <TileLayer
         url="http://tiles.hel.ninja/styles/hel-osm-bright/{z}/{x}/{y}@2x@fi.png"

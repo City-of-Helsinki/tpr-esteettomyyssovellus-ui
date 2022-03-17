@@ -1,7 +1,7 @@
 // place for custom typescript interfaces/"models"
 
 import { Dispatch, SetStateAction } from "react";
-import { LatLngExpression } from "leaflet";
+// import { LatLngExpression } from "leaflet";
 import {
   BackendEntrance,
   BackendEntranceAnswer,
@@ -172,11 +172,10 @@ export interface PreviewControlButtonsProps {
 
 export interface MapProps {
   questionId: number;
-  initCenter?: [number, number] | number[];
   initZoom: number;
-  initLocation: [number, number] | number[];
+  initLocation: [number, number];
   draggableMarker?: boolean;
-  updateLocationHandler?: (location: LatLngExpression) => void;
+  // updateLocationHandler?: (location: LatLngExpression) => void;
   makeStatic?: boolean;
   isMainLocPicComponent?: boolean;
 }

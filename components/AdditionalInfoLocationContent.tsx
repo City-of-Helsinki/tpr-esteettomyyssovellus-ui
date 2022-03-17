@@ -89,16 +89,7 @@ const AdditionalInfoLocationContent = ({
 
   // useMemo for preventing leaflet map rendering each time something updates on page
   const memoMap = useMemo(() => {
-    return (
-      <Map
-        initCenter={coords}
-        initLocation={coords}
-        initZoom={14}
-        draggableMarker
-        questionId={questionId}
-        isMainLocPicComponent={isMainLocPicComponent}
-      />
-    );
+    return <Map initLocation={coords} initZoom={14} draggableMarker questionId={questionId} isMainLocPicComponent={isMainLocPicComponent} />;
   }, [coords, isMainLocPicComponent, questionId]);
 
   return (

@@ -62,11 +62,7 @@ proj4.defs("EPSG:3067", "+title=EPSG:3067 +proj=utm +zone=35 +ellps=GRS80 +datum
 // convert coordinates from proj to another proj
 // returns coordinates in [x, y] / [lon, lat] / [pituus, leveys]
 // notice for be able to convert another crs than epsg3067 - WGS84 need to add them to defs above
-export const convertCoordinates = (
-  fromProjection: string,
-  toProjection: string,
-  coordinates: [number, number] | number[]
-): [number, number] | number[] => {
+export const convertCoordinates = (fromProjection: string, toProjection: string, coordinates: [number, number]): [number, number] => {
   if (!isLocationValid(coordinates)) return [0, 0];
   return proj4(fromProjection, toProjection, coordinates);
 };

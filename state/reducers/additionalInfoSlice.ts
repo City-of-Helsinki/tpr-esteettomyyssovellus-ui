@@ -77,7 +77,7 @@ export const additionalInfoSlice = createSlice({
       state,
       action: PayloadAction<{
         questionId: number;
-        coordinates: [number, number] | number[];
+        coordinates: [number, number];
         locNorthing: number;
         locEasting: number;
       }>
