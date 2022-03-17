@@ -4,8 +4,7 @@ import { useI18n } from "next-localization";
 import ServicepointLandingSummaryContent from "./ServicepointLandingSummaryContent";
 import ServicepointLandingSummaryLocationPicture from "./ServicepointLandingSummaryLocationPicture";
 import ServicepointLandingSummaryModifyButton from "./ServicepointLandingSummaryModifyButton";
-import { StoredSentence } from "../types/backendModels";
-import { ServicepointLandingSummaryAccessibilityProps } from "../types/general";
+import { AccessibilityData, ServicepointLandingSummaryAccessibilityProps } from "../types/general";
 import { formatAddress } from "../utils/utilFunctions";
 import styles from "./ServicepointLandingSummaryAccessibility.module.scss";
 
@@ -32,12 +31,9 @@ const ServicepointLandingSummaryAccessibility = ({
         )}`
       : `${i18n.t("common.entrance")}: ${entranceName ?? ""}`;
 
-  interface SentenceGroup {
-    [key: string]: StoredSentence[];
-  }
-  const getGroupedAccessibilityData = (): SentenceGroup | undefined => {
+  const getGroupedAccessibilityData = (): AccessibilityData | undefined => {
     if (accessibilityData[entranceKey]) {
-      return accessibilityData[entranceKey].reduce((acc: SentenceGroup, sentence) => {
+      return accessibilityData[entranceKey].reduce((acc: AccessibilityData, sentence) => {
         const { sentence_group_id } = sentence;
         return {
           ...acc,

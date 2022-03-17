@@ -3,11 +3,17 @@ import proj4 from "proj4";
 import publicIp from "public-ip";
 import crypto from "crypto";
 import getOrigin from "./request";
-import { StoredSentence } from "../types/backendModels";
-import { API_FETCH_ANSWER_LOGS, API_FETCH_QUESTION_ANSWERS, API_FETCH_QUESTION_BLOCK_ANSWER_FIELD, API_GENERATE_SENTENCES } from "../types/constants";
+import { BackendEntranceSentence } from "../types/backendModels";
+import {
+  API_FETCH_ANSWER_LOGS,
+  API_FETCH_QUESTION_ANSWERS,
+  API_FETCH_QUESTION_BLOCK_ANSWER_FIELD,
+  API_GENERATE_SENTENCES,
+  LanguageLocales,
+} from "../types/constants";
 import { API_TOKEN } from "./checksumSecret";
 /*
-import { QuestionAnswerPhoto, StoredSentence } from "../types/backendModels";
+import { QuestionAnswerPhoto } from "../types/backendModels";
 import {
   API_FETCH_QUESTION_ANSWER_COMMENTS,
   API_FETCH_QUESTION_ANSWER_LOCATIONS,
@@ -42,9 +48,11 @@ export const getFinnishDate = (jsonTimeStamp: Date): string => {
   return finnish_date;
 };
 
-export const filterByLanguage = (dict: StoredSentence[], locale: string): StoredSentence[] => {
+export const filterByLanguage = (dict: BackendEntranceSentence[], locale: string): BackendEntranceSentence[] => {
+  const localeId: number = LanguageLocales[locale as keyof typeof LanguageLocales];
+
   return dict.filter((entry) => {
-    return entry.language_code === locale;
+    return entry.language_id === localeId;
   });
 };
 

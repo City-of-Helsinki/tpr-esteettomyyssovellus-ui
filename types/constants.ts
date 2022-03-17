@@ -35,7 +35,7 @@ export const API_FETCH_QUESTION_BLOCK_ANSWER_FIELD = "api/ArXQuestionBlockAnswer
 // export const API_FETCH_QUESTION_ANSWER_PHOTOS = "api/ArXQuestionAnswerPhoto/";
 // export const API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS = "api/ArXQuestionAnswerPhotoTxt/";
 export const API_FETCH_BACKEND_QUESTIONS = "api/ArBackendQuestions/";
-export const API_FETCH_SENTENCE_LANGS = "api/ArXStoredSentenceLangs/";
+export const API_FETCH_BACKEND_SENTENCES = "api/ArBackendEntranceSentence/";
 export const API_FETCH_SYSTEM_FORMS = "api/ArSystemForms/";
 export const API_FETCH_EXTERNAL_SERVICEPOINTS = "api/ArExternalServicepoint/";
 

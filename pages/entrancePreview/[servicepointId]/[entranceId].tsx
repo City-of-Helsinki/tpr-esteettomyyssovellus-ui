@@ -22,9 +22,9 @@ import {
   API_FETCH_BACKEND_ENTRANCE,
   API_FETCH_BACKEND_ENTRANCE_ANSWERS,
   API_FETCH_BACKEND_ENTRANCE_FIELD,
+  API_FETCH_BACKEND_SENTENCES,
   API_FETCH_BACKEND_SERVICEPOINT,
   API_FETCH_ENTRANCES,
-  API_FETCH_SENTENCE_LANGS,
   API_FETCH_SERVICEPOINTS,
   API_URL_BASE,
 } from "../../../types/constants";
@@ -34,11 +34,11 @@ import {
   BackendEntrance,
   BackendEntranceAnswer,
   BackendEntranceField,
+  BackendEntranceSentence,
   BackendServicepoint,
   Entrance,
   EntranceResults,
   Servicepoint,
-  StoredSentence,
 } from "../../../types/backendModels";
 import { AccessibilityData, EntranceData, PreviewProps } from "../../../types/general";
 
@@ -303,10 +303,13 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       }
 
       // Get the draft sentences for this entrance
-      const sentenceResp = await fetch(`${API_URL_BASE}${API_FETCH_SENTENCE_LANGS}?entrance_id=${params.entranceId}&form_submitted=D&format=json`, {
-        headers: new Headers({ Authorization: getTokenHash() }),
-      });
-      const sentenceData = await (sentenceResp.json() as Promise<StoredSentence[]>);
+      const sentenceResp = await fetch(
+        `${API_URL_BASE}${API_FETCH_BACKEND_SENTENCES}?entrance_id=${params.entranceId}&form_submitted=D&format=json`,
+        {
+          headers: new Headers({ Authorization: getTokenHash() }),
+        }
+      );
+      const sentenceData = await (sentenceResp.json() as Promise<BackendEntranceSentence[]>);
       accessibilityData = {
         [entranceKey]: sentenceData,
       };

@@ -6,6 +6,7 @@ import {
   BackendEntrance,
   BackendEntranceAnswer,
   BackendEntranceField,
+  BackendEntranceSentence,
   BackendQuestion,
   BackendQuestionBlock,
   BackendQuestionBlockField,
@@ -16,7 +17,6 @@ import {
   // QuestionAnswerPhoto,
   // QuestionAnswerPhotoTxt,
   Servicepoint,
-  StoredSentence,
 } from "./backendModels";
 
 export interface QuestionContainerProps {
@@ -368,7 +368,7 @@ export interface EntranceData {
 }
 
 export interface AccessibilityData {
-  [key: string]: StoredSentence[];
+  [key: string]: BackendEntranceSentence[];
 }
 
 export interface DetailsProps {

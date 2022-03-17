@@ -68,21 +68,6 @@ export interface EntranceResults {
   results: Entrance[];
 }
 
-export interface StoredSentence {
-  entrance_id: number;
-  log_id: number;
-  language_code: string;
-  sentence_group_id: number;
-  sentence_group_name: string;
-  question_block_id: number;
-  question_block_name: string;
-  sentence_id: number;
-  sentence_order_text: string;
-  sentence?: string;
-  stored?: Date;
-  form_submitted?: string;
-}
-
 /*
 export interface AnswerLog {
   log_id: number;

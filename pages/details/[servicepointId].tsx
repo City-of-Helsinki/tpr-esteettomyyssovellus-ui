@@ -20,15 +20,15 @@ import { setServicepointLocation, setServicepointLocationWGS84 } from "../../sta
 import {
   // API_FETCH_ANSWER_LOGS,
   API_FETCH_BACKEND_ENTRANCE,
+  API_FETCH_BACKEND_SENTENCES,
   API_FETCH_BACKEND_SERVICEPOINT,
   API_FETCH_ENTRANCES,
-  API_FETCH_SENTENCE_LANGS,
   API_FETCH_SERVICEPOINTS,
   API_URL_BASE,
 } from "../../types/constants";
 import LoadSpinner from "../../components/common/LoadSpinner";
 import { persistor } from "../../state/store";
-import { BackendEntrance, BackendServicepoint, EntranceResults, Servicepoint, StoredSentence } from "../../types/backendModels";
+import { BackendEntrance, BackendEntranceSentence, BackendServicepoint, EntranceResults, Servicepoint } from "../../types/backendModels";
 import { AccessibilityData, DetailsProps, EntranceData } from "../../types/general";
 
 // usage: the details / landing page of servicepoint
@@ -291,12 +291,12 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       const entranceResultSentences = await Promise.all(
         servicepointEntranceData.results.map(async (entranceResult) => {
           const sentenceResp = await fetch(
-            `${API_URL_BASE}${API_FETCH_SENTENCE_LANGS}?entrance_id=${entranceResult.entrance_id}&form_submitted=Y&format=json`,
+            `${API_URL_BASE}${API_FETCH_BACKEND_SENTENCES}?entrance_id=${entranceResult.entrance_id}&form_submitted=Y&format=json`,
             {
               headers: new Headers({ Authorization: getTokenHash() }),
             }
           );
-          const sentenceData = await (sentenceResp.json() as Promise<StoredSentence[]>);
+          const sentenceData = await (sentenceResp.json() as Promise<BackendEntranceSentence[]>);
           return { entranceResult, sentenceData };
         })
       );
