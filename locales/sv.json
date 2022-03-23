@@ -168,7 +168,10 @@
     "additionalInfoPreviewHeader": "Ytterligare information",
     "additionalInfoPreviewAltText": "Bild: ",
     "additionalInfoPreviewSourceText": "Källa: ",
-    "optional": "frivillig"
+    "optional": "frivillig",
+    "fillPlaceData1": "Vill du slutföra",
+    "fillPlaceData2": "tillgänglighetsinformation",
+    "placeLink": "Lägg till ett bild och/eller plats"
   },
   "QuestionFormImportExistingData": {
     "chooseServicepoint": "Välj ett kontor",

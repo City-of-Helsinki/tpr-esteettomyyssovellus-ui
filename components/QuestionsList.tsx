@@ -6,7 +6,7 @@ import { BackendQuestion } from "../types/backendModels";
 import { QuestionsListProps } from "../types/general";
 
 // usage: list questions component, should be called once per question block
-const QuestionsList = ({ additionalInfoVisible, questions, answerChoices }: QuestionsListProps): JSX.Element => {
+const QuestionsList = ({ additionalInfoVisible, questions, answerChoices, accessibilityPlaces }: QuestionsListProps): JSX.Element => {
   return (
     <>
       {questions?.map((question: BackendQuestion) => {
@@ -22,11 +22,8 @@ const QuestionsList = ({ additionalInfoVisible, questions, answerChoices }: Ques
         return (
           <QuestionContainer
             key={question.question_id}
-            questionId={question.question_id}
-            questionBlockId={question.question_block_id}
-            questionNumber={question.question_code}
-            questionText={question.text}
-            questionInfo={question.description ?? null}
+            question={question}
+            accessibilityPlaces={accessibilityPlaces}
             // hasAdditionalInfo={
             //   additionalInfoVisible &&
             //   (question.can_add_location === "Y" || question.can_add_comment === "Y" || question.can_add_photo_max_count !== 0)
@@ -35,8 +32,6 @@ const QuestionsList = ({ additionalInfoVisible, questions, answerChoices }: Ques
             // canAddLocation={question.can_add_location === "Y"}
             // canAddComment={question.can_add_comment === "Y"}
             // canAddPhotoMaxCount={question.can_add_photo_max_count}
-            photoText={question.photo_text}
-            photoUrl={question.photo_url}
           >
             {/* For checking if the component is yes_or_no question -> data from db */}
             {question.yes_no_question === "Y" ? (

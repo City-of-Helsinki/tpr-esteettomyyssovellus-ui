@@ -1,4 +1,4 @@
-import React, { KeyboardEvent, MouseEvent, useMemo, useState } from "react";
+import React, { KeyboardEvent, MouseEvent, useState } from "react";
 import { SideNavigation } from "hds-react";
 import { useI18n } from "next-localization";
 import SummaryAccessibility from "./SummaryAccessibility";
@@ -33,10 +33,7 @@ const SummarySideNavigation = ({ entranceKey, entranceData, servicepointData, ac
     }
   };
 
-  const groupedAccessibilityData = useMemo(
-    () => getGroupedAccessibilityData(accessibilityData ? accessibilityData[entranceKey] : undefined),
-    [accessibilityData, entranceKey]
-  );
+  const groupedAccessibilityData = getGroupedAccessibilityData(accessibilityData ? accessibilityData[entranceKey] : undefined);
 
   const getSentenceGroupSubLevels = (groupedSentences?: AccessibilityData) => {
     if (groupedSentences) {

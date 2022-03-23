@@ -168,7 +168,10 @@
     "additionalInfoPreviewHeader": "Lisätiedot",
     "additionalInfoPreviewAltText": "Kuva: ",
     "additionalInfoPreviewSourceText": "Lähde: ",
-    "optional": "vapaaehtoinen"
+    "optional": "vapaaehtoinen",
+    "fillPlaceData1": "Haluatko täydentää",
+    "fillPlaceData2": "esteettömyystietoja",
+    "placeLink": "Lisää kuva ja/tai sijainti"
   },
   "QuestionFormImportExistingData": {
     "chooseServicepoint": "Valitse toimipiste",

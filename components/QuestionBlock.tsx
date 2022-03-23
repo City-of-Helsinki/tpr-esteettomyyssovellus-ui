@@ -13,7 +13,15 @@ import { setFinished, unsetFinished } from "../state/reducers/formSlice";
 
 // usage: in form groups up all questions under a single "question block" / accordion
 // notes: used under headlineQuestionContainer in main form
-const QuestionBlock = ({ description, questions, answerChoices, extraFields, photoUrl, photoText }: QuestionBlockProps): JSX.Element => {
+const QuestionBlock = ({
+  description,
+  questions,
+  answerChoices,
+  extraFields,
+  accessibilityPlaces,
+  photoUrl,
+  photoText,
+}: QuestionBlockProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
   // const [showAdditionalInfo, setShowAdditionalInfo] = useState(false);
@@ -110,7 +118,12 @@ const QuestionBlock = ({ description, questions, answerChoices, extraFields, pho
       {/* TODO: add QuestionBlockLocationPictureContent component here */}
 
       {/* QtionList loops the single question row(s) */}
-      <QuestionsList additionalInfoVisible={showAdditionalInfo} questions={filteredQuestions} answerChoices={answerChoices} />
+      <QuestionsList
+        additionalInfoVisible={showAdditionalInfo}
+        questions={filteredQuestions}
+        answerChoices={answerChoices}
+        accessibilityPlaces={accessibilityPlaces}
+      />
 
       {/*hasInfoAndButtons || !showContinue ? null : (
         <div className={styles.continueButton}>

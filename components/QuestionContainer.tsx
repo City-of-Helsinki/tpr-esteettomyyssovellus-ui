@@ -1,7 +1,8 @@
 import React from "react";
-import { IconInfoCircle, IconCrossCircle, IconAlertCircle } from "hds-react";
+import { IconAlertCircle, IconCrossCircle, IconInfoCircle, IconPenLine, Link as HdsLink } from "hds-react";
 import { useI18n } from "next-localization";
 import { useRouter } from "next/router";
+import Link from "next/link";
 import styles from "./QuestionContainer.module.scss";
 import { QuestionContainerProps } from "../types/general";
 import QuestionInfo from "./QuestionInfo";
@@ -15,13 +16,8 @@ import { setCurrentlyEditingBlock } from "../state/reducers/generalSlice";
 // and possible addinfo previews if question has addinfos
 // note: MainLocationOrImage uses questionId as id and questionBlockId as caseid for location or image
 const QuestionContainer = ({
-  questionId,
-  questionBlockId,
-  questionNumber,
-  questionText,
-  questionInfo,
-  photoUrl,
-  photoText,
+  question,
+  accessibilityPlaces,
   children,
   hasAdditionalInfo,
   // canAddLocation,
@@ -32,8 +28,19 @@ const QuestionContainer = ({
   const i18n = useI18n();
   const router = useRouter();
   const dispatch = useAppDispatch();
-
   const curLocale: string = i18n.locale();
+
+  const {
+    question_id: questionId,
+    question_block_id: questionBlockId,
+    question_code: questionNumber,
+    text: questionText,
+    description: questionInfo,
+    photo_text: photoText,
+    photo_url: photoUrl,
+    place_visible_if_question_choice: placeVisible,
+  } = question;
+
   // const questionDepth = (questionNumber?.toString().split(".") || []).length;
   // const paddingLeft = `${(questionDepth - 2) * 5}rem`;
   const photoTexts = photoText?.split("<BR>");
@@ -41,7 +48,33 @@ const QuestionContainer = ({
   const invalidBlocks = useAppSelector((state) => state.formReducer.invalidBlocks);
   const curQuestionAddinfos = useAppSelector((state) => state.additionalInfoReducer.additionalInfo[questionId]);
   const curAnswers = useAppSelector((state) => state.formReducer.answers);
+  const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
+  const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
   const isInvalid = invalidBlocks.includes(questionBlockId);
+
+  // Accessibility place string examples:
+  // 4:80101
+  // 7:1202+1203+1204+1205+1206+1207
+  // 37:5403+5404+5405+5406+5407;38:5403+5404+5405+5406+5407
+  const questionPlaces = placeVisible?.split(";");
+  const visiblePlaceIds = questionPlaces?.reduce((acc: number[], placeStr) => {
+    const place = placeStr.split(":");
+    if (place && place.length === 2) {
+      const placeId = place[0];
+      const choices = place[1].split("+");
+
+      if (choices.some((elem) => curAnsweredChoices.includes(Number(elem)))) {
+        return [...acc, Number(placeId)];
+      }
+    }
+    return acc;
+  }, []);
+  const visiblePlaces =
+    visiblePlaceIds && visiblePlaceIds.length > 0
+      ? accessibilityPlaces.filter((place) => {
+          return visiblePlaceIds.includes(place.place_id);
+        })
+      : undefined;
 
   // set invalid style if validation errors
   const questionStyle =
@@ -78,44 +111,71 @@ const QuestionContainer = ({
 
   return (
     <div className={styles.maincontainer} style={questionStyle} id={`questionid-${questionId}`}>
-      <div className={styles.questioncontainer}>
-        <div className={styles.maintext}>
-          <p>
-            {questionNumber} {questionText}
-          </p>
-          {questionInfo ? (
-            <QuestionInfo
-              openText={i18n.t("accessibilityForm.whatDoesThisMean")}
-              openIcon={<IconInfoCircle aria-hidden />}
-              closeText={i18n.t("accessibilityForm.closeGuidance")}
-              closeIcon={<IconCrossCircle aria-hidden />}
-              textOnBottom
-            >
-              <div className={styles.infoContainer}>
-                {questionInfos?.map((e, index) => {
-                  const key = `br_${index}`;
-                  return <p key={key}>{e}</p>;
-                })}
-                {photoUrl && <img src={photoUrl} alt="" className={styles.infoPicture} />}
-                {photoTexts && <p>{photoTexts}</p>}
-              </div>
-            </QuestionInfo>
+      <div className={styles.questionwrapper}>
+        <div className={styles.questioncontainer}>
+          <div className={styles.maintext}>
+            <p>
+              {questionNumber} {questionText}
+            </p>
+            {questionInfo ? (
+              <QuestionInfo
+                openText={i18n.t("accessibilityForm.whatDoesThisMean")}
+                openIcon={<IconInfoCircle aria-hidden />}
+                closeText={i18n.t("accessibilityForm.closeGuidance")}
+                closeIcon={<IconCrossCircle aria-hidden />}
+                textOnBottom
+              >
+                <div className={styles.infoContainer}>
+                  {questionInfos?.map((e, index) => {
+                    const key = `br_${index}`;
+                    return <p key={key}>{e}</p>;
+                  })}
+                  {photoUrl && <img src={photoUrl} alt="" className={styles.infoPicture} />}
+                  {photoTexts && <p>{photoTexts}</p>}
+                </div>
+              </QuestionInfo>
+            ) : null}
+          </div>
+
+          <div className={styles.children}>{children}</div>
+
+          {hasAdditionalInfo && questionId !== undefined ? (
+            <QuestionAdditionalInformation
+              questionId={questionId}
+              blockId={questionBlockId}
+              // canAddLocation={canAddLocation}
+              // canAddPhotoMaxCount={canAddPhotoMaxCount}
+              // canAddComment={canAddComment}
+              isMainLocPicComponent={isMainLocPicComponent}
+            />
           ) : null}
+          {isInvalid && curAnswers[questionId] === undefined ? <IconAlertCircle className={styles.alertCircle} aria-hidden /> : null}
         </div>
 
-        <div className={styles.children}>{children}</div>
-
-        {hasAdditionalInfo && questionId !== undefined ? (
-          <QuestionAdditionalInformation
-            questionId={questionId}
-            blockId={questionBlockId}
-            // canAddLocation={canAddLocation}
-            // canAddPhotoMaxCount={canAddPhotoMaxCount}
-            // canAddComment={canAddComment}
-            isMainLocPicComponent={isMainLocPicComponent}
-          />
-        ) : null}
-        {isInvalid && curAnswers[questionId] === undefined ? <IconAlertCircle className={styles.alertCircle} aria-hidden /> : null}
+        {visiblePlaces && (
+          <div className={styles.questioncontainer}>
+            {visiblePlaces.map((place) => {
+              const key = `place_${place.place_id}`;
+              return (
+                <div key={key} className={styles.placecontainer}>
+                  <div className={styles.place}>
+                    <IconPenLine aria-hidden />
+                    <div className={styles.maintext}>
+                      {`${i18n.t("accessibilityForm.fillPlaceData1")} ${place.name} ${i18n.t("accessibilityForm.fillPlaceData2")}?`}
+                    </div>
+                  </div>
+                  <div className={styles.children}>
+                    <Link href={`/accessibilityPlace/${curServicepointId}/${place.place_id}`}>
+                      <HdsLink href="#" size="M" disableVisitedStyles>
+                        {i18n.t("accessibilityForm.placeLink")}
+                      </HdsLink>
+                    </Link>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {/* code under loops additional infos to the form if question has addinfo */}

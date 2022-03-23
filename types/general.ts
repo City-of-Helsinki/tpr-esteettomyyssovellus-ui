@@ -7,6 +7,7 @@ import {
   BackendEntranceAnswer,
   BackendEntranceField,
   BackendEntranceSentence,
+  BackendPlace,
   BackendQuestion,
   BackendQuestionBlock,
   BackendQuestionBlockField,
@@ -20,18 +21,13 @@ import {
 } from "./backendModels";
 
 export interface QuestionContainerProps {
-  questionId: number;
-  questionBlockId: number;
-  questionNumber?: number | string;
-  questionText?: string;
-  questionInfo?: string | null;
+  question: BackendQuestion;
+  accessibilityPlaces: BackendPlace[];
   children: JSX.Element;
   hasAdditionalInfo: boolean;
   // canAddLocation?: boolean;
   // canAddPhotoMaxCount?: number;
   // canAddComment?: boolean;
-  photoUrl?: string | null;
-  photoText?: string | null;
   isMainLocPicComponent?: boolean;
 }
 
@@ -115,6 +111,7 @@ export interface QuestionsListProps {
   additionalInfoVisible: boolean;
   questions?: BackendQuestion[] | null;
   answerChoices?: BackendQuestionChoice[] | null;
+  accessibilityPlaces: BackendPlace[];
 }
 
 export interface QuestionBlockExtraFieldListProps {
@@ -301,6 +298,7 @@ export interface EntranceFormProps {
   questionChoicesData: BackendQuestionChoice[];
   questionBlocksData: BackendQuestionBlock[];
   questionBlockFieldData: BackendQuestionBlockField[];
+  accessibilityPlaceData: BackendPlace[];
   entranceData: BackendEntrance;
   servicepointData: Servicepoint;
   questionAnswerData: BackendEntranceAnswer[];
@@ -323,6 +321,7 @@ export interface QuestionBlockProps {
   questions?: BackendQuestion[] | null;
   answerChoices?: BackendQuestionChoice[] | null;
   extraFields?: BackendQuestionBlockField[] | null;
+  accessibilityPlaces: BackendPlace[];
   description?: string | null;
   photoUrl?: string | null;
   photoText?: string | null;
@@ -405,6 +404,13 @@ export interface PreviewProps {
   entranceData: EntranceData;
   questionAnswerData: BackendEntranceAnswer[];
   questionExtraAnswerData: BackendEntranceField[];
+  isMainEntrancePublished: boolean;
+}
+
+export interface AccessibilityPlaceProps {
+  servicepointData: Servicepoint;
+  servicepointDetail: BackendServicepoint;
+  accessibilityPlaceData: BackendPlace;
   isMainEntrancePublished: boolean;
 }
 

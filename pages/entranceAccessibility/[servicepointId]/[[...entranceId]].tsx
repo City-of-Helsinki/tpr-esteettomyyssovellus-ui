@@ -12,6 +12,7 @@ import {
   API_FETCH_BACKEND_ENTRANCE,
   API_FETCH_BACKEND_ENTRANCE_ANSWERS,
   API_FETCH_BACKEND_ENTRANCE_FIELD,
+  API_FETCH_BACKEND_PLACES,
   API_FETCH_BACKEND_QUESTIONBLOCK_FIELD,
   API_FETCH_BACKEND_SERVICEPOINT,
   API_FETCH_ENTRANCES,
@@ -32,6 +33,7 @@ import {
   BackendEntrance,
   BackendEntranceAnswer,
   BackendEntranceField,
+  BackendPlace,
   BackendQuestion,
   BackendQuestionBlock,
   BackendQuestionBlockField,
@@ -75,6 +77,7 @@ const EntranceAccessibility = ({
   questionBlockFieldData,
   questionAnswerData,
   questionExtraAnswerData,
+  accessibilityPlaceData,
   entranceData,
   servicepointData,
   // additionalInfosData,
@@ -241,6 +244,8 @@ const EntranceAccessibility = ({
     }
   }, [servicepointData, entranceData, questionAnswerData, questionExtraAnswerData, startedAnswering, dispatch]);
 
+  const filteredPlaces = accessibilityPlaceData.filter((place) => place.language_id === curLocaleId);
+
   // map visible blocks & questions & answers
   // const nextBlock = 0;
   // const lastBlockNumber = "";
@@ -295,6 +300,7 @@ const EntranceAccessibility = ({
                 questions={blockQuestions}
                 answerChoices={answerChoices}
                 extraFields={blockExtraFields}
+                accessibilityPlaces={filteredPlaces}
                 photoUrl={block.photo_url}
                 photoText={block.photo_text}
               />
@@ -402,6 +408,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   let questionChoicesData: BackendQuestionChoice[] = [];
   let questionBlocksData: BackendQuestionBlock[] = [];
   let questionBlockFieldData: BackendQuestionBlockField[] = [];
+  let accessibilityPlaceData: BackendPlace[] = [];
   let questionAnswerData: BackendEntranceAnswer[] = [];
   let questionExtraAnswerData: BackendEntranceField[] = [];
   let entranceData: BackendEntrance = {} as BackendEntrance;
@@ -490,11 +497,15 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         const questionBlockFieldResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_QUESTIONBLOCK_FIELD}${formId}`, {
           headers: new Headers({ Authorization: getTokenHash() }),
         });
+        const accessibilityPlaceResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_PLACES}?format=json`, {
+          headers: new Headers({ Authorization: getTokenHash() }),
+        });
 
         questionsData = await (questionsResp.json() as Promise<BackendQuestion[]>);
         questionChoicesData = await (questionChoicesResp.json() as Promise<BackendQuestionChoice[]>);
         questionBlocksData = await (questionBlocksResp.json() as Promise<BackendQuestionBlock[]>);
         questionBlockFieldData = await (questionBlockFieldResp.json() as Promise<BackendQuestionBlockField[]>);
+        accessibilityPlaceData = await (accessibilityPlaceResp.json() as Promise<BackendPlace[]>);
       }
 
       if (params.entranceId !== undefined) {
@@ -571,6 +582,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       questionChoicesData = [];
       questionBlocksData = [];
       questionBlockFieldData = [];
+      accessibilityPlaceData = [];
       questionAnswerData = [];
       questionExtraAnswerData = [];
       entranceData = {} as BackendEntrance;
@@ -585,6 +597,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       questionChoicesData,
       questionBlocksData,
       questionBlockFieldData,
+      accessibilityPlaceData,
       questionAnswerData,
       questionExtraAnswerData,
       entranceData,

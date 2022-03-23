@@ -168,7 +168,10 @@
     "additionalInfoPreviewHeader": "Additional Information",
     "additionalInfoPreviewAltText": "Picture: ",
     "additionalInfoPreviewSourceText": "Source: ",
-    "optional": "optional"
+    "optional": "optional",
+    "fillPlaceData1": "Do you want to complete",
+    "fillPlaceData2": "accessibility information",
+    "placeLink": "Add a picture and/or location"
   },
   "QuestionFormImportExistingData": {
     "chooseServicepoint": "Choose servicepoint",
