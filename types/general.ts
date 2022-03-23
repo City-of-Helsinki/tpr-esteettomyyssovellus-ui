@@ -128,6 +128,10 @@ export interface SummarySideNavigationProps {
   entranceData?: BackendEntrance;
   servicepointData: Servicepoint;
   accessibilityData: AccessibilityData;
+  questionsData: QuestionData;
+  questionChoicesData: QuestionChoiceData;
+  questionBlocksData: QuestionBlockData;
+  questionAnswerData: EntranceAnswerData;
 }
 
 export interface ServicepointLandingSummaryContactProps {
@@ -147,8 +151,13 @@ export interface ServicepointLandingSummaryAccessibilityProps {
 }
 
 export interface SummaryAccessibilityProps {
+  entranceKey: string;
   sentenceGroup?: BackendEntranceSentence[];
   hasData: boolean;
+  questionsData: QuestionData;
+  questionChoicesData: QuestionChoiceData;
+  questionBlocksData: QuestionBlockData;
+  questionAnswerData: EntranceAnswerData;
 }
 
 export interface PreviewPageLandingSummaryProps {
@@ -388,6 +397,19 @@ export interface AccessibilityData {
   [key: string]: BackendEntranceSentence[];
 }
 
+export interface QuestionData {
+  [key: string]: BackendQuestion[];
+}
+export interface QuestionChoiceData {
+  [key: string]: BackendQuestionChoice[];
+}
+export interface QuestionBlockData {
+  [key: string]: BackendQuestionBlock[];
+}
+export interface EntranceAnswerData {
+  [key: string]: BackendEntranceAnswer[];
+}
+
 export interface DetailsProps {
   servicepointData: Servicepoint;
   servicepointDetail: BackendServicepoint;
@@ -395,6 +417,10 @@ export interface DetailsProps {
   entranceData: EntranceData;
   // hasExistingFormData: boolean;
   isMainEntrancePublished: boolean;
+  questionsData: QuestionData;
+  questionChoicesData: QuestionChoiceData;
+  questionBlocksData: QuestionBlockData;
+  questionAnswerData: EntranceAnswerData;
 }
 
 export interface PreviewProps {

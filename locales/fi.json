@@ -90,7 +90,10 @@
     "entrancePicturesLabel": "Lisäsisäänkäynnin kuva",
     "navigateToPage": "Siirry sivulle",
     "picturesLocations": "Kuvat ja sijainnit",
-    "photoSource": "Lähde"
+    "photoSource": "Lähde",
+    "questionsAndAnswers": "Esteettömyyskysymykset ja vastaukset",
+    "showMore": "Näytä lisää",
+    "showLess": "Näytä vähemmän"
   },
   "questionFormControlButtons": {
     "quit": "Keskeytä",

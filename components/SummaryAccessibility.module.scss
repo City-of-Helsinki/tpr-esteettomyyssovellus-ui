@@ -12,18 +12,47 @@
   }
 
   .accordion {
-    > div:first-child {
-      font-size: $fontsize-heading-xs;
-      font-weight: 400;
+    border-bottom: 0 !important;
 
+    > div:first-child {
+      font-size: $fontsize-body-m;
+      font-weight: 500;
+      background-color: $color-black-5;
+      padding: $spacing-s;
+
+      /*
       div[aria-expanded="true"] {
         font-weight: 700;
       }
+      */
     }
   }
 
-  .sentence {
-    margin: $spacing-s 0;
+  .innerAccordion {
+    border-bottom: 0 !important;
+
+    > div:first-child {
+      font-size: $fontsize-body-m;
+      font-weight: 500;
+      padding: $spacing-s;
+    }
+  }
+
+  .sentencelist {
+    padding: 0 $spacing-s;
+
+    .sentence {
+      margin: $spacing-s 0;
+    }
+  }
+
+  .questioncontainer {
+    margin-top: $spacing-2-xs;
+
+    .answer {
+      font-weight: 700;
+      margin-left: $spacing-2-xs;
+    }
   }
 
   .footercontainer {

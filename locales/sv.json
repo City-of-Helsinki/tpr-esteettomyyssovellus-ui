@@ -90,7 +90,10 @@
     "entrancePicturesLabel": "Alternativ ingångens bild",
     "navigateToPage": "Navigera till sidan",
     "picturesLocations": "Foton och platser",
-    "photoSource": "Källa"
+    "photoSource": "Källa",
+    "questionsAndAnswers": "Tillgänglighetsfrågor och svar",
+    "showMore": "Visa mer",
+    "showLess": "Visa mindre"
   },
   "questionFormControlButtons": {
     "quit": "Avbryta",

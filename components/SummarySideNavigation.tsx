@@ -8,7 +8,16 @@ import { AccessibilityData, SummarySideNavigationProps } from "../types/general"
 import styles from "./SummarySideNavigation.module.scss";
 
 // usage: used in details page to create a side menu for different entrance content
-const SummarySideNavigation = ({ entranceKey, entranceData, servicepointData, accessibilityData }: SummarySideNavigationProps): JSX.Element => {
+const SummarySideNavigation = ({
+  entranceKey,
+  entranceData,
+  servicepointData,
+  accessibilityData,
+  questionsData,
+  questionChoicesData,
+  questionBlocksData,
+  questionAnswerData,
+}: SummarySideNavigationProps): JSX.Element => {
   const i18n = useI18n();
 
   const locationPictureLevelId = `sideNavigationLocationPicture_${entranceKey}`;
@@ -91,8 +100,13 @@ const SummarySideNavigation = ({ entranceKey, entranceData, servicepointData, ac
 
         {activeLevel.indexOf("sideNavigationAccessibilityInfo") >= 0 && (
           <SummaryAccessibility
+            entranceKey={entranceKey}
             sentenceGroup={groupedAccessibilityData ? groupedAccessibilityData[selectedSentenceGroupId] : undefined}
             hasData={hasAccessibilityData}
+            questionsData={questionsData}
+            questionChoicesData={questionChoicesData}
+            questionBlocksData={questionBlocksData}
+            questionAnswerData={questionAnswerData}
           />
         )}
       </div>

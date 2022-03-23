@@ -90,7 +90,10 @@
     "entrancePicturesLabel": "Additional entrance photo",
     "navigateToPage": "Navigate to page",
     "picturesLocations": "Photos and locations",
-    "photoSource": "Source"
+    "photoSource": "Source",
+    "questionsAndAnswers": "Accessibility questions and answers",
+    "showMore": "Show more",
+    "showLess": "Show less"
   },
   "questionFormControlButtons": {
     "quit": "Quit",
