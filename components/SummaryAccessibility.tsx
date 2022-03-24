@@ -2,6 +2,7 @@ import React from "react";
 import { Accordion, IconAlertCircle } from "hds-react";
 import { useI18n } from "next-localization";
 import ServicepointLandingSummaryContent from "./ServicepointLandingSummaryContent";
+import SummaryAccessibilityInnerAccordion from "./SummaryAccessibilityInnerAccordion";
 import { BackendEntranceSentence, BackendQuestion, BackendQuestionBlock } from "../types/backendModels";
 import { LanguageLocales } from "../types/constants";
 import { SummaryAccessibilityProps } from "../types/general";
@@ -121,13 +122,15 @@ const SummaryAccessibility = ({
           });
       };
 
+      const rowLimit = 10;
+
       return (
         <Accordion className={styles.accordion} heading={i18n.t("servicepoint.questionsAndAnswers")}>
-          {getQuestionAnswerRows(5, true)}
+          {getQuestionAnswerRows(rowLimit, true)}
 
-          <Accordion className={styles.innerAccordion} heading={i18n.t("servicepoint.showMore")}>
-            {getQuestionAnswerRows(5, false)}
-          </Accordion>
+          <SummaryAccessibilityInnerAccordion>
+            <>{getQuestionAnswerRows(rowLimit, false)}</>
+          </SummaryAccessibilityInnerAccordion>
         </Accordion>
       );
     }

@@ -28,16 +28,6 @@
     }
   }
 
-  .innerAccordion {
-    border-bottom: 0 !important;
-
-    > div:first-child {
-      font-size: $fontsize-body-m;
-      font-weight: 500;
-      padding: $spacing-s;
-    }
-  }
-
   .sentencelist {
     padding: 0 $spacing-s;
 

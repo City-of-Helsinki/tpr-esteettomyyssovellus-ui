@@ -1,0 +1,10 @@
+@import "~hds-design-tokens/lib/all.scss";
+@import "../styles/mixins.scss";
+
+.maincontainer {
+  margin-top: $spacing-s;
+
+  .contentcontainer {
+    padding: 0;
+  }
+}
