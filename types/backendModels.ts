@@ -135,7 +135,10 @@ export interface BackendServicepoint {
   accessibility_phone?: string;
   accessibility_email?: string;
   new_entrance_possible: string;
-  [key: string]: number | string | undefined;
+  entrance_count?: number;
+  finished_entrance_count?: number;
+  modified?: Date;
+  [key: string]: number | string | Date | undefined;
 }
 
 // BackendEntrance - use in details and preview pages
@@ -160,7 +163,8 @@ export interface BackendEntrance {
   contact_person_en?: string;
   accessibility_phone?: string;
   accessibility_email?: string;
-  [key: string]: number | string | undefined;
+  modified?: Date;
+  [key: string]: number | string | Date | undefined;
 }
 
 // BackendCopyableEntrance - use in accessibility form page
@@ -211,6 +215,8 @@ export interface BackendEntranceChoice {
   entrance_id: number;
   form_submitted?: string;
   language_id: number;
+  sentence_group_id?: number;
+  sentence_group_name?: string;
   question_block_id: number;
   question_block_code?: string;
   question_block_text?: string;

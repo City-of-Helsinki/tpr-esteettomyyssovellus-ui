@@ -17,7 +17,6 @@ import {
   // QuestionAnswerLocation,
   // QuestionAnswerPhoto,
   // QuestionAnswerPhotoTxt,
-  Servicepoint,
 } from "./backendModels";
 
 export interface QuestionContainerProps {
@@ -126,7 +125,7 @@ export interface QuestionAdditionalInfoCtrlButtonProps {
 export interface SummarySideNavigationProps {
   entranceKey: string;
   entranceData?: BackendEntrance;
-  servicepointData: Servicepoint;
+  servicepointData: BackendServicepoint;
   accessibilityData: AccessibilityData;
   questionsData: QuestionData;
   questionChoicesData: QuestionChoiceData;
@@ -135,7 +134,6 @@ export interface SummarySideNavigationProps {
 }
 
 export interface ServicepointLandingSummaryContactProps {
-  servicepointData: BackendServicepoint;
   entranceData?: BackendEntrance;
   hasData: boolean;
   hasModifyButton?: boolean;
@@ -144,7 +142,7 @@ export interface ServicepointLandingSummaryContactProps {
 export interface ServicepointLandingSummaryAccessibilityProps {
   entranceKey: string;
   entranceData?: BackendEntrance;
-  servicepointData: Servicepoint;
+  servicepointData: BackendServicepoint;
   accessibilityData: AccessibilityData;
   hasData: boolean;
   hasModifyButton?: boolean;
@@ -177,7 +175,7 @@ export interface ServicepointLandingSummaryLocationPictureProps {
 export interface SummaryLocationPictureProps {
   entranceKey: string;
   entranceData?: BackendEntrance;
-  servicepointData: Servicepoint;
+  servicepointData: BackendServicepoint;
 }
 
 export interface ServicepointLandingSummaryModifyButtonProps {
@@ -309,7 +307,7 @@ export interface EntranceFormProps {
   questionBlockFieldData: BackendQuestionBlockField[];
   accessibilityPlaceData: BackendPlace[];
   entranceData: BackendEntrance;
-  servicepointData: Servicepoint;
+  servicepointData: BackendServicepoint;
   questionAnswerData: BackendEntranceAnswer[];
   questionExtraAnswerData: BackendEntranceField[];
   // additionalInfosData: FetchAdditionalInfos;
@@ -411,8 +409,7 @@ export interface EntranceAnswerData {
 }
 
 export interface DetailsProps {
-  servicepointData: Servicepoint;
-  servicepointDetail: BackendServicepoint;
+  servicepointData: BackendServicepoint;
   accessibilityData: AccessibilityData;
   entranceData: EntranceData;
   // hasExistingFormData: boolean;
@@ -424,8 +421,7 @@ export interface DetailsProps {
 }
 
 export interface PreviewProps {
-  servicepointData: Servicepoint;
-  servicepointDetail: BackendServicepoint;
+  servicepointData: BackendServicepoint;
   accessibilityData: AccessibilityData;
   entranceData: EntranceData;
   questionAnswerData: BackendEntranceAnswer[];
@@ -434,9 +430,8 @@ export interface PreviewProps {
 }
 
 export interface AccessibilityPlaceProps {
-  servicepointData: Servicepoint;
-  servicepointDetail: BackendServicepoint;
   accessibilityPlaceData: BackendPlace;
+  servicepointData: BackendServicepoint;
   isMainEntrancePublished: boolean;
 }
 

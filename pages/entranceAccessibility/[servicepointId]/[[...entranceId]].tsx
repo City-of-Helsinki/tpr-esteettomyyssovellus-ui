@@ -23,7 +23,6 @@ import {
   API_FETCH_QUESTION_URL,
   API_FETCH_QUESTIONBLOCK_URL,
   API_FETCH_QUESTIONCHOICES,
-  API_FETCH_SERVICEPOINTS,
   API_URL_BASE,
   LanguageLocales,
 } from "../../../types/constants";
@@ -45,7 +44,6 @@ import {
   // QuestionAnswerLocation,
   // QuestionAnswerPhoto,
   // QuestionAnswerPhotoTxt,
-  Servicepoint,
 } from "../../../types/backendModels";
 import { EntranceFormProps } from "../../../types/general";
 import HeadlineQuestionContainer from "../../../components/HeadlineQuestionContainer";
@@ -412,7 +410,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   let questionAnswerData: BackendEntranceAnswer[] = [];
   let questionExtraAnswerData: BackendEntranceField[] = [];
   let entranceData: BackendEntrance = {} as BackendEntrance;
-  let servicepointData: Servicepoint = {} as Servicepoint;
+  let servicepointData: BackendServicepoint = {} as BackendServicepoint;
   // let additionalInfosData = {};
   // let addInfoCommentsData;
   // let addInfoLocationsData;
@@ -423,10 +421,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
 
   if (params !== undefined) {
     try {
-      const servicepointResp = await fetch(`${API_URL_BASE}${API_FETCH_SERVICEPOINTS}${params.servicepointId}/?format=json`, {
-        headers: new Headers({ Authorization: getTokenHash() }),
-      });
-      servicepointData = await (servicepointResp.json() as Promise<Servicepoint>);
       const servicepointBackendDetailResp = await fetch(
         `${API_URL_BASE}${API_FETCH_BACKEND_SERVICEPOINT}?servicepoint_id=${params.servicepointId}&format=json`,
         {
@@ -434,7 +428,10 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         }
       );
       const servicepointBackendDetail = await (servicepointBackendDetailResp.json() as Promise<BackendServicepoint[]>);
-      const servicepointDetail = servicepointBackendDetail?.length > 0 ? servicepointBackendDetail[0] : undefined;
+
+      if (servicepointBackendDetail?.length > 0) {
+        servicepointData = servicepointBackendDetail[0];
+      }
 
       // Get all the existing entrances for the service point
       const servicepointEntranceResp = await fetch(`${API_URL_BASE}${API_FETCH_ENTRANCES}?servicepoint=${params.servicepointId}&format=json`, {
@@ -455,10 +452,10 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       }
 
       // Check this specific entrance
-      if (params.entranceId === undefined && (!servicepointDetail || servicepointDetail.new_entrance_possible === "Y")) {
+      if (params.entranceId === undefined && (servicepointData.servicepoint_id === undefined || servicepointData.new_entrance_possible === "Y")) {
         // New entrance
         // Make a new main entrance if not existing, otherwise an additional entrance
-        formId = !isMainEntrancePublished || !mainEntrance || !servicepointDetail ? 0 : 1;
+        formId = !isMainEntrancePublished || !mainEntrance || servicepointData.servicepoint_id === undefined ? 0 : 1;
       } else if (params.entranceId !== undefined) {
         // Existing entrance
         const entranceResp = await fetch(`${API_URL_BASE}${API_FETCH_ENTRANCES}${params.entranceId}/?format=json`, {
@@ -586,7 +583,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       questionAnswerData = [];
       questionExtraAnswerData = [];
       entranceData = {} as BackendEntrance;
-      servicepointData = {} as Servicepoint;
+      servicepointData = {} as BackendServicepoint;
       // additionalInfosData = {};
     }
   }

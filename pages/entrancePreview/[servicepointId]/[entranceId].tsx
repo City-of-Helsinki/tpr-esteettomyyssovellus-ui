@@ -25,7 +25,6 @@ import {
   API_FETCH_BACKEND_SENTENCES,
   API_FETCH_BACKEND_SERVICEPOINT,
   API_FETCH_ENTRANCES,
-  API_FETCH_SERVICEPOINTS,
   API_URL_BASE,
 } from "../../../types/constants";
 import { persistor } from "../../../state/store";
@@ -38,14 +37,12 @@ import {
   BackendServicepoint,
   Entrance,
   EntranceResults,
-  Servicepoint,
 } from "../../../types/backendModels";
 import { AccessibilityData, EntranceData, PreviewProps } from "../../../types/general";
 
 // usage: the preview page of an entrance, displayed before saving the completed form
 const Preview = ({
   servicepointData,
-  servicepointDetail,
   accessibilityData,
   entranceData,
   questionAnswerData,
@@ -170,13 +167,7 @@ const Preview = ({
               <div>
                 <PreviewControlButtons hasSaveDraftButton={!isMainEntrancePublished} setSendingComplete={setSendingComplete} />
 
-                {entranceKey === "main" && (
-                  <ServicepointLandingSummaryContact
-                    servicepointData={servicepointDetail}
-                    entranceData={entranceData[entranceKey]}
-                    hasData={hasData}
-                  />
-                )}
+                {entranceKey === "main" && <ServicepointLandingSummaryContact entranceData={entranceData[entranceKey]} hasData={hasData} />}
 
                 <ServicepointLandingSummaryAccessibility
                   entranceKey={entranceKey}
@@ -214,8 +205,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
 
   let accessibilityData: AccessibilityData = {};
   let entranceData: EntranceData = {};
-  let servicepointData: Servicepoint = {} as Servicepoint;
-  let servicepointDetail: BackendServicepoint = {} as BackendServicepoint;
+  let servicepointData: BackendServicepoint = {} as BackendServicepoint;
   let questionAnswerData: BackendEntranceAnswer[] = [];
   let questionExtraAnswerData: BackendEntranceField[] = [];
   // const hasExistingFormData = false;
@@ -223,11 +213,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
 
   if (params !== undefined) {
     try {
-      const servicepointResp = await fetch(`${API_URL_BASE}${API_FETCH_SERVICEPOINTS}${params.servicepointId}/?format=json`, {
-        headers: new Headers({ Authorization: getTokenHash() }),
-      });
-      servicepointData = await (servicepointResp.json() as Promise<Servicepoint>);
-
       const servicepointBackendDetailResp = await fetch(
         `${API_URL_BASE}${API_FETCH_BACKEND_SERVICEPOINT}?servicepoint_id=${params.servicepointId}&format=json`,
         {
@@ -237,7 +222,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       const servicepointBackendDetail = await (servicepointBackendDetailResp.json() as Promise<BackendServicepoint[]>);
 
       if (servicepointBackendDetail?.length > 0) {
-        servicepointDetail = servicepointBackendDetail[0];
+        servicepointData = servicepointBackendDetail[0];
       }
 
       // Get all the existing entrances for the service point
@@ -326,8 +311,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
     } catch (err) {
       console.error("Error", err);
 
-      servicepointData = {} as Servicepoint;
-      servicepointDetail = {} as BackendServicepoint;
+      servicepointData = {} as BackendServicepoint;
       accessibilityData = {};
       entranceData = {};
       questionAnswerData = [];
@@ -339,7 +323,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
     props: {
       lngDict,
       servicepointData,
-      servicepointDetail,
       accessibilityData,
       entranceData,
       questionAnswerData,

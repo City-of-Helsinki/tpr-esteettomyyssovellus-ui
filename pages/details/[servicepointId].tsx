@@ -27,7 +27,6 @@ import {
   API_FETCH_QUESTIONBLOCK_URL,
   API_FETCH_QUESTIONCHOICES,
   API_FETCH_QUESTION_URL,
-  API_FETCH_SERVICEPOINTS,
   API_URL_BASE,
 } from "../../types/constants";
 import LoadSpinner from "../../components/common/LoadSpinner";
@@ -41,7 +40,6 @@ import {
   BackendQuestionChoice,
   BackendServicepoint,
   EntranceResults,
-  Servicepoint,
 } from "../../types/backendModels";
 import {
   AccessibilityData,
@@ -56,7 +54,6 @@ import {
 // usage: the details / landing page of servicepoint
 const Details = ({
   servicepointData,
-  servicepointDetail,
   accessibilityData,
   entranceData,
   // hasExistingFormData,
@@ -70,7 +67,7 @@ const Details = ({
   const dispatch = useAppDispatch();
   const isLoading = useLoading();
   const treeItems = [servicepointData.servicepoint_name ?? ""];
-  const finnishDate = getFinnishDate(servicepointData.modified);
+  const finnishDate = servicepointData.modified ? getFinnishDate(servicepointData.modified) : "";
 
   // TODO - improve this by checking user on server-side
   const user = useAppSelector((state) => state.generalSlice.user);
@@ -109,9 +106,7 @@ const Details = ({
     }
 
     // Update servicepointId in redux state
-    if (servicepointData) {
-      dispatch(setServicepointId(servicepointData.servicepoint_id));
-    }
+    dispatch(setServicepointId(servicepointData.servicepoint_id));
 
     /*
     if (hasData && accessibilityData.main.length !== 0 && accessibilityData.main[0].form_submitted === "Y") {
@@ -189,19 +184,14 @@ const Details = ({
                   entranceKeys.length === 1 ? i18n.t("servicepoint.numberOfEntrances1") : i18n.t("servicepoint.numberOfEntrances2+")
                 })`}</h2>
 
-                {servicepointDetail.new_entrance_possible === "Y" && <ServicepointLandingSummaryNewButton />}
+                {servicepointData.new_entrance_possible === "Y" && <ServicepointLandingSummaryNewButton />}
               </div>
               */}
 
               <h2>{i18n.t("common.mainEntrance")}</h2>
             </div>
 
-            <ServicepointLandingSummaryContact
-              servicepointData={servicepointDetail}
-              entranceData={entranceData.main}
-              hasData={hasMainAccessibilityData}
-              hasModifyButton
-            />
+            <ServicepointLandingSummaryContact entranceData={entranceData.main} hasData={hasMainAccessibilityData} hasModifyButton />
 
             {entranceKeys.map((key, index) => {
               const hasAccessibilityData = accessibilityData && accessibilityData[key] && accessibilityData[key].length > 0;
@@ -230,7 +220,7 @@ const Details = ({
               );
             })}
 
-            <div>{servicepointDetail.new_entrance_possible === "Y" && <ServicepointLandingSummaryNewButton />}</div>
+            <div>{servicepointData.new_entrance_possible === "Y" && <ServicepointLandingSummaryNewButton />}</div>
           </div>
         </main>
       )}
@@ -244,9 +234,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
 
   let accessibilityData: AccessibilityData = {};
   let entranceData: EntranceData = {};
-  let servicepointData: Servicepoint = {} as Servicepoint;
-  let servicepointDetail: BackendServicepoint = {} as BackendServicepoint;
-  // let hasExistingFormData = false;
+  let servicepointData: BackendServicepoint = {} as BackendServicepoint;
   let isMainEntrancePublished = false;
   let questionsData: QuestionData = {};
   let questionChoicesData: QuestionChoiceData = {};
@@ -255,11 +243,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
 
   if (params !== undefined) {
     try {
-      const servicepointResp = await fetch(`${API_URL_BASE}${API_FETCH_SERVICEPOINTS}${params.servicepointId}/?format=json`, {
-        headers: new Headers({ Authorization: getTokenHash() }),
-      });
-      servicepointData = await (servicepointResp.json() as Promise<Servicepoint>);
-
       const servicepointBackendDetailResp = await fetch(
         `${API_URL_BASE}${API_FETCH_BACKEND_SERVICEPOINT}?servicepoint_id=${params.servicepointId}&format=json`,
         {
@@ -269,7 +252,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       const servicepointBackendDetail = await (servicepointBackendDetailResp.json() as Promise<BackendServicepoint[]>);
 
       if (servicepointBackendDetail?.length > 0) {
-        servicepointDetail = servicepointBackendDetail[0];
+        servicepointData = servicepointBackendDetail[0];
       }
 
       // Get all the existing entrances for the service point
@@ -420,8 +403,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
     } catch (err) {
       console.error("Error", err);
 
-      servicepointData = {} as Servicepoint;
-      servicepointDetail = {} as BackendServicepoint;
+      servicepointData = {} as BackendServicepoint;
       accessibilityData = {};
       entranceData = {};
       questionsData = {};
@@ -435,7 +417,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
     props: {
       lngDict,
       servicepointData,
-      servicepointDetail,
       accessibilityData,
       entranceData,
       // hasExistingFormData,
