@@ -5,6 +5,7 @@ import { Dispatch, SetStateAction } from "react";
 import {
   BackendEntrance,
   BackendEntranceAnswer,
+  BackendEntranceChoice,
   BackendEntranceField,
   BackendEntranceSentence,
   BackendPlace,
@@ -127,10 +128,7 @@ export interface SummarySideNavigationProps {
   entranceData?: BackendEntrance;
   servicepointData: BackendServicepoint;
   accessibilityData: AccessibilityData;
-  questionsData: QuestionData;
-  questionChoicesData: QuestionChoiceData;
-  questionBlocksData: QuestionBlockData;
-  questionAnswerData: EntranceAnswerData;
+  questionAnswerData: EntranceChoiceData;
 }
 
 export interface ServicepointLandingSummaryContactProps {
@@ -150,12 +148,10 @@ export interface ServicepointLandingSummaryAccessibilityProps {
 
 export interface SummaryAccessibilityProps {
   entranceKey: string;
+  sentenceGroupId: string;
   sentenceGroup?: BackendEntranceSentence[];
+  questionAnswerData: EntranceChoiceData;
   hasData: boolean;
-  questionsData: QuestionData;
-  questionChoicesData: QuestionChoiceData;
-  questionBlocksData: QuestionBlockData;
-  questionAnswerData: EntranceAnswerData;
 }
 
 export interface PreviewPageLandingSummaryProps {
@@ -395,29 +391,17 @@ export interface AccessibilityData {
   [key: string]: BackendEntranceSentence[];
 }
 
-export interface QuestionData {
-  [key: string]: BackendQuestion[];
-}
-export interface QuestionChoiceData {
-  [key: string]: BackendQuestionChoice[];
-}
-export interface QuestionBlockData {
-  [key: string]: BackendQuestionBlock[];
-}
-export interface EntranceAnswerData {
-  [key: string]: BackendEntranceAnswer[];
+export interface EntranceChoiceData {
+  [key: string]: BackendEntranceChoice[];
 }
 
 export interface DetailsProps {
   servicepointData: BackendServicepoint;
   accessibilityData: AccessibilityData;
   entranceData: EntranceData;
+  questionAnswerData: EntranceChoiceData;
   // hasExistingFormData: boolean;
   isMainEntrancePublished: boolean;
-  questionsData: QuestionData;
-  questionChoicesData: QuestionChoiceData;
-  questionBlocksData: QuestionBlockData;
-  questionAnswerData: EntranceAnswerData;
 }
 
 export interface PreviewProps {

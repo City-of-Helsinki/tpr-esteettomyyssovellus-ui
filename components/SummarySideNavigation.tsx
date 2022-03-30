@@ -13,9 +13,6 @@ const SummarySideNavigation = ({
   entranceData,
   servicepointData,
   accessibilityData,
-  questionsData,
-  questionChoicesData,
-  questionBlocksData,
   questionAnswerData,
 }: SummarySideNavigationProps): JSX.Element => {
   const i18n = useI18n();
@@ -101,12 +98,10 @@ const SummarySideNavigation = ({
         {activeLevel.indexOf("sideNavigationAccessibilityInfo") >= 0 && (
           <SummaryAccessibility
             entranceKey={entranceKey}
+            sentenceGroupId={selectedSentenceGroupId}
             sentenceGroup={groupedAccessibilityData ? groupedAccessibilityData[selectedSentenceGroupId] : undefined}
-            hasData={hasAccessibilityData}
-            questionsData={questionsData}
-            questionChoicesData={questionChoicesData}
-            questionBlocksData={questionBlocksData}
             questionAnswerData={questionAnswerData}
+            hasData={hasAccessibilityData}
           />
         )}
       </div>

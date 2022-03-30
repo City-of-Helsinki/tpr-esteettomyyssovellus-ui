@@ -3,7 +3,7 @@ import { Accordion, IconAlertCircle } from "hds-react";
 import { useI18n } from "next-localization";
 import ServicepointLandingSummaryContent from "./ServicepointLandingSummaryContent";
 import SummaryAccessibilityInnerAccordion from "./SummaryAccessibilityInnerAccordion";
-import { BackendEntranceSentence, BackendQuestion, BackendQuestionBlock } from "../types/backendModels";
+import { BackendEntranceSentence } from "../types/backendModels";
 import { LanguageLocales } from "../types/constants";
 import { SummaryAccessibilityProps } from "../types/general";
 import styles from "./SummaryAccessibility.module.scss";
@@ -12,12 +12,10 @@ import styles from "./SummaryAccessibility.module.scss";
 // this component more like a container -> used with SummarySideNavigation
 const SummaryAccessibility = ({
   entranceKey,
+  sentenceGroupId,
   sentenceGroup,
-  hasData,
-  questionsData,
-  questionChoicesData,
-  questionBlocksData,
   questionAnswerData,
+  hasData,
 }: SummaryAccessibilityProps): JSX.Element => {
   const i18n = useI18n();
   const curLocaleId: number = LanguageLocales[i18n.locale() as keyof typeof LanguageLocales];
@@ -43,78 +41,20 @@ const SummaryAccessibility = ({
   };
 
   const getQuestionsAnswersAccordion = () => {
-    if (questionBlocksData[entranceKey] && questionsData[entranceKey] && questionChoicesData[entranceKey]) {
-      const answeredChoices = questionAnswerData[entranceKey]
-        ? questionAnswerData[entranceKey].reduce((acc: number[], a) => {
-            const questionId = a.question_id;
-            const answer = a.question_choice_id;
-            return questionId !== undefined && questionId !== null && answer !== undefined && answer !== null ? [...acc, answer] : acc;
-          }, [])
-        : [];
-      const answers = questionAnswerData[entranceKey]
-        ? questionAnswerData[entranceKey].reduce((acc: { [key: number]: number }, a) => {
-            const questionId = a.question_id;
-            const answer = a.question_choice_id;
-            return questionId !== undefined && questionId !== null && answer !== undefined && answer !== null
-              ? { ...acc, [questionId]: answer }
-              : acc;
-          }, [])
-        : {};
-
-      const questionsAnswers = questionBlocksData[entranceKey].flatMap((block: BackendQuestionBlock) => {
-        const visibleQuestions = block.visible_if_question_choice?.split("+");
-
-        const answersIncludeAllVisibleQuestions = visibleQuestions ? visibleQuestions.some((elem) => answeredChoices.includes(Number(elem))) : false;
-
-        const isVisible =
-          (block.visible_if_question_choice === null && block.language_id === curLocaleId) ||
-          (answersIncludeAllVisibleQuestions && block.language_id === curLocaleId);
-
-        const blockQuestions = isVisible
-          ? questionsData[entranceKey].filter(
-              (question) => question.question_block_id === block.question_block_id && question.language_id === curLocaleId
-            )
-          : undefined;
-
-        const answerChoices = isVisible
-          ? questionChoicesData[entranceKey].filter(
-              (choice) => choice.question_block_id === block.question_block_id && choice.language_id === curLocaleId
-            )
-          : undefined;
-
-        const filteredQuestions = blockQuestions
-          ? blockQuestions.filter(
-              (question) =>
-                question.visible_if_question_choice === null ||
-                question.visible_if_question_choice?.split("+").some((elem) => answeredChoices.includes(Number(elem)))
-            )
-          : undefined;
-
-        return isVisible && filteredQuestions && answerChoices && block.question_block_id !== undefined
-          ? filteredQuestions.map((question: BackendQuestion) => {
-              const answerChoice = answerChoices.find(
-                (choice) => choice.question_id === question.question_id && choice.question_choice_id === answers[question.question_id]
-              );
-              const answerText = answerChoice?.text ?? "";
-
-              return { question, answerText };
-            })
-          : undefined;
-      });
-
+    if (sentenceGroup && questionAnswerData[entranceKey]) {
       const getQuestionAnswerRows = (limit: number, isLessThan: boolean) => {
-        return questionsAnswers
-          .filter((qa) => qa)
+        return questionAnswerData[entranceKey]
+          .filter((qa) => qa.sentence_group_id === Number(sentenceGroupId) && qa.language_id === curLocaleId)
+          .sort((a, b) => (a.question_order_text ?? "").localeCompare(b.question_order_text ?? ""))
           .map((qa, index) => {
             if (qa) {
-              const { question, answerText } = qa;
-              const { question_id, question_code, text } = question;
+              const { question_id, question_code, question_text, question_choice_text } = qa;
 
               return (
                 (isLessThan ? index < limit : index >= limit) && (
                   <div key={`question_${question_id}`} className={styles.questioncontainer}>
-                    <span>{`${question_code} ${text}`}</span>
-                    <span className={styles.answer}>{`${answerText}`}</span>
+                    <span>{`${question_code} ${question_text}`}</span>
+                    <span className={styles.answer}>{`${question_choice_text}`}</span>
                   </div>
                 )
               );

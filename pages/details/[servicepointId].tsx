@@ -20,48 +20,25 @@ import { setServicepointLocation, setServicepointLocationWGS84 } from "../../sta
 import {
   // API_FETCH_ANSWER_LOGS,
   API_FETCH_BACKEND_ENTRANCE,
-  API_FETCH_BACKEND_ENTRANCE_ANSWERS,
+  API_FETCH_BACKEND_ENTRANCE_CHOICES,
   API_FETCH_BACKEND_SENTENCES,
   API_FETCH_BACKEND_SERVICEPOINT,
   API_FETCH_ENTRANCES,
-  API_FETCH_QUESTIONBLOCK_URL,
-  API_FETCH_QUESTIONCHOICES,
-  API_FETCH_QUESTION_URL,
   API_URL_BASE,
 } from "../../types/constants";
 import LoadSpinner from "../../components/common/LoadSpinner";
 import { persistor } from "../../state/store";
-import {
-  BackendEntrance,
-  BackendEntranceAnswer,
-  BackendEntranceSentence,
-  BackendQuestion,
-  BackendQuestionBlock,
-  BackendQuestionChoice,
-  BackendServicepoint,
-  EntranceResults,
-} from "../../types/backendModels";
-import {
-  AccessibilityData,
-  DetailsProps,
-  EntranceAnswerData,
-  EntranceData,
-  QuestionBlockData,
-  QuestionChoiceData,
-  QuestionData,
-} from "../../types/general";
+import { BackendEntrance, BackendEntranceChoice, BackendEntranceSentence, BackendServicepoint, EntranceResults } from "../../types/backendModels";
+import { AccessibilityData, DetailsProps, EntranceChoiceData, EntranceData } from "../../types/general";
 
 // usage: the details / landing page of servicepoint
 const Details = ({
   servicepointData,
   accessibilityData,
   entranceData,
+  questionAnswerData,
   // hasExistingFormData,
   isMainEntrancePublished,
-  questionsData,
-  questionChoicesData,
-  questionBlocksData,
-  questionAnswerData,
 }: DetailsProps): ReactElement => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
@@ -211,9 +188,6 @@ const Details = ({
                     entranceData={entranceData[key]}
                     servicepointData={servicepointData}
                     accessibilityData={filteredAccessibilityData}
-                    questionsData={questionsData}
-                    questionChoicesData={questionChoicesData}
-                    questionBlocksData={questionBlocksData}
                     questionAnswerData={questionAnswerData}
                   />
                 </div>
@@ -235,11 +209,8 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   let accessibilityData: AccessibilityData = {};
   let entranceData: EntranceData = {};
   let servicepointData: BackendServicepoint = {} as BackendServicepoint;
+  let questionAnswerData: EntranceChoiceData = {};
   let isMainEntrancePublished = false;
-  let questionsData: QuestionData = {};
-  let questionChoicesData: QuestionChoiceData = {};
-  let questionBlocksData: QuestionBlockData = {};
-  let questionAnswerData: EntranceAnswerData = {};
 
   if (params !== undefined) {
     try {
@@ -344,61 +315,25 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       */
 
       // Get the questions and answers for all the entrances for use in the accessibility summaries
-      const mainQuestionsResp = await fetch(`${API_URL_BASE}${API_FETCH_QUESTION_URL}0`, {
-        headers: new Headers({ Authorization: getTokenHash() }),
-      });
-      const sideQuestionsResp = await fetch(`${API_URL_BASE}${API_FETCH_QUESTION_URL}1`, {
-        headers: new Headers({ Authorization: getTokenHash() }),
-      });
-      const mainQuestionChoicesResp = await fetch(`${API_URL_BASE}${API_FETCH_QUESTIONCHOICES}0`, {
-        headers: new Headers({ Authorization: getTokenHash() }),
-      });
-      const sideQuestionChoicesResp = await fetch(`${API_URL_BASE}${API_FETCH_QUESTIONCHOICES}1`, {
-        headers: new Headers({ Authorization: getTokenHash() }),
-      });
-      const mainQuestionBlocksResp = await fetch(`${API_URL_BASE}${API_FETCH_QUESTIONBLOCK_URL}0`, {
-        headers: new Headers({ Authorization: getTokenHash() }),
-      });
-      const sideQuestionBlocksResp = await fetch(`${API_URL_BASE}${API_FETCH_QUESTIONBLOCK_URL}1`, {
-        headers: new Headers({ Authorization: getTokenHash() }),
-      });
-
-      const mainQuestionsData = await (mainQuestionsResp.json() as Promise<BackendQuestion[]>);
-      const sideQuestionsData = await (sideQuestionsResp.json() as Promise<BackendQuestion[]>);
-      const mainQuestionChoicesData = await (mainQuestionChoicesResp.json() as Promise<BackendQuestionChoice[]>);
-      const sideQuestionChoicesData = await (sideQuestionChoicesResp.json() as Promise<BackendQuestionChoice[]>);
-      const mainQuestionBlocksData = await (mainQuestionBlocksResp.json() as Promise<BackendQuestionBlock[]>);
-      const sideQuestionBlocksData = await (sideQuestionBlocksResp.json() as Promise<BackendQuestionBlock[]>);
-
-      questionsData = Object.keys(accessibilityData).reduce((acc, entranceKey) => {
-        return entranceKey === "main" ? { ...acc, main: mainQuestionsData } : { ...acc, [entranceKey]: sideQuestionsData };
-      }, {});
-      questionChoicesData = Object.keys(accessibilityData).reduce((acc, entranceKey) => {
-        return entranceKey === "main" ? { ...acc, main: mainQuestionChoicesData } : { ...acc, [entranceKey]: sideQuestionChoicesData };
-      }, {});
-      questionBlocksData = Object.keys(accessibilityData).reduce((acc, entranceKey) => {
-        return entranceKey === "main" ? { ...acc, main: mainQuestionBlocksData } : { ...acc, [entranceKey]: sideQuestionBlocksData };
-      }, {});
-
       const entranceQuestionAnswerData = await Promise.all(
         Object.keys(entranceData).map(async (entranceKey) => {
           const entrance = entranceData[entranceKey];
 
-          const allQuestionAnswersResp = await fetch(
-            `${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE_ANSWERS}?entrance_id=${entrance.entrance_id}&format=json`,
+          const allEntranceChoicesResp = await fetch(
+            `${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE_CHOICES}?entrance_id=${entrance.entrance_id}&format=json`,
             {
               headers: new Headers({ Authorization: getTokenHash() }),
             }
           );
-          const allQuestionAnswerData = await (allQuestionAnswersResp.json() as Promise<BackendEntranceAnswer[]>);
+          const allEntranceChoiceData = await (allEntranceChoicesResp.json() as Promise<BackendEntranceChoice[]>);
 
-          return { entranceKey, allQuestionAnswerData };
+          return { entranceKey, allEntranceChoiceData };
         })
       );
 
       questionAnswerData = entranceQuestionAnswerData.reduce((acc, answerData) => {
         const entrance = entranceData[answerData.entranceKey];
-        return { ...acc, [answerData.entranceKey]: answerData.allQuestionAnswerData.filter((a) => a.log_id === entrance.log_id) };
+        return { ...acc, [answerData.entranceKey]: answerData.allEntranceChoiceData.filter((a) => a.log_id === entrance.log_id) };
       }, {});
     } catch (err) {
       console.error("Error", err);
@@ -406,9 +341,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       servicepointData = {} as BackendServicepoint;
       accessibilityData = {};
       entranceData = {};
-      questionsData = {};
-      questionChoicesData = {};
-      questionBlocksData = {};
       questionAnswerData = {};
     }
   }
@@ -419,12 +351,9 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       servicepointData,
       accessibilityData,
       entranceData,
+      questionAnswerData,
       // hasExistingFormData,
       isMainEntrancePublished,
-      questionsData,
-      questionChoicesData,
-      questionBlocksData,
-      questionAnswerData,
     },
   };
 };
