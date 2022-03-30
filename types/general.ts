@@ -379,6 +379,7 @@ export interface SaveSpinnerProps {
 }
 
 export interface MainLocationAndPictureProps {
+  accessibilityPlaces: BackendPlace[];
   canAddLocation: boolean;
   canAddPicture: boolean;
 }

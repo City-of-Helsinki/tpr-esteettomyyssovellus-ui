@@ -1,11 +1,12 @@
 import React from "react";
 import { useAppSelector } from "../state/hooks";
+import { BackendQuestion } from "../types/backendModels";
 import { MainLocationAndPictureProps } from "../types/general";
 import Map from "./common/Map";
 import QuestionContainer from "./QuestionContainer";
 import styles from "./BlockMainLocationPictureContent.module.scss";
 
-const BlockMainLocationPictureContent = ({ canAddLocation, canAddPicture }: MainLocationAndPictureProps): JSX.Element => {
+const BlockMainLocationPictureContent = ({ accessibilityPlaces, canAddLocation, canAddPicture }: MainLocationAndPictureProps): JSX.Element => {
   // note: questionBlockId 1 === location, 2 === image
 
   const coordinatesWGS84 = useAppSelector((state) => state.generalSlice.coordinatesWGS84) ?? [60.1, 24.9];
@@ -15,22 +16,43 @@ const BlockMainLocationPictureContent = ({ canAddLocation, canAddPicture }: Main
 
   const mainImage = useAppSelector((state) => state.formReducer.mainImage);
 
+  const question1: BackendQuestion = {
+    technical_id: "",
+    form_id: 0,
+    language_id: 1,
+    question_id: -1,
+    question_block_id: 1,
+    question_code: "",
+    text: "PH: Pääsisäänkäynnin sijainti (teksti kannasta??)",
+    description: "PH: tähän jotain info (teksti kannasta??)",
+    photo_text: "ph: photo text",
+    photo_url: "ph: photo_url",
+  };
+
+  const question2: BackendQuestion = {
+    technical_id: "",
+    form_id: 0,
+    language_id: 1,
+    question_id: -1,
+    question_block_id: 2,
+    question_code: "",
+    text: "PH: Pääsisäänkäynnin kuva (teksti kannasta?)",
+    description: "PH: tähän ehkä jotain infot",
+    photo_text: "ph: photo text??",
+    photo_url: "ph: photo_url??",
+  };
+
   return (
     <>
       {canAddLocation ? (
         <QuestionContainer
           key={123456789}
-          questionId={-1}
-          questionBlockId={1}
-          questionNumber=""
-          questionText="PH: Pääsisäänkäynnin sijainti (teksti kannasta??)"
-          questionInfo="PH: tähän jotain info (teksti kannasta??)"
+          question={question1}
+          accessibilityPlaces={accessibilityPlaces}
           hasAdditionalInfo
           // canAddLocation
           // canAddComment={false}
           // canAddPhotoMaxCount={0}
-          photoText="ph: photo text"
-          photoUrl="ph: photo_url"
           isMainLocPicComponent
         >
           <div className={styles.mappreviewcontainer}>
@@ -43,17 +65,12 @@ const BlockMainLocationPictureContent = ({ canAddLocation, canAddPicture }: Main
       {canAddPicture ? (
         <QuestionContainer
           key={987654321}
-          questionId={-1}
-          questionBlockId={2}
-          questionNumber=""
-          questionText="PH: Pääsisäänkäynnin kuva (teksti kannasta?)"
-          questionInfo="PH: tähän ehkä jotain infot"
+          question={question2}
+          accessibilityPlaces={accessibilityPlaces}
           hasAdditionalInfo
           // canAddLocation={false}
           // canAddComment={false}
           // canAddPhotoMaxCount={1}
-          photoText="ph: photo text??"
-          photoUrl="ph: photo_url??"
           isMainLocPicComponent
         >
           {mainImage ? (
