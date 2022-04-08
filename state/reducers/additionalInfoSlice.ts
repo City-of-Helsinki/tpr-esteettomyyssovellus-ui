@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { PURGE } from "redux-persist";
-import { AdditionalInfoProps, AdditionalInfoStateProps, PictureProps } from "../../types/general";
+import { AdditionalInfoProps, AdditionalInfoStateProps, EntrancePlaceBox, PictureProps } from "../../types/general";
 
 // TODO: maybe delete this before prod
 // notice: many [questionNumber] OR [qNumber] is actually questionId
@@ -38,6 +38,7 @@ const initialState: AdditionalInfoStateProps = {
   initAddInfoFromDb: false,
   curEditingInitialState: {},
   additionalInfo: {},
+  entrancePlaceBoxes: [],
 };
 
 export const additionalInfoSlice = createSlice({
@@ -53,6 +54,78 @@ export const additionalInfoSlice = createSlice({
       return {
         ...state,
         initAddInfoFromDb: action.payload.isInited,
+      };
+    },
+    setEntrancePlaceBoxes: (state, action: PayloadAction<EntrancePlaceBox[]>) => {
+      return { ...state, entrancePlaceBoxes: action.payload };
+    },
+    addEntrancePlaceBox: (state, action: PayloadAction<EntrancePlaceBox>) => {
+      return { ...state, entrancePlaceBoxes: [...(state.entrancePlaceBoxes ?? []), action.payload] };
+    },
+    editEntrancePlaceBox: (
+      state,
+      action: PayloadAction<{
+        entrance_id: number;
+        place_id: number;
+        order_number: number;
+        updatedPlaceBox: EntrancePlaceBox;
+      }>
+    ) => {
+      return {
+        ...state,
+        entrancePlaceBoxes: state.entrancePlaceBoxes.reduce((acc: EntrancePlaceBox[], box) => {
+          return box.entrance_id === action.payload.entrance_id &&
+            box.place_id === action.payload.place_id &&
+            box.order_number === action.payload.order_number
+            ? [...acc, action.payload.updatedPlaceBox]
+            : [...acc, box];
+        }, []),
+      };
+    },
+    addInvalidEntrancePlaceBoxValue: (
+      state,
+      action: PayloadAction<{
+        entrance_id: number;
+        place_id: number;
+        order_number: number;
+        invalidValueToAdd: string;
+      }>
+    ) => {
+      return {
+        ...state,
+        entrancePlaceBoxes: state.entrancePlaceBoxes.reduce((acc: EntrancePlaceBox[], box) => {
+          return box.entrance_id === action.payload.entrance_id &&
+            box.place_id === action.payload.place_id &&
+            box.order_number === action.payload.order_number
+            ? [
+                ...acc,
+                {
+                  ...box,
+                  invalidValues: [...(box.invalidValues ?? []), action.payload.invalidValueToAdd].filter((v, i, a) => v && a.indexOf(v) === i),
+                },
+              ]
+            : [...acc, box];
+        }, []),
+      };
+    },
+    removeInvalidEntrancePlaceBoxValue: (
+      state,
+      action: PayloadAction<{
+        entrance_id: number;
+        place_id: number;
+        order_number: number;
+        invalidValueToRemove: string;
+      }>
+    ) => {
+      return {
+        ...state,
+        entrancePlaceBoxes: state.entrancePlaceBoxes.reduce((acc: EntrancePlaceBox[], box) => {
+          return box.entrance_id === action.payload.entrance_id &&
+            box.place_id === action.payload.place_id &&
+            box.order_number === action.payload.order_number
+            ? [...acc, { ...box, invalidValues: (box.invalidValues ?? []).filter((val) => val !== action.payload.invalidValueToRemove) }]
+            : [...acc, box];
+        }, []),
       };
     },
     setEditingInitialState: (
@@ -427,6 +500,11 @@ export const {
   removeAllInvalids,
   removeInvalidValues,
   addInvalidValues,
+  setEntrancePlaceBoxes,
+  addEntrancePlaceBox,
+  editEntrancePlaceBox,
+  addInvalidEntrancePlaceBoxValue,
+  removeInvalidEntrancePlaceBoxValue,
 } = additionalInfoSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type

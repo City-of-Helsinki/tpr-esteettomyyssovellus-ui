@@ -7,6 +7,7 @@ import {
   BackendEntranceAnswer,
   BackendEntranceChoice,
   BackendEntranceField,
+  BackendEntrancePlace,
   BackendEntranceSentence,
   BackendPlace,
   BackendQuestion,
@@ -240,7 +241,7 @@ export interface AdditionalInfos {
 // }
 
 // invalid answers list of
-interface AddinfoInvalidAnswers {
+export interface AddinfoInvalidAnswers {
   id: number;
   invalidAnswers?: string[];
 }
@@ -274,10 +275,22 @@ export interface AdditionalInfoProps {
   [key: string]: AdditionalInfos;
 }
 
+export interface EntrancePlaceBox {
+  entrance_id: number;
+  place_id: number;
+  order_number: number;
+  existingBox?: BackendEntrancePlace;
+  modifiedBox?: BackendEntrancePlace;
+  photoBase64?: string;
+  termsAccepted: boolean;
+  invalidValues: string[];
+}
+
 export interface AdditionalInfoStateProps {
   initAddInfoFromDb: boolean;
   curEditingInitialState: AdditionalInfoProps;
   additionalInfo: AdditionalInfoProps;
+  entrancePlaceBoxes: EntrancePlaceBox[];
 }
 
 export interface MainLocationOrImageProps {
@@ -303,6 +316,7 @@ export interface EntranceFormProps {
   questionBlockFieldData: BackendQuestionBlockField[];
   accessibilityPlaceData: BackendPlace[];
   entranceData: BackendEntrance;
+  entrancePlaceData: BackendEntrancePlace[];
   servicepointData: BackendServicepoint;
   questionAnswerData: BackendEntranceAnswer[];
   questionExtraAnswerData: BackendEntranceField[];
@@ -319,7 +333,6 @@ interface FetchAdditionalInfos {
   phototexts?: QuestionAnswerPhotoTxt[];
 }
 */
-
 export interface QuestionBlockProps {
   questions?: BackendQuestion[] | null;
   answerChoices?: BackendQuestionChoice[] | null;
@@ -415,9 +428,30 @@ export interface PreviewProps {
 }
 
 export interface AccessibilityPlaceProps {
-  accessibilityPlaceData: BackendPlace;
   servicepointData: BackendServicepoint;
-  isMainEntrancePublished: boolean;
+  entranceData: BackendEntrance;
+  accessibilityPlaceData: BackendPlace[];
+}
+
+export interface AccessibilityPlaceBoxProps {
+  entrancePlaceBox: EntrancePlaceBox;
+}
+
+export interface AccessibilityPlaceLocationProps {
+  entrancePlaceBox: EntrancePlaceBox;
+}
+
+export interface AccessibilityPlacePictureProps {
+  entrancePlaceBox: EntrancePlaceBox;
+}
+
+export interface AccessibilityPlaceCtrlButtonsProps {
+  entrancePlaceBoxes: EntrancePlaceBox[];
+}
+
+export interface AccessibilityPlaceNewButtonProps {
+  accessibilityPlaceData: BackendPlace;
+  orderNumber: number;
 }
 
 export interface ElementCountProps {

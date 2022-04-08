@@ -50,6 +50,7 @@ const QuestionContainer = ({
   const curAnswers = useAppSelector((state) => state.formReducer.answers);
   const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
   const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
+  const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
   const isInvalid = invalidBlocks.includes(questionBlockId);
 
   // Accessibility place string examples:
@@ -161,11 +162,11 @@ const QuestionContainer = ({
                   <div className={styles.place}>
                     <IconPenLine aria-hidden />
                     <div className={styles.maintext}>
-                      {`${i18n.t("accessibilityForm.fillPlaceData1")} ${place.name} ${i18n.t("accessibilityForm.fillPlaceData2")}?`}
+                      {`${i18n.t("accessibilityForm.fillPlaceData1")} '${place.name}' ${i18n.t("accessibilityForm.fillPlaceData2")}?`}
                     </div>
                   </div>
                   <div className={styles.children}>
-                    <Link href={`/accessibilityPlace/${curServicepointId}/${place.place_id}`}>
+                    <Link href={`/accessibilityPlace/${curServicepointId}/${curEntranceId}/${place.place_id}`}>
                       <HdsLink href="#" size="M" disableVisitedStyles>
                         {i18n.t("accessibilityForm.placeLink")}
                       </HdsLink>

@@ -25,6 +25,7 @@ import {
   API_FETCH_QUESTIONCHOICES,
   API_URL_BASE,
   LanguageLocales,
+  API_FETCH_BACKEND_ENTRANCE_PLACES,
 } from "../../../types/constants";
 import { useAppSelector, useAppDispatch, useLoading } from "../../../state/hooks";
 import QuestionBlock from "../../../components/QuestionBlock";
@@ -32,6 +33,7 @@ import {
   BackendEntrance,
   BackendEntranceAnswer,
   BackendEntranceField,
+  BackendEntrancePlace,
   BackendPlace,
   BackendQuestion,
   BackendQuestionBlock,
@@ -47,7 +49,6 @@ import {
 } from "../../../types/backendModels";
 import { EntranceFormProps } from "../../../types/general";
 import HeadlineQuestionContainer from "../../../components/HeadlineQuestionContainer";
-
 import QuestionFormCtrlButtons from "../../../components/QuestionFormCtrlButtons";
 import PathTreeComponent from "../../../components/PathTreeComponent";
 import { setAnswer, setAnsweredChoice, setEntranceId, setExtraAnswer, setServicepointId, setStartDate } from "../../../state/reducers/formSlice";
@@ -63,6 +64,7 @@ import {
   setInitAdditionalInfoFromDb,
 } from "../../../state/reducers/additionalInfoSlice";
 */
+import { setEntrancePlaceBoxes } from "../../../state/reducers/additionalInfoSlice";
 import { persistor } from "../../../state/store";
 // import { setCurrentlyEditingBlock, setCurrentlyEditingQuestion } from "../../../state/reducers/generalSlice";
 import LoadSpinner from "../../../components/common/LoadSpinner";
@@ -77,6 +79,7 @@ const EntranceAccessibility = ({
   questionExtraAnswerData,
   accessibilityPlaceData,
   entranceData,
+  entrancePlaceData,
   servicepointData,
   // additionalInfosData,
   formId,
@@ -122,6 +125,24 @@ const EntranceAccessibility = ({
     if (Object.keys(entranceData).length > 0) {
       dispatch(setEntranceId(entranceData.entrance_id));
     }
+
+    dispatch(
+      setEntrancePlaceBoxes(
+        entrancePlaceData.map((place) => {
+          const { entrance_id, place_id, order_number } = place;
+
+          return {
+            entrance_id: entrance_id,
+            place_id: place_id,
+            order_number: order_number ?? 0,
+            existingBox: place,
+            modifiedBox: place,
+            termsAccepted: true,
+            invalidValues: [],
+          };
+        })
+      )
+    );
 
     // The additional info structure will be changing, so the frontend handling has been removed for now
     /*
@@ -240,7 +261,7 @@ const EntranceAccessibility = ({
         }
       });
     }
-  }, [servicepointData, entranceData, questionAnswerData, questionExtraAnswerData, startedAnswering, dispatch]);
+  }, [servicepointData, entranceData, questionAnswerData, questionExtraAnswerData, entrancePlaceData, startedAnswering, dispatch]);
 
   const filteredPlaces = accessibilityPlaceData.filter((place) => place.language_id === curLocaleId);
 
@@ -410,6 +431,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   let questionAnswerData: BackendEntranceAnswer[] = [];
   let questionExtraAnswerData: BackendEntranceField[] = [];
   let entranceData: BackendEntrance = {} as BackendEntrance;
+  let entrancePlaceData: BackendEntrancePlace[] = [];
   let servicepointData: BackendServicepoint = {} as BackendServicepoint;
   // let additionalInfosData = {};
   // let addInfoCommentsData;
@@ -571,6 +593,25 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
 
           questionExtraAnswerData = allQuestionExtraAnswerData.filter((a) => a.log_id === maxLogId);
         }
+
+        const allEntrancePlaceDataResp = await fetch(
+          `${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE_PLACES}?entrance_id=${params.entranceId}&format=json`,
+          {
+            headers: new Headers({ Authorization: getTokenHash() }),
+          }
+        );
+        const allEntrancePlaceData = await (allEntrancePlaceDataResp.json() as Promise<BackendEntrancePlace[]>);
+
+        if (allEntrancePlaceData?.length > 0) {
+          // Return entrance place data for the highest log id only, in case both published and draft data exists (form_submitted = 'Y' and 'D')
+          // Note: This log id value may be different from the main answer data log id
+          const maxLogId =
+            allEntrancePlaceData.sort((a: BackendEntrancePlace, b: BackendEntrancePlace) => {
+              return (b.log_id ?? 0) - (a.log_id ?? 0);
+            })[0].log_id ?? -1;
+
+          entrancePlaceData = allEntrancePlaceData.filter((a) => a.log_id === maxLogId);
+        }
       }
     } catch (e) {
       console.error("Error", e);
@@ -583,6 +624,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       questionAnswerData = [];
       questionExtraAnswerData = [];
       entranceData = {} as BackendEntrance;
+      entrancePlaceData = [];
       servicepointData = {} as BackendServicepoint;
       // additionalInfosData = {};
     }
@@ -598,6 +640,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       questionAnswerData,
       questionExtraAnswerData,
       entranceData,
+      entrancePlaceData,
       servicepointData,
       // additionalInfosData,
       formId,

@@ -184,6 +184,7 @@ export interface BackendEntranceAnswer {
   question_block_id: number;
   question_id?: number;
   question_choice_id?: number;
+  // The following values are only used when question_id is null
   loc_easting?: number;
   loc_northing?: number;
   comment_fi?: string;
