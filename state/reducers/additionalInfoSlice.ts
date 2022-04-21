@@ -145,6 +145,34 @@ export const additionalInfoSlice = createSlice({
         }, []),
       };
     },
+    revertEntrancePlace: (
+      state,
+      action: PayloadAction<{
+        entrance_id: number;
+        place_id: number;
+      }>
+    ) => {
+      return {
+        ...state,
+        entrancePlaceBoxes: state.entrancePlaceBoxes.reduce((acc: EntrancePlaceBox[], box) => {
+          if (box.entrance_id === action.payload.entrance_id && box.place_id === action.payload.place_id) {
+            // Revert this entrance place box
+            if (box.existingBox !== undefined) {
+              // This box existed before, so revert to the existing values
+              return [
+                ...acc,
+                { ...box, order_number: box.existingBox.order_number ?? 0, modifiedBox: box.existingBox, isDeleted: false, invalidValues: [] },
+              ];
+            } else {
+              // This box did not exist before, so remove it
+              return acc;
+            }
+          } else {
+            return [...acc, box];
+          }
+        }, []),
+      };
+    },
     addInvalidEntrancePlaceBoxValue: (
       state,
       action: PayloadAction<{
@@ -538,8 +566,10 @@ export const additionalInfoSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(PURGE, () => ({
+    // Don't remove edited entrance place data here, this is handled in the EntranceAccessibility page instead
+    builder.addCase(PURGE, (state) => ({
       ...initialState,
+      entrancePlaceBoxes: state.entrancePlaceBoxes,
     }));
   },
 });
@@ -568,6 +598,7 @@ export const {
   editEntrancePlaceBox,
   changeEntrancePlaceBoxOrder,
   deleteEntrancePlaceBox,
+  revertEntrancePlace,
   addInvalidEntrancePlaceBoxValue,
   removeInvalidEntrancePlaceBoxValue,
 } = additionalInfoSlice.actions;

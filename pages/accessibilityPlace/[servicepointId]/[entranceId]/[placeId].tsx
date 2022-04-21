@@ -107,7 +107,7 @@ const AccessibilityPlace = ({ servicepointData, entranceData, accessibilityPlace
               <div className={styles.subHeader}>{subHeader}</div>
 
               <div className={styles.mainbuttons}>
-                <AccessibilityPlaceCtrlButtons entrancePlaceBoxes={filteredEntrancePlaceBoxes} />
+                <AccessibilityPlaceCtrlButtons placeId={filteredPlaceData.place_id} entrancePlaceBoxes={filteredEntrancePlaceBoxes} />
               </div>
 
               <div className={styles.infoHeader}>{`${i18n.t("additionalInfo.additionalInfo")} > ${filteredPlaceData.name}`}</div>

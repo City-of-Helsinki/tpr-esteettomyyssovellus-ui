@@ -281,7 +281,7 @@ export interface EntrancePlaceBox {
   order_number: number;
   existingBox?: BackendEntrancePlace;
   modifiedBox?: BackendEntrancePlace;
-  isDeleted?: boolean;
+  isDeleted: boolean;
   photoBase64?: string;
   termsAccepted: boolean;
   invalidValues: string[];
@@ -447,6 +447,7 @@ export interface AccessibilityPlacePictureProps {
 }
 
 export interface AccessibilityPlaceCtrlButtonsProps {
+  placeId: number;
   entrancePlaceBoxes: EntrancePlaceBox[];
 }
 

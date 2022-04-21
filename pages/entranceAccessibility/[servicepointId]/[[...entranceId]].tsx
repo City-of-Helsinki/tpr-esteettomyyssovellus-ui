@@ -97,12 +97,14 @@ const EntranceAccessibility = ({
 
   useEffect(() => {
     // Clear the state on initial load
+    // Note: To preserve any edits, entrance place data is not cleared with purge, so population is handled in the useEffect below instead
     persistor.purge();
   }, []);
 
   // const curEditingQuestionAddInfoNumber = useAppSelector((state) => state.generalSlice.currentlyEditingQuestionAddinfo);
   // const curEditingBlockAddInfoNumber = useAppSelector((state) => state.generalSlice.currentlyEditingBlockAddinfo);
 
+  const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
   const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
   const curInvalidBlocks = useAppSelector((state) => state.formReducer.invalidBlocks);
   // const additionalInfoInitedFromDb = useAppSelector((state) => state.additionalInfoReducer.initAddInfoFromDb);
@@ -115,6 +117,29 @@ const EntranceAccessibility = ({
   const isExistingEntrance = hasData && Object.keys(entranceData).length > 0;
 
   useEffect(() => {
+    // Reset the entrance places if the entrance id changes, otherwise keep any edited entrance places already stored in redux state
+    const resetEntrancePlaces = Object.keys(entranceData).length > 0 && curEntranceId !== entranceData.entrance_id;
+    if (resetEntrancePlaces) {
+      dispatch(
+        setEntrancePlaceBoxes(
+          entrancePlaceData.map((place) => {
+            const { entrance_id, place_id, order_number } = place;
+
+            return {
+              entrance_id: entrance_id,
+              place_id: place_id,
+              order_number: order_number ?? 0,
+              existingBox: place,
+              modifiedBox: place,
+              isDeleted: false,
+              termsAccepted: true,
+              invalidValues: [],
+            };
+          })
+        )
+      );
+    }
+
     // Update servicepointId and entranceId in redux state
     if (Object.keys(servicepointData).length > 0) {
       dispatch(setServicepointId(servicepointData.servicepoint_id));
@@ -125,24 +150,6 @@ const EntranceAccessibility = ({
     if (Object.keys(entranceData).length > 0) {
       dispatch(setEntranceId(entranceData.entrance_id));
     }
-
-    dispatch(
-      setEntrancePlaceBoxes(
-        entrancePlaceData.map((place) => {
-          const { entrance_id, place_id, order_number } = place;
-
-          return {
-            entrance_id: entrance_id,
-            place_id: place_id,
-            order_number: order_number ?? 0,
-            existingBox: place,
-            modifiedBox: place,
-            termsAccepted: true,
-            invalidValues: [],
-          };
-        })
-      )
-    );
 
     // The additional info structure will be changing, so the frontend handling has been removed for now
     /*
@@ -261,7 +268,7 @@ const EntranceAccessibility = ({
         }
       });
     }
-  }, [servicepointData, entranceData, questionAnswerData, questionExtraAnswerData, entrancePlaceData, startedAnswering, dispatch]);
+  }, [curEntranceId, servicepointData, entranceData, questionAnswerData, questionExtraAnswerData, entrancePlaceData, startedAnswering, dispatch]);
 
   const filteredPlaces = accessibilityPlaceData.filter((place) => place.language_id === curLocaleId);
 
