@@ -82,6 +82,47 @@ export const additionalInfoSlice = createSlice({
         }, []),
       };
     },
+    changeEntrancePlaceBoxOrder: (
+      state,
+      action: PayloadAction<{
+        entrance_id: number;
+        place_id: number;
+        order_number: number;
+        difference: number;
+      }>
+    ) => {
+      // Count the boxes for this entrance place
+      const boxCount = state.entrancePlaceBoxes.filter(
+        (box) => box.entrance_id === action.payload.entrance_id && box.place_id === action.payload.place_id
+      );
+
+      return {
+        ...state,
+        entrancePlaceBoxes: state.entrancePlaceBoxes.reduce((acc: EntrancePlaceBox[], box) => {
+          // Swap the order numbers of the two boxes
+          // The difference value is +1 or -1 depending on which arrow was clicked
+          const box1 = action.payload.order_number;
+          const box2 = action.payload.order_number + action.payload.difference;
+
+          if (
+            box.entrance_id === action.payload.entrance_id &&
+            box.place_id === action.payload.place_id &&
+            (box.order_number === box1 || box.order_number === box2)
+          ) {
+            if (box1 >= 1 && box2 >= 1 && box1 <= boxCount.length && box2 <= boxCount.length) {
+              // The order numbers are within the limits, so ok to swap
+              const newOrder =
+                box.order_number === box1 ? box.order_number + action.payload.difference : box.order_number - action.payload.difference;
+              return [...acc, { ...box, order_number: newOrder }];
+            } else {
+              return [...acc, box];
+            }
+          } else {
+            return [...acc, box];
+          }
+        }, []),
+      };
+    },
     addInvalidEntrancePlaceBoxValue: (
       state,
       action: PayloadAction<{
@@ -503,6 +544,7 @@ export const {
   setEntrancePlaceBoxes,
   addEntrancePlaceBox,
   editEntrancePlaceBox,
+  changeEntrancePlaceBoxOrder,
   addInvalidEntrancePlaceBoxValue,
   removeInvalidEntrancePlaceBoxValue,
 } = additionalInfoSlice.actions;

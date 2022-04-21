@@ -1,16 +1,30 @@
 import React from "react";
 import { useI18n } from "next-localization";
+import { Button, IconArrowDown, IconArrowUp, IconCross } from "hds-react";
+import { useAppDispatch } from "../state/hooks";
+import { changeEntrancePlaceBoxOrder } from "../state/reducers/additionalInfoSlice";
 import { AccessibilityPlaceBoxProps } from "../types/general";
 // import AccessibilityPlaceLocation from "./AccessibilityPlaceLocation";
 import AccessibilityPlacePicture from "./AccessibilityPlacePicture";
 import styles from "./AccessibilityPlaceBox.module.scss";
-import { Button, IconArrowDown, IconArrowUp, IconCross } from "hds-react";
 
 // usage: grouping one set of picture and location in accessibility place form
 const AccessibilityPlaceBox = ({ entrancePlaceBox }: AccessibilityPlaceBoxProps): JSX.Element => {
   const i18n = useI18n();
+  const dispatch = useAppDispatch();
 
-  const { order_number } = entrancePlaceBox;
+  const { entrance_id, place_id, order_number } = entrancePlaceBox;
+
+  const changeBoxOrder = (difference: number) => {
+    dispatch(
+      changeEntrancePlaceBoxOrder({
+        entrance_id,
+        place_id,
+        order_number,
+        difference,
+      })
+    );
+  };
 
   return (
     <div className={styles.maincontainer}>
@@ -22,10 +36,10 @@ const AccessibilityPlaceBox = ({ entrancePlaceBox }: AccessibilityPlaceBoxProps)
 
         <div className={`${styles.headingsection} ${styles.rightsection}`}>
           <div>{i18n.t("additionalInfo.order")}</div>
-          <Button variant="supplementary" iconLeft={<IconArrowUp />}>
+          <Button variant="supplementary" iconLeft={<IconArrowUp />} onClick={() => changeBoxOrder(-1)}>
             {""}
           </Button>
-          <Button variant="supplementary" iconLeft={<IconArrowDown />}>
+          <Button variant="supplementary" iconLeft={<IconArrowDown />} onClick={() => changeBoxOrder(1)}>
             {""}
           </Button>
           <Button variant="supplementary" iconLeft={<IconCross />}>
