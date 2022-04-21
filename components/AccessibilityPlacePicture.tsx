@@ -328,7 +328,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
           </div>
 
           <div className={styles.picturetermscontainer}>
-            <SelectionGroup label={i18n.t("additionalInfo.sharePictureLicenseLabel")}>
+            <SelectionGroup label={i18n.t("additionalInfo.sharePictureLicenseLabel")} required>
               <Checkbox
                 id={`picture-license-${currentId}`}
                 label={`${i18n.t("additionalInfo.sharePictureLicenseText")} ${i18n.t("additionalInfo.sharePictureLicense")}`}
