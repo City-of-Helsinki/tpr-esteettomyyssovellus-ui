@@ -2,7 +2,7 @@ import React from "react";
 import { useI18n } from "next-localization";
 import { Button, IconArrowDown, IconArrowUp, IconCross } from "hds-react";
 import { useAppDispatch } from "../state/hooks";
-import { changeEntrancePlaceBoxOrder } from "../state/reducers/additionalInfoSlice";
+import { changeEntrancePlaceBoxOrder, deleteEntrancePlaceBox } from "../state/reducers/additionalInfoSlice";
 import { AccessibilityPlaceBoxProps } from "../types/general";
 // import AccessibilityPlaceLocation from "./AccessibilityPlaceLocation";
 import AccessibilityPlacePicture from "./AccessibilityPlacePicture";
@@ -26,6 +26,16 @@ const AccessibilityPlaceBox = ({ entrancePlaceBox }: AccessibilityPlaceBoxProps)
     );
   };
 
+  const deleteBox = () => {
+    dispatch(
+      deleteEntrancePlaceBox({
+        entrance_id,
+        place_id,
+        order_number,
+      })
+    );
+  };
+
   return (
     <div className={styles.maincontainer}>
       <div className={styles.headingcontainer}>
@@ -42,7 +52,7 @@ const AccessibilityPlaceBox = ({ entrancePlaceBox }: AccessibilityPlaceBoxProps)
           <Button variant="supplementary" iconLeft={<IconArrowDown />} onClick={() => changeBoxOrder(1)}>
             {""}
           </Button>
-          <Button variant="supplementary" iconLeft={<IconCross />}>
+          <Button variant="supplementary" iconLeft={<IconCross />} onClick={deleteBox}>
             {""}
           </Button>
         </div>

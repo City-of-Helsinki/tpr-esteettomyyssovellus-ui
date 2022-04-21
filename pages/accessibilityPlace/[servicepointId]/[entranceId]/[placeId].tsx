@@ -63,10 +63,11 @@ const AccessibilityPlace = ({ servicepointData, entranceData, accessibilityPlace
   const localeId: number = LanguageLocales[i18n.locale() as keyof typeof LanguageLocales];
   const filteredPlaceData = accessibilityPlaceData?.find((place) => place.language_id === localeId) ?? ({} as BackendPlace);
 
+  // Show the boxes for this entrance place that have not been deleted
   const filteredEntrancePlaceBoxes = curEntrancePlaceBoxes
     ? curEntrancePlaceBoxes
         .filter((placeBox) => {
-          return placeBox.place_id === filteredPlaceData.place_id;
+          return placeBox.place_id === filteredPlaceData.place_id && !placeBox.isDeleted;
         })
         .sort((a, b) => (a.order_number ?? 0) - (b.order_number ?? 0))
     : [];
