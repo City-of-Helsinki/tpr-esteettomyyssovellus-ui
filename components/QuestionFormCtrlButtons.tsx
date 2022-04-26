@@ -33,6 +33,7 @@ const QuestionFormCtrlButtons = ({
 
   const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
   const curExtraAnswers = useAppSelector((state) => state.formReducer.extraAnswers);
+  const curEntrancePlaceBoxes = useAppSelector((state) => state.additionalInfoReducer.entrancePlaceBoxes);
   const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
   const startedAnswering = useAppSelector((state) => state.formReducer.startedAnswering);
   const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
@@ -91,7 +92,17 @@ const QuestionFormCtrlButtons = ({
       });
       */
 
-      await saveFormData(entranceId, curAnsweredChoices, curExtraAnswers, startedAnswering, user, true, router);
+      await saveFormData(
+        curServicepointId,
+        entranceId,
+        curAnsweredChoices,
+        curExtraAnswers,
+        curEntrancePlaceBoxes,
+        startedAnswering,
+        user,
+        true,
+        router
+      );
     }
 
     return entranceId;

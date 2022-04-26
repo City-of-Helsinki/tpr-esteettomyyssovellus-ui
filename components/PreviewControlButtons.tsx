@@ -21,6 +21,7 @@ const PreviewControlButtons = ({ hasSaveDraftButton, setSendingComplete }: Previ
 
   const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
   const curExtraAnswers = useAppSelector((state) => state.formReducer.extraAnswers);
+  const curEntrancePlaceBoxes = useAppSelector((state) => state.additionalInfoReducer.entrancePlaceBoxes);
   const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
   const startedAnswering = useAppSelector((state) => state.formReducer.startedAnswering);
   const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
@@ -38,7 +39,17 @@ const PreviewControlButtons = ({ hasSaveDraftButton, setSendingComplete }: Previ
 
   const saveData = async (isDraft: boolean): Promise<void> => {
     if (curEntranceId > 0) {
-      await saveFormData(curEntranceId, curAnsweredChoices, curExtraAnswers, startedAnswering, user, isDraft, router);
+      await saveFormData(
+        curServicepointId,
+        curEntranceId,
+        curAnsweredChoices,
+        curExtraAnswers,
+        curEntrancePlaceBoxes,
+        startedAnswering,
+        user,
+        isDraft,
+        router
+      );
     }
   };
 

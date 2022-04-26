@@ -248,6 +248,7 @@ export interface BackendEntrancePlace {
   photo_text_fi?: string;
   photo_text_sv?: string;
   photo_text_en?: string;
+  [key: string]: number | string | undefined;
 }
 
 // BackendEntranceSentence - use in details and preview pages - v0.6
