@@ -159,9 +159,16 @@ export const additionalInfoSlice = createSlice({
             // Revert this entrance place box
             if (box.existingBox !== undefined) {
               // This box existed before, so revert to the existing values
+              // Try to make sure the order number is 1 or higher
               return [
                 ...acc,
-                { ...box, order_number: box.existingBox.order_number ?? 0, modifiedBox: box.existingBox, isDeleted: false, invalidValues: [] },
+                {
+                  ...box,
+                  order_number: box.existingBox.order_number && box.existingBox.order_number > 0 ? box.existingBox.order_number : 1,
+                  modifiedBox: box.existingBox,
+                  isDeleted: false,
+                  invalidValues: [],
+                },
               ];
             } else {
               // This box did not exist before, so remove it

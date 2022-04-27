@@ -69,7 +69,7 @@ const AccessibilityPlace = ({ servicepointData, entranceData, accessibilityPlace
         .filter((placeBox) => {
           return placeBox.place_id === filteredPlaceData.place_id && !placeBox.isDeleted;
         })
-        .sort((a, b) => (a.order_number ?? 0) - (b.order_number ?? 0))
+        .sort((a, b) => (a.order_number ?? 1) - (b.order_number ?? 1))
     : [];
 
   return (
