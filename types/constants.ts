@@ -45,6 +45,8 @@ export const API_SAVE_PLACE_ANSWER = "api/ArXPlaceAnswer/";
 export const API_SAVE_PLACE_ANSWER_BOX = "api/ArXPlaceAnswerBox/";
 export const API_SAVE_PLACE_ANSWER_BOX_TEXT = "api/ArXPlaceAnswerBoxTxt/";
 export const API_AZURE_UPLOAD = "api/azure_upload/";
+export const API_DELETE_PLACE_BOX_TEXT_SUFFIX = "delete_box_txts/";
+export const API_DELETE_PLACE_FROM_ANSWER = "api/DeletePlaceFromAnswer/";
 
 export enum LanguageLocales {
   fi = 1,
