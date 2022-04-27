@@ -100,112 +100,128 @@ interface KeyValue {
 }
 
 const saveExtraFieldAnswers = async (logId: number, extraAnswers: KeyValue, router: NextRouter) => {
-  const extraFieldPosts = Object.keys(extraAnswers).map(async (questionBlockFieldIdStr) => {
-    const questionBlockFieldId = Number(questionBlockFieldIdStr);
-    const extraAnswer = extraAnswers[questionBlockFieldId];
+  await Promise.all(
+    Object.keys(extraAnswers).map(async (questionBlockFieldIdStr) => {
+      const questionBlockFieldId = Number(questionBlockFieldIdStr);
+      const extraAnswer = extraAnswers[questionBlockFieldId];
 
-    await postData(
-      API_FETCH_QUESTION_BLOCK_ANSWER_FIELD,
-      JSON.stringify({
-        log_id: logId,
-        question_block_field_id: questionBlockFieldId,
-        entry: extraAnswer,
-      }),
-      router
-    );
-  });
-
-  await Promise.all(extraFieldPosts);
+      await postData(
+        API_FETCH_QUESTION_BLOCK_ANSWER_FIELD,
+        JSON.stringify({
+          log_id: logId,
+          question_block_field_id: questionBlockFieldId,
+          entry: extraAnswer,
+        }),
+        router
+      );
+    })
+  );
 };
 
 const saveEntrancePlaces = async (logId: number, servicePointId: number, entrancePlaceBoxes: EntrancePlaceBox[], router: NextRouter) => {
   console.log("saveEntrancePlaces", servicePointId, entrancePlaceBoxes);
 
-  const placeBoxRequests = entrancePlaceBoxes.map(async (box) => {
-    // Save the entrance place first to get the place answer id
-    const placeRequest = {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: getTokenHash() },
-      body: JSON.stringify({
-        log_id: logId,
-        place_id: box.place_id,
-      }),
-    };
+  if (entrancePlaceBoxes && entrancePlaceBoxes.length > 0) {
+    // Save the entrance places first to get place answer ids, since the combination of log_id and place_id is unique
+    const distinctPlaceIds = entrancePlaceBoxes.map((box) => box.place_id).filter((v, i, a) => a.indexOf(v) === i);
 
-    const placeResponse = await fetch(`${getOrigin(router)}/${API_SAVE_PLACE_ANSWER}`, placeRequest);
-    const placeAnswer = await (placeResponse.json() as Promise<{ place_answer_id: number }>);
-
-    console.log("box", box);
-    console.log("place", box.place_id, "place_answer_id", placeAnswer.place_answer_id);
-
-    // Use the place answer id to save the place box and its data
-    if (box.modifiedBox && !box.isDeleted) {
-      // New or modified box
-      let photoUrl = box.modifiedBox?.photo_url;
-
-      if (box.photoBase64) {
-        // Uploaded photo, save to Azure first to get the url for the database
-        const imageRequest = {
+    // Make an array of place answer ids for each place id
+    const placeAnswerIdArray = await Promise.all(
+      distinctPlaceIds.flatMap(async (placeId) => {
+        const placeRequest = {
           method: "POST",
           headers: { "Content-Type": "application/json", Authorization: getTokenHash() },
           body: JSON.stringify({
-            file: box.photoBase64,
+            log_id: logId,
+            place_id: placeId,
           }),
         };
 
-        const imageResponse = await fetch(`${getOrigin(router)}/${API_AZURE_UPLOAD}${servicePointId}/`, imageRequest);
-        const imageJson = await (imageResponse.json() as Promise<{ status: string; uploaded_file_name: string; url: string }>);
+        const placeResponse = await fetch(`${getOrigin(router)}/${API_SAVE_PLACE_ANSWER}`, placeRequest);
+        const placeAnswer: { place_answer_id: number } = await (placeResponse.json() as Promise<{ place_answer_id: number }>);
 
-        console.log("place", box.place_id, "imageJson", imageJson);
+        return { [placeId]: placeAnswer.place_answer_id };
+      })
+    );
 
-        photoUrl = imageJson.url;
-      }
+    // Convert the array to an object for easier lookups
+    const placeAnswerIds = placeAnswerIdArray.reduce((acc, placeAnswerObj) => {
+      return { ...acc, ...placeAnswerObj };
+    }, {});
 
-      // Save the place box using the specified image url or Azure url created above
-      const boxRequest = {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: getTokenHash() },
-        body: JSON.stringify({
-          place_answer_id: placeAnswer.place_answer_id,
-          // loc_easting,
-          // loc_northing,
-          photo_url: photoUrl,
-          photo_source_text: box.modifiedBox?.photo_source_text,
-          order_number: box.order_number,
-        }),
-      };
+    // Save the place boxes and their data next using the place answer ids
+    entrancePlaceBoxes.forEach(async (box) => {
+      const placeAnswerId = placeAnswerIds[box.place_id];
 
-      const boxResponse = await fetch(`${getOrigin(router)}/${API_SAVE_PLACE_ANSWER_BOX}`, boxRequest);
-      const boxJson = await (boxResponse.json() as Promise<{ box_id: number }>);
+      console.log("box", box);
+      console.log("place", box.place_id, "placeAnswerId", placeAnswerId);
 
-      console.log("place", box.place_id, "boxJson", boxJson);
+      if (box.modifiedBox && !box.isDeleted) {
+        // New or modified box
+        let photoUrl = box.modifiedBox?.photo_url;
 
-      // Save the photo text for each language if available
-      const languages = ["fi", "sv", "en"];
-      languages.forEach(async (lang) => {
-        if (box.modifiedBox) {
-          const boxText = box.modifiedBox[`photo_text_${lang}`] as string;
+        if (box.photoBase64) {
+          // Uploaded photo, save to Azure first to get the url for the database
+          const imageRequest = {
+            method: "POST",
+            headers: { "Content-Type": "application/json", Authorization: getTokenHash() },
+            body: JSON.stringify({
+              file: box.photoBase64,
+            }),
+          };
 
-          if (boxText && boxText.length > 0) {
-            await postData(
-              API_SAVE_PLACE_ANSWER_BOX_TEXT,
-              JSON.stringify({
-                box_id: boxJson.box_id,
-                language_id: LanguageLocales[lang as keyof typeof LanguageLocales],
-                box_text_type: "PHOTO",
-                box_text: boxText,
-              }),
-              router
-            );
-          }
+          const imageResponse = await fetch(`${getOrigin(router)}/${API_AZURE_UPLOAD}${servicePointId}/`, imageRequest);
+          const imageJson = await (imageResponse.json() as Promise<{ status: string; uploaded_file_name: string; url: string }>);
+
+          console.log("place", box.place_id, "imageJson", imageJson);
+
+          photoUrl = imageJson.url;
         }
-      });
-    } else if (box.isDeleted) {
-      // TODO - delete place box data and images
-    }
-  });
 
-  await Promise.all(placeBoxRequests);
+        // Save the place box using the specified image url or Azure url created above
+        const boxRequest = {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: getTokenHash() },
+          body: JSON.stringify({
+            place_answer_id: placeAnswerId,
+            // loc_easting,
+            // loc_northing,
+            photo_url: photoUrl,
+            photo_source_text: box.modifiedBox?.photo_source_text,
+            order_number: box.order_number,
+          }),
+        };
+
+        const boxResponse = await fetch(`${getOrigin(router)}/${API_SAVE_PLACE_ANSWER_BOX}`, boxRequest);
+        const boxJson = await (boxResponse.json() as Promise<{ box_id: number }>);
+
+        console.log("place", box.place_id, "boxJson", boxJson);
+
+        // Save the photo text for each language if available
+        const languages = ["fi", "sv", "en"];
+        languages.forEach(async (lang) => {
+          if (box.modifiedBox) {
+            const boxText = box.modifiedBox[`photo_text_${lang}`] as string;
+
+            if (boxText && boxText.length > 0) {
+              await postData(
+                API_SAVE_PLACE_ANSWER_BOX_TEXT,
+                JSON.stringify({
+                  box_id: boxJson.box_id,
+                  language_id: LanguageLocales[lang as keyof typeof LanguageLocales],
+                  box_text_type: "PHOTO",
+                  box_text: boxText,
+                }),
+                router
+              );
+            }
+          }
+        });
+      } else if (box.isDeleted) {
+        // TODO - delete place box data and images
+      }
+    });
+  }
 };
 
 export const saveFormData = async (
