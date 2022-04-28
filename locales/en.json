@@ -46,6 +46,12 @@
       "returnNoSave": "Exit without saving",
       "deleteAdditionalInfo": "Delete all additional info sets"
     },
+    "message": {
+      "validationFailed": {
+        "title": "Errors in the form",
+        "message": "Please check the information, incorrect fields are highlighted below"
+      }
+    },
     "mainEntrance": "Main entrance",
     "mainEntranceLocation": "Main entrance location",
     "additionalEntrance": "Additional entrance",

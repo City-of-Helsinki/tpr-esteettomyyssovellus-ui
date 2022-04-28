@@ -46,6 +46,12 @@
       "returnNoSave": "Poistu tallentamatta",
       "deleteAdditionalInfo": "Poista kaikki lisätietokokonaisuudet"
     },
+    "message": {
+      "validationFailed": {
+        "title": "Lomakkeella on virheitä",
+        "message": "Tarkista tiedot, virheellisiä kohtia on korostettu alla"
+      }
+    },
     "mainEntrance": "Pääsisäänkäynti",
     "mainEntranceLocation": "Pääsisäänkäynnin sijainti",
     "additionalEntrance": "Lisäsisäänkäynti",

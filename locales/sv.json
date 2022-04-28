@@ -46,6 +46,12 @@
       "returnNoSave": "Avsluta utan att spara",
       "deleteAdditionalInfo": "Ta bort alla ytterligare datamängder"
     },
+    "message": {
+      "validationFailed": {
+        "title": "Det finns fel i blanketten",
+        "message": "Kontrollera uppgifterna, de felaktiga punkterna är markerade här under"
+      }
+    },
     "mainEntrance": "Huvudingången",
     "mainEntranceLocation": "Platsen för huvudentren",
     "additionalEntrance": "Alternativ ingång",

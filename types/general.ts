@@ -275,6 +275,18 @@ export interface AdditionalInfoProps {
   [key: string]: AdditionalInfos;
 }
 
+export interface Validation {
+  valid: boolean;
+  fieldId: string;
+  fieldLabel: string;
+}
+
+/*
+export interface KeyValueValidation {
+  [key: string]: Validation;
+}
+*/
+
 export interface EntrancePlaceBox {
   entrance_id: number;
   place_id: number;
@@ -284,7 +296,7 @@ export interface EntrancePlaceBox {
   isDeleted: boolean;
   photoBase64?: string;
   termsAccepted: boolean;
-  invalidValues: string[];
+  invalidValues: Validation[];
 }
 
 export interface AdditionalInfoStateProps {
@@ -292,6 +304,7 @@ export interface AdditionalInfoStateProps {
   curEditingInitialState: AdditionalInfoProps;
   additionalInfo: AdditionalInfoProps;
   entrancePlaceBoxes: EntrancePlaceBox[];
+  entrancePlaceValid: boolean;
 }
 
 export interface MainLocationOrImageProps {

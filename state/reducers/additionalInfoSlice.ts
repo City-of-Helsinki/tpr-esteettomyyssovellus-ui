@@ -39,6 +39,7 @@ const initialState: AdditionalInfoStateProps = {
   curEditingInitialState: {},
   additionalInfo: {},
   entrancePlaceBoxes: [],
+  entrancePlaceValid: true,
 };
 
 export const additionalInfoSlice = createSlice({
@@ -58,6 +59,9 @@ export const additionalInfoSlice = createSlice({
     },
     setEntrancePlaceBoxes: (state, action: PayloadAction<EntrancePlaceBox[]>) => {
       return { ...state, entrancePlaceBoxes: action.payload };
+    },
+    setEntrancePlaceValid: (state, action: PayloadAction<boolean>) => {
+      return { ...state, entrancePlaceValid: action.payload };
     },
     addEntrancePlaceBox: (state, action: PayloadAction<EntrancePlaceBox>) => {
       return { ...state, entrancePlaceBoxes: [...(state.entrancePlaceBoxes ?? []), action.payload] };
@@ -206,9 +210,12 @@ export const additionalInfoSlice = createSlice({
         entrance_id: number;
         place_id: number;
         order_number: number;
-        invalidValueToAdd: string;
+        invalidFieldId: string;
+        invalidFieldLabel: string;
       }>
     ) => {
+      const validationToAdd = { valid: false, fieldId: action.payload.invalidFieldId, fieldLabel: action.payload.invalidFieldLabel };
+
       return {
         ...state,
         entrancePlaceBoxes: state.entrancePlaceBoxes.reduce((acc: EntrancePlaceBox[], box) => {
@@ -220,7 +227,9 @@ export const additionalInfoSlice = createSlice({
                 ...acc,
                 {
                   ...box,
-                  invalidValues: [...(box.invalidValues ?? []), action.payload.invalidValueToAdd].filter((v, i, a) => v && a.indexOf(v) === i),
+                  invalidValues: [...(box.invalidValues ?? []), validationToAdd].filter(
+                    (v, i, a) => v && a.findIndex((v2) => v2.fieldId === v.fieldId) === i
+                  ),
                 },
               ]
             : [...acc, box];
@@ -233,7 +242,7 @@ export const additionalInfoSlice = createSlice({
         entrance_id: number;
         place_id: number;
         order_number: number;
-        invalidValueToRemove: string;
+        invalidFieldIdToRemove: string;
       }>
     ) => {
       return {
@@ -241,9 +250,9 @@ export const additionalInfoSlice = createSlice({
         entrancePlaceBoxes: state.entrancePlaceBoxes.reduce((acc: EntrancePlaceBox[], box) => {
           return box.entrance_id === action.payload.entrance_id &&
             box.place_id === action.payload.place_id &&
-            ? [...acc, { ...box, invalidValues: (box.invalidValues ?? []).filter((val) => val !== action.payload.invalidValueToRemove) }]
             box.order_number === action.payload.order_number &&
             !box.isDeleted
+            ? [...acc, { ...box, invalidValues: (box.invalidValues ?? []).filter((val) => val.fieldId !== action.payload.invalidFieldIdToRemove) }]
             : [...acc, box];
         }, []),
       };
@@ -623,6 +632,7 @@ export const {
   removeInvalidValues,
   addInvalidValues,
   setEntrancePlaceBoxes,
+  setEntrancePlaceValid,
   addEntrancePlaceBox,
   editEntrancePlaceBox,
   changeEntrancePlaceBoxOrder,

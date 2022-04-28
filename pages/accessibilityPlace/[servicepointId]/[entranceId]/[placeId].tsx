@@ -4,6 +4,7 @@ import { useI18n } from "next-localization";
 import Head from "next/head";
 import { IconCrossCircle, IconQuestionCircle } from "hds-react";
 import Layout from "../../../../components/common/Layout";
+import ValidationSummary from "../../../../components/common/ValidationSummary";
 import QuestionInfo from "../../../../components/QuestionInfo";
 import ServicepointMainInfoContent from "../../../../components/ServicepointMainInfoContent";
 import PathTreeComponent from "../../../../components/PathTreeComponent";
@@ -47,6 +48,7 @@ const AccessibilityPlace = ({ servicepointData, entranceData, accessibilityPlace
   const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
   const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
   const curEntrancePlaceBoxes = useAppSelector((state) => state.additionalInfoReducer.entrancePlaceBoxes);
+  const curEntrancePlaceValid = useAppSelector((state) => state.additionalInfoReducer.entrancePlaceValid);
 
   const hasData =
     Object.keys(servicepointData).length > 0 &&
@@ -71,6 +73,7 @@ const AccessibilityPlace = ({ servicepointData, entranceData, accessibilityPlace
         })
         .sort((a, b) => (a.order_number ?? 1) - (b.order_number ?? 1))
     : [];
+  const filteredEntrancePlaceInvalidValues = filteredEntrancePlaceBoxes.flatMap((box) => box.invalidValues);
 
   return (
     <Layout>
@@ -108,6 +111,9 @@ const AccessibilityPlace = ({ servicepointData, entranceData, accessibilityPlace
 
               <div className={styles.mainbuttons}>
                 <AccessibilityPlaceCtrlButtons placeId={filteredPlaceData.place_id} entrancePlaceBoxes={filteredEntrancePlaceBoxes} />
+                {!curEntrancePlaceValid && (
+                  <ValidationSummary pageValid={curEntrancePlaceValid} validationSummary={filteredEntrancePlaceInvalidValues} />
+                )}
               </div>
 
               <div className={styles.infoHeader}>{`${i18n.t("additionalInfo.additionalInfo")} > ${filteredPlaceData.name}`}</div>

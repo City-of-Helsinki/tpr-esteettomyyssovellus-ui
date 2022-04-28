@@ -37,24 +37,25 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
     );
   };
 
-  const handleAddInvalidValue = (invalidValueToAdd: string) => {
+  const handleAddInvalidValue = (invalidFieldId: string, invalidFieldLabel: string) => {
     dispatch(
       addInvalidEntrancePlaceBoxValue({
         entrance_id,
         place_id,
         order_number,
-        invalidValueToAdd,
+        invalidFieldId,
+        invalidFieldLabel,
       })
     );
   };
 
-  const handleRemoveInvalidValue = (invalidValueToRemove: string) => {
+  const handleRemoveInvalidValue = (invalidFieldIdToRemove: string) => {
     dispatch(
       removeInvalidEntrancePlaceBoxValue({
         entrance_id,
         place_id,
         order_number,
-        invalidValueToRemove,
+        invalidFieldIdToRemove,
       })
     );
   };
@@ -114,7 +115,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
     }
   };
 
-  const handleConfirmImageLink = async () => {
+  const handleConfirmImageLink = async (fieldId: string, fieldLabel: string) => {
     const isImage = await validateUrlIsImage(linkText);
     if (isImage) {
       updatePlaceBox({
@@ -123,10 +124,10 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
         termsAccepted: false,
       });
 
-      handleRemoveInvalidValue("url");
+      handleRemoveInvalidValue(fieldId);
       setLinkInput(false);
     } else {
-      handleAddInvalidValue("url");
+      handleAddInvalidValue(fieldId, fieldLabel);
     }
   };
 
@@ -141,7 +142,8 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
 
   // only update state after X (0.5) sec from prev KeyDown, set Alt text with correct lang
   // let timer: NodeJS.Timeout;
-  const handleAddAlt = (evt: KeyboardEvent<HTMLTextAreaElement>, language: string) => {
+  const handleAddAlt = (evt: KeyboardEvent<HTMLTextAreaElement>, language: string, fieldLabel: string) => {
+    const fieldId = evt.currentTarget.id;
     const altText = evt.currentTarget.value;
     /*
     clearTimeout(timer);
@@ -154,28 +156,34 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
       modifiedBox: { ...((modifiedBox || {}) as BackendEntrancePlace), [`photo_text_${language}`]: altText },
     });
 
-    // remove or add mandatory alt fi validation to state
-    if (altText && altText !== "") {
-      handleRemoveInvalidValue("fi");
-    } else if (altText === "") {
-      handleAddInvalidValue("fi");
+    if (language === "fi") {
+      // remove or add mandatory alt fi validation to state
+      if (altText && altText !== "") {
+        handleRemoveInvalidValue(fieldId);
+      } else if (altText === "") {
+        handleAddInvalidValue(fieldId, fieldLabel);
+      }
     }
   };
 
-  const handleTermsChange = (termsChecked: boolean) => {
+  const handleTermsChange = (evt: ChangeEvent<HTMLInputElement>, fieldLabel: string) => {
+    const fieldId = evt.currentTarget.id;
+    const termsChecked = evt.target.checked;
+
     updatePlaceBox({
       ...entrancePlaceBox,
       termsAccepted: termsChecked,
     });
 
     if (termsChecked) {
-      handleRemoveInvalidValue("sharelicense");
+      handleRemoveInvalidValue(fieldId);
     } else {
-      handleAddInvalidValue("sharelicense");
+      handleAddInvalidValue(fieldId, fieldLabel);
     }
   };
 
-  const handleSourceChange = (evt: ChangeEvent<HTMLInputElement>) => {
+  const handleSourceChange = (evt: ChangeEvent<HTMLInputElement>, fieldLabel: string) => {
+    const fieldId = evt.currentTarget.id;
     const source = evt.currentTarget.value;
 
     updatePlaceBox({
@@ -185,20 +193,21 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
 
     // remove or add mandatory source validation to state
     if (source && source !== "") {
-      handleRemoveInvalidValue("source");
+      handleRemoveInvalidValue(fieldId);
     } else if (source === "") {
-      handleAddInvalidValue("source");
+      handleAddInvalidValue(fieldId, fieldLabel);
     }
   };
 
-  const handleLinkText = (evt: ChangeEvent<HTMLInputElement>) => {
+  const handleLinkText = (evt: ChangeEvent<HTMLInputElement>, fieldLabel: string) => {
+    const fieldId = evt.currentTarget.id;
     const text = evt.currentTarget.value;
     setLinkText(text);
 
     if (text && text !== "") {
-      handleRemoveInvalidValue("url");
+      handleRemoveInvalidValue(fieldId);
     } else if (text === "") {
-      handleAddInvalidValue("url");
+      handleAddInvalidValue(fieldId, fieldLabel);
     }
   };
 
@@ -231,10 +240,10 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
               label={onlyLink ? i18n.t("additionalInfo.pictureInputLink") : i18n.t("additionalInfo.pictureInput")}
               placeholder={photo_url ?? ""}
               disabled={!onlyLink}
-              onChange={(e) => handleLinkText(e)}
+              onChange={(e) => handleLinkText(e, onlyLink ? i18n.t("additionalInfo.pictureInputLink") : i18n.t("additionalInfo.pictureInput"))}
               defaultValue={photo_url ?? ""}
-              invalid={invalidValues.includes("url")}
-              errorText={invalidValues.includes("url") ? i18n.t("additionalInfo.picureLinkErrorText") : ""}
+              invalid={invalidValues.some((v) => v.fieldId === `chooseimg-${currentId}`)}
+              errorText={invalidValues.some((v) => v.fieldId === `chooseimg-${currentId}`) ? i18n.t("additionalInfo.picureLinkErrorText") : ""}
             />
           </div>
         )}
@@ -260,7 +269,16 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
           )}
 
           {linkInput && (
-            <QuestionButton variant="secondary" onClickHandler={() => handleConfirmImageLink()} disabled={!linkText}>
+            <QuestionButton
+              variant="secondary"
+              onClickHandler={() =>
+                handleConfirmImageLink(
+                  `chooseimg-${currentId}`,
+                  onlyLink ? i18n.t("additionalInfo.pictureInputLink") : i18n.t("additionalInfo.pictureInput")
+                )
+              }
+              disabled={!linkText}
+            >
               {i18n.t("additionalInfo.pictureLinkConfirmButton")}
             </QuestionButton>
           )}
@@ -284,10 +302,10 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
               tooltipButtonLabel={i18n.t("additionalInfo.generalTooptipButtonLabel")}
               tooltipLabel={i18n.t("additionalInfo.generalTooptipLabel")}
               tooltipText={i18n.t("additionalInfo.altToolTipContent")}
-              onKeyUp={(evt: KeyboardEvent<HTMLTextAreaElement>) => handleAddAlt(evt, "fi")}
+              onKeyUp={(evt: KeyboardEvent<HTMLTextAreaElement>) => handleAddAlt(evt, "fi", i18n.t("additionalInfo.pictureLabel"))}
               defaultValue={photo_text_fi ?? ""}
-              invalid={invalidValues.includes("fi")}
-              errorText={invalidValues.includes("fi") ? i18n.t("additionalInfo.addCommentFiErrorText") : ""}
+              invalid={invalidValues.some((v) => v.fieldId === `text-fin-${currentId}`)}
+              errorText={invalidValues.some((v) => v.fieldId === `text-fin-${currentId}`) ? i18n.t("additionalInfo.addCommentFiErrorText") : ""}
             />
 
             <div className={styles.altLabel}>
@@ -302,7 +320,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
                   id={`text-sv-${currentId}`}
                   label={i18n.t("additionalInfo.pictureLabelSwe")}
                   helperText={i18n.t("additionalInfo.pictureHelperTextSwe")}
-                  onKeyUp={(evt: KeyboardEvent<HTMLTextAreaElement>) => handleAddAlt(evt, "sv")}
+                  onKeyUp={(evt: KeyboardEvent<HTMLTextAreaElement>) => handleAddAlt(evt, "sv", i18n.t("additionalInfo.pictureLabelSwe"))}
                   defaultValue={photo_text_sv ?? ""}
                 />
               </QuestionInfo>
@@ -320,7 +338,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
                   id={`text-eng-${currentId}`}
                   label={i18n.t("additionalInfo.pictureLabelEng")}
                   helperText={i18n.t("additionalInfo.pictureHelperTextEng")}
-                  onKeyUp={(evt: KeyboardEvent<HTMLTextAreaElement>) => handleAddAlt(evt, "en")}
+                  onKeyUp={(evt: KeyboardEvent<HTMLTextAreaElement>) => handleAddAlt(evt, "en", i18n.t("additionalInfo.pictureLabelEng"))}
                   defaultValue={photo_text_en ?? ""}
                 />
               </QuestionInfo>
@@ -334,8 +352,10 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
                 label={`${i18n.t("additionalInfo.sharePictureLicenseText")} ${i18n.t("additionalInfo.sharePictureLicense")}`}
                 name="agreeToPictureTerms"
                 checked={termsAccepted}
-                onChange={(evt) => handleTermsChange(evt.target.checked)}
-                errorText={invalidValues.includes("sharelicense") ? i18n.t("additionalInfo.pictureTermsErrorText") : ""}
+                onChange={(evt) => handleTermsChange(evt, i18n.t("additionalInfo.sharePictureLicenseLabel"))}
+                errorText={
+                  invalidValues.some((v) => v.fieldId === `picture-license-${currentId}`) ? i18n.t("additionalInfo.pictureTermsErrorText") : ""
+                }
               />
             </SelectionGroup>
             <Tooltip> {i18n.t("additionalInfo.pictureTermsInfoText")} </Tooltip>
@@ -348,11 +368,11 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
               tooltipLabel={i18n.t("additionalInfo.generalTooptipLabel")}
               tooltipText={i18n.t("additionalInfo.sourceTooltipText")}
               label={i18n.t("additionalInfo.sourceTooltipMainLabel")}
-              onChange={handleSourceChange}
+              onChange={(evt) => handleSourceChange(evt, i18n.t("additionalInfo.sourceTooltipMainLabel"))}
               required
               defaultValue={photo_source_text ?? ""}
-              invalid={invalidValues.includes("source")}
-              errorText={invalidValues.includes("source") ? i18n.t("additionalInfo.picureSourceErrorText") : ""}
+              invalid={invalidValues.some((v) => v.fieldId === `tooltip-source-${currentId}`)}
+              errorText={invalidValues.some((v) => v.fieldId === `tooltip-source-${currentId}`) ? i18n.t("additionalInfo.picureSourceErrorText") : ""}
             />
           </div>
         </div>
