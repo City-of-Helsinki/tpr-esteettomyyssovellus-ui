@@ -131,7 +131,7 @@ export const additionalInfoSlice = createSlice({
         order_number: number;
       }>
     ) => {
-      // Mark the box as deleted, and updated the order numbers of the rest for this entrance place
+      // Mark the box as deleted, and update the order numbers of the rest for this entrance place
       return {
         ...state,
         entrancePlaceBoxes: state.entrancePlaceBoxes.reduce((acc: EntrancePlaceBox[], box) => {
@@ -139,6 +139,25 @@ export const additionalInfoSlice = createSlice({
             return box.order_number === action.payload.order_number
               ? [...acc, { ...box, isDeleted: true }]
               : [...acc, { ...box, order_number: box.order_number > action.payload.order_number ? box.order_number - 1 : box.order_number }];
+          } else {
+            return [...acc, box];
+          }
+        }, []),
+      };
+    },
+    deleteEntrancePlace: (
+      state,
+      action: PayloadAction<{
+        entrance_id: number;
+        place_id: number;
+      }>
+    ) => {
+      // Mark all boxes as deleted for this entrance place
+      return {
+        ...state,
+        entrancePlaceBoxes: state.entrancePlaceBoxes.reduce((acc: EntrancePlaceBox[], box) => {
+          if (box.entrance_id === action.payload.entrance_id && box.place_id === action.payload.place_id) {
+            return [...acc, { ...box, isDeleted: true }];
           } else {
             return [...acc, box];
           }
@@ -605,6 +624,7 @@ export const {
   editEntrancePlaceBox,
   changeEntrancePlaceBoxOrder,
   deleteEntrancePlaceBox,
+  deleteEntrancePlace,
   revertEntrancePlace,
   addInvalidEntrancePlaceBoxValue,
   removeInvalidEntrancePlaceBoxValue,

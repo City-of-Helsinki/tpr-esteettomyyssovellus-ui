@@ -4,7 +4,7 @@ import { useI18n } from "next-localization";
 import { useRouter } from "next/router";
 import QuestionButton from "./QuestionButton";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
-import { revertEntrancePlace } from "../state/reducers/additionalInfoSlice";
+import { deleteEntrancePlace, revertEntrancePlace } from "../state/reducers/additionalInfoSlice";
 import { AccessibilityPlaceCtrlButtonsProps } from "../types/general";
 import styles from "./AccessibilityPlaceCtrlButtons.module.scss";
 
@@ -69,6 +69,15 @@ const AccessibilityPlaceCtrlButtons = ({ placeId, entrancePlaceBoxes }: Accessib
     router.back();
   };
 
+  const handleDeleteAdditionalInfo = () => {
+    dispatch(
+      deleteEntrancePlace({
+        entrance_id: curEntranceId,
+        place_id: placeId,
+      })
+    );
+  };
+
   return (
     <div className={styles.maincontainer}>
       <QuestionButton variant="secondary" iconLeft={<IconArrowLeft />} onClickHandler={handleSaveAndReturn} disabled={hasInvalidValidations()}>
@@ -77,6 +86,11 @@ const AccessibilityPlaceCtrlButtons = ({ placeId, entrancePlaceBoxes }: Accessib
       <span className={styles.noborderbutton}>
         <QuestionButton variant="secondary" onClickHandler={() => handleReturnNoSave()}>
           {i18n.t("common.buttons.returnNoSave")}
+        </QuestionButton>
+      </span>
+      <span className={styles.noborderbutton}>
+        <QuestionButton variant="secondary" onClickHandler={() => handleDeleteAdditionalInfo()}>
+          {i18n.t("common.buttons.deleteAdditionalInfo")}
         </QuestionButton>
       </span>
     </div>

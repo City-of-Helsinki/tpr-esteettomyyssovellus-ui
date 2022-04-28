@@ -43,7 +43,8 @@
     "generalExplanation": "Explanation",
     "buttons": {
       "saveAndReturn": "Save and return",
-      "returnNoSave": "Exit without saving"
+      "returnNoSave": "Exit without saving",
+      "deleteAdditionalInfo": "Delete additional info"
     },
     "mainEntrance": "Main entrance",
     "mainEntranceLocation": "Main entrance location",

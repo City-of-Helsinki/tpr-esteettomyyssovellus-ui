@@ -42,8 +42,9 @@
     "generalChoose": "Välja",
     "generalExplanation": "Förklaring",
     "buttons": {
-      "saveAndReturn": "spara och returnera",
-      "returnNoSave": "avsluta utan att spara"
+      "saveAndReturn": "Spara och returnera",
+      "returnNoSave": "Avsluta utan att spara",
+      "deleteAdditionalInfo": "Ta bort ytterligare information"
     },
     "mainEntrance": "Huvudingången",
     "mainEntranceLocation": "Platsen för huvudentren",

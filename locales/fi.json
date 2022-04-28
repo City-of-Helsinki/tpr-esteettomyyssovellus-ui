@@ -43,7 +43,8 @@
     "generalExplanation": "Selite",
     "buttons": {
       "saveAndReturn": "Tallenna ja palaa",
-      "returnNoSave": "Poistu tallentamatta"
+      "returnNoSave": "Poistu tallentamatta",
+      "deleteAdditionalInfo": "Poista lisätiedot"
     },
     "mainEntrance": "Pääsisäänkäynti",
     "mainEntranceLocation": "Pääsisäänkäynnin sijainti",
