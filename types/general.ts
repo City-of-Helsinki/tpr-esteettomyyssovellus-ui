@@ -423,6 +423,7 @@ export interface PreviewProps {
   servicepointData: BackendServicepoint;
   accessibilityData: AccessibilityData;
   entranceData: EntranceData;
+  entrancePlaceData: BackendEntrancePlace[];
   questionAnswerData: BackendEntranceAnswer[];
   questionExtraAnswerData: BackendEntranceField[];
   isMainEntrancePublished: boolean;

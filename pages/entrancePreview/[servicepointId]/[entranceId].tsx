@@ -15,6 +15,7 @@ import PreviewControlButtons from "../../../components/PreviewControlButtons";
 import AddNewEntranceNotice from "../../../components/common/AddNewEntranceNotice";
 import LoadSpinner from "../../../components/common/LoadSpinner";
 import { useAppDispatch, useAppSelector, useLoading } from "../../../state/hooks";
+import { setEntrancePlaceBoxes } from "../../../state/reducers/additionalInfoSlice";
 import { setServicepointId, setEntranceId, setStartDate, setAnsweredChoice, setAnswer, setExtraAnswer } from "../../../state/reducers/formSlice";
 import { filterByLanguage, formatAddress, getCurrentDate, getTokenHash } from "../../../utils/utilFunctions";
 import {
@@ -22,6 +23,7 @@ import {
   API_FETCH_BACKEND_ENTRANCE,
   API_FETCH_BACKEND_ENTRANCE_ANSWERS,
   API_FETCH_BACKEND_ENTRANCE_FIELD,
+  API_FETCH_BACKEND_ENTRANCE_PLACES,
   API_FETCH_BACKEND_SENTENCES,
   API_FETCH_BACKEND_SERVICEPOINT,
   API_FETCH_ENTRANCES,
@@ -33,6 +35,7 @@ import {
   BackendEntrance,
   BackendEntranceAnswer,
   BackendEntranceField,
+  BackendEntrancePlace,
   BackendEntranceSentence,
   BackendServicepoint,
   Entrance,
@@ -45,6 +48,7 @@ const Preview = ({
   servicepointData,
   accessibilityData,
   entranceData,
+  entrancePlaceData,
   questionAnswerData,
   questionExtraAnswerData,
   isMainEntrancePublished,
@@ -113,7 +117,28 @@ const Preview = ({
         }
       });
     }
-  }, [servicepointData, entranceData, questionAnswerData, questionExtraAnswerData, entranceKey, startedAnswering, dispatch]);
+
+    // Update entrance places in redux state
+    dispatch(
+      setEntrancePlaceBoxes(
+        entrancePlaceData.map((place) => {
+          const { entrance_id, place_id, order_number } = place;
+
+          // Try to make sure the order number is 1 or higher
+          return {
+            entrance_id: entrance_id,
+            place_id: place_id,
+            order_number: order_number && order_number > 0 ? order_number : 1,
+            existingBox: place,
+            modifiedBox: place,
+            isDeleted: false,
+            termsAccepted: true,
+            invalidValues: [],
+          };
+        })
+      )
+    );
+  }, [servicepointData, entranceData, questionAnswerData, questionExtraAnswerData, entrancePlaceData, entranceKey, startedAnswering, dispatch]);
 
   const hasData = accessibilityData && accessibilityData[entranceKey] && accessibilityData[entranceKey].length > 0;
 
@@ -205,6 +230,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
 
   let accessibilityData: AccessibilityData = {};
   let entranceData: EntranceData = {};
+  let entrancePlaceData: BackendEntrancePlace[] = [];
   let servicepointData: BackendServicepoint = {} as BackendServicepoint;
   let questionAnswerData: BackendEntranceAnswer[] = [];
   let questionExtraAnswerData: BackendEntranceField[] = [];
@@ -287,6 +313,19 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         questionExtraAnswerData = allQuestionExtraAnswerData.filter((a) => a.form_submitted === "D");
       }
 
+      // Get the draft entrance place data for pictures and maps
+      const allEntrancePlaceDataResp = await fetch(
+        `${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE_PLACES}?entrance_id=${params.entranceId}&format=json`,
+        {
+          headers: new Headers({ Authorization: getTokenHash() }),
+        }
+      );
+      const allEntrancePlaceData = await (allEntrancePlaceDataResp.json() as Promise<BackendEntrancePlace[]>);
+
+      if (allEntrancePlaceData?.length > 0) {
+        entrancePlaceData = allEntrancePlaceData.filter((a) => a.form_submitted === "D");
+      }
+
       // Get the draft sentences for this entrance
       const sentenceResp = await fetch(
         `${API_URL_BASE}${API_FETCH_BACKEND_SENTENCES}?entrance_id=${params.entranceId}&form_submitted=D&format=json`,
@@ -314,6 +353,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       servicepointData = {} as BackendServicepoint;
       accessibilityData = {};
       entranceData = {};
+      entrancePlaceData = [];
       questionAnswerData = [];
       questionExtraAnswerData = [];
     }
@@ -325,6 +365,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       servicepointData,
       accessibilityData,
       entranceData,
+      entrancePlaceData,
       questionAnswerData,
       questionExtraAnswerData,
       // hasExistingFormData,
