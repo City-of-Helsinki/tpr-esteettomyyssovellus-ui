@@ -19,6 +19,7 @@ const AccessibilityPlaceNewButton = ({ accessibilityPlaceData, orderNumber }: Ac
       place_id: accessibilityPlaceData.place_id,
       order_number: orderNumber,
       modifiedBox: {} as BackendEntrancePlace,
+      isDeleted: false,
       termsAccepted: false,
       invalidValues: [],
     };

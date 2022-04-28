@@ -76,7 +76,8 @@ export const additionalInfoSlice = createSlice({
         entrancePlaceBoxes: state.entrancePlaceBoxes.reduce((acc: EntrancePlaceBox[], box) => {
           return box.entrance_id === action.payload.entrance_id &&
             box.place_id === action.payload.place_id &&
-            box.order_number === action.payload.order_number
+            box.order_number === action.payload.order_number &&
+            !box.isDeleted
             ? [...acc, action.payload.updatedPlaceBox]
             : [...acc, box];
         }, []),
@@ -213,7 +214,8 @@ export const additionalInfoSlice = createSlice({
         entrancePlaceBoxes: state.entrancePlaceBoxes.reduce((acc: EntrancePlaceBox[], box) => {
           return box.entrance_id === action.payload.entrance_id &&
             box.place_id === action.payload.place_id &&
-            box.order_number === action.payload.order_number
+            box.order_number === action.payload.order_number &&
+            !box.isDeleted
             ? [
                 ...acc,
                 {
@@ -239,8 +241,9 @@ export const additionalInfoSlice = createSlice({
         entrancePlaceBoxes: state.entrancePlaceBoxes.reduce((acc: EntrancePlaceBox[], box) => {
           return box.entrance_id === action.payload.entrance_id &&
             box.place_id === action.payload.place_id &&
-            box.order_number === action.payload.order_number
             ? [...acc, { ...box, invalidValues: (box.invalidValues ?? []).filter((val) => val !== action.payload.invalidValueToRemove) }]
+            box.order_number === action.payload.order_number &&
+            !box.isDeleted
             : [...acc, box];
         }, []),
       };

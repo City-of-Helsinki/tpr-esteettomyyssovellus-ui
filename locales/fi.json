@@ -44,7 +44,7 @@
     "buttons": {
       "saveAndReturn": "Tallenna ja palaa",
       "returnNoSave": "Poistu tallentamatta",
-      "deleteAdditionalInfo": "Poista lisätiedot"
+      "deleteAdditionalInfo": "Poista kaikki lisätietokokonaisuudet"
     },
     "mainEntrance": "Pääsisäänkäynti",
     "mainEntranceLocation": "Pääsisäänkäynnin sijainti",

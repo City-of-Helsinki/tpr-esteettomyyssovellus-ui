@@ -44,7 +44,7 @@
     "buttons": {
       "saveAndReturn": "Spara och returnera",
       "returnNoSave": "Avsluta utan att spara",
-      "deleteAdditionalInfo": "Ta bort ytterligare information"
+      "deleteAdditionalInfo": "Ta bort alla ytterligare datamängder"
     },
     "mainEntrance": "Huvudingången",
     "mainEntranceLocation": "Platsen för huvudentren",

@@ -44,7 +44,7 @@
     "buttons": {
       "saveAndReturn": "Save and return",
       "returnNoSave": "Exit without saving",
-      "deleteAdditionalInfo": "Delete additional info"
+      "deleteAdditionalInfo": "Delete all additional info sets"
     },
     "mainEntrance": "Main entrance",
     "mainEntranceLocation": "Main entrance location",
