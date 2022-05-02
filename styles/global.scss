@@ -11,6 +11,8 @@ body {
   padding: 0;
   margin: 0;
   font-family: HelsinkiGrotesk, Arial, sans-serif;
+  font-size: $fontsize-body-m;
+  line-height: $lineheight-l;
 }
 
 @font-face {
