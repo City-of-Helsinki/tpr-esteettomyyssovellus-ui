@@ -22,6 +22,8 @@
       "accessibility": "Accessibility"
     },
     "map": {
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out",
       "osm": "OpenStreetMap contributors",
       "point": "point",
       "line": "line"

@@ -1,21 +1,22 @@
 import React, { ReactElement, useRef, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useI18n } from "next-localization";
-import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, useMap, useMapEvents, ZoomControl } from "react-leaflet";
 import { Marker as LeafletMarker, Icon } from "leaflet";
-import { useDispatch } from "react-redux";
+// import { useDispatch } from "react-redux";
 import getOrigin from "../../utils/request";
+// import { addLocation } from "../../state/reducers/additionalInfoSlice";
+// import { useAppSelector } from "../../state/hooks";
+// import { setServicepointLocation, setServicepointLocationWGS84 } from "../../state/reducers/generalSlice";
+import { MAP_INITIAL_CENTER, MAP_INITIAL_ZOOM, MAP_MAX_ZOOM, MAP_MIN_ZOOM } from "../../types/constants";
+import { isLocationValid } from "../../utils/utilFunctions";
 import styles from "./MapWrapper.module.scss";
-import { addLocation } from "../../state/reducers/additionalInfoSlice";
-import { useAppSelector } from "../../state/hooks";
-import { convertCoordinates, isLocationValid } from "../../utils/utilFunctions";
-import { setServicepointLocation, setServicepointLocationWGS84 } from "../../state/reducers/generalSlice";
-import { MAP_INITIAL_CENTER, MAP_INITIAL_ZOOM } from "../../types/constants";
 
 interface MapWrapperProps {
   questionId: number;
   initialZoom: number;
-  initLocation?: [number, number];
+  curLocation: [number, number];
+  setLocation?: (location: [number, number]) => void;
   setMapReady?: (ready: boolean) => void;
   draggableMarker?: boolean;
   makeStatic: boolean;
@@ -26,20 +27,22 @@ interface MapWrapperProps {
 // notes: editable in additionalinfo page, in form/details pages only static "preview"
 // gets the main location from state (fetched from db). User can either click the map or drag-n-drop marker for new location
 const MapWrapper = ({
-  questionId,
+  // questionId,
   initialZoom,
+  curLocation,
+  setLocation,
   setMapReady,
   draggableMarker,
+  // isMainLocPicComponent = false,
   makeStatic,
-  initLocation,
-  isMainLocPicComponent = false,
 }: MapWrapperProps): ReactElement => {
   const i18n = useI18n();
   const router = useRouter();
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const markerRef = useRef<LeafletMarker>(null);
 
+  /*
   // state location for addinfos for getting location from addinfo question state
   const stateLocation = useAppSelector((state) => state.additionalInfoReducer.additionalInfo[questionId]?.locations?.coordinates);
 
@@ -49,7 +52,9 @@ const MapWrapper = ({
 
   // @ts-ignore : ignore types because .reverse() returns number[]
   const curLocation: [number, number] = stateLocation && stateLocation !== undefined && !isMainLocPicComponent ? stateLocation : initGeneralLocation;
+  */
 
+  /*
   const setLocation = (coordinates: [number, number]) => {
     // transform coordinates to northing and easting for db
     const lonLatReverseCoordinates: [number, number] = [coordinates[1], coordinates[0]];
@@ -86,6 +91,7 @@ const MapWrapper = ({
       );
     }
   };
+  */
 
   // Use the icon images from the public folder
   const icon = new Icon.Default({ imagePath: `${getOrigin(router)}/` });
@@ -113,7 +119,6 @@ const MapWrapper = ({
     });
     return ref.current;
   };
-
   const prevLocation = usePrevious(curLocation);
 
   // A child component must be used in order to access the react-leaflet map hook
@@ -130,13 +135,13 @@ const MapWrapper = ({
       if (map.tap) map.tap.disable();
     }
 
+    // Force a map update otherwise the map does not always render correctly after a page is first loaded
     map.invalidateSize();
 
     // If the initLocation in redux state has changed, by geocoding or dragging, pan the map to centre on the new position
     useEffect(() => {
       if (isLocationValid(curLocation) && prevLocation !== curLocation && !makeStatic) {
-        map.setView(curLocation, 18);
-        map.invalidateSize();
+        map.setView(curLocation, MAP_MAX_ZOOM);
       }
     }, [map]);
 
@@ -144,7 +149,7 @@ const MapWrapper = ({
     // If there is no initLocation, allow a map click (or tap) to store the click initLocation in redux, which then causes the marker to be shown
     useMapEvents({
       click: (evt) => {
-        if (isLocationValid(curLocation) && !makeStatic) {
+        if (!isLocationValid(curLocation) && setLocation && !makeStatic) {
           setLocation([evt.latlng.lat, evt.latlng.lng]);
         }
       },
@@ -158,14 +163,25 @@ const MapWrapper = ({
     if (setMapReady) {
       setMapReady(true);
     }
+    /*
     if (!stateLocation || stateLocation === undefined) {
       setLocation(curLocation);
     }
+    */
   };
 
   return (
-    <MapContainer className={styles.mapwrapper} center={center} zoom={zoom} minZoom={5} maxZoom={18} whenReady={whenReady}>
+    <MapContainer
+      className={styles.mapwrapper}
+      zoomControl={false}
+      center={center}
+      zoom={zoom}
+      minZoom={MAP_MIN_ZOOM}
+      maxZoom={MAP_MAX_ZOOM}
+      whenReady={whenReady}
+    >
       <CustomMapHandler />
+      <ZoomControl position="topleft" zoomInTitle={i18n.t("common.map.zoomIn")} zoomOutTitle={i18n.t("common.map.zoomOut")} />
       <TileLayer
         url="http://tiles.hel.ninja/styles/hel-osm-bright/{z}/{x}/{y}@2x@fi.png"
         attribution={`<a href="https://www.openstreetmap.org/copyright" target="_blank">© ${i18n.t("common.map.osm")}</a>`}

@@ -22,6 +22,8 @@
       "accessibility": "Saavutettavuusseloste"
     },
     "map": {
+      "zoomIn": "Lähennä",
+      "zoomOut": "Loitonna",
       "osm": "OpenStreetMapin tekijät",
       "point": "piste",
       "line": "viiva"

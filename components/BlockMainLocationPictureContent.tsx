@@ -57,7 +57,7 @@ const BlockMainLocationPictureContent = ({ accessibilityPlaces, canAddLocation, 
         >
           <div className={styles.mappreviewcontainer}>
             <div className={styles.mappreview}>
-              <Map initLocation={coordinatesWGS84} initZoom={17} draggableMarker={false} questionId={-1} makeStatic isMainLocPicComponent />
+              <Map curLocation={coordinatesWGS84} initZoom={17} draggableMarker={false} questionId={-1} makeStatic isMainLocPicComponent />
             </div>
           </div>
         </QuestionContainer>

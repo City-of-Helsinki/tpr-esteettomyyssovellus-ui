@@ -220,7 +220,7 @@ const QuestionContainer = ({
                   <div className={styles.mapcontainerspacer} />
                   <div className={styles.mappreview}>
                     <Map
-                      initLocation={curQuestionAddinfos.locations.coordinates}
+                      curLocation={curQuestionAddinfos.locations.coordinates}
                       initZoom={17}
                       draggableMarker={false}
                       questionId={questionId}

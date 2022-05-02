@@ -192,9 +192,9 @@ export interface PreviewControlButtonsProps {
 export interface MapProps {
   questionId: number;
   initZoom: number;
-  initLocation: [number, number];
+  curLocation: [number, number];
+  setLocation?: (location: [number, number]) => void;
   draggableMarker?: boolean;
-  // updateLocationHandler?: (location: LatLngExpression) => void;
   makeStatic?: boolean;
   isMainLocPicComponent?: boolean;
 }

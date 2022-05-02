@@ -38,7 +38,7 @@ const SummaryLocationPicture = ({ entranceKey, entranceData, servicepointData }:
           </div>
 
           <div className={styles.map}>
-            <Map initLocation={coordinates} initZoom={17} draggableMarker={false} questionId={-1} makeStatic />
+            <Map curLocation={coordinates} initZoom={17} draggableMarker={false} questionId={-1} makeStatic />
           </div>
         </div>
       </div>

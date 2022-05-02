@@ -22,6 +22,8 @@
       "accessibility": "Tillgänglighetsutlåtande"
     },
     "map": {
+      "zoomIn": "Zooma in",
+      "zoomOut": "Zooma ut",
       "osm": "OpenStreetMaps bidragsgivare",
       "point": "punkt",
       "line": "linje"

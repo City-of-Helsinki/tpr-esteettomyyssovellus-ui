@@ -9,6 +9,8 @@ export const HKI_GEOCODING_URL = "https://api.hel.fi/servicemap/v2/search/?forma
 export const GEOCODING_PARAMS = "&language=fi&only=location";
 export const MAP_INITIAL_CENTER = [60.166, 24.942];
 export const MAP_INITIAL_ZOOM = 13;
+export const MAP_MIN_ZOOM = 10;
+export const MAP_MAX_ZOOM = 18;
 
 // The server-side calls should use the local backend directly
 // Note: the client-side calls use the full path, which is handled by getOrigin in request.ts
