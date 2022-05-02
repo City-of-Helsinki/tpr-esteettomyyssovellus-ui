@@ -65,7 +65,7 @@ const AccessibilityPlaceLocation = ({ entrancePlaceBox }: AccessibilityPlaceLoca
 
       updatePlaceBox({
         ...entrancePlaceBox,
-        modifiedBox: { ...((modifiedBox || {}) as BackendEntrancePlace), loc_easting: locEas, loc_northing: locNor },
+        modifiedBox: { ...((modifiedBox || {}) as BackendEntrancePlace), loc_easting: Math.round(locEas), loc_northing: Math.round(locNor) },
       });
     },
     [entrancePlaceBox, modifiedBox, updatePlaceBox]
@@ -170,17 +170,17 @@ const AccessibilityPlaceLocation = ({ entrancePlaceBox }: AccessibilityPlaceLoca
 
   return (
     <div className={styles.maincontainer}>
-      {mapInput && <div className={styles.mapcontainer}>{memoMap}</div>}
+      {(mapInput || isLocationValid(coordinatesWGS84)) && <div className={styles.mapcontainer}>{memoMap}</div>}
 
       <div className={styles.inputcontainer}>
         <div className={styles.inputbuttons}>
-          {!mapInput && (
+          {!mapInput && !isLocationValid(coordinatesWGS84) && (
             <QuestionButton variant="secondary" iconRight={<IconLocation aria-hidden />} onClickHandler={() => handleAddLocation()}>
               {i18n.t("additionalInfo.addLocation")}
             </QuestionButton>
           )}
 
-          {mapInput && (
+          {(mapInput || isLocationValid(coordinatesWGS84)) && (
             <QuestionButton variant="secondary" iconRight={<IconCross aria-hidden />} onClickHandler={() => handleOnDelete()}>
               {i18n.t("additionalInfo.cancelLocation")}
             </QuestionButton>
@@ -188,7 +188,7 @@ const AccessibilityPlaceLocation = ({ entrancePlaceBox }: AccessibilityPlaceLoca
         </div>
       </div>
 
-      {mapInput && isLocationValid(coordinatesWGS84) && (
+      {isLocationValid(coordinatesWGS84) && (
         <div className={styles.lowercontentcontainer}>
           <div className={styles.altcontainer}>
             <TextArea

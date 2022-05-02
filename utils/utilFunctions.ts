@@ -212,8 +212,8 @@ const saveEntrancePlaceBox = async (entrancePlaceBox: EntrancePlaceBox, placeAns
       headers: { "Content-Type": "application/json", Authorization: getTokenHash() },
       body: JSON.stringify({
         place_answer_id: placeAnswerId,
-        // loc_easting,
-        // loc_northing,
+        loc_easting: entrancePlaceBox.modifiedBox.loc_easting,
+        loc_northing: entrancePlaceBox.modifiedBox.loc_northing,
         ...(photoUrl && { photo_url: photoUrl }),
         ...(photoUrl && { photo_source_text: entrancePlaceBox.modifiedBox.photo_source_text ?? "" }),
         order_number: entrancePlaceBox.order_number,
@@ -228,17 +228,31 @@ const saveEntrancePlaceBox = async (entrancePlaceBox: EntrancePlaceBox, placeAns
     // Save the photo text for each language if available
     const languages = ["fi", "sv", "en"];
     languages.forEach(async (lang) => {
-      if (entrancePlaceBox.modifiedBox) {
-        const boxText = entrancePlaceBox.modifiedBox[`photo_text_${lang}`] as string;
+      if (entrancePlaceBox.modifiedBox && boxJson.box_id > 0) {
+        const locationText = entrancePlaceBox.modifiedBox[`location_text_${lang}`] as string;
+        const photoText = entrancePlaceBox.modifiedBox[`photo_text_${lang}`] as string;
 
-        if (boxText && boxText.length > 0) {
+        if (locationText && locationText.length > 0) {
+          await postData(
+            API_SAVE_PLACE_ANSWER_BOX_TEXT,
+            JSON.stringify({
+              box_id: boxJson.box_id,
+              language_id: LanguageLocales[lang as keyof typeof LanguageLocales],
+              box_text_type: "LOCATION",
+              box_text: locationText,
+            }),
+            router
+          );
+        }
+
+        if (photoText && photoText.length > 0) {
           await postData(
             API_SAVE_PLACE_ANSWER_BOX_TEXT,
             JSON.stringify({
               box_id: boxJson.box_id,
               language_id: LanguageLocales[lang as keyof typeof LanguageLocales],
               box_text_type: "PHOTO",
-              box_text: boxText,
+              box_text: photoText,
             }),
             router
           );
