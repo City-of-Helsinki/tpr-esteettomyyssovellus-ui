@@ -130,11 +130,13 @@ const AccessibilityPlace = ({ servicepointData, entranceData, accessibilityPlace
               })}
             </div>
 
-            <div className={styles.footerbutton}>
-              <AccessibilityPlaceNewButton accessibilityPlaceData={filteredPlaceData} orderNumber={filteredEntrancePlaceBoxes.length + 1} />
-            </div>
-            <div className={styles.footerbutton}>
-              <AccessibilityPlaceCtrlButtons placeId={filteredPlaceData.place_id} entrancePlaceBoxes={filteredEntrancePlaceBoxes} />
+            <div className={styles.footercontainer}>
+              <div className={styles.footerbutton}>
+                <AccessibilityPlaceNewButton accessibilityPlaceData={filteredPlaceData} orderNumber={filteredEntrancePlaceBoxes.length + 1} />
+              </div>
+              <div className={styles.footerbutton}>
+                <AccessibilityPlaceCtrlButtons placeId={filteredPlaceData.place_id} entrancePlaceBoxes={filteredEntrancePlaceBoxes} />
+              </div>
             </div>
           </div>
         </main>

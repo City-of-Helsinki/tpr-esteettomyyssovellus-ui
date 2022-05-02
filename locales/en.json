@@ -129,7 +129,7 @@
     "picturesInstructions": "Instructions for adding PICTURES",
     "commentInstructions": "Instructions for adding COMMENT",
     "pictureLabel": "Picture caption",
-    "pictureHelperText": "The text is used as alt-text and the caption.",
+    "pictureHelperText": "The text is used as alt-text and the caption",
     "generalTooptipButtonLabel": "Help",
     "generalTooptipLabel": "Help",
     "altToolTipContent": "Help text here",

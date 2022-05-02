@@ -50,7 +50,11 @@
     }
   }
 
-  .footerbutton {
-    margin-top: $spacing-l;
+  .footercontainer {
+    margin-top: $spacing-5-xl;
+
+    .footerbutton {
+      margin-top: $spacing-l;
+    }
   }
 }

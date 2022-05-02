@@ -134,7 +134,14 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
   const handleOnDelete = () => {
     updatePlaceBox({
       ...entrancePlaceBox,
-      modifiedBox: { ...((modifiedBox || {}) as BackendEntrancePlace), photo_url: undefined },
+      modifiedBox: {
+        ...((modifiedBox || {}) as BackendEntrancePlace),
+        photo_url: undefined,
+        photo_text_fi: undefined,
+        photo_text_sv: undefined,
+        photo_text_en: undefined,
+        photo_source_text: undefined,
+      },
       photoBase64: undefined,
     });
     setLinkInput(false);
@@ -142,7 +149,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
 
   // only update state after X (0.5) sec from prev KeyDown, set Alt text with correct lang
   // let timer: NodeJS.Timeout;
-  const handleAddAlt = (evt: KeyboardEvent<HTMLTextAreaElement>, language: string, fieldLabel: string) => {
+  const handleAddAltText = (evt: KeyboardEvent<HTMLTextAreaElement>, language: string, fieldLabel: string) => {
     const fieldId = evt.currentTarget.id;
     const altText = evt.currentTarget.value;
     /*
@@ -211,19 +218,6 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
     }
   };
 
-  // init validation errors if needed
-  /*
-  useEffect(() => {
-    // if addinfo page with no curimage or initvalue add default validation errors
-    if (!curImage || !initValue) {
-      handleAddInvalidValue(["url", "fi", "source", "sharelicense"]);
-    } else {
-      // set terms checked if already validated image due to always checked otherwise cant save
-      setTermsChecked(true);
-    }
-  }, [curImage, handleAddInvalidValue, initValue]);
-  */
-
   return (
     <div className={styles.maincontainer}>
       {(photoBase64 || photo_url) && (
@@ -291,7 +285,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
         </div>
       </div>
 
-      {photoBase64 || photo_url ? (
+      {(photoBase64 || photo_url) && (
         <div className={styles.lowercontentcontainer}>
           <div className={styles.altcontainer}>
             <TextArea
@@ -302,7 +296,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
               tooltipButtonLabel={i18n.t("additionalInfo.generalTooptipButtonLabel")}
               tooltipLabel={i18n.t("additionalInfo.generalTooptipLabel")}
               tooltipText={i18n.t("additionalInfo.altToolTipContent")}
-              onKeyUp={(evt: KeyboardEvent<HTMLTextAreaElement>) => handleAddAlt(evt, "fi", i18n.t("additionalInfo.pictureLabel"))}
+              onKeyUp={(evt: KeyboardEvent<HTMLTextAreaElement>) => handleAddAltText(evt, "fi", i18n.t("additionalInfo.pictureLabel"))}
               defaultValue={photo_text_fi ?? ""}
               invalid={invalidValues.some((v) => v.fieldId === `text-fin-${currentId}`)}
               errorText={invalidValues.some((v) => v.fieldId === `text-fin-${currentId}`) ? i18n.t("additionalInfo.addCommentFiErrorText") : ""}
@@ -320,7 +314,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
                   id={`text-sv-${currentId}`}
                   label={i18n.t("additionalInfo.pictureLabelSwe")}
                   helperText={i18n.t("additionalInfo.pictureHelperTextSwe")}
-                  onKeyUp={(evt: KeyboardEvent<HTMLTextAreaElement>) => handleAddAlt(evt, "sv", i18n.t("additionalInfo.pictureLabelSwe"))}
+                  onKeyUp={(evt: KeyboardEvent<HTMLTextAreaElement>) => handleAddAltText(evt, "sv", i18n.t("additionalInfo.pictureLabelSwe"))}
                   defaultValue={photo_text_sv ?? ""}
                 />
               </QuestionInfo>
@@ -338,7 +332,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
                   id={`text-eng-${currentId}`}
                   label={i18n.t("additionalInfo.pictureLabelEng")}
                   helperText={i18n.t("additionalInfo.pictureHelperTextEng")}
-                  onKeyUp={(evt: KeyboardEvent<HTMLTextAreaElement>) => handleAddAlt(evt, "en", i18n.t("additionalInfo.pictureLabelEng"))}
+                  onKeyUp={(evt: KeyboardEvent<HTMLTextAreaElement>) => handleAddAltText(evt, "en", i18n.t("additionalInfo.pictureLabelEng"))}
                   defaultValue={photo_text_en ?? ""}
                 />
               </QuestionInfo>
@@ -376,7 +370,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
             />
           </div>
         </div>
-      ) : null}
+      )}
     </div>
   );
 };
