@@ -41,7 +41,9 @@ const AccessibilityPlaceCtrlButtons = ({ placeId, entrancePlaceBoxes }: Accessib
   };
 
   const validateForm = () => {
-    const isFormValid = entrancePlaceBoxes.every((box) => {
+    // Check whether all data on the form is valid
+    // Everything needs to be validated, so make sure lazy evaluation is not used
+    const formValidation = entrancePlaceBoxes.map((box) => {
       const { order_number, modifiedBox, photoBase64, termsAccepted, isDeleted } = box;
       const { photo_text_fi, photo_source_text } = modifiedBox || {};
       let isValid = true;
@@ -50,15 +52,15 @@ const AccessibilityPlaceCtrlButtons = ({ placeId, entrancePlaceBoxes }: Accessib
         if (photoBase64 || modifiedBox?.photo_url) {
           // Photo added, so validate the mandatory fields
           if (!photo_text_fi || photo_text_fi.length === 0) {
-            handleAddInvalidValue(box, `text-fin-${order_number}`, i18n.t("additionalInfo.pictureLabel"));
+            handleAddInvalidValue(box, `text-fin-${order_number}`, `${order_number}. ${i18n.t("additionalInfo.pictureLabel")}`);
             isValid = false;
           }
           if (!termsAccepted) {
-            handleAddInvalidValue(box, `picture-license-${order_number}`, i18n.t("additionalInfo.sharePictureLicenseLabel"));
+            handleAddInvalidValue(box, `picture-license-${order_number}`, `${order_number}. ${i18n.t("additionalInfo.sharePictureLicenseLabel")}`);
             isValid = false;
           }
           if (!photo_source_text || photo_source_text.length === 0) {
-            handleAddInvalidValue(box, `tooltip-source-${order_number}`, i18n.t("additionalInfo.sourceTooltipMainLabel"));
+            handleAddInvalidValue(box, `tooltip-source-${order_number}`, `${order_number}. ${i18n.t("additionalInfo.sourceTooltipMainLabel")}`);
             isValid = false;
           }
         }
@@ -67,6 +69,7 @@ const AccessibilityPlaceCtrlButtons = ({ placeId, entrancePlaceBoxes }: Accessib
       return isValid;
     });
 
+    const isFormValid = formValidation.every((valid) => valid);
     dispatch(setEntrancePlaceValid(isFormValid));
 
     return isFormValid;
