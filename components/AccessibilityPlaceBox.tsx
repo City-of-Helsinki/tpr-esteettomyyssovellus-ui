@@ -4,7 +4,7 @@ import { Button, IconArrowDown, IconArrowUp, IconCross } from "hds-react";
 import { useAppDispatch } from "../state/hooks";
 import { changeEntrancePlaceBoxOrder, deleteEntrancePlaceBox } from "../state/reducers/additionalInfoSlice";
 import { AccessibilityPlaceBoxProps } from "../types/general";
-// import AccessibilityPlaceLocation from "./AccessibilityPlaceLocation";
+import AccessibilityPlaceLocation from "./AccessibilityPlaceLocation";
 import AccessibilityPlacePicture from "./AccessibilityPlacePicture";
 import styles from "./AccessibilityPlaceBox.module.scss";
 
@@ -66,7 +66,7 @@ const AccessibilityPlaceBox = ({ entrancePlaceBox }: AccessibilityPlaceBoxProps)
 
         <div>
           <div className={styles.contentheader}>{`${i18n.t("additionalInfo.locationTitle")} ${order_number}`}</div>
-          {/*<AccessibilityPlaceLocation entrancePlaceBox={entrancePlaceBox} />*/}
+          <AccessibilityPlaceLocation entrancePlaceBox={entrancePlaceBox} />
         </div>
       </div>
     </div>
