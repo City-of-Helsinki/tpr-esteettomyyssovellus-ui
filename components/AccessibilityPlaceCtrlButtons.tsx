@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { IconArrowLeft } from "hds-react";
 import { useI18n } from "next-localization";
 import { useRouter } from "next/router";
@@ -22,6 +22,7 @@ const AccessibilityPlaceCtrlButtons = ({ placeId, entrancePlaceBoxes }: Accessib
 
   const [pageSaved, setPageSaved] = useState(false);
 
+  const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
   const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
   // const prevState = useAppSelector((state) => state.additionalInfoReducer.curEditingInitialState as AdditionalInfoProps);
 
@@ -76,6 +77,16 @@ const AccessibilityPlaceCtrlButtons = ({ placeId, entrancePlaceBoxes }: Accessib
   const useMountEffect = (fun: () => void) => useEffect(fun, []);
   useMountEffect(validateForm);
 
+  const revertPlace = useCallback(() => {
+    // Revert this entrance place using existing values
+    dispatch(
+      revertEntrancePlace({
+        entrance_id: curEntranceId,
+        place_id: placeId,
+      })
+    );
+  }, [curEntranceId, placeId, dispatch]);
+
   // handle user clicking back button on browser / mouse ->
   // needs to remove the "saved" values same as clicking return no save
   // also check if pageSaved (saved button clicked), if so then just return
@@ -98,31 +109,24 @@ const AccessibilityPlaceCtrlButtons = ({ placeId, entrancePlaceBoxes }: Accessib
   useEffect(() => {
     router.beforePopState(() => {
       if (!pageSaved) {
-        // Revert this entrance place using existing values
-        dispatch(
-          revertEntrancePlace({
-            entrance_id: curEntranceId,
-            place_id: placeId,
-          })
-        );
+        revertPlace();
       }
-
       return true;
     });
-  }, [pageSaved, curEntranceId, placeId, dispatch, router]);
+  }, [pageSaved, revertPlace, router]);
 
   // don't alter already saved state, set pageSaved to true
   const handleSaveAndReturn = () => {
     if (validateForm()) {
       setPageSaved(true);
-      router.back();
-      // todo: if current router.back() approach not working use e.g router.push and store page-edit id to state
+      router.push(`/entranceAccessibility/${curServicepointId}/${curEntranceId}/`);
     }
   };
 
-  // handle user clicked return no save button, uses beforePopState to reset state either init or empty respectively
+  // handle user clicked return no save button
   const handleReturnNoSave = () => {
-    router.back();
+    revertPlace();
+    router.push(`/entranceAccessibility/${curServicepointId}/${curEntranceId}/`);
   };
 
   const handleDeleteAdditionalInfo = () => {
