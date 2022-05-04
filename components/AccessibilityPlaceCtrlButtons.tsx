@@ -64,6 +64,16 @@ const AccessibilityPlaceCtrlButtons = ({ placeId, entrancePlaceBoxes }: Accessib
             isValid = false;
           }
         }
+
+        if (!photoBase64 && !modifiedBox?.photo_url && !modifiedBox?.loc_easting && !modifiedBox?.loc_northing) {
+          // No photo or location
+          handleAddInvalidValue(
+            box,
+            `placebox-${order_number}`,
+            `${order_number}. ${i18n.t("additionalInfo.pictureTitle")} / ${i18n.t("additionalInfo.locationTitle")}`
+          );
+          isValid = false;
+        }
       }
 
       return isValid;

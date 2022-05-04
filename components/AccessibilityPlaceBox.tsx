@@ -38,7 +38,7 @@ const AccessibilityPlaceBox = ({ entrancePlaceBox }: AccessibilityPlaceBoxProps)
 
   return (
     <div className={styles.maincontainer}>
-      <div className={styles.headingcontainer}>
+      <div id={`placebox-${order_number}`} className={styles.headingcontainer}>
         <div className={styles.headingsection}>
           <div className={`${styles.headertext} ${styles.ordernumber}`}>{order_number}</div>
           <div className={styles.headertext}>{`${i18n.t("additionalInfo.additionalInfoSet")} ${order_number}`}</div>
