@@ -127,8 +127,10 @@ export interface QuestionAdditionalInfoCtrlButtonProps {
 export interface SummarySideNavigationProps {
   entranceKey: string;
   entranceData?: BackendEntrance;
+  entrancePlaceData: EntrancePlaceData;
   servicepointData: BackendServicepoint;
   accessibilityData: AccessibilityData;
+  accessibilityPlaces: BackendPlace[];
   questionAnswerData: EntranceChoiceData;
 }
 
@@ -173,6 +175,11 @@ export interface SummaryLocationPictureProps {
   entranceKey: string;
   entranceData?: BackendEntrance;
   servicepointData: BackendServicepoint;
+}
+
+export interface SummaryAccessibilityPlaceProps {
+  entrancePlaceName: string;
+  entrancePlaceData?: BackendEntrancePlace[];
 }
 
 export interface ServicepointLandingSummaryModifyButtonProps {
@@ -423,10 +430,16 @@ export interface EntranceChoiceData {
   [key: string]: BackendEntranceChoice[];
 }
 
+export interface EntrancePlaceData {
+  [key: string]: BackendEntrancePlace[];
+}
+
 export interface DetailsProps {
   servicepointData: BackendServicepoint;
   accessibilityData: AccessibilityData;
+  accessibilityPlaceData: BackendPlace[];
   entranceData: EntranceData;
+  entrancePlaceData: EntrancePlaceData;
   questionAnswerData: EntranceChoiceData;
   // hasExistingFormData: boolean;
   isMainEntrancePublished: boolean;

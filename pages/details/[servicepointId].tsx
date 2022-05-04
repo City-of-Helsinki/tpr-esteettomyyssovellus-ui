@@ -21,21 +21,34 @@ import {
   // API_FETCH_ANSWER_LOGS,
   API_FETCH_BACKEND_ENTRANCE,
   API_FETCH_BACKEND_ENTRANCE_CHOICES,
+  API_FETCH_BACKEND_ENTRANCE_PLACES,
+  API_FETCH_BACKEND_PLACES,
   API_FETCH_BACKEND_SENTENCES,
   API_FETCH_BACKEND_SERVICEPOINT,
   API_FETCH_ENTRANCES,
   API_URL_BASE,
+  LanguageLocales,
 } from "../../types/constants";
 import LoadSpinner from "../../components/common/LoadSpinner";
 import { persistor } from "../../state/store";
-import { BackendEntrance, BackendEntranceChoice, BackendEntranceSentence, BackendServicepoint, EntranceResults } from "../../types/backendModels";
-import { AccessibilityData, DetailsProps, EntranceChoiceData, EntranceData } from "../../types/general";
+import {
+  BackendEntrance,
+  BackendEntranceChoice,
+  BackendEntrancePlace,
+  BackendEntranceSentence,
+  BackendPlace,
+  BackendServicepoint,
+  EntranceResults,
+} from "../../types/backendModels";
+import { AccessibilityData, DetailsProps, EntranceChoiceData, EntranceData, EntrancePlaceData } from "../../types/general";
 
 // usage: the details / landing page of servicepoint
 const Details = ({
   servicepointData,
   accessibilityData,
+  accessibilityPlaceData,
   entranceData,
+  entrancePlaceData,
   questionAnswerData,
   // hasExistingFormData,
   isMainEntrancePublished,
@@ -103,6 +116,10 @@ const Details = ({
     };
   }, {});
   const entranceKeys = Object.keys(filteredAccessibilityData);
+
+  const curLocaleId: number = LanguageLocales[i18n.locale() as keyof typeof LanguageLocales];
+  const filteredPlaces = accessibilityPlaceData.filter((place) => place.language_id === curLocaleId);
+
   const subHeader = `${i18n.t("common.mainEntrance")}: ${formatAddress(
     servicepointData.address_street_name,
     servicepointData.address_no,
@@ -186,8 +203,10 @@ const Details = ({
                     key={`sidenav_${key}`}
                     entranceKey={key}
                     entranceData={entranceData[key]}
+                    entrancePlaceData={entrancePlaceData}
                     servicepointData={servicepointData}
                     accessibilityData={filteredAccessibilityData}
+                    accessibilityPlaces={filteredPlaces}
                     questionAnswerData={questionAnswerData}
                   />
                 </div>
@@ -207,7 +226,9 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   const lngDict = await i18nLoader(locales);
 
   let accessibilityData: AccessibilityData = {};
+  let accessibilityPlaceData: BackendPlace[] = [];
   let entranceData: EntranceData = {};
+  let entrancePlaceData: EntrancePlaceData = {};
   let servicepointData: BackendServicepoint = {} as BackendServicepoint;
   let questionAnswerData: EntranceChoiceData = {};
   let isMainEntrancePublished = false;
@@ -299,6 +320,12 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         ...sideEntranceSentences,
       };
 
+      // Get the accessibility place data for use in the accessibility summaries for entrance place names
+      const accessibilityPlaceResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_PLACES}?format=json`, {
+        headers: new Headers({ Authorization: getTokenHash() }),
+      });
+      accessibilityPlaceData = await (accessibilityPlaceResp.json() as Promise<BackendPlace[]>);
+
       /*
       if (servicepointEntranceData.results.length !== 0 && mainEntranceSentences?.entranceResult) {
         const logResp = await fetch(
@@ -313,6 +340,28 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         hasExistingFormData = logData.length !== 0;
       }
       */
+
+      // Get the entrance place data for all the entrances for use in the accessibility summaries for pictures and maps
+      const entranceAccessibilityPlaceData = await Promise.all(
+        Object.keys(entranceData).map(async (entranceKey) => {
+          const entrance = entranceData[entranceKey];
+
+          const allEntrancePlaceDataResp = await fetch(
+            `${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE_PLACES}?entrance_id=${entrance.entrance_id}&format=json`,
+            {
+              headers: new Headers({ Authorization: getTokenHash() }),
+            }
+          );
+          const allEntrancePlaceData = await (allEntrancePlaceDataResp.json() as Promise<BackendEntrancePlace[]>);
+
+          return { entranceKey, allEntrancePlaceData };
+        })
+      );
+
+      entrancePlaceData = entranceAccessibilityPlaceData.reduce((acc, placeData) => {
+        const entrance = entranceData[placeData.entranceKey];
+        return { ...acc, [placeData.entranceKey]: placeData.allEntrancePlaceData.filter((a) => a.log_id === entrance.log_id) };
+      }, {});
 
       // Get the questions and answers for all the entrances for use in the accessibility summaries
       const entranceQuestionAnswerData = await Promise.all(
@@ -340,7 +389,9 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
 
       servicepointData = {} as BackendServicepoint;
       accessibilityData = {};
+      accessibilityPlaceData = [];
       entranceData = {};
+      entrancePlaceData = {};
       questionAnswerData = {};
     }
   }
@@ -350,7 +401,9 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       lngDict,
       servicepointData,
       accessibilityData,
+      accessibilityPlaceData,
       entranceData,
+      entrancePlaceData,
       questionAnswerData,
       // hasExistingFormData,
       isMainEntrancePublished,

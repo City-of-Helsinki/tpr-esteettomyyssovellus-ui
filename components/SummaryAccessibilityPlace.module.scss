@@ -1,0 +1,44 @@
+@import "~hds-design-tokens/lib/all.scss";
+@import "../styles/mixins.scss";
+
+.maincontainer {
+  .boxcontainer {
+    width: 100%;
+  }
+
+  .subcontainer {
+    width: 100%;
+
+    h4, h5 {
+      margin: $spacing-m 0;
+    }
+
+    .mappicturecontainer {
+      display: flex;
+      flex-direction: row;
+
+      @include media(xs, s) {
+        flex-direction: column;
+      }
+
+      > div {
+        width: 50%;
+
+        @include media(xs, s) {
+          width: 100%;
+        }
+      }
+
+      .label div {
+        margin-bottom: $spacing-m;
+      }
+
+      .picture {
+        img {
+          max-width: 100%;
+          max-height: 20rem;
+        }
+      }
+    }
+  }
+}
