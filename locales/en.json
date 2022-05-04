@@ -164,7 +164,7 @@
     "commentEnLabel": "Description in English",
     "commentEnLabelHelper" : "Tell us more about accessibility in English",
     "pictureLinkConfirmButton": "Confirm",
-    "picureLinkErrorText": "Please enter a picture link",
+    "picureLinkErrorText": "Please enter a valid picture link",
     "pictureTermsErrorText": "Please accept the terms",
     "pictureTermsInfoText": "The terms must be accepted, you can read them by clicking on the text from the link below",
     "picureSourceErrorText": "Please enter the image source",

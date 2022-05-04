@@ -164,7 +164,7 @@
     "commentEnLabel": "Beskrivning på engelska",
     "commentEnLabelHelper" : "Berätta mer om tillgänglighet på engelska",
     "pictureLinkConfirmButton": "Bekräfta",
-    "picureLinkErrorText": "Ange en bildlänk",
+    "picureLinkErrorText": "Ange en giltig bildlänk",
     "pictureTermsErrorText": "Godkänn villkoren",
     "pictureTermsInfoText": "Villkoren måste accepteras, du kan läsa dem genom att klicka på texten från länken nedan",
     "picureSourceErrorText": "Ange bildkällan",

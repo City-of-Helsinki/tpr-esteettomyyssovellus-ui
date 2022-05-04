@@ -84,8 +84,8 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
 
   // todo: maybe needs more refined error message if not found image (?)
   const validateUrlIsImage = async (url: string) => {
-    const res = await fetch(url);
-    if (res.status === 200) {
+    const res = await fetch(url).catch((err) => console.log("ERROR", err));
+    if (res && res.status === 200) {
       return true;
     }
     return false;

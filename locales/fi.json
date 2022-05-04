@@ -164,7 +164,7 @@
     "commentEnLabel": "Kuvailu englanniksi",
     "commentEnLabelHelper" : "Kerro lisää esteettömyydestä englanniksi",
     "pictureLinkConfirmButton": "Vahvista",
-    "picureLinkErrorText": "Olkaa hyvä ja syöttäkää kuvalinkki",
+    "picureLinkErrorText": "Olkaa hyvä ja syöttäkää kelvollinen kuvalinkki",
     "pictureTermsErrorText": "Olkaa hyvä ja hyväksykää ehdot",
     "pictureTermsInfoText": "Ehdot tulee hyväksyä, pääset lukemaan ne oheisesta linkistä tekstiä klikkaamalla",
     "picureSourceErrorText": "Olkaa hyvä ja syöttäkää kuvalähde",
