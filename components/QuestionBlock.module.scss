@@ -1,20 +1,27 @@
 @import "~hds-design-tokens/lib/all.scss";
 @import "../styles/mixins.scss";
 
+.mainInfo {
+  overflow-wrap: break-word;
+}
+
 .continueButton {
   margin-top: $spacing-m;
   :focus::after {
     margin-right: -0.95rem;
   }
 }
+
 .infoContainer {
   display: flex;
   flex-direction: column;
+
   .infoPicture {
-    height: 20rem;
-    width: 25rem;
+    max-width: 100%;
+    max-height: 20rem;
   }
 }
+
 .importAddinfoContainer {
   display: flex;
   flex-direction: row;

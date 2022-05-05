@@ -39,6 +39,7 @@ const QuestionsList = ({ additionalInfoVisible, questions, answerChoices, access
                 key={question.question_code}
                 options={answerOptions}
                 questionId={question.question_id}
+                blockId={question.question_block_id}
                 firstButtonLabel={answerOptions ? answerOptions[0].label : undefined}
                 secondButtonLabel={answerOptions ? answerOptions[1].label : undefined}
               />

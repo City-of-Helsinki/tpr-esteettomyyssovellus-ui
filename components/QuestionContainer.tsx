@@ -1,5 +1,5 @@
 import React from "react";
-import { IconAlertCircle, IconCrossCircle, IconInfoCircle, IconPenLine, Link as HdsLink } from "hds-react";
+import { IconCrossCircle, IconInfoCircle, IconPenLine, Link as HdsLink } from "hds-react";
 import { useI18n } from "next-localization";
 import { useRouter } from "next/router";
 import Link from "next/link";
@@ -131,7 +131,11 @@ const QuestionContainer = ({
                     const key = `br_${index}`;
                     return <p key={key}>{e}</p>;
                   })}
-                  {photoUrl && <img src={photoUrl} alt="" className={styles.infoPicture} />}
+                  {photoUrl && (
+                    <div>
+                      <img src={photoUrl} alt="" className={styles.infoPicture} />
+                    </div>
+                  )}
                   {photoTexts && <p>{photoTexts}</p>}
                 </div>
               </QuestionInfo>
@@ -150,7 +154,7 @@ const QuestionContainer = ({
               isMainLocPicComponent={isMainLocPicComponent}
             />
           ) : null}
-          {isInvalid && curAnswers[questionId] === undefined ? <IconAlertCircle className={styles.alertCircle} aria-hidden /> : null}
+          {/*isInvalid && curAnswers[questionId] === undefined ? <IconAlertCircle className={styles.alertCircle} aria-hidden /> : null*/}
         </div>
 
         {visiblePlaces && (

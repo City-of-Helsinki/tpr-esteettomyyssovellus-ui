@@ -1,5 +1,6 @@
 import { SelectionGroup, RadioButton } from "hds-react";
 import React, { ChangeEvent, useEffect, useState } from "react";
+import { useI18n } from "next-localization";
 import { QuestionRadioButtonsProps } from "../types/general";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { removeAnsweredChoice, setAnswer, setAnsweredChoice } from "../state/reducers/formSlice";
@@ -11,11 +12,17 @@ const QuestionRadioButtons = ({
   secondButtonLabel = "",
   options,
   questionId,
+  blockId,
 }: QuestionRadioButtonsProps): JSX.Element => {
+  const i18n = useI18n();
   const dispatch = useAppDispatch();
+
   const curAnswers = useAppSelector((state) => state.formReducer.answers);
+  const curInvalidBlocks = useAppSelector((state) => state.formReducer.invalidBlocks);
 
   const [selectedRadioItem, setSelectedRadioItem] = useState("0");
+
+  const isInvalid = selectedRadioItem === "0" && blockId !== undefined && curInvalidBlocks.includes(blockId);
 
   useEffect(() => {
     const startState = questionId !== undefined && curAnswers[questionId] !== undefined ? curAnswers[questionId].toString() : "0";
@@ -43,7 +50,7 @@ const QuestionRadioButtons = ({
   const secondId = `v-radio${secondValue}`;
 
   return (
-    <SelectionGroup direction="horizontal" label={mainLabel}>
+    <SelectionGroup direction="horizontal" label={mainLabel} errorText={isInvalid ? i18n.t("common.missingAnswerValue") : ""}>
       <RadioButton
         id={firstId}
         name={firstValue}

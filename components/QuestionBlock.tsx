@@ -96,7 +96,11 @@ const QuestionBlock = ({
             >
               <div className={styles.infoContainer}>
                 {photoText !== null ? photoText : null}
-                {photoUrl !== null ? <img alt={photoText ?? ""} src={photoUrl} className={styles.infoPicture} /> : null}
+                {photoUrl !== null ? (
+                  <div>
+                    <img alt={photoText ?? ""} src={photoUrl} className={styles.infoPicture} />
+                  </div>
+                ) : null}
               </div>
             </QuestionInfo>
           )}

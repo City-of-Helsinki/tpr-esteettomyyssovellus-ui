@@ -89,6 +89,7 @@ export interface QuestionRadioButtonsProps {
   secondButtonLabel?: string;
   options?: InputOption[];
   questionId?: number;
+  blockId?: number;
 }
 
 export interface QuestionTextInputProps {

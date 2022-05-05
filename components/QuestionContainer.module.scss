@@ -15,24 +15,31 @@
       flex-direction: column;
     }
 
+    .maintext {
+      width: 100%;
+    }
+
     .infoContainer {
       display: flex;
       flex-direction: column;
       border-left: 5px solid $color-bus;
       padding-left: $spacing-m;
+      overflow-wrap: break-word;
 
       .infoPicture {
-        width: 20rem;
-        height: 15rem;
+        max-width: 100%;
+        max-height: 20rem;
       }
     }
 
+    /*
     .alertCircle {
       color: $color-error;
       padding-top: 0.8rem;
       margin-right: -4rem;
       padding-left: 2.4rem;
     }
+    */
   }
 
   .placecontainer {
