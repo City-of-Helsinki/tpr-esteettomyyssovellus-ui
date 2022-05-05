@@ -127,16 +127,44 @@ const QuestionContainer = ({
                 textOnBottom
               >
                 <div className={styles.infoContainer}>
-                  {questionInfos?.map((e, index) => {
+                  {questionInfos?.map((text, index) => {
                     const key = `br_${index}`;
-                    return <p key={key}>{e}</p>;
+                    return <p key={key}>{text}</p>;
                   })}
                   {photoUrl && (
                     <div>
                       <img src={photoUrl} alt="" className={styles.infoPicture} />
                     </div>
                   )}
-                  {photoTexts && <p>{photoTexts}</p>}
+                  {photoTexts?.map((text, index) => {
+                    // Try to convert urls in the text into clickable links
+                    const regex = /((?:http|https)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(?:\/\S*)?)/g;
+                    const splitLinks = text.split(regex);
+                    const key = `br_${index}`;
+
+                    return (
+                      <p key={key}>
+                        {splitLinks.map((textOrLink) => {
+                          if (textOrLink.startsWith("http")) {
+                            return (
+                              <HdsLink
+                                href={textOrLink}
+                                size="M"
+                                openInNewTab
+                                openInNewTabAriaLabel={i18n.t("common.opensInANewTab")}
+                                external
+                                openInExternalDomainAriaLabel={i18n.t("common.opensExternal")}
+                                disableVisitedStyles
+                              >
+                                {textOrLink}
+                              </HdsLink>
+                            );
+                          }
+                          return textOrLink.trim();
+                        })}
+                      </p>
+                    );
+                  })}
                 </div>
               </QuestionInfo>
             ) : null}

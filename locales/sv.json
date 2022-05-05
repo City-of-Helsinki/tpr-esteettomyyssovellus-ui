@@ -33,7 +33,8 @@
       "sv": "på svenska",
       "en": "på engelska"
     },
-    "opensInANewTab": "(öppnar i ny flik)",
+    "opensInANewTab": "Öppnar i ny flik.",
+    "opensExternal": "Flyttar till en annan webbplats.",
     "notAuthorized": "Du har inte behörighet att visa den begärda sidan",
     "noData": "Information är inte tillgänglig",
     "landing": {
