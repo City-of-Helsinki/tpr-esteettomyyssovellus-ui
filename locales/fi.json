@@ -69,6 +69,7 @@
     "hideInfo": "Pienennä ohje",
     "editAddinfoText": "Muokkaa lisätietoja",
     "missingAnswerValue": "Valinta puuttuu",
+    "missingTextValue": "Vastaus puuttuu",
     "copyDataFromSameAddress": "kopioi samassa osoitteessa olevan toimipisteen tiedot",
     "openInfoWhatIsThis": "Näytä mikä tämä on",
     "statusReady": "Valmis",

@@ -33,12 +33,11 @@ export interface QuestionContainerProps {
 }
 
 export interface QuestionExtraFieldProps {
-  questionBlockId: number;
-  questionBlockFieldId: number;
   fieldNumber?: number;
   questionText?: string;
   questionInfo?: string | null;
   isMandatory: boolean;
+  isTextInvalid: boolean;
   children: JSX.Element;
 }
 
@@ -96,6 +95,7 @@ export interface QuestionTextInputProps {
   id: string;
   questionBlockFieldId: number;
   placeholder?: string;
+  isTextInvalid: boolean;
 }
 
 export interface QuestionFormCtrlButtonsProps {
