@@ -9,7 +9,7 @@ import AccessibilityPlacePicture from "./AccessibilityPlacePicture";
 import styles from "./AccessibilityPlaceBox.module.scss";
 
 // usage: grouping one set of picture and location in accessibility place form
-const AccessibilityPlaceBox = ({ entrancePlaceBox }: AccessibilityPlaceBoxProps): JSX.Element => {
+const AccessibilityPlaceBox = ({ entrancePlaceBox, canAddLocation }: AccessibilityPlaceBoxProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
 
@@ -64,10 +64,12 @@ const AccessibilityPlaceBox = ({ entrancePlaceBox }: AccessibilityPlaceBoxProps)
           <AccessibilityPlacePicture entrancePlaceBox={entrancePlaceBox} />
         </div>
 
-        <div>
-          <div className={styles.contentheader}>{`${i18n.t("additionalInfo.locationTitle")} ${order_number}`}</div>
-          <AccessibilityPlaceLocation entrancePlaceBox={entrancePlaceBox} />
-        </div>
+        {canAddLocation && (
+          <div>
+            <div className={styles.contentheader}>{`${i18n.t("additionalInfo.locationTitle")} ${order_number}`}</div>
+            <AccessibilityPlaceLocation entrancePlaceBox={entrancePlaceBox} />
+          </div>
+        )}
       </div>
     </div>
   );

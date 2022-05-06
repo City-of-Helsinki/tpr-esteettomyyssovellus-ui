@@ -168,8 +168,9 @@ const AccessibilityPlaceLocation = ({ entrancePlaceBox }: AccessibilityPlaceLoca
     );
   }, [coordinatesWGS84, setLocation, isMainLocPicComponent, questionId]);
 
+  // The map should not be visible to screen readers, so use aria-hidden here
   return (
-    <div className={styles.maincontainer}>
+    <div className={styles.maincontainer} aria-hidden>
       {(mapInput || isLocationValid(coordinatesWGS84)) && <div className={styles.mapcontainer}>{memoMap}</div>}
 
       <div className={styles.inputcontainer}>

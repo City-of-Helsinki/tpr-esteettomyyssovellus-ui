@@ -126,7 +126,9 @@ const AccessibilityPlace = ({ servicepointData, entranceData, accessibilityPlace
             <div>
               {filteredEntrancePlaceBoxes.map((entrancePlaceBox, index) => {
                 const key = `box_${index}`;
-                return <AccessibilityPlaceBox key={key} entrancePlaceBox={entrancePlaceBox} />;
+                return (
+                  <AccessibilityPlaceBox key={key} entrancePlaceBox={entrancePlaceBox} canAddLocation={filteredPlaceData.can_add_location === "Y"} />
+                );
               })}
             </div>
 
