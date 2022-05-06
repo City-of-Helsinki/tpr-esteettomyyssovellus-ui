@@ -1,8 +1,9 @@
 import React from "react";
-import { IconInfoCircle, IconCrossCircle } from "hds-react";
+import { IconInfoCircle, IconCrossCircle, Link as HdsLink } from "hds-react";
 import { useI18n } from "next-localization";
 import styles from "./QuestionExtraField.module.scss";
 import { QuestionExtraFieldProps } from "../types/general";
+import { splitTextUrls } from "../utils/utilFunctions";
 import QuestionInfo from "./QuestionInfo";
 
 // usage: container for single extra field row e.g. header/text, text input
@@ -27,6 +28,30 @@ const QuestionExtraField = ({
       }
     : {};
 
+  const convertTextUrlsToLinks = (splitUrls: string[]) => {
+    return splitUrls.map((textOrLink) => {
+      if (textOrLink.startsWith("http")) {
+        // Link
+        return (
+          <HdsLink
+            href={textOrLink}
+            size="M"
+            openInNewTab
+            openInNewTabAriaLabel={i18n.t("common.opensInANewTab")}
+            external
+            openInExternalDomainAriaLabel={i18n.t("common.opensExternal")}
+            disableVisitedStyles
+          >
+            {textOrLink}
+          </HdsLink>
+        );
+      } else {
+        // Text
+        return textOrLink.trim();
+      }
+    });
+  };
+
   return (
     <div className={styles.maincontainer} style={questionStyle} id={`fieldnumber-${fieldNumber}`}>
       <div className={styles.questioncontainer}>
@@ -42,9 +67,10 @@ const QuestionExtraField = ({
               textOnBottom
             >
               <div className={styles.infoContainer}>
-                {questionInfos?.map((e, index) => {
+                {questionInfos?.map((text, index) => {
+                  const splitUrls = splitTextUrls(text);
                   const key = `br_${index}`;
-                  return <p key={key}>{e}</p>;
+                  return <p key={key}>{convertTextUrlsToLinks(splitUrls)}</p>;
                 })}
               </div>
             </QuestionInfo>

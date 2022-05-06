@@ -11,6 +11,7 @@ import Map from "./common/Map";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import QuestionButton from "./QuestionButton";
 import { setCurrentlyEditingBlock } from "../state/reducers/generalSlice";
+import { splitTextUrls } from "../utils/utilFunctions";
 
 // usage: container for single question row e.g. header/text, additional infos and dropdown/radiobutton
 // and possible addinfo previews if question has addinfos
@@ -110,6 +111,30 @@ const QuestionContainer = ({
     });
   };
 
+  const convertTextUrlsToLinks = (splitUrls: string[]) => {
+    return splitUrls.map((textOrLink) => {
+      if (textOrLink.startsWith("http")) {
+        // Link
+        return (
+          <HdsLink
+            href={textOrLink}
+            size="M"
+            openInNewTab
+            openInNewTabAriaLabel={i18n.t("common.opensInANewTab")}
+            external
+            openInExternalDomainAriaLabel={i18n.t("common.opensExternal")}
+            disableVisitedStyles
+          >
+            {textOrLink}
+          </HdsLink>
+        );
+      } else {
+        // Text
+        return textOrLink.trim();
+      }
+    });
+  };
+
   return (
     <div className={styles.maincontainer} style={questionStyle} id={`questionid-${questionId}`}>
       <div className={styles.questionwrapper}>
@@ -128,8 +153,9 @@ const QuestionContainer = ({
               >
                 <div className={styles.infoContainer}>
                   {questionInfos?.map((text, index) => {
+                    const splitUrls = splitTextUrls(text);
                     const key = `br_${index}`;
-                    return <p key={key}>{text}</p>;
+                    return <p key={key}>{convertTextUrlsToLinks(splitUrls)}</p>;
                   })}
                   {photoUrl && (
                     <div>
@@ -137,33 +163,9 @@ const QuestionContainer = ({
                     </div>
                   )}
                   {photoTexts?.map((text, index) => {
-                    // Try to convert urls in the text into clickable links
-                    const regex = /((?:http|https)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(?:\/\S*)?)/g;
-                    const splitLinks = text.split(regex);
+                    const splitUrls = splitTextUrls(text);
                     const key = `br_${index}`;
-
-                    return (
-                      <p key={key}>
-                        {splitLinks.map((textOrLink) => {
-                          if (textOrLink.startsWith("http")) {
-                            return (
-                              <HdsLink
-                                href={textOrLink}
-                                size="M"
-                                openInNewTab
-                                openInNewTabAriaLabel={i18n.t("common.opensInANewTab")}
-                                external
-                                openInExternalDomainAriaLabel={i18n.t("common.opensExternal")}
-                                disableVisitedStyles
-                              >
-                                {textOrLink}
-                              </HdsLink>
-                            );
-                          }
-                          return textOrLink.trim();
-                        })}
-                      </p>
-                    );
+                    return <p key={key}>{convertTextUrlsToLinks(splitUrls)}</p>;
                   })}
                 </div>
               </QuestionInfo>

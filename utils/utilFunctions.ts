@@ -100,6 +100,12 @@ export const getClientIp = async (): Promise<string> =>
     fallbackUrls: ["https://ifconfig.co/ip"],
   });
 
+export const splitTextUrls = (text: string) => {
+  // Try to split the text into urls and other text, so that the urls can be converted into clickable links
+  const regex = /((?:http|https)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(?:\/\S*)?)/g;
+  return text.split(regex).filter((t) => t.length > 0);
+};
+
 interface KeyValue {
   [key: number]: string;
 }
