@@ -363,6 +363,7 @@ export interface QuestionBlockProps {
   description?: string | null;
   photoUrl?: string | null;
   photoText?: string | null;
+  putFieldsBeforeQuestions: boolean;
 }
 
 export interface PathTreeProps {

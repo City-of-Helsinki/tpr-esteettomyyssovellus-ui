@@ -22,6 +22,7 @@ const QuestionBlock = ({
   accessibilityPlaces,
   photoUrl,
   photoText,
+  putFieldsBeforeQuestions,
 }: QuestionBlockProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
@@ -143,7 +144,7 @@ const QuestionBlock = ({
         </div>
       )}
 
-      <QuestionBlockExtraFieldList extraFields={extraFields} />
+      {putFieldsBeforeQuestions && <QuestionBlockExtraFieldList extraFields={extraFields} />}
 
       {/* TODO: add QuestionBlockLocationPictureContent component here */}
 
@@ -154,6 +155,8 @@ const QuestionBlock = ({
         answerChoices={answerChoices}
         accessibilityPlaces={accessibilityPlaces}
       />
+
+      {!putFieldsBeforeQuestions && <QuestionBlockExtraFieldList extraFields={extraFields} />}
 
       {/*hasInfoAndButtons || !showContinue ? null : (
         <div className={styles.continueButton}>

@@ -321,6 +321,7 @@ export interface BackendQuestionBlock {
   add_photo_description?: string; // v0.4
   show_details_in_titlebar?: string; // v0.4
   add_comment_possible?: string; // v0.6
+  put_fields_before_questions?: string; // 0.7
 }
 
 // BackendQuestionBlockField - use in accessibility form page

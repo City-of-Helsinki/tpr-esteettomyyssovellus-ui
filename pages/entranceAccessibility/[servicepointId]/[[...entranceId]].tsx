@@ -330,6 +330,7 @@ const EntranceAccessibility = ({
                 accessibilityPlaces={filteredPlaces}
                 photoUrl={block.photo_url}
                 photoText={block.photo_text}
+                putFieldsBeforeQuestions={block.put_fields_before_questions === "Y"}
               />
             </HeadlineQuestionContainer>
           ) : null;
