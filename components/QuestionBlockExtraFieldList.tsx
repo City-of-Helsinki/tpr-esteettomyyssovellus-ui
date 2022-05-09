@@ -25,7 +25,7 @@ const QuestionBlockExtraFieldList = ({ extraFields }: QuestionBlockExtraFieldLis
             key={field_number}
             fieldNumber={field_number}
             questionText={field_title}
-            questionInfo={description ?? null}
+            questionInfo={description}
             isMandatory={isMandatory}
             isTextInvalid={isTextInvalid}
           >
