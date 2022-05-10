@@ -48,6 +48,20 @@ const Servicepoints = ({
     dispatch(setUser(user));
   }
 
+  const setSearchable = async () => {
+    const setSearchableOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: getTokenHash(),
+      },
+    };
+    const updateAddressUrl = `${getOrigin(router)}/${API_FETCH_SERVICEPOINTS}${servicepointId}/set_searchable/`;
+    //const updateAddressUrl = `${API_URL_BASE}${API_FETCH_SERVICEPOINTS}${servicepointId}/update_address/`;
+    await fetch(updateAddressUrl, setSearchableOptions);
+  }
+  setSearchable()
+
   if (skip) {
     router.push("/details/" + servicepointId);
   }
@@ -240,6 +254,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
       const addressData = await (addressResponse.json() as Promise<string[]>);
       const [choppedAddress = "", choppedAddressNumber = "", choppedPostOffice = ""] = addressData || [];
 
+
       const isNewServicepoint = servicepointData.length === 0;
 
       if (isNewServicepoint) {
@@ -275,7 +290,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
             // accessibility_phone: null, // Set in accessibilityEdit
             // accessibility_email: null, // Set in accessibilityEdit
             // accessibility_www: null, // Set in accessibilityEdit
-            is_searchable: "Y", // TODO: Y or N?
+            is_searchable: "Y",
             organisation_id: query.systemId,
             loc_easting: query.easting,
             loc_northing: query.northing,
