@@ -292,17 +292,17 @@ const EntranceAccessibility = ({
 
           const blockQuestions = isVisible
             ? questionsData.filter((question) => question.question_block_id === block.question_block_id && question.language_id === curLocaleId)
-            : null;
+            : undefined;
 
           const blockExtraFields = isVisible
             ? questionBlockFieldData.filter(
                 (question) => question.question_block_id === block.question_block_id && question.language_id === curLocaleId
               )
-            : null;
+            : undefined;
 
           const answerChoices = isVisible
             ? questionChoicesData.filter((choice) => choice.question_block_id === block.question_block_id && choice.language_id === curLocaleId)
-            : null;
+            : undefined;
 
           // if (isVisible && blockQuestions && answerChoices && block.question_block_code !== undefined) lastBlockNumber = block.question_block_code;
 
@@ -323,14 +323,11 @@ const EntranceAccessibility = ({
             >
               <QuestionBlock
                 key={block.question_block_id}
-                description={block.description ?? null}
+                block={block}
                 questions={blockQuestions}
                 answerChoices={answerChoices}
                 extraFields={blockExtraFields}
                 accessibilityPlaces={filteredPlaces}
-                photoUrl={block.photo_url}
-                photoText={block.photo_text}
-                putFieldsBeforeQuestions={block.put_fields_before_questions === "Y"}
               />
             </HeadlineQuestionContainer>
           ) : null;

@@ -35,7 +35,7 @@ export interface QuestionContainerProps {
 export interface QuestionExtraFieldProps {
   fieldNumber?: number;
   questionText?: string;
-  questionInfo?: string | null;
+  questionInfo?: string;
   isMandatory: boolean;
   isTextInvalid: boolean;
   children: JSX.Element;
@@ -111,13 +111,13 @@ export interface QuestionFormCtrlButtonsProps {
 
 export interface QuestionsListProps {
   additionalInfoVisible: boolean;
-  questions?: BackendQuestion[] | null;
-  answerChoices?: BackendQuestionChoice[] | null;
+  questions?: BackendQuestion[];
+  answerChoices?: BackendQuestionChoice[];
   accessibilityPlaces: BackendPlace[];
 }
 
 export interface QuestionBlockExtraFieldListProps {
-  extraFields?: BackendQuestionBlockField[] | null;
+  extraFields?: BackendQuestionBlockField[];
 }
 
 export interface QuestionAdditionalInfoCtrlButtonProps {
@@ -356,14 +356,11 @@ interface FetchAdditionalInfos {
 }
 */
 export interface QuestionBlockProps {
-  questions?: BackendQuestion[] | null;
-  answerChoices?: BackendQuestionChoice[] | null;
-  extraFields?: BackendQuestionBlockField[] | null;
+  block: BackendQuestionBlock;
+  questions?: BackendQuestion[];
+  answerChoices?: BackendQuestionChoice[];
+  extraFields?: BackendQuestionBlockField[];
   accessibilityPlaces: BackendPlace[];
-  description?: string | null;
-  photoUrl?: string | null;
-  photoText?: string | null;
-  putFieldsBeforeQuestions: boolean;
 }
 
 export interface PathTreeProps {
