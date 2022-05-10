@@ -266,8 +266,11 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
             }
           );
           const entranceDetail = await (entranceDetailResp.json() as Promise<BackendEntrance[]>);
-          const entrance = entranceDetail.find((e) => e.form_submitted === "Y");
-          return { entranceResult, entrance };
+
+          // In some cases there is no published entrance, so form_submitted is null
+          const entranceY = entranceDetail.find((e) => e.form_submitted === "Y");
+          const entranceNull = entranceDetail.find((e) => e.form_submitted === null);
+          return { entranceResult, entrance: entranceY ?? entranceNull };
         })
       );
 
@@ -288,8 +291,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       };
 
       // Check if the main entrance exists and is published
-      // No need to check if form_submitted === "Y", since this was already done above
-      isMainEntrancePublished = !!mainEntranceDetails?.entrance;
+      isMainEntrancePublished = !!mainEntranceDetails?.entrance && mainEntranceDetails?.entrance.form_submitted === "Y";
 
       const entranceResultSentences = await Promise.all(
         servicepointEntranceData.results.map(async (entranceResult) => {

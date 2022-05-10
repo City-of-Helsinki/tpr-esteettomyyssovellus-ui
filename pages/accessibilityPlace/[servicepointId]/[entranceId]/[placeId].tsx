@@ -187,6 +187,11 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
           })[0].log_id ?? -1;
 
         entranceData = entranceDetail.find((a) => a.log_id === maxLogId) as BackendEntrance;
+
+        // In some cases there is no published entrance, so form_submitted and log_id are null
+        if (!entranceData) {
+          entranceData = entranceDetail[0];
+        }
       }
     } catch (err) {
       console.error("Error", err);

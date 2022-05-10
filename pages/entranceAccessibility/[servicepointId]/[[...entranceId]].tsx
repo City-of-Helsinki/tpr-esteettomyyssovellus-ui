@@ -65,7 +65,7 @@ import {
 } from "../../../state/reducers/additionalInfoSlice";
 */
 import { setEntrancePlaceBoxes } from "../../../state/reducers/additionalInfoSlice";
-import { persistor } from "../../../state/store";
+// import { persistor } from "../../../state/store";
 // import { setCurrentlyEditingBlock, setCurrentlyEditingQuestion } from "../../../state/reducers/generalSlice";
 import LoadSpinner from "../../../components/common/LoadSpinner";
 
@@ -95,11 +95,13 @@ const EntranceAccessibility = ({
   const user = useAppSelector((state) => state.generalSlice.user);
   const isUserValid = !!user && user.length > 0;
 
+  // Note: To preserve any edits, entrance data is not cleared with purge, so population is handled in the useEffect below instead
+  /*
   useEffect(() => {
     // Clear the state on initial load
-    // Note: To preserve any edits, entrance place data is not cleared with purge, so population is handled in the useEffect below instead
     persistor.purge();
   }, []);
+  */
 
   // const curEditingQuestionAddInfoNumber = useAppSelector((state) => state.generalSlice.currentlyEditingQuestionAddinfo);
   // const curEditingBlockAddInfoNumber = useAppSelector((state) => state.generalSlice.currentlyEditingBlockAddinfo);
@@ -117,9 +119,9 @@ const EntranceAccessibility = ({
   const isExistingEntrance = hasData && Object.keys(entranceData).length > 0;
 
   useEffect(() => {
-    // Reset the entrance places if the entrance id changes, otherwise keep any edited entrance places already stored in redux state
-    const resetEntrancePlaces = Object.keys(entranceData).length > 0 && curEntranceId !== entranceData.entrance_id;
-    if (resetEntrancePlaces) {
+    // Reset the entrance data if the entrance id changes, otherwise keep any edited entrance data already stored in redux state
+    const resetEntranceData = Object.keys(entranceData).length > 0 && curEntranceId !== entranceData.entrance_id;
+    if (resetEntranceData) {
       dispatch(
         setEntrancePlaceBoxes(
           entrancePlaceData.map((place) => {
@@ -247,27 +249,31 @@ const EntranceAccessibility = ({
     dispatch(clearEditingInitialState());
     */
 
-    // Put existing answers into redux state
-    if (questionAnswerData.length > 0) {
-      questionAnswerData.forEach((a: BackendEntranceAnswer) => {
-        const questionId = a.question_id;
-        const answer = a.question_choice_id;
-        if (questionId !== undefined && answer !== undefined) {
-          dispatch(setAnsweredChoice(answer));
-          dispatch(setAnswer({ questionId, answer }));
-        }
-      });
+    if (resetEntranceData) {
+      // Put existing answers into redux state
+      if (questionAnswerData.length > 0) {
+        questionAnswerData.forEach((a: BackendEntranceAnswer) => {
+          const questionId = a.question_id;
+          const answer = a.question_choice_id;
+          if (questionId !== undefined && answer !== undefined) {
+            dispatch(setAnsweredChoice(answer));
+            dispatch(setAnswer({ questionId, answer }));
+          }
+        });
+      }
     }
 
-    // Put existing extra field answers into redux state
-    if (questionExtraAnswerData.length > 0) {
-      questionExtraAnswerData.forEach((ea: BackendEntranceField) => {
-        const questionBlockFieldId = ea.question_block_field_id;
-        const answer = ea.entry;
-        if (questionBlockFieldId !== undefined && answer !== undefined) {
-          dispatch(setExtraAnswer({ questionBlockFieldId, answer }));
-        }
-      });
+    if (resetEntranceData) {
+      // Put existing extra field answers into redux state
+      if (questionExtraAnswerData.length > 0) {
+        questionExtraAnswerData.forEach((ea: BackendEntranceField) => {
+          const questionBlockFieldId = ea.question_block_field_id;
+          const answer = ea.entry;
+          if (questionBlockFieldId !== undefined && answer !== undefined) {
+            dispatch(setExtraAnswer({ questionBlockFieldId, answer }));
+          }
+        });
+      }
     }
   }, [curEntranceId, servicepointData, entranceData, questionAnswerData, questionExtraAnswerData, entrancePlaceData, startedAnswering, dispatch]);
 
@@ -506,6 +512,11 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
             })[0].log_id ?? -1;
 
           entranceData = entranceDetail.find((a) => a.log_id === maxLogId) as BackendEntrance;
+
+          // In some cases there is no published entrance, so form_submitted and log_id are null
+          if (!entranceData) {
+            entranceData = entranceDetail[0];
+          }
         }
       }
 
