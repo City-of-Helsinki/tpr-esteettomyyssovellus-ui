@@ -4,6 +4,7 @@ import { useI18n } from "next-localization";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import styles from "./QuestionContainer.module.scss";
+import TextWithLinks from "./common/TextWithLinks";
 import { QuestionContainerProps } from "../types/general";
 import QuestionInfo from "./QuestionInfo";
 import QuestionAdditionalInformation from "./QuestionAdditionalInformation";
@@ -111,30 +112,6 @@ const QuestionContainer = ({
     });
   };
 
-  const convertTextUrlsToLinks = (splitUrls: string[]) => {
-    return splitUrls.map((textOrLink) => {
-      if (textOrLink.startsWith("http")) {
-        // Link
-        return (
-          <HdsLink
-            href={textOrLink}
-            size="M"
-            openInNewTab
-            openInNewTabAriaLabel={i18n.t("common.opensInANewTab")}
-            external
-            openInExternalDomainAriaLabel={i18n.t("common.opensExternal")}
-            disableVisitedStyles
-          >
-            {textOrLink}
-          </HdsLink>
-        );
-      } else {
-        // Text
-        return textOrLink.trim();
-      }
-    });
-  };
-
   return (
     <div className={styles.maincontainer} style={questionStyle} id={`questionid-${questionId}`}>
       <div className={styles.questionwrapper}>
@@ -153,9 +130,8 @@ const QuestionContainer = ({
               >
                 <div className={styles.infoContainer}>
                   {questionInfos?.map((text, index) => {
-                    const splitUrls = splitTextUrls(text);
                     const key = `br_${index}`;
-                    return <p key={key}>{convertTextUrlsToLinks(splitUrls)}</p>;
+                    return <TextWithLinks key={key} text={text} />;
                   })}
                   {photoUrl && (
                     <div>
@@ -163,9 +139,8 @@ const QuestionContainer = ({
                     </div>
                   )}
                   {photoTexts?.map((text, index) => {
-                    const splitUrls = splitTextUrls(text);
                     const key = `br_${index}`;
-                    return <p key={key}>{convertTextUrlsToLinks(splitUrls)}</p>;
+                    return <TextWithLinks key={key} text={text} />;
                   })}
                 </div>
               </QuestionInfo>

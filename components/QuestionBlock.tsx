@@ -1,6 +1,7 @@
-import { IconAngleDown, IconAngleUp, Link as HdsLink } from "hds-react";
+import { IconAngleDown, IconAngleUp } from "hds-react";
 import React, { useEffect } from "react";
 import { useI18n } from "next-localization";
+import TextWithLinks from "./common/TextWithLinks";
 // import QuestionAdditionalInfoCtrlButton from "./QuestionAdditionalInfoCtrlButton";
 import QuestionBlockExtraFieldList from "./QuestionBlockExtraFieldList";
 import QuestionFormImportExistingData from "./QuestionFormImportExistingData";
@@ -10,7 +11,6 @@ import QuestionsList from "./QuestionsList";
 import { QuestionBlockProps } from "../types/general";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
 import { setFinished, unsetFinished } from "../state/reducers/formSlice";
-import { splitTextUrls } from "../utils/utilFunctions";
 
 // usage: in form groups up all questions under a single "question block" / accordion
 // notes: used under headlineQuestionContainer in main form
@@ -74,38 +74,13 @@ const QuestionBlock = ({ block, questions, answerChoices, extraFields, accessibi
   // Turn "<BR>" to linebreaks
   const desc = description?.split("<BR>");
 
-  const convertTextUrlsToLinks = (splitUrls: string[]) => {
-    return splitUrls.map((textOrLink) => {
-      if (textOrLink.startsWith("http")) {
-        // Link
-        return (
-          <HdsLink
-            href={textOrLink}
-            size="M"
-            openInNewTab
-            openInNewTabAriaLabel={i18n.t("common.opensInANewTab")}
-            external
-            openInExternalDomainAriaLabel={i18n.t("common.opensExternal")}
-            disableVisitedStyles
-          >
-            {textOrLink}
-          </HdsLink>
-        );
-      } else {
-        // Text
-        return textOrLink.trim();
-      }
-    });
-  };
-
   return (
     <>
       {hasInfoAndButtons ? (
         <div className={styles.mainInfo}>
           {desc?.map((text, index) => {
-            const splitUrls = splitTextUrls(text);
             const key = `br_${index}`;
-            return <p key={key}>{convertTextUrlsToLinks(splitUrls)}</p>;
+            return <TextWithLinks key={key} text={text} />;
           })}
 
           {(photo_text || photo_url) && (
@@ -116,7 +91,7 @@ const QuestionBlock = ({ block, questions, answerChoices, extraFields, accessibi
               closeIcon={<IconAngleUp aria-hidden />}
             >
               <div className={styles.infoContainer}>
-                {photo_text ? convertTextUrlsToLinks(splitTextUrls(photo_text)) : null}
+                {photo_text && <TextWithLinks text={photo_text} />}
                 {photo_url && (
                   <div>
                     <img alt={photo_text ?? ""} src={photo_url} className={styles.infoPicture} />
