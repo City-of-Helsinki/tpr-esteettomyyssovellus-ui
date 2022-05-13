@@ -468,6 +468,23 @@ export interface PreviewProps {
   isMainEntrancePublished: boolean;
 }
 
+export interface EntranceLocationPhotoProps {
+  servicepointData: BackendServicepoint;
+  entranceData: BackendEntrance;
+}
+
+export interface EntranceLocationProps {
+  entranceLocationPhoto: EntranceLocationPhoto;
+}
+
+export interface EntrancePhotoProps {
+  entranceLocationPhoto: EntranceLocationPhoto;
+}
+
+export interface EntranceLocationPhotoCtrlButtonsProps {
+  entranceLocationPhoto: EntranceLocationPhoto;
+}
+
 export interface AccessibilityPlaceProps {
   servicepointData: BackendServicepoint;
   entranceData: BackendEntrance;
