@@ -59,8 +59,8 @@ const Servicepoints = ({
     const updateAddressUrl = `${getOrigin(router)}/${API_FETCH_SERVICEPOINTS}${servicepointId}/set_searchable/`;
     //const updateAddressUrl = `${API_URL_BASE}${API_FETCH_SERVICEPOINTS}${servicepointId}/update_address/`;
     await fetch(updateAddressUrl, setSearchableOptions);
-  }
-  setSearchable()
+  };
+  setSearchable();
 
   if (skip) {
     router.push("/details/" + servicepointId);
@@ -253,7 +253,6 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
       const addressResponse = await fetch(`${API_URL_BASE}${API_CHOP_ADDRESS}`, addressRequestOptions);
       const addressData = await (addressResponse.json() as Promise<string[]>);
       const [choppedAddress = "", choppedAddressNumber = "", choppedPostOffice = ""] = addressData || [];
-
 
       const isNewServicepoint = servicepointData.length === 0;
 
