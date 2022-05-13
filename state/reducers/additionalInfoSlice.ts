@@ -185,14 +185,7 @@ export const additionalInfoSlice = createSlice({
         }, []),
       };
     },
-    deleteEntrancePlaceBox: (
-      state,
-      action: PayloadAction<{
-        entrance_id: number;
-        place_id: number;
-        order_number: number;
-      }>
-    ) => {
+    deleteEntrancePlaceBox: (state, action: PayloadAction<{ entrance_id: number; place_id: number; order_number: number }>) => {
       // Mark the box as deleted, and update the order numbers of the rest for this entrance place
       return {
         ...state,
@@ -207,13 +200,7 @@ export const additionalInfoSlice = createSlice({
         }, []),
       };
     },
-    deleteEntrancePlace: (
-      state,
-      action: PayloadAction<{
-        entrance_id: number;
-        place_id: number;
-      }>
-    ) => {
+    deleteEntrancePlace: (state, action: PayloadAction<{ entrance_id: number; place_id: number }>) => {
       // Mark all boxes as deleted for this entrance place
       return {
         ...state,
@@ -226,13 +213,7 @@ export const additionalInfoSlice = createSlice({
         }, []),
       };
     },
-    revertEntrancePlace: (
-      state,
-      action: PayloadAction<{
-        entrance_id: number;
-        place_id: number;
-      }>
-    ) => {
+    revertEntrancePlace: (state, action: PayloadAction<{ entrance_id: number; place_id: number }>) => {
       return {
         ...state,
         entrancePlaceBoxes: state.entrancePlaceBoxes.reduce((acc: EntrancePlaceBox[], box) => {
@@ -245,9 +226,10 @@ export const additionalInfoSlice = createSlice({
                 ...acc,
                 {
                   ...box,
-                  order_number: box.existingBox.order_number && box.existingBox.order_number > 0 ? box.existingBox.order_number : 1,
+                  order_number: box.order_number > 0 ? box.order_number : 1,
                   modifiedBox: box.existingBox,
-                  isDeleted: false,
+                  modifiedPhotoBase64: box.existingPhotoBase64,
+                  // isDeleted: false,
                   invalidValues: [],
                 },
               ];

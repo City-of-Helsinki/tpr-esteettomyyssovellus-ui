@@ -19,7 +19,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
   const [linkInput, setLinkInput] = useState(false);
   const [linkText, setLinkText] = useState("");
 
-  const { entrance_id, place_id, order_number, modifiedBox, photoBase64, termsAccepted, invalidValues = [] } = entrancePlaceBox;
+  const { entrance_id, place_id, order_number, modifiedBox, modifiedPhotoBase64, termsAccepted, invalidValues = [] } = entrancePlaceBox;
   const { photo_url, photo_text_fi, photo_text_sv, photo_text_en, photo_source_text } = modifiedBox || {};
 
   const currentId = order_number;
@@ -64,7 +64,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
     updatePlaceBox({
       ...entrancePlaceBox,
       modifiedBox: { ...((modifiedBox || {}) as BackendEntrancePlace), photo_url: undefined },
-      photoBase64: undefined,
+      modifiedPhotoBase64: undefined,
     });
   };
 
@@ -103,7 +103,8 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
 
           updatePlaceBox({
             ...entrancePlaceBox,
-            photoBase64: base64,
+            modifiedBox: { ...((modifiedBox || {}) as BackendEntrancePlace), photo_url: undefined },
+            modifiedPhotoBase64: base64,
             termsAccepted: false,
           });
         }
@@ -121,6 +122,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
       updatePlaceBox({
         ...entrancePlaceBox,
         modifiedBox: { ...((modifiedBox || {}) as BackendEntrancePlace), photo_url: linkText },
+        modifiedPhotoBase64: undefined,
         termsAccepted: false,
       });
 
@@ -142,7 +144,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
         photo_text_en: undefined,
         photo_source_text: undefined,
       },
-      photoBase64: undefined,
+      modifiedPhotoBase64: undefined,
     });
     setLinkInput(false);
   };
@@ -220,9 +222,9 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
 
   return (
     <div className={styles.maincontainer}>
-      {(photoBase64 || photo_url) && (
+      {(modifiedPhotoBase64 || photo_url) && (
         <div className={styles.picture}>
-          <img src={photoBase64 ?? photo_url} alt="" />
+          <img src={modifiedPhotoBase64 ?? photo_url} alt="" />
         </div>
       )}
 
@@ -243,13 +245,13 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
         )}
 
         <div className={styles.inputbuttons}>
-          {(photoBase64 || photo_url) && (
+          {(modifiedPhotoBase64 || photo_url) && (
             <QuestionButton variant="secondary" onClickHandler={handleChangePicture}>
               {i18n.t("additionalInfo.changePicture")}
             </QuestionButton>
           )}
 
-          {!photoBase64 && !photo_url && !linkInput && (
+          {!modifiedPhotoBase64 && !photo_url && !linkInput && (
             <>
               <QuestionButton variant="secondary" iconRight={<IconUpload aria-hidden />} onClickHandler={handleAddImageFromDevice}>
                 {i18n.t("additionalInfo.chooseFromDevice")}
@@ -277,7 +279,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
             </QuestionButton>
           )}
 
-          {(photoBase64 || photo_url || linkInput) && (
+          {(modifiedPhotoBase64 || photo_url || linkInput) && (
             <QuestionButton variant="secondary" iconRight={<IconCross aria-hidden />} onClickHandler={() => handleOnDelete()}>
               {i18n.t("additionalInfo.cancelPicture")}
             </QuestionButton>
@@ -285,7 +287,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
         </div>
       </div>
 
-      {(photoBase64 || photo_url) && (
+      {(modifiedPhotoBase64 || photo_url) && (
         <div className={styles.lowercontentcontainer}>
           <div className={styles.altcontainer}>
             <TextArea

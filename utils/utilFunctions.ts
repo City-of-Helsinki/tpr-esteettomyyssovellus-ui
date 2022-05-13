@@ -327,9 +327,9 @@ const saveEntrancePlaces = async (logId: number, servicePointId: number, entranc
             // New or modified place box
             // Use the specified photo url or upload an imported photo to Azure
             let photoUrl = box.modifiedBox?.photo_url;
-            if (box.photoBase64) {
+            if (box.modifiedPhotoBase64) {
               // Uploaded photo, save to Azure first to get the url for the database
-              photoUrl = await uploadPictureToAzure(servicePointId, box.photoBase64, router);
+              photoUrl = await uploadPictureToAzure(servicePointId, box.modifiedPhotoBase64, router);
             }
 
             // Save the entrance place box

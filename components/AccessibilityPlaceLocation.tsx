@@ -9,8 +9,8 @@ import { AccessibilityPlaceLocationProps, EntrancePlaceBox } from "../types/gene
 import { convertCoordinates, isLocationValid } from "../utils/utilFunctions";
 import Map from "./common/Map";
 import QuestionButton from "./QuestionButton";
-import styles from "./AccessibilityPlaceLocation.module.scss";
 import QuestionInfo from "./QuestionInfo";
+import styles from "./AccessibilityPlaceLocation.module.scss";
 
 // usage: accessibility place page location component
 // notes: remove geocoding if not needed
@@ -57,8 +57,6 @@ const AccessibilityPlaceLocation = ({ entrancePlaceBox }: AccessibilityPlaceLoca
 
   const setLocation = useCallback(
     (coordinates: [number, number]) => {
-      console.log("NEW setLocation", coordinates);
-
       // Convert the coordinates to the Finnish system
       const lonLatReverseCoordinates: [number, number] = [coordinates[1], coordinates[0]];
       const [locEas, locNor] = convertCoordinates("WGS84", "EPSG:3067", lonLatReverseCoordinates);
@@ -87,7 +85,6 @@ const AccessibilityPlaceLocation = ({ entrancePlaceBox }: AccessibilityPlaceLoca
         location_text_sv: undefined,
         location_text_en: undefined,
       },
-      photoBase64: undefined,
     });
     setMapInput(false);
   };

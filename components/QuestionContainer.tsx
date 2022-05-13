@@ -1,15 +1,15 @@
 import React from "react";
 import { IconCrossCircle, IconInfoCircle, IconPenLine, Link as HdsLink } from "hds-react";
 import { useI18n } from "next-localization";
-// import { useRouter } from "next/router";
-import Link from "next/link";
+import { useRouter } from "next/router";
 import styles from "./QuestionContainer.module.scss";
 import TextWithLinks from "./common/TextWithLinks";
 import { QuestionContainerProps } from "../types/general";
 import QuestionInfo from "./QuestionInfo";
 // import QuestionAdditionalInformation from "./QuestionAdditionalInformation";
 // import Map from "./common/Map";
-import { useAppSelector } from "../state/hooks";
+import { useAppDispatch, useAppSelector } from "../state/hooks";
+import { setEntrancePlaceBoxes } from "../state/reducers/additionalInfoSlice";
 // import QuestionButton from "./QuestionButton";
 // import { setCurrentlyEditingBlock } from "../state/reducers/generalSlice";
 
@@ -27,8 +27,8 @@ const QuestionContainer = ({
   children,
 }: QuestionContainerProps): JSX.Element => {
   const i18n = useI18n();
-  // const router = useRouter();
-  // const dispatch = useAppDispatch();
+  const router = useRouter();
+  const dispatch = useAppDispatch();
   // const curLocale: string = i18n.locale();
 
   const {
@@ -52,6 +52,7 @@ const QuestionContainer = ({
   const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
   const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
   const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
+  const curEntrancePlaceBoxes = useAppSelector((state) => state.additionalInfoReducer.entrancePlaceBoxes);
   const isInvalid = invalidBlocks.includes(questionBlockId);
 
   // Accessibility place string examples:
@@ -115,6 +116,23 @@ const QuestionContainer = ({
   };
   */
 
+  const editAccessibilityPlace = (placeId: number) => {
+    // Update the existing data in case the user returns without saving
+    dispatch(
+      setEntrancePlaceBoxes(
+        curEntrancePlaceBoxes.map((placeBox) => {
+          return {
+            ...placeBox,
+            existingBox: placeBox.modifiedBox,
+            existingPhotoBase64: placeBox.modifiedPhotoBase64,
+          };
+        })
+      )
+    );
+
+    router.push(`/accessibilityPlace/${curServicepointId}/${curEntranceId}/${placeId}`);
+  };
+
   return (
     <div className={styles.maincontainer} style={questionStyle} id={`questionid-${questionId}`}>
       <div className={styles.questionwrapper}>
@@ -168,21 +186,21 @@ const QuestionContainer = ({
         {visiblePlaces && (
           <div className={styles.questioncontainer}>
             {visiblePlaces.map((place) => {
-              const key = `place_${place.place_id}`;
+              const { place_id, name } = place;
+              const key = `place_${place_id}`;
+
               return (
                 <div key={key} className={styles.placecontainer}>
                   <div className={styles.place}>
                     <IconPenLine aria-hidden />
                     <div className={styles.maintext}>
-                      {`${i18n.t("accessibilityForm.fillPlaceData1")} '${place.name}' ${i18n.t("accessibilityForm.fillPlaceData2")}?`}
+                      {`${i18n.t("accessibilityForm.fillPlaceData1")} '${name}' ${i18n.t("accessibilityForm.fillPlaceData2")}?`}
                     </div>
                   </div>
                   <div className={styles.children}>
-                    <Link href={`/accessibilityPlace/${curServicepointId}/${curEntranceId}/${place.place_id}`}>
-                      <HdsLink href="#" size="M" disableVisitedStyles>
-                        {i18n.t("accessibilityForm.placeLink")}
-                      </HdsLink>
-                    </Link>
+                    <HdsLink href="#" size="M" disableVisitedStyles onClick={() => editAccessibilityPlace(place_id)}>
+                      {i18n.t("accessibilityForm.placeLink")}
+                    </HdsLink>
                   </div>
                 </div>
               );

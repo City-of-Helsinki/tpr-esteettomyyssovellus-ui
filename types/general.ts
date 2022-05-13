@@ -314,7 +314,8 @@ export interface EntrancePlaceBox {
   existingBox?: BackendEntrancePlace;
   modifiedBox?: BackendEntrancePlace;
   isDeleted: boolean;
-  photoBase64?: string;
+  existingPhotoBase64?: string;
+  modifiedPhotoBase64?: string;
   termsAccepted: boolean;
   invalidValues: Validation[];
 }

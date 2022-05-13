@@ -44,12 +44,12 @@ const AccessibilityPlaceCtrlButtons = ({ placeId, entrancePlaceBoxes }: Accessib
     // Check whether all data on the form is valid
     // Everything needs to be validated, so make sure lazy evaluation is not used
     const formValidation = entrancePlaceBoxes.map((box) => {
-      const { order_number, modifiedBox, photoBase64, termsAccepted, isDeleted } = box;
-      const { photo_text_fi, photo_source_text } = modifiedBox || {};
+      const { order_number, modifiedBox, modifiedPhotoBase64, termsAccepted, isDeleted } = box;
+      const { loc_easting, loc_northing, photo_url, photo_text_fi, photo_source_text } = modifiedBox || {};
       let isValid = true;
 
       if (!isDeleted) {
-        if (photoBase64 || modifiedBox?.photo_url) {
+        if (modifiedPhotoBase64 || photo_url) {
           // Photo added, so validate the mandatory fields
           if (!photo_text_fi || photo_text_fi.length === 0) {
             handleAddInvalidValue(box, `text-fin-${order_number}`, `${order_number}. ${i18n.t("additionalInfo.pictureLabel")}`);
@@ -65,7 +65,7 @@ const AccessibilityPlaceCtrlButtons = ({ placeId, entrancePlaceBoxes }: Accessib
           }
         }
 
-        if (!photoBase64 && !modifiedBox?.photo_url && !modifiedBox?.loc_easting && !modifiedBox?.loc_northing) {
+        if (!modifiedPhotoBase64 && !photo_url && !loc_easting && !loc_northing) {
           // No photo or location
           handleAddInvalidValue(
             box,
