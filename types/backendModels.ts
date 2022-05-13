@@ -195,6 +195,7 @@ export interface BackendEntranceAnswer {
   photo_text_fi?: string;
   photo_text_sv?: string;
   photo_text_en?: string;
+  [key: string]: number | string | undefined;
 }
 
 // BackendEntranceField - use in accessibility form page

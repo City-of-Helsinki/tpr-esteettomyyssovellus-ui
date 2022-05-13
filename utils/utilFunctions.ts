@@ -15,10 +15,12 @@ import {
   API_SAVE_PLACE_ANSWER,
   API_SAVE_PLACE_ANSWER_BOX,
   API_SAVE_PLACE_ANSWER_BOX_TEXT,
+  API_SAVE_QUESTION_BLOCK_ANSWER,
+  API_SAVE_QUESTION_BLOCK_ANSWER_TEXT,
   LanguageLocales,
 } from "../types/constants";
 import { API_TOKEN } from "./checksumSecret";
-import { EntrancePlaceBox } from "../types/general";
+import { EntranceLocationPhoto, EntrancePlaceBox } from "../types/general";
 /*
 import { QuestionAnswerPhoto } from "../types/backendModels";
 import {
@@ -344,11 +346,64 @@ const saveEntrancePlaces = async (logId: number, servicePointId: number, entranc
   }
 };
 
+const saveEntranceLocationPhoto = async (logId: number, servicePointId: number, entranceLocationPhoto: EntranceLocationPhoto, router: NextRouter) => {
+  console.log("saveEntranceLocationPhoto", servicePointId, entranceLocationPhoto);
+
+  if (entranceLocationPhoto && entranceLocationPhoto.modifiedAnswer) {
+    // Use the specified photo url or upload an imported photo to Azure
+    let photoUrl = entranceLocationPhoto.modifiedAnswer.photo_url;
+    if (entranceLocationPhoto.modifiedPhotoBase64) {
+      // Uploaded photo, save to Azure first to get the url for the database
+      photoUrl = await uploadPictureToAzure(servicePointId, entranceLocationPhoto.modifiedPhotoBase64, router);
+    }
+
+    // Save the entrance photo using the specified photo url or Azure url created above
+    const answerRequest = {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: getTokenHash() },
+      body: JSON.stringify({
+        log_id: logId,
+        question_block_id: entranceLocationPhoto.question_block_id,
+        loc_easting: entranceLocationPhoto.modifiedAnswer.loc_easting,
+        loc_northing: entranceLocationPhoto.modifiedAnswer.loc_northing,
+        ...(photoUrl && { photo_url: photoUrl }),
+        ...(photoUrl && { photo_source_text: entranceLocationPhoto.modifiedAnswer.photo_source_text ?? "" }),
+      }),
+    };
+
+    const answerResponse = await fetch(`${getOrigin(router)}/${API_SAVE_QUESTION_BLOCK_ANSWER}`, answerRequest);
+    const answerJson = await (answerResponse.json() as Promise<{ question_block_answer_id: number }>);
+
+    console.log("block", entranceLocationPhoto.question_block_id, "answerJson", answerJson);
+
+    // Save the photo text for each language if available
+    const languages = ["fi", "sv", "en"];
+    languages.forEach(async (lang) => {
+      if (entranceLocationPhoto.modifiedAnswer && answerJson.question_block_answer_id > 0) {
+        const photoText = entranceLocationPhoto.modifiedAnswer[`photo_text_${lang}`] as string;
+
+        if (photoText && photoText.length > 0) {
+          await postData(
+            API_SAVE_QUESTION_BLOCK_ANSWER_TEXT,
+            JSON.stringify({
+              question_block_answer_id: answerJson.question_block_answer_id,
+              language_id: LanguageLocales[lang as keyof typeof LanguageLocales],
+              photo_text: photoText,
+            }),
+            router
+          );
+        }
+      }
+    });
+  }
+};
+
 export const saveFormData = async (
   servicePointId: number,
   entranceId: number,
   answeredChoices: number[],
   extraAnswers: KeyValue,
+  entranceLocationPhoto: EntranceLocationPhoto,
   entrancePlaceBoxes: EntrancePlaceBox[],
   startedAnswering: string,
   user: string,
@@ -390,6 +445,7 @@ export const saveFormData = async (
 
       // await postAdditionalInfo(logId, additionalInfo.additionalInfo);
       await saveExtraFieldAnswers(logId, extraAnswers, router);
+      await saveEntranceLocationPhoto(logId, servicePointId, entranceLocationPhoto, router);
       await saveEntrancePlaces(logId, servicePointId, entrancePlaceBoxes, router);
 
       // GENERATE SENTENCES

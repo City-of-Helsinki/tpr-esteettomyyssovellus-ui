@@ -21,7 +21,7 @@ const QuestionBlockLocationPhotoContent = ({ block, canAddLocation, canAddPhoto 
   const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
   const curEntranceLocationPhoto = useAppSelector((state) => state.additionalInfoReducer.entranceLocationPhoto);
 
-  const { add_location_title, add_location_description, add_photo_title, add_photo_description } = block;
+  const { question_block_id, add_location_title, add_location_description, add_photo_title, add_photo_description } = block;
   const locationTexts = add_location_description?.split("<BR>");
   const photoTexts = add_photo_description?.split("<BR>");
 
@@ -38,6 +38,7 @@ const QuestionBlockLocationPhotoContent = ({ block, canAddLocation, canAddPhoto 
     dispatch(
       setEntranceLocationPhoto({
         ...curEntranceLocationPhoto,
+        question_block_id,
         existingAnswer: curEntranceLocationPhoto.modifiedAnswer,
         existingPhotoBase64: curEntranceLocationPhoto.modifiedPhotoBase64,
         canAddLocation,

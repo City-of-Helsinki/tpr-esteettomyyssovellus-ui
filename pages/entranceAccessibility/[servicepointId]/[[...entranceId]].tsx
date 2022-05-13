@@ -265,9 +265,11 @@ const EntranceAccessibility = ({
       const entranceLocationPhotoAnswer = questionAnswerData.find((a) => a.question_id === undefined);
       if (entranceLocationPhotoAnswer) {
         // Use the existing location and/or photo
+        // The add permissions are set later in QuestionBlockLocationPhotoContent
         dispatch(
           setEntranceLocationPhoto({
             entrance_id: entranceData.entrance_id,
+            question_block_id: entranceLocationPhotoAnswer.question_block_id,
             existingAnswer: entranceLocationPhotoAnswer,
             modifiedAnswer: entranceLocationPhotoAnswer,
             termsAccepted: true,
@@ -281,6 +283,7 @@ const EntranceAccessibility = ({
         dispatch(
           setEntranceLocationPhoto({
             entrance_id: entranceData.entrance_id,
+            question_block_id: -1,
             existingAnswer: {} as BackendEntranceAnswer,
             modifiedAnswer: {} as BackendEntranceAnswer,
             termsAccepted: false,

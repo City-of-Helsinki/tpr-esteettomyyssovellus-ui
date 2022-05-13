@@ -297,6 +297,7 @@ export interface KeyValueValidation {
 
 export interface EntranceLocationPhoto {
   entrance_id: number;
+  question_block_id: number;
   existingAnswer?: BackendEntranceAnswer;
   modifiedAnswer?: BackendEntranceAnswer;
   existingPhotoBase64?: string;

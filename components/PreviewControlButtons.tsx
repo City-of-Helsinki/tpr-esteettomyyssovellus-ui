@@ -21,6 +21,7 @@ const PreviewControlButtons = ({ hasSaveDraftButton, setSendingComplete }: Previ
 
   const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
   const curExtraAnswers = useAppSelector((state) => state.formReducer.extraAnswers);
+  const curEntranceLocationPhoto = useAppSelector((state) => state.additionalInfoReducer.entranceLocationPhoto);
   const curEntrancePlaceBoxes = useAppSelector((state) => state.additionalInfoReducer.entrancePlaceBoxes);
   const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
   const startedAnswering = useAppSelector((state) => state.formReducer.startedAnswering);
@@ -44,6 +45,7 @@ const PreviewControlButtons = ({ hasSaveDraftButton, setSendingComplete }: Previ
         curEntranceId,
         curAnsweredChoices,
         curExtraAnswers,
+        curEntranceLocationPhoto,
         curEntrancePlaceBoxes,
         startedAnswering,
         user,
