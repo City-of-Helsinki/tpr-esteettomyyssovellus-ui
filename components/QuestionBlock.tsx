@@ -4,6 +4,7 @@ import { useI18n } from "next-localization";
 import TextWithLinks from "./common/TextWithLinks";
 // import QuestionAdditionalInfoCtrlButton from "./QuestionAdditionalInfoCtrlButton";
 import QuestionBlockExtraFieldList from "./QuestionBlockExtraFieldList";
+import QuestionBlockLocationPhotoContent from "./QuestionBlockLocationPhotoContent";
 import QuestionFormImportExistingData from "./QuestionFormImportExistingData";
 import styles from "./QuestionBlock.module.scss";
 import QuestionInfo from "./QuestionInfo";
@@ -22,7 +23,7 @@ const QuestionBlock = ({ block, questions, answerChoices, extraFields, accessibi
   // const isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
   // const [showContinue, setShowContinue] = useState(!isContinueClicked);
 
-  const { description, photo_url, photo_text, put_fields_before_questions, add_location_possible, add_photo_possible } = block;
+  const { question_block_id, description, photo_url, photo_text, put_fields_before_questions, add_location_possible, add_photo_possible } = block;
 
   /*
   const handleAdditionalInfoToggle = () => {
@@ -40,9 +41,12 @@ const QuestionBlock = ({ block, questions, answerChoices, extraFields, accessibi
   };
   */
 
-  const blockId = questions && questions.length > 0 && questions[0].question_block_id !== undefined ? questions[0].question_block_id : -1;
+  // const blockId = questions && questions.length > 0 && questions[0].question_block_id !== undefined ? questions[0].question_block_id : -1;
+  const blockId = question_block_id;
   const hasInfoAndButtons = questions && questions.length > 0 ? blockId !== 0 : true;
   const putFieldsBeforeQuestions = put_fields_before_questions === "Y";
+  const canAddLocation = add_location_possible === "Y";
+  const canAddPhoto = add_photo_possible === "Y";
   const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
   // const continueActive = curAnsweredChoices.length !== 0;
 
@@ -115,7 +119,9 @@ const QuestionBlock = ({ block, questions, answerChoices, extraFields, accessibi
 
       {putFieldsBeforeQuestions && <QuestionBlockExtraFieldList extraFields={extraFields} />}
 
-      {/* TODO: add QuestionBlockLocationPictureContent component here */}
+      {(canAddLocation || canAddPhoto) && (
+        <QuestionBlockLocationPhotoContent block={block} canAddLocation={canAddLocation} canAddPhoto={canAddPhoto} />
+      )}
 
       {/* QtionList loops the single question row(s) */}
       <QuestionsList

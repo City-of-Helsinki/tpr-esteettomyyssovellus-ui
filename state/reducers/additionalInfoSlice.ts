@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { PURGE } from "redux-persist";
-import { AdditionalInfoProps, AdditionalInfoStateProps, EntrancePlaceBox, PictureProps } from "../../types/general";
+import { AdditionalInfoProps, AdditionalInfoStateProps, EntranceLocationPhoto, EntrancePlaceBox, PictureProps } from "../../types/general";
 
 // TODO: maybe delete this before prod
 // notice: many [questionNumber] OR [qNumber] is actually questionId
@@ -38,6 +38,8 @@ const initialState: AdditionalInfoStateProps = {
   initAddInfoFromDb: false,
   curEditingInitialState: {},
   additionalInfo: {},
+  entranceLocationPhoto: {} as EntranceLocationPhoto,
+  entranceLocationPhotoValid: true,
   entrancePlaceBoxes: [],
   entrancePlaceValid: true,
 };
@@ -55,6 +57,61 @@ export const additionalInfoSlice = createSlice({
       return {
         ...state,
         initAddInfoFromDb: action.payload.isInited,
+      };
+    },
+    setEntranceLocationPhoto: (state, action: PayloadAction<EntranceLocationPhoto>) => {
+      return { ...state, entranceLocationPhoto: action.payload };
+    },
+    setEntranceLocationPhotoValid: (state, action: PayloadAction<boolean>) => {
+      return { ...state, entranceLocationPhotoValid: action.payload };
+    },
+    editEntranceLocationPhoto: (state, action: PayloadAction<{ entrance_id: number; updatedLocationPhoto: EntranceLocationPhoto }>) => {
+      return {
+        ...state,
+        entranceLocationPhoto: { ...state.entranceLocationPhoto, ...action.payload.updatedLocationPhoto },
+      };
+    },
+    revertEntranceLocationPhoto: (state, action: PayloadAction<{ entrance_id: number }>) => {
+      return {
+        ...state,
+        entranceLocationPhoto: {
+          ...state.entranceLocationPhoto,
+          entrance_id: action.payload.entrance_id,
+          modifiedAnswer: state.entranceLocationPhoto.existingAnswer,
+          modifiedPhotoBase64: state.entranceLocationPhoto.existingPhotoBase64,
+          invalidValues: [],
+        },
+      };
+    },
+    addInvalidEntranceLocationPhotoValue: (
+      state,
+      action: PayloadAction<{
+        entrance_id: number;
+        invalidFieldId: string;
+        invalidFieldLabel: string;
+      }>
+    ) => {
+      const validationToAdd = { valid: false, fieldId: action.payload.invalidFieldId, fieldLabel: action.payload.invalidFieldLabel };
+
+      return {
+        ...state,
+        entranceLocationPhoto: {
+          ...state.entranceLocationPhoto,
+          invalidValues: [...(state.entranceLocationPhoto.invalidValues ?? []), validationToAdd].filter(
+            (v, i, a) => v && a.findIndex((v2) => v2.fieldId === v.fieldId) === i
+          ),
+        },
+      };
+    },
+    removeInvalidEntranceLocationPhotoValue: (state, action: PayloadAction<{ entrance_id: number; invalidFieldIdToRemove: string }>) => {
+      return {
+        ...state,
+        entranceLocationPhoto: {
+          ...state.entranceLocationPhoto,
+          invalidValues: [
+            ...(state.entranceLocationPhoto.invalidValues ?? []).filter((val) => val.fieldId !== action.payload.invalidFieldIdToRemove),
+          ],
+        },
       };
     },
     setEntrancePlaceBoxes: (state, action: PayloadAction<EntrancePlaceBox[]>) => {
@@ -631,6 +688,12 @@ export const {
   removeAllInvalids,
   removeInvalidValues,
   addInvalidValues,
+  setEntranceLocationPhoto,
+  setEntranceLocationPhotoValid,
+  editEntranceLocationPhoto,
+  revertEntranceLocationPhoto,
+  addInvalidEntranceLocationPhotoValue,
+  removeInvalidEntranceLocationPhotoValue,
   setEntrancePlaceBoxes,
   setEntrancePlaceValid,
   addEntrancePlaceBox,

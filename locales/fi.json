@@ -200,7 +200,8 @@
     "optional": "vapaaehtoinen",
     "fillPlaceData1": "Haluatko täydentää",
     "fillPlaceData2": "esteettömyystietoja",
-    "placeLink": "Lisää kuva ja/tai sijainti"
+    "placeLink": "Lisää kuva ja/tai sijainti",
+    "editLocationPhoto": "Muokkaa"
   },
   "QuestionFormImportExistingData": {
     "chooseServicepoint": "Valitse toimipiste",

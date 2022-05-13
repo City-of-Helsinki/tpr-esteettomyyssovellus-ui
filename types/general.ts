@@ -295,6 +295,18 @@ export interface KeyValueValidation {
 }
 */
 
+export interface EntranceLocationPhoto {
+  entrance_id: number;
+  existingAnswer?: BackendEntranceAnswer;
+  modifiedAnswer?: BackendEntranceAnswer;
+  existingPhotoBase64?: string;
+  modifiedPhotoBase64?: string;
+  termsAccepted: boolean;
+  invalidValues: Validation[];
+  canAddLocation: boolean;
+  canAddPhoto: boolean;
+}
+
 export interface EntrancePlaceBox {
   entrance_id: number;
   place_id: number;
@@ -311,6 +323,8 @@ export interface AdditionalInfoStateProps {
   initAddInfoFromDb: boolean;
   curEditingInitialState: AdditionalInfoProps;
   additionalInfo: AdditionalInfoProps;
+  entranceLocationPhoto: EntranceLocationPhoto;
+  entranceLocationPhotoValid: boolean;
   entrancePlaceBoxes: EntrancePlaceBox[];
   entrancePlaceValid: boolean;
 }
@@ -411,10 +425,10 @@ export interface SaveSpinnerProps {
   savingFinishedText: string;
 }
 
-export interface MainLocationAndPictureProps {
-  accessibilityPlaces: BackendPlace[];
+export interface QuestionBlockLocationPhotoContentProps {
+  block: BackendQuestionBlock;
   canAddLocation: boolean;
-  canAddPicture: boolean;
+  canAddPhoto: boolean;
 }
 
 export interface EntranceData {

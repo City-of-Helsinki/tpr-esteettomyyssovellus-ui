@@ -64,7 +64,7 @@ import {
   setInitAdditionalInfoFromDb,
 } from "../../../state/reducers/additionalInfoSlice";
 */
-import { setEntrancePlaceBoxes } from "../../../state/reducers/additionalInfoSlice";
+import { setEntranceLocationPhoto, setEntrancePlaceBoxes } from "../../../state/reducers/additionalInfoSlice";
 // import { persistor } from "../../../state/store";
 // import { setCurrentlyEditingBlock, setCurrentlyEditingQuestion } from "../../../state/reducers/generalSlice";
 import LoadSpinner from "../../../components/common/LoadSpinner";
@@ -260,6 +260,35 @@ const EntranceAccessibility = ({
             dispatch(setAnswer({ questionId, answer }));
           }
         });
+      }
+
+      const entranceLocationPhotoAnswer = questionAnswerData.find((a) => a.question_id === undefined);
+      if (entranceLocationPhotoAnswer) {
+        // Use the existing location and/or photo
+        dispatch(
+          setEntranceLocationPhoto({
+            entrance_id: entranceData.entrance_id,
+            existingAnswer: entranceLocationPhotoAnswer,
+            modifiedAnswer: entranceLocationPhotoAnswer,
+            termsAccepted: true,
+            invalidValues: [],
+            canAddLocation: false,
+            canAddPhoto: false,
+          })
+        );
+      } else {
+        // No location or photo defined yet
+        dispatch(
+          setEntranceLocationPhoto({
+            entrance_id: entranceData.entrance_id,
+            existingAnswer: {} as BackendEntranceAnswer,
+            modifiedAnswer: {} as BackendEntranceAnswer,
+            termsAccepted: false,
+            invalidValues: [],
+            canAddLocation: false,
+            canAddPhoto: false,
+          })
+        );
       }
     }
 

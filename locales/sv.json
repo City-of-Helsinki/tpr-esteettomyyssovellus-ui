@@ -200,7 +200,8 @@
     "optional": "frivillig",
     "fillPlaceData1": "Vill du slutföra",
     "fillPlaceData2": "tillgänglighetsinformation",
-    "placeLink": "Lägg till ett bild och/eller plats"
+    "placeLink": "Lägg till ett bild och/eller plats",
+    "editLocationPhoto": "Redigera"
   },
   "QuestionFormImportExistingData": {
     "chooseServicepoint": "Välj ett kontor",

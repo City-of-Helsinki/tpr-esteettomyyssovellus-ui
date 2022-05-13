@@ -1,0 +1,67 @@
+@import "~hds-design-tokens/lib/all.scss";
+@import "../styles/mixins.scss";
+
+.maincontainer {
+  .questioncontainer {
+    padding: $spacing-m $spacing-s;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+
+    @include media(xs, s) {
+      flex-direction: column;
+    }
+
+    .maintext {
+      flex-grow: 1;
+      flex-basis: 0;
+      width: 100%;
+    }
+
+    .infoContainer {
+      display: flex;
+      flex-direction: column;
+      border-left: 5px solid $color-bus;
+      padding-left: $spacing-m;
+      overflow-wrap: break-word;
+
+      .infoPicture {
+        max-width: 100%;
+        max-height: 20rem;
+      }
+    }
+
+    .label {
+      @include media(m, l, xl) {
+        margin-top: $spacing-m;
+      }
+
+      div {
+        margin-bottom: $spacing-m;
+      }
+    }
+  }
+
+  .detailcontainer {
+    flex-grow: 1;
+    flex-basis: 0;
+    width: 100%;
+
+    @include media(m, l, xl) {
+      display: flex;
+      justify-content: flex-end;
+      margin-left: $spacing-l;
+    }
+
+    .mapcontainer {
+      width: 100%;
+    }
+
+    .photocontainer {
+      img {
+        max-width: 100%;
+        max-height: 20rem;
+      }
+    }
+  }
+}
