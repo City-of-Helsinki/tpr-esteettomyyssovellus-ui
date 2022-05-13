@@ -15,7 +15,7 @@ import PreviewControlButtons from "../../../components/PreviewControlButtons";
 import AddNewEntranceNotice from "../../../components/common/AddNewEntranceNotice";
 import LoadSpinner from "../../../components/common/LoadSpinner";
 import { useAppDispatch, useAppSelector, useLoading } from "../../../state/hooks";
-import { setEntrancePlaceBoxes } from "../../../state/reducers/additionalInfoSlice";
+import { setEntranceLocationPhoto, setEntrancePlaceBoxes } from "../../../state/reducers/additionalInfoSlice";
 import { setServicepointId, setEntranceId, setStartDate, setAnsweredChoice, setAnswer, setExtraAnswer } from "../../../state/reducers/formSlice";
 import { filterByLanguage, formatAddress, getCurrentDate, getTokenHash } from "../../../utils/utilFunctions";
 import {
@@ -116,6 +116,24 @@ const Preview = ({
           dispatch(setExtraAnswer({ questionBlockFieldId, answer }));
         }
       });
+    }
+
+    // Put the existing entrance location and photo into redux state
+    const entranceLocationPhotoAnswer = questionAnswerData.find((a) => a.question_id === undefined || a.question_id === null);
+    if (entranceLocationPhotoAnswer) {
+      // Use the existing location and/or photo
+      dispatch(
+        setEntranceLocationPhoto({
+          entrance_id: entranceData[entranceKey].entrance_id,
+          question_block_id: entranceLocationPhotoAnswer.question_block_id,
+          existingAnswer: entranceLocationPhotoAnswer,
+          modifiedAnswer: entranceLocationPhotoAnswer,
+          termsAccepted: true,
+          invalidValues: [],
+          canAddLocation: false,
+          canAddPhoto: false,
+        })
+      );
     }
 
     // Update entrance places in redux state
