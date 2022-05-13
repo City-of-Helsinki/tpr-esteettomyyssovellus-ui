@@ -1,15 +1,15 @@
 import React from "react";
 import { IconCrossCircle, IconInfoCircle, IconPenLine, Link as HdsLink } from "hds-react";
 import { useI18n } from "next-localization";
-import { useRouter } from "next/router";
+// import { useRouter } from "next/router";
 import Link from "next/link";
 import styles from "./QuestionContainer.module.scss";
 import TextWithLinks from "./common/TextWithLinks";
 import { QuestionContainerProps } from "../types/general";
 import QuestionInfo from "./QuestionInfo";
 // import QuestionAdditionalInformation from "./QuestionAdditionalInformation";
-import Map from "./common/Map";
-import { useAppDispatch, useAppSelector } from "../state/hooks";
+// import Map from "./common/Map";
+import { useAppSelector } from "../state/hooks";
 // import QuestionButton from "./QuestionButton";
 // import { setCurrentlyEditingBlock } from "../state/reducers/generalSlice";
 
@@ -27,9 +27,9 @@ const QuestionContainer = ({
   children,
 }: QuestionContainerProps): JSX.Element => {
   const i18n = useI18n();
-  const router = useRouter();
-  const dispatch = useAppDispatch();
-  const curLocale: string = i18n.locale();
+  // const router = useRouter();
+  // const dispatch = useAppDispatch();
+  // const curLocale: string = i18n.locale();
 
   const {
     question_id: questionId,
