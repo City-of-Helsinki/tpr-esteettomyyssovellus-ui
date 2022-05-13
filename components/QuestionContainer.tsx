@@ -7,12 +7,11 @@ import styles from "./QuestionContainer.module.scss";
 import TextWithLinks from "./common/TextWithLinks";
 import { QuestionContainerProps } from "../types/general";
 import QuestionInfo from "./QuestionInfo";
-import QuestionAdditionalInformation from "./QuestionAdditionalInformation";
+// import QuestionAdditionalInformation from "./QuestionAdditionalInformation";
 import Map from "./common/Map";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
-import QuestionButton from "./QuestionButton";
-import { setCurrentlyEditingBlock } from "../state/reducers/generalSlice";
-import { splitTextUrls } from "../utils/utilFunctions";
+// import QuestionButton from "./QuestionButton";
+// import { setCurrentlyEditingBlock } from "../state/reducers/generalSlice";
 
 // usage: container for single question row e.g. header/text, additional infos and dropdown/radiobutton
 // and possible addinfo previews if question has addinfos
@@ -20,12 +19,12 @@ import { splitTextUrls } from "../utils/utilFunctions";
 const QuestionContainer = ({
   question,
   accessibilityPlaces,
-  children,
-  hasAdditionalInfo,
+  // hasAdditionalInfo,
   // canAddLocation,
   // canAddPhotoMaxCount,
   // canAddComment,
-  isMainLocPicComponent,
+  // isMainLocPicComponent,
+  children,
 }: QuestionContainerProps): JSX.Element => {
   const i18n = useI18n();
   const router = useRouter();
@@ -48,7 +47,7 @@ const QuestionContainer = ({
   const photoTexts = photoText?.split("<BR>");
   const questionInfos = questionInfo?.split("<BR><BR>");
   const invalidBlocks = useAppSelector((state) => state.formReducer.invalidBlocks);
-  const curQuestionAddinfos = useAppSelector((state) => state.additionalInfoReducer.additionalInfo[questionId]);
+  // const curQuestionAddinfos = useAppSelector((state) => state.additionalInfoReducer.additionalInfo[questionId]);
   const curAnswers = useAppSelector((state) => state.formReducer.answers);
   const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
   const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
@@ -92,11 +91,14 @@ const QuestionContainer = ({
           // paddingLeft,
         };
 
+  /*
   if (isMainLocPicComponent) {
     console.log("isMainLocPicComponent");
     console.log(questionId);
   }
+  */
 
+  /*
   const handleEditAddInfo = () => {
     // todo: this is for the edit text to go to page -> edit to work
 
@@ -111,6 +113,7 @@ const QuestionContainer = ({
       shallow: true,
     });
   };
+  */
 
   return (
     <div className={styles.maincontainer} style={questionStyle} id={`questionid-${questionId}`}>
@@ -149,7 +152,7 @@ const QuestionContainer = ({
 
           <div className={styles.children}>{children}</div>
 
-          {hasAdditionalInfo && questionId !== undefined ? (
+          {/*hasAdditionalInfo && questionId !== undefined ? (
             <QuestionAdditionalInformation
               questionId={questionId}
               blockId={questionBlockId}
@@ -158,7 +161,7 @@ const QuestionContainer = ({
               // canAddComment={canAddComment}
               isMainLocPicComponent={isMainLocPicComponent}
             />
-          ) : null}
+          ) : null*/}
           {/*isInvalid && curAnswers[questionId] === undefined ? <IconAlertCircle className={styles.alertCircle} aria-hidden /> : null*/}
         </div>
 
@@ -189,7 +192,7 @@ const QuestionContainer = ({
       </div>
 
       {/* code under loops additional infos to the form if question has addinfo */}
-      {curQuestionAddinfos && curQuestionAddinfos.components && curQuestionAddinfos.components.length !== 0 ? (
+      {/*curQuestionAddinfos && curQuestionAddinfos.components && curQuestionAddinfos.components.length !== 0 ? (
         <div className={styles.addinfos}>
           <>
             <div className={styles.addinfos}>
@@ -247,7 +250,7 @@ const QuestionContainer = ({
             </div>
           </>
         </div>
-      ) : null}
+      ) : null*/}
     </div>
   );
 };

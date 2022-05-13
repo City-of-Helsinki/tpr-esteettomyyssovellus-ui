@@ -19,7 +19,7 @@ const QuestionBlock = ({ block, questions, answerChoices, extraFields, accessibi
   const i18n = useI18n();
   const dispatch = useAppDispatch();
   // const [showAdditionalInfo, setShowAdditionalInfo] = useState(false);
-  const showAdditionalInfo = false;
+  // const showAdditionalInfo = false;
   // const isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
   // const [showContinue, setShowContinue] = useState(!isContinueClicked);
 
@@ -125,7 +125,7 @@ const QuestionBlock = ({ block, questions, answerChoices, extraFields, accessibi
 
       {/* QtionList loops the single question row(s) */}
       <QuestionsList
-        additionalInfoVisible={showAdditionalInfo}
+        // additionalInfoVisible={showAdditionalInfo}
         questions={filteredQuestions}
         answerChoices={answerChoices}
         accessibilityPlaces={accessibilityPlaces}

@@ -6,7 +6,7 @@ import { BackendQuestion } from "../types/backendModels";
 import { QuestionsListProps } from "../types/general";
 
 // usage: list questions component, should be called once per question block
-const QuestionsList = ({ additionalInfoVisible, questions, answerChoices, accessibilityPlaces }: QuestionsListProps): JSX.Element => {
+const QuestionsList = ({ questions, answerChoices, accessibilityPlaces }: QuestionsListProps): JSX.Element => {
   return (
     <>
       {questions?.map((question: BackendQuestion) => {
@@ -28,7 +28,7 @@ const QuestionsList = ({ additionalInfoVisible, questions, answerChoices, access
             //   additionalInfoVisible &&
             //   (question.can_add_location === "Y" || question.can_add_comment === "Y" || question.can_add_photo_max_count !== 0)
             // }
-            hasAdditionalInfo={additionalInfoVisible}
+            // hasAdditionalInfo={additionalInfoVisible}
             // canAddLocation={question.can_add_location === "Y"}
             // canAddComment={question.can_add_comment === "Y"}
             // canAddPhotoMaxCount={question.can_add_photo_max_count}

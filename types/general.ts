@@ -25,11 +25,11 @@ export interface QuestionContainerProps {
   question: BackendQuestion;
   accessibilityPlaces: BackendPlace[];
   children: JSX.Element;
-  hasAdditionalInfo: boolean;
+  // hasAdditionalInfo: boolean;
   // canAddLocation?: boolean;
   // canAddPhotoMaxCount?: number;
   // canAddComment?: boolean;
-  isMainLocPicComponent?: boolean;
+  // isMainLocPicComponent?: boolean;
 }
 
 export interface QuestionExtraFieldProps {
@@ -110,7 +110,7 @@ export interface QuestionFormCtrlButtonsProps {
 }
 
 export interface QuestionsListProps {
-  additionalInfoVisible: boolean;
+  // additionalInfoVisible: boolean;
   questions?: BackendQuestion[];
   answerChoices?: BackendQuestionChoice[];
   accessibilityPlaces: BackendPlace[];
