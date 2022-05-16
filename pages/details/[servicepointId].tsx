@@ -72,7 +72,7 @@ const Details = ({
   const hasData = Object.keys(servicepointData).length > 0;
   const hasMainAccessibilityData = accessibilityData && accessibilityData.main && accessibilityData.main.length > 0;
 
-  useEffect(() => {
+  const initReduxData = () => {
     // Update the servicepoint coordinates in redux state, for use as the default location on maps
     const { loc_easting, loc_northing } = servicepointData;
     const coordinatesEuref = [loc_easting ?? 0, loc_northing ?? 0] as [number, number];
@@ -90,7 +90,12 @@ const Details = ({
       dispatch(setFormSubmitted());
     }
     */
-  }, [servicepointData, entranceData, accessibilityData, hasData, dispatch]);
+  };
+
+  // Initialise the redux data on first render only, using a workaround utilising useEffect with empty dependency array
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const useMountEffect = (fun: () => void) => useEffect(fun, []);
+  useMountEffect(initReduxData);
 
   // Filter by language
   // Make sure that the main entrance is listed before the side entrances.

@@ -119,13 +119,10 @@ const EntranceAccessibility = ({
   const hasData = Object.keys(servicepointData).length > 0;
   const isExistingEntrance = hasData && Object.keys(entranceData).length > 0;
 
-  useEffect(() => {
+  const initReduxData = () => {
     // Update servicepointId and entranceId in redux state
     if (Object.keys(servicepointData).length > 0) {
       dispatch(setServicepointId(servicepointData.servicepoint_id));
-      if (startedAnswering === "") {
-        dispatch(setStartDate(getCurrentDate()));
-      }
 
       // Update the servicepoint coordinates in redux state, for use as the default location on maps
       const { loc_easting, loc_northing } = servicepointData;
@@ -313,7 +310,19 @@ const EntranceAccessibility = ({
         )
       );
     }
-  }, [curEntranceId, servicepointData, entranceData, questionAnswerData, questionExtraAnswerData, entrancePlaceData, startedAnswering, dispatch]);
+  };
+
+  // Initialise the redux data on first render only, using a workaround utilising useEffect with empty dependency array
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const useMountEffect = (fun: () => void) => useEffect(fun, []);
+  useMountEffect(initReduxData);
+
+  useEffect(() => {
+    // Update when the question answering started
+    if (startedAnswering === "") {
+      dispatch(setStartDate(getCurrentDate()));
+    }
+  }, [startedAnswering, dispatch]);
 
   const filteredPlaces = accessibilityPlaceData.filter((place) => place.language_id === curLocaleId);
 

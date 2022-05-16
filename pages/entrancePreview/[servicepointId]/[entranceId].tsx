@@ -83,13 +83,10 @@ const Preview = ({
         )}`
       : `${i18n.t("common.entrance")}: ${entranceName ?? ""}`;
 
-  useEffect(() => {
+  const initReduxData = () => {
     // Update servicepointId and entranceId in redux state
     if (Object.keys(servicepointData).length > 0) {
       dispatch(setServicepointId(servicepointData.servicepoint_id));
-      if (startedAnswering === "") {
-        dispatch(setStartDate(getCurrentDate()));
-      }
     }
     if (Object.keys(entranceData).length > 0) {
       dispatch(setEntranceId(entranceData[entranceKey].entrance_id));
@@ -156,7 +153,20 @@ const Preview = ({
         })
       )
     );
-  }, [servicepointData, entranceData, questionAnswerData, questionExtraAnswerData, entrancePlaceData, entranceKey, startedAnswering, dispatch]);
+  };
+
+  // Initialise the redux data on first render only, using a workaround utilising useEffect with empty dependency array
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const useMountEffect = (fun: () => void) => useEffect(fun, []);
+  useMountEffect(initReduxData);
+
+  useEffect(() => {
+    // Update when the question answering started, if needed
+    // TODO: try to preserve the start date on state purge
+    if (startedAnswering === "") {
+      dispatch(setStartDate(getCurrentDate()));
+    }
+  }, [startedAnswering, dispatch]);
 
   const hasData = accessibilityData && accessibilityData[entranceKey] && accessibilityData[entranceKey].length > 0;
 
