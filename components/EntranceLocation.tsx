@@ -67,6 +67,18 @@ const EntranceLocation = ({ entranceLocationPhoto }: EntranceLocationProps): JSX
   );
 
   const handleAddLocation = () => {
+    // If there is no valid location, use the servicepoint location as the default
+    if (!isLocationValid(coordinatesEuref) && isLocationValid(servicepointCoordinatesEuref)) {
+      updateLocationPhoto({
+        ...entranceLocationPhoto,
+        modifiedAnswer: {
+          ...((modifiedAnswer || {}) as BackendEntranceAnswer),
+          loc_easting: servicepointCoordinatesEuref[0],
+          loc_northing: servicepointCoordinatesEuref[1],
+        },
+      });
+    }
+
     setMapInput(true);
   };
 

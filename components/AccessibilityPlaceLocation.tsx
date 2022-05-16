@@ -71,6 +71,18 @@ const AccessibilityPlaceLocation = ({ entrancePlaceBox }: AccessibilityPlaceLoca
   );
 
   const handleAddLocation = () => {
+    // If there is no valid location, use the servicepoint location as the default
+    if (!isLocationValid(coordinatesEuref) && isLocationValid(servicepointCoordinatesEuref)) {
+      updatePlaceBox({
+        ...entrancePlaceBox,
+        modifiedBox: {
+          ...((modifiedBox || {}) as BackendEntrancePlace),
+          loc_easting: servicepointCoordinatesEuref[0],
+          loc_northing: servicepointCoordinatesEuref[1],
+        },
+      });
+    }
+
     setMapInput(true);
   };
 
