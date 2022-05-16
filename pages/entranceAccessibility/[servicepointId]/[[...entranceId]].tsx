@@ -120,30 +120,6 @@ const EntranceAccessibility = ({
   const isExistingEntrance = hasData && Object.keys(entranceData).length > 0;
 
   useEffect(() => {
-    // Reset the entrance data if the entrance id changes, otherwise keep any edited entrance data already stored in redux state
-    const resetEntranceData = Object.keys(entranceData).length > 0 && curEntranceId !== entranceData.entrance_id;
-    if (resetEntranceData) {
-      dispatch(
-        setEntrancePlaceBoxes(
-          entrancePlaceData.map((place) => {
-            const { entrance_id, place_id, order_number } = place;
-
-            // Try to make sure the order number is 1 or higher
-            return {
-              entrance_id: entrance_id,
-              place_id: place_id,
-              order_number: order_number && order_number > 0 ? order_number : 1,
-              existingBox: place,
-              modifiedBox: place,
-              isDeleted: false,
-              termsAccepted: true,
-              invalidValues: [],
-            };
-          })
-        )
-      );
-    }
-
     // Update servicepointId and entranceId in redux state
     if (Object.keys(servicepointData).length > 0) {
       dispatch(setServicepointId(servicepointData.servicepoint_id));
@@ -257,6 +233,9 @@ const EntranceAccessibility = ({
     dispatch(clearEditingInitialState());
     */
 
+    // Reset the entrance data if the entrance id changes, otherwise keep any edited entrance data already stored in redux state
+    const resetEntranceData = Object.keys(entranceData).length > 0 && curEntranceId !== entranceData.entrance_id;
+
     if (resetEntranceData) {
       // Put existing answers into redux state
       if (questionAnswerData.length > 0) {
@@ -301,9 +280,7 @@ const EntranceAccessibility = ({
           })
         );
       }
-    }
 
-    if (resetEntranceData) {
       // Put existing extra field answers into redux state
       if (questionExtraAnswerData.length > 0) {
         questionExtraAnswerData.forEach((ea: BackendEntranceField) => {
@@ -314,6 +291,27 @@ const EntranceAccessibility = ({
           }
         });
       }
+
+      // Put entrance place boxes into redux state
+      dispatch(
+        setEntrancePlaceBoxes(
+          entrancePlaceData.map((place) => {
+            const { entrance_id, place_id, order_number } = place;
+
+            // Try to make sure the order number is 1 or higher
+            return {
+              entrance_id: entrance_id,
+              place_id: place_id,
+              order_number: order_number && order_number > 0 ? order_number : 1,
+              existingBox: place,
+              modifiedBox: place,
+              isDeleted: false,
+              termsAccepted: true,
+              invalidValues: [],
+            };
+          })
+        )
+      );
     }
   }, [curEntranceId, servicepointData, entranceData, questionAnswerData, questionExtraAnswerData, entrancePlaceData, startedAnswering, dispatch]);
 
