@@ -51,7 +51,7 @@ import { EntranceFormProps } from "../../../types/general";
 import HeadlineQuestionContainer from "../../../components/HeadlineQuestionContainer";
 import QuestionFormCtrlButtons from "../../../components/QuestionFormCtrlButtons";
 import PathTreeComponent from "../../../components/PathTreeComponent";
-import { setAnswer, setAnsweredChoice, setEntranceId, setExtraAnswer, setServicepointId, setStartDate } from "../../../state/reducers/formSlice";
+import { setAnswer, setEntranceId, setExtraAnswer, setServicepointId, setStartDate } from "../../../state/reducers/formSlice";
 import { getTokenHash, getCurrentDate, formatAddress, convertCoordinates } from "../../../utils/utilFunctions";
 /*
 import {
@@ -108,7 +108,9 @@ const EntranceAccessibility = ({
   // const curEditingBlockAddInfoNumber = useAppSelector((state) => state.generalSlice.currentlyEditingBlockAddinfo);
 
   const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
-  const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
+  // const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
+  const curAnswers = useAppSelector((state) => state.formReducer.answers);
+  const curAnsweredChoices = Object.values(curAnswers);
   const curInvalidBlocks = useAppSelector((state) => state.formReducer.invalidBlocks);
   // const additionalInfoInitedFromDb = useAppSelector((state) => state.additionalInfoReducer.initAddInfoFromDb);
   const isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
@@ -240,7 +242,7 @@ const EntranceAccessibility = ({
           const questionId = a.question_id;
           const answer = a.question_choice_id;
           if (questionId !== undefined && answer !== undefined) {
-            dispatch(setAnsweredChoice(answer));
+            // dispatch(setAnsweredChoice(answer));
             dispatch(setAnswer({ questionId, answer }));
           }
         });

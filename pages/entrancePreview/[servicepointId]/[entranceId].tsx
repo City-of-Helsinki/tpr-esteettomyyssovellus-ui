@@ -16,7 +16,7 @@ import AddNewEntranceNotice from "../../../components/common/AddNewEntranceNotic
 import LoadSpinner from "../../../components/common/LoadSpinner";
 import { useAppDispatch, useAppSelector, useLoading } from "../../../state/hooks";
 import { setEntranceLocationPhoto, setEntrancePlaceBoxes } from "../../../state/reducers/additionalInfoSlice";
-import { setServicepointId, setEntranceId, setStartDate, setAnsweredChoice, setAnswer, setExtraAnswer } from "../../../state/reducers/formSlice";
+import { setServicepointId, setEntranceId, setStartDate, setAnswer, setExtraAnswer } from "../../../state/reducers/formSlice";
 import { filterByLanguage, formatAddress, getCurrentDate, getTokenHash } from "../../../utils/utilFunctions";
 import {
   // API_FETCH_ANSWER_LOGS,
@@ -98,7 +98,7 @@ const Preview = ({
         const questionId = a.question_id;
         const answer = a.question_choice_id;
         if (questionId !== undefined && answer !== undefined) {
-          dispatch(setAnsweredChoice(answer));
+          // dispatch(setAnsweredChoice(answer));
           dispatch(setAnswer({ questionId, answer }));
         }
       });

@@ -3,7 +3,7 @@ import React, { ChangeEvent, useEffect, useState } from "react";
 import { useI18n } from "next-localization";
 import { QuestionRadioButtonsProps } from "../types/general";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
-import { removeAnsweredChoice, setAnswer, setAnsweredChoice } from "../state/reducers/formSlice";
+import { setAnswer } from "../state/reducers/formSlice";
 
 // usage: general custom radiobutton from HDS
 const QuestionRadioButtons = ({
@@ -34,10 +34,12 @@ const QuestionRadioButtons = ({
 
     if (questionId && options) {
       const answer = Number(e.target.value);
+      /*
       if (curAnswers[questionId] !== undefined) {
         dispatch(removeAnsweredChoice(curAnswers[questionId]));
       }
       dispatch(setAnsweredChoice(answer));
+      */
       dispatch(setAnswer({ questionId, answer }));
     }
   };

@@ -19,7 +19,9 @@ const PreviewControlButtons = ({ hasSaveDraftButton, setSendingComplete }: Previ
   const [isSavingDraft, setSavingDraft] = useState(false);
   const [isSavingFinal, setSavingFinal] = useState(false);
 
-  const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
+  // const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
+  const curAnswers = useAppSelector((state) => state.formReducer.answers);
+  const curAnsweredChoices = Object.values(curAnswers);
   const curExtraAnswers = useAppSelector((state) => state.formReducer.extraAnswers);
   const curEntranceLocationPhoto = useAppSelector((state) => state.additionalInfoReducer.entranceLocationPhoto);
   const curEntrancePlaceBoxes = useAppSelector((state) => state.additionalInfoReducer.entrancePlaceBoxes);

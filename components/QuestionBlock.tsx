@@ -47,8 +47,11 @@ const QuestionBlock = ({ block, questions, answerChoices, extraFields, accessibi
   const putFieldsBeforeQuestions = put_fields_before_questions === "Y";
   const canAddLocation = add_location_possible === "Y";
   const canAddPhoto = add_photo_possible === "Y";
-  const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
+  // const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
+  const curAnswers = useAppSelector((state) => state.formReducer.answers);
+  const curAnsweredChoices = Object.values(curAnswers);
   // const continueActive = curAnsweredChoices.length !== 0;
+  const keys = Object.keys(curAnswers);
 
   // filter questions to get only correct ones with curAnsweredChoices
   const filteredQuestions = questions
@@ -58,9 +61,6 @@ const QuestionBlock = ({ block, questions, answerChoices, extraFields, accessibi
           question.visible_if_question_choice?.split("+").some((elem) => curAnsweredChoices.includes(Number(elem)))
       )
     : undefined;
-
-  const curAnswers = useAppSelector((state) => state.formReducer.answers);
-  const keys = Object.keys(curAnswers);
 
   useEffect(() => {
     // check if block is finished (all visible questions are answered), also used to display icon if finished and with validation

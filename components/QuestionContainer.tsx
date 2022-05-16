@@ -49,7 +49,8 @@ const QuestionContainer = ({
   const invalidBlocks = useAppSelector((state) => state.formReducer.invalidBlocks);
   // const curQuestionAddinfos = useAppSelector((state) => state.additionalInfoReducer.additionalInfo[questionId]);
   const curAnswers = useAppSelector((state) => state.formReducer.answers);
-  const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
+  // const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
+  const curAnsweredChoices = Object.values(curAnswers);
   const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
   const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
   const curEntrancePlaceBoxes = useAppSelector((state) => state.additionalInfoReducer.entrancePlaceBoxes);
