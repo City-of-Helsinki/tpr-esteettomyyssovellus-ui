@@ -353,13 +353,13 @@ const EntranceAccessibility = ({
               )
             : undefined;
 
-          const answerChoices = isVisible
+          const blockAnswerChoices = isVisible
             ? questionChoicesData.filter((choice) => choice.question_block_id === block.question_block_id && choice.language_id === curLocaleId)
             : undefined;
 
           // if (isVisible && blockQuestions && answerChoices && block.question_block_code !== undefined) lastBlockNumber = block.question_block_code;
 
-          return isVisible && blockQuestions && answerChoices && block.question_block_id !== undefined ? (
+          return isVisible && blockQuestions && blockAnswerChoices && block.question_block_id !== undefined ? (
             <HeadlineQuestionContainer
               key={block.question_block_id}
               number={block.question_block_id}
@@ -378,7 +378,7 @@ const EntranceAccessibility = ({
                 key={block.question_block_id}
                 block={block}
                 questions={blockQuestions}
-                answerChoices={answerChoices}
+                answerChoices={blockAnswerChoices}
                 extraFields={blockExtraFields}
                 accessibilityPlaces={filteredPlaces}
               />
@@ -386,10 +386,6 @@ const EntranceAccessibility = ({
           ) : null;
         })
       : null;
-
-  const visibleQuestionChoices = questionChoicesData?.filter((choice) => {
-    return choice.question_block_id !== undefined && visibleBlocks?.map((elem) => Number(elem?.key)).includes(choice.question_block_id);
-  });
 
   /*
   // if returning from additional info page -> init page to correct location / question
@@ -467,7 +463,8 @@ const EntranceAccessibility = ({
                 hasPreviewButton={hasTopLevelAnswer}
                 hasContinueButton={!hasTopLevelAnswer}
                 visibleBlocks={visibleBlocks}
-                visibleQuestionChoices={visibleQuestionChoices}
+                questionsData={questionsData}
+                questionChoicesData={questionChoicesData}
                 formId={formId}
               />
             </div>

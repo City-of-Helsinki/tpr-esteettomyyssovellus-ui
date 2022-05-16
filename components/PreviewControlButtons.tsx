@@ -39,11 +39,14 @@ const PreviewControlButtons = ({ hasSaveDraftButton, setSendingComplete }: Previ
   };
 
   const saveData = async (isDraft: boolean): Promise<void> => {
+    // Filter to make sure the answered choices do not include any null values
+    const filteredAnswerChoices = curAnsweredChoices.filter((a) => a);
+
     if (curEntranceId > 0) {
       await saveFormData(
         curServicepointId,
         curEntranceId,
-        curAnsweredChoices,
+        filteredAnswerChoices,
         curExtraAnswers,
         curEntranceLocationPhoto,
         curEntrancePlaceBoxes,
