@@ -33,7 +33,7 @@ const SummaryAccessibilityPlace = ({ entrancePlaceName, entrancePlaceData }: Sum
             } = entrancePlaceBox;
             const key = `box_${index}`;
 
-            const coordinatesEuref: [number, number] = [loc_easting ?? 0, loc_northing ?? 0];
+            const coordinatesEuref = [loc_easting ?? 0, loc_northing ?? 0] as [number, number];
             const coordinatesWGS84 = convertCoordinates("EPSG:3067", "WGS84", coordinatesEuref).reverse() as [number, number];
 
             return (

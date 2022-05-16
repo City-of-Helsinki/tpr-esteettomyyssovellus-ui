@@ -6,7 +6,7 @@ import styles from "./AdditionalInfoCtrlButtons.module.scss";
 import QuestionButton from "./QuestionButton";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { addMainImageElement, addMainPicture } from "../state/reducers/formSlice";
-import { setServicepointLocation, setServicepointLocationWGS84 } from "../state/reducers/generalSlice";
+import { setServicepointLocationEuref, setServicepointLocationWGS84 } from "../state/reducers/generalSlice";
 
 // usage: save and return without saving buttons in additionalinfo page
 // notes: only save if save clicked, if return no save or back button (browser, mice etc) returns to old or emtpy value
@@ -43,8 +43,8 @@ const MainLocationPictureCtrlButtons = (): JSX.Element => {
       }
       if (coordinatesTemp) {
         dispatch(
-          setServicepointLocation({
-            coordinates: coordinatesTemp,
+          setServicepointLocationEuref({
+            coordinatesEuref: coordinatesTemp,
           })
         );
       }

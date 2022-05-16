@@ -16,7 +16,7 @@ import PathTreeComponent from "../../components/PathTreeComponent";
 import { useAppDispatch, useAppSelector, useLoading } from "../../state/hooks";
 import { setServicepointId } from "../../state/reducers/formSlice";
 import { convertCoordinates, filterByLanguage, formatAddress, getFinnishDate, getTokenHash } from "../../utils/utilFunctions";
-import { setServicepointLocation, setServicepointLocationWGS84 } from "../../state/reducers/generalSlice";
+import { setServicepointLocationEuref, setServicepointLocationWGS84 } from "../../state/reducers/generalSlice";
 import {
   // API_FETCH_ANSWER_LOGS,
   API_FETCH_BACKEND_ENTRANCE,
@@ -73,27 +73,12 @@ const Details = ({
   const hasMainAccessibilityData = accessibilityData && accessibilityData.main && accessibilityData.main.length > 0;
 
   useEffect(() => {
-    // set coordinates from data to state gerenalSlice for e.g. leafletmaps
-    if (servicepointData && servicepointData.loc_northing && servicepointData.loc_easting) {
-      const northing: number = servicepointData.loc_northing;
-      const easthing: number = servicepointData.loc_easting;
-      const coordinates: [number, number] = [easthing, northing];
-      // @ts-ignore : ignore types because .reverse() returns number[]
-      const coordinatesWGS84: [number, number] =
-        coordinates && coordinates !== undefined ? convertCoordinates("EPSG:3067", "WGS84", coordinates).reverse() : coordinates;
-
-      dispatch(
-        setServicepointLocation({
-          coordinates,
-        })
-      );
-
-      dispatch(
-        setServicepointLocationWGS84({
-          coordinatesWGS84,
-        })
-      );
-    }
+    // Update the servicepoint coordinates in redux state, for use as the default location on maps
+    const { loc_easting, loc_northing } = servicepointData;
+    const coordinatesEuref = [loc_easting ?? 0, loc_northing ?? 0] as [number, number];
+    const coordinatesWGS84 = convertCoordinates("EPSG:3067", "WGS84", coordinatesEuref).reverse() as [number, number];
+    dispatch(setServicepointLocationEuref({ coordinatesEuref }));
+    dispatch(setServicepointLocationWGS84({ coordinatesWGS84 }));
 
     // Update servicepointId in redux state
     dispatch(setServicepointId(servicepointData.servicepoint_id));

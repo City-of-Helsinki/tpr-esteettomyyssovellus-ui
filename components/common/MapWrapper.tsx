@@ -7,7 +7,7 @@ import { Marker as LeafletMarker, Icon } from "leaflet";
 import getOrigin from "../../utils/request";
 // import { addLocation } from "../../state/reducers/additionalInfoSlice";
 // import { useAppSelector } from "../../state/hooks";
-// import { setServicepointLocation, setServicepointLocationWGS84 } from "../../state/reducers/generalSlice";
+// import { setServicepointLocationEuref, setServicepointLocationWGS84 } from "../../state/reducers/generalSlice";
 import { MAP_INITIAL_CENTER, MAP_INITIAL_ZOOM, MAP_MAX_ZOOM, MAP_MIN_ZOOM } from "../../types/constants";
 import { isLocationValid } from "../../utils/utilFunctions";
 import styles from "./MapWrapper.module.scss";
@@ -67,7 +67,7 @@ const MapWrapper = ({
       const coordinatesEPSG: [number, number] = [locEas, locNor];
 
       dispatch(
-        setServicepointLocation({
+        setServicepointLocationEuref({
           coordinates: coordinatesEPSG,
         })
       );

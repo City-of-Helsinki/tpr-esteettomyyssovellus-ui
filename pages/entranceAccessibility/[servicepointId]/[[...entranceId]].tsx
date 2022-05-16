@@ -52,7 +52,7 @@ import HeadlineQuestionContainer from "../../../components/HeadlineQuestionConta
 import QuestionFormCtrlButtons from "../../../components/QuestionFormCtrlButtons";
 import PathTreeComponent from "../../../components/PathTreeComponent";
 import { setAnswer, setAnsweredChoice, setEntranceId, setExtraAnswer, setServicepointId, setStartDate } from "../../../state/reducers/formSlice";
-import { getTokenHash, getCurrentDate, formatAddress } from "../../../utils/utilFunctions";
+import { getTokenHash, getCurrentDate, formatAddress, convertCoordinates } from "../../../utils/utilFunctions";
 /*
 import {
   addComment,
@@ -66,6 +66,7 @@ import {
 */
 import { setEntranceLocationPhoto, setEntrancePlaceBoxes } from "../../../state/reducers/additionalInfoSlice";
 // import { persistor } from "../../../state/store";
+import { setServicepointLocationEuref, setServicepointLocationWGS84 } from "../../../state/reducers/generalSlice";
 // import { setCurrentlyEditingBlock, setCurrentlyEditingQuestion } from "../../../state/reducers/generalSlice";
 import LoadSpinner from "../../../components/common/LoadSpinner";
 
@@ -149,6 +150,13 @@ const EntranceAccessibility = ({
       if (startedAnswering === "") {
         dispatch(setStartDate(getCurrentDate()));
       }
+
+      // Update the servicepoint coordinates in redux state, for use as the default location on maps
+      const { loc_easting, loc_northing } = servicepointData;
+      const coordinatesEuref = [loc_easting ?? 0, loc_northing ?? 0] as [number, number];
+      const coordinatesWGS84 = convertCoordinates("EPSG:3067", "WGS84", coordinatesEuref).reverse() as [number, number];
+      dispatch(setServicepointLocationEuref({ coordinatesEuref }));
+      dispatch(setServicepointLocationWGS84({ coordinatesWGS84 }));
     }
     if (Object.keys(entranceData).length > 0) {
       dispatch(setEntranceId(entranceData.entrance_id));

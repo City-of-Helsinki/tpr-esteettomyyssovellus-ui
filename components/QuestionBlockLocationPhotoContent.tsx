@@ -6,9 +6,9 @@ import Map from "./common/Map";
 import TextWithLinks from "./common/TextWithLinks";
 import { setEntranceLocationPhoto } from "../state/reducers/additionalInfoSlice";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
-import { MAP_INITIAL_ZOOM, MAP_MAX_ZOOM } from "../types/constants";
+import { MAP_MAX_ZOOM } from "../types/constants";
 import { QuestionBlockLocationPhotoContentProps } from "../types/general";
-import { convertCoordinates, isLocationValid } from "../utils/utilFunctions";
+import { convertCoordinates } from "../utils/utilFunctions";
 import QuestionInfo from "./QuestionInfo";
 import styles from "./QuestionBlockLocationPhotoContent.module.scss";
 
@@ -30,7 +30,7 @@ const QuestionBlockLocationPhotoContent = ({ block, canAddLocation, canAddPhoto 
   const { modifiedPhotoBase64, modifiedAnswer } = curEntranceLocationPhoto;
   const { loc_easting, loc_northing, photo_url, photo_text_fi, photo_text_sv, photo_text_en, photo_source_text } = modifiedAnswer || {};
 
-  const coordinatesEuref: [number, number] = [loc_easting ?? 0, loc_northing ?? 0];
+  const coordinatesEuref = [loc_easting ?? 0, loc_northing ?? 0] as [number, number];
   const coordinatesWGS84 = convertCoordinates("EPSG:3067", "WGS84", coordinatesEuref).reverse() as [number, number];
 
   const editLocationPhoto = () => {
@@ -77,7 +77,7 @@ const QuestionBlockLocationPhotoContent = ({ block, canAddLocation, canAddPhoto 
               <div className={styles.mapcontainer}>
                 <Map
                   curLocation={coordinatesWGS84}
-                  initZoom={isLocationValid(coordinatesWGS84) ? MAP_MAX_ZOOM : MAP_INITIAL_ZOOM}
+                  initZoom={MAP_MAX_ZOOM}
                   draggableMarker={false}
                   questionId={-1}
                   makeStatic

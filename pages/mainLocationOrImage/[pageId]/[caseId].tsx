@@ -46,7 +46,7 @@ const MainLocationOrImage = ({ pageId, caseId }: MainLocationOrImageProps): Reac
 
   const currentMainImage = useAppSelector((state) => state.formReducer.mainImage);
 
-  const coordinates = useAppSelector((state) => state.generalSlice.coordinates);
+  const coordinatesEuref = useAppSelector((state) => state.generalSlice.coordinatesEuref);
 
   const coordinatesWGS84 = useAppSelector((state) => state.generalSlice.coordinatesWGS84);
 
@@ -59,11 +59,11 @@ const MainLocationOrImage = ({ pageId, caseId }: MainLocationOrImageProps): Reac
     }
     dispatch(
       setCurEditingBothCoordinateTemps({
-        coordinates,
+        coordinates: coordinatesEuref,
         coordinatesWGS84,
       })
     );
-  }, [coordinates, coordinatesWGS84, currentMainImage, currentMainImageElement, dispatch]);
+  }, [coordinatesEuref, coordinatesWGS84, currentMainImage, currentMainImageElement, dispatch]);
 
   const hasMainImage = useAppSelector((state) => state.formReducer.mainImageElement);
 

@@ -3,7 +3,7 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 import { PURGE } from "redux-persist";
 
 interface generalSliceProps {
-  coordinates: [number, number];
+  coordinatesEuref: [number, number];
   coordinatesWGS84: [number, number];
   user: string;
   currentlyEditingQuestionAddinfo: number;
@@ -14,7 +14,7 @@ interface generalSliceProps {
 
 // todo: get the initial location to here
 const initialState: generalSliceProps = {
-  coordinates: [0, 0],
+  coordinatesEuref: [0, 0],
   coordinatesWGS84: [0, 0],
   user: "",
   currentlyEditingQuestionAddinfo: -1,
@@ -41,9 +41,9 @@ export const generalSlice = createSlice({
         currentlyEditingBlockAddinfo: action.payload,
       };
     },
-    setServicepointLocation: (state, action: PayloadAction<{ coordinates: [number, number] }>) => {
-      const { coordinates } = action.payload;
-      return { ...state, coordinates };
+    setServicepointLocationEuref: (state, action: PayloadAction<{ coordinatesEuref: [number, number] }>) => {
+      const { coordinatesEuref } = action.payload;
+      return { ...state, coordinatesEuref };
     },
     setServicepointLocationWGS84: (state, action: PayloadAction<{ coordinatesWGS84: [number, number] }>) => {
       const { coordinatesWGS84 } = action.payload;
@@ -79,7 +79,7 @@ export const generalSlice = createSlice({
 });
 
 export const {
-  setServicepointLocation,
+  setServicepointLocationEuref,
   setServicepointLocationWGS84,
   setCurrentlyEditingBlock,
   setUser,

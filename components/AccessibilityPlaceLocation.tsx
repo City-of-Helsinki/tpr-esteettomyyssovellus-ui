@@ -1,10 +1,10 @@
 import React, { KeyboardEvent, useCallback, useMemo, useState } from "react";
 import { IconCross, IconLocation, IconMinus, IconPlus, TextArea } from "hds-react";
 import { useI18n } from "next-localization";
-import { useAppDispatch } from "../state/hooks";
+import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { editEntrancePlaceBox } from "../state/reducers/additionalInfoSlice";
 import { BackendEntrancePlace } from "../types/backendModels";
-import { MAP_INITIAL_ZOOM, MAP_MAX_ZOOM } from "../types/constants";
+import { MAP_MAX_ZOOM } from "../types/constants";
 import { AccessibilityPlaceLocationProps, EntrancePlaceBox } from "../types/general";
 import { convertCoordinates, isLocationValid } from "../utils/utilFunctions";
 import Map from "./common/Map";
@@ -36,7 +36,8 @@ const AccessibilityPlaceLocation = ({ entrancePlaceBox }: AccessibilityPlaceLoca
   const coordinates = useAppSelector((state) => state.additionalInfoReducer.additionalInfo[questionId].locations?.coordinates);
   const coords = !isMainLocPicComponent && coordinates ? coordinates : fallbackLocation;
   */
-  const coordinatesEuref: [number, number] = [loc_easting ?? 0, loc_northing ?? 0];
+  const servicepointCoordinatesEuref = useAppSelector((state) => state.generalSlice.coordinatesEuref);
+  const coordinatesEuref = [loc_easting ?? 0, loc_northing ?? 0] as [number, number];
   const coordinatesWGS84 = convertCoordinates("EPSG:3067", "WGS84", coordinatesEuref).reverse() as [number, number];
 
   const [mapInput, setMapInput] = useState(false);
@@ -58,7 +59,7 @@ const AccessibilityPlaceLocation = ({ entrancePlaceBox }: AccessibilityPlaceLoca
   const setLocation = useCallback(
     (coordinates: [number, number]) => {
       // Convert the coordinates to the Finnish system
-      const lonLatReverseCoordinates: [number, number] = [coordinates[1], coordinates[0]];
+      const lonLatReverseCoordinates = [coordinates[1], coordinates[0]] as [number, number];
       const [locEas, locNor] = convertCoordinates("WGS84", "EPSG:3067", lonLatReverseCoordinates);
 
       updatePlaceBox({
@@ -157,7 +158,7 @@ const AccessibilityPlaceLocation = ({ entrancePlaceBox }: AccessibilityPlaceLoca
       <Map
         curLocation={coordinatesWGS84}
         setLocation={setLocation}
-        initZoom={isLocationValid(coordinatesWGS84) ? MAP_MAX_ZOOM : MAP_INITIAL_ZOOM}
+        initZoom={MAP_MAX_ZOOM}
         draggableMarker
         questionId={questionId}
         isMainLocPicComponent={isMainLocPicComponent}
