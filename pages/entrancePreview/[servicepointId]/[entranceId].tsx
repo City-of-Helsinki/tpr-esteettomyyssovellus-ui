@@ -178,10 +178,12 @@ const Preview = ({
     }
   }, [startedAnswering, dispatch]);
 
-  const hasData = accessibilityData && accessibilityData[entranceKey] && accessibilityData[entranceKey].length > 0;
+  const hasData = Object.keys(servicepointData).length > 0;
+  const hasAccessibilityData = accessibilityData && accessibilityData[entranceKey] && accessibilityData[entranceKey].length > 0;
+  const hasPlaceData = entrancePlaceData && entrancePlaceData.length > 0;
 
   // Filter by language
-  const filteredAccessibilityData: AccessibilityData = hasData
+  const filteredAccessibilityData: AccessibilityData = hasAccessibilityData
     ? {
         [entranceKey]: filterByLanguage(accessibilityData[entranceKey], i18n.locale()),
       }
@@ -214,7 +216,7 @@ const Preview = ({
             sentenceGroupId={sentenceGroupId}
             sentenceGroup={groupedAccessibilityData ? groupedAccessibilityData[sentenceGroupId] : undefined}
             entranceChoiceData={{ [entranceKey]: entranceChoiceData }}
-            hasData={hasData}
+            hasData={hasAccessibilityData}
           />
         );
       });
@@ -301,21 +303,31 @@ const Preview = ({
               <div className={styles.contentcontainer}>
                 <PreviewControlButtons hasSaveDraftButton={!isMainEntrancePublished} setSendingComplete={setSendingComplete} />
 
-                {entranceKey === "main" && <ServicepointLandingSummaryContact entranceData={entranceData[entranceKey]} hasData={hasData} />}
+                {entranceKey === "main" && (
+                  <ServicepointLandingSummaryContact entranceData={entranceData[entranceKey]} hasData={hasAccessibilityData} />
+                )}
 
-                <ServicepointLandingSummaryContent contentHeader={i18n.t("servicepoint.mainEntranceLocationLabel")}>
+                <ServicepointLandingSummaryContent
+                  contentHeader={
+                    entranceKey === "main" ? i18n.t("servicepoint.mainEntranceLocationLabel") : i18n.t("servicepoint.entranceLocationLabel")
+                  }
+                >
                   <SummaryLocationPicture entranceKey={entranceKey} entranceData={entranceData[entranceKey]} servicepointData={servicepointData} />
                 </ServicepointLandingSummaryContent>
 
-                <div>
-                  <h2 className={styles.header}>{i18n.t("servicepoint.accessibilityPreviewHeader")}</h2>
-                  <div className={styles.content}>{getSentenceGroups(groupedAccessibilityData)}</div>
-                </div>
+                {hasAccessibilityData && (
+                  <div>
+                    <h2 className={styles.header}>{i18n.t("servicepoint.accessibilityPreviewHeader")}</h2>
+                    <div className={styles.content}>{getSentenceGroups(groupedAccessibilityData)}</div>
+                  </div>
+                )}
 
-                <div>
-                  <h2 className={styles.header}>{i18n.t("servicepoint.picturesLocations")}</h2>
-                  <div className={styles.content}>{getEntrancePlaces(groupedEntrancePlaceData)}</div>
-                </div>
+                {hasPlaceData && (
+                  <div>
+                    <h2 className={styles.header}>{i18n.t("servicepoint.picturesLocations")}</h2>
+                    <div className={styles.content}>{getEntrancePlaces(groupedEntrancePlaceData)}</div>
+                  </div>
+                )}
 
                 <div className={styles.footercontainer}>
                   <PreviewControlButtons hasSaveDraftButton={!isMainEntrancePublished} setSendingComplete={setSendingComplete} />
