@@ -14,7 +14,7 @@ const SummaryAccessibility = ({
   entranceKey,
   sentenceGroupId,
   sentenceGroup,
-  questionAnswerData,
+  entranceChoiceData,
   hasData,
 }: SummaryAccessibilityProps): JSX.Element => {
   const i18n = useI18n();
@@ -41,9 +41,9 @@ const SummaryAccessibility = ({
   };
 
   const getQuestionsAnswersAccordion = () => {
-    if (sentenceGroup && questionAnswerData[entranceKey]) {
+    if (sentenceGroup && entranceChoiceData[entranceKey]) {
       const getQuestionAnswerRows = (limit: number, isLessThan: boolean) => {
-        return questionAnswerData[entranceKey]
+        return entranceChoiceData[entranceKey]
           .filter((qa) => qa.sentence_group_id === Number(sentenceGroupId) && qa.language_id === curLocaleId)
           .sort((a, b) => (a.question_order_text ?? "").localeCompare(b.question_order_text ?? ""))
           .map((qa, index) => {

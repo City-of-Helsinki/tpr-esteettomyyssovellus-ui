@@ -291,7 +291,7 @@ const EntranceAccessibility = ({
         });
       }
 
-      // Put entrance place boxes into redux state
+      // Put entrance places into redux state
       dispatch(
         setEntrancePlaceBoxes(
           entrancePlaceData.map((place) => {

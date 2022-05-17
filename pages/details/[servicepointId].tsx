@@ -49,7 +49,7 @@ const Details = ({
   accessibilityPlaceData,
   entranceData,
   entrancePlaceData,
-  questionAnswerData,
+  entranceChoiceData,
   // hasExistingFormData,
   isMainEntrancePublished,
 }: DetailsProps): ReactElement => {
@@ -197,7 +197,7 @@ const Details = ({
                     servicepointData={servicepointData}
                     accessibilityData={filteredAccessibilityData}
                     accessibilityPlaces={filteredPlaces}
-                    questionAnswerData={questionAnswerData}
+                    entranceChoiceData={entranceChoiceData}
                   />
                 </div>
               );
@@ -220,7 +220,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   let entranceData: EntranceData = {};
   let entrancePlaceData: EntrancePlaceData = {};
   let servicepointData: BackendServicepoint = {} as BackendServicepoint;
-  let questionAnswerData: EntranceChoiceData = {};
+  let entranceChoiceData: EntranceChoiceData = {};
   let isMainEntrancePublished = false;
 
   if (params !== undefined) {
@@ -372,7 +372,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         })
       );
 
-      questionAnswerData = entranceQuestionAnswerData.reduce((acc, answerData) => {
+      entranceChoiceData = entranceQuestionAnswerData.reduce((acc, answerData) => {
         const entrance = entranceData[answerData.entranceKey];
         return { ...acc, [answerData.entranceKey]: answerData.allEntranceChoiceData.filter((a) => a.log_id === entrance.log_id) };
       }, {});
@@ -384,7 +384,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       accessibilityPlaceData = [];
       entranceData = {};
       entrancePlaceData = {};
-      questionAnswerData = {};
+      entranceChoiceData = {};
     }
   }
 
@@ -396,7 +396,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       accessibilityPlaceData,
       entranceData,
       entrancePlaceData,
-      questionAnswerData,
+      entranceChoiceData,
       // hasExistingFormData,
       isMainEntrancePublished,
     },

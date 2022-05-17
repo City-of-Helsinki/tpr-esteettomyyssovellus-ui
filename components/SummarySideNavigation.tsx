@@ -16,7 +16,7 @@ const SummarySideNavigation = ({
   servicepointData,
   accessibilityData,
   accessibilityPlaces,
-  questionAnswerData,
+  entranceChoiceData,
 }: SummarySideNavigationProps): JSX.Element => {
   const i18n = useI18n();
 
@@ -94,7 +94,7 @@ const SummarySideNavigation = ({
 
         return (
           <SideNavigation.SubLevel
-            key={`sentencegroup_${entrancePlaceId}`}
+            key={`entranceplace_${entrancePlaceId}`}
             id={subLevelId}
             active={activeLevel === subLevelId}
             label={getEntrancePlaceName(entrancePlaceId)}
@@ -148,7 +148,7 @@ const SummarySideNavigation = ({
             entranceKey={entranceKey}
             sentenceGroupId={selectedGroupId}
             sentenceGroup={groupedAccessibilityData ? groupedAccessibilityData[selectedGroupId] : undefined}
-            questionAnswerData={questionAnswerData}
+            entranceChoiceData={entranceChoiceData}
             hasData={hasAccessibilityData}
           />
         )}

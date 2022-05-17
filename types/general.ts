@@ -133,7 +133,7 @@ export interface SummarySideNavigationProps {
   servicepointData: BackendServicepoint;
   accessibilityData: AccessibilityData;
   accessibilityPlaces: BackendPlace[];
-  questionAnswerData: EntranceChoiceData;
+  entranceChoiceData: EntranceChoiceData;
 }
 
 export interface ServicepointLandingSummaryContactProps {
@@ -155,7 +155,7 @@ export interface SummaryAccessibilityProps {
   entranceKey: string;
   sentenceGroupId: string;
   sentenceGroup?: BackendEntranceSentence[];
-  questionAnswerData: EntranceChoiceData;
+  entranceChoiceData: EntranceChoiceData;
   hasData: boolean;
 }
 
@@ -456,7 +456,7 @@ export interface DetailsProps {
   accessibilityPlaceData: BackendPlace[];
   entranceData: EntranceData;
   entrancePlaceData: EntrancePlaceData;
-  questionAnswerData: EntranceChoiceData;
+  entranceChoiceData: EntranceChoiceData;
   // hasExistingFormData: boolean;
   isMainEntrancePublished: boolean;
 }
