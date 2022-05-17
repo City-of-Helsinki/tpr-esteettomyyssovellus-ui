@@ -22,6 +22,8 @@
       "accessibility": "Saavutettavuusseloste"
     },
     "map": {
+      "zoomIn": "Lähennä",
+      "zoomOut": "Loitonna",
       "osm": "OpenStreetMapin tekijät",
       "point": "piste",
       "line": "viiva"
@@ -31,7 +33,8 @@
       "sv": "ruotsiksi",
       "en": "englanniksi"
     },
-    "opensInANewTab": "(aukeaa uuteen välilehteen)",
+    "opensInANewTab": "Avautuu uudessa välilehdessä.",
+    "opensExternal": "Siirtyy toiseen sivustoon.",
     "notAuthorized": "Sinulla ei ole lupaa tarkastella pyydettyä sivua",
     "noData": "Tietoja ei ole saatavilla",
     "landing": {
@@ -43,14 +46,22 @@
     "generalExplanation": "Selite",
     "buttons": {
       "saveAndReturn": "Tallenna ja palaa",
-      "returnNoSave": "Poistu tallentamatta"
+      "returnNoSave": "Poistu tallentamatta",
+      "deleteAdditionalInfo": "Poista kaikki lisätietokokonaisuudet"
+    },
+    "message": {
+      "validationFailed": {
+        "title": "Lomakkeella on virheitä",
+        "message": "Tarkista tiedot, virheellisiä kohtia on korostettu alla"
+      }
     },
     "mainEntrance": "Pääsisäänkäynti",
     "mainEntranceLocation": "Pääsisäänkäynnin sijainti",
     "additionalEntrance": "Lisäsisäänkäynti",
+    "additionalEntrances": "Lisäsisäänkäynnit",
     "entrance": "Lisäsisäänkäynti",
     "newEntrance": "Uusi sisäänkäynti",
-    "updated": "Päivitetty",
+    "updated": "Päivitetty viimeksi",
     "search": "Haku",
     "formSaved": "Esteettömyystiedot tallennettu",
     "formSentAndSaved": "Tiedot on lähetetty ja tallennettu onnistuneesti",
@@ -59,6 +70,7 @@
     "hideInfo": "Pienennä ohje",
     "editAddinfoText": "Muokkaa lisätietoja",
     "missingAnswerValue": "Valinta puuttuu",
+    "missingTextValue": "Vastaus puuttuu",
     "copyDataFromSameAddress": "kopioi samassa osoitteessa olevan toimipisteen tiedot",
     "openInfoWhatIsThis": "Näytä mikä tämä on",
     "statusReady": "Valmis",
@@ -74,6 +86,7 @@
     },
     "contactInfoHeader": "Yhteystiedot",
     "contactFormSummaryHeader": "Esteettömyystiedot",
+    "contactFormPreviewHeader": "Esikatsele esteettömyystiedot",
     "numberOfEntrances1": "sisäänkäynti",
     "numberOfEntrances2+": "sisäänkäyntiä",
     "noDataContactinfo": "Toimipisteelle ei ole annettu esteettömyysasioiden yhteystietoja",
@@ -86,7 +99,14 @@
     "entranceLocationLabel": "Lisäsisäänkäynnin sijainti",
     "mainEntranceLocationCoordinatesLabel": "Koordinaatit",
     "mainEntrancePicturesLabel": "Pääsisäänkäynnin kuva",
-    "entrancePicturesLabel": "Lisäsisäänkäynnin kuva"
+    "entrancePicturesLabel": "Lisäsisäänkäynnin kuva",
+    "accessibilityPreviewHeader": "Esteettömyystiedot",
+    "navigateToPage": "Siirry sivulle",
+    "picturesLocations": "Kuvat ja sijainnit",
+    "photoSource": "Lähde",
+    "questionsAndAnswers": "Esteettömyyskysymykset ja vastaukset",
+    "showMore": "Näytä lisää",
+    "showLess": "Näytä vähemmän"
   },
   "questionFormControlButtons": {
     "quit": "Keskeytä",
@@ -102,17 +122,18 @@
     "addPictures": "Lisää kuvia",
     "addComment": "Lisää kommentti",
     "changePicture": "Vaihda kuva",
-    "chooseFromDevice": "Valitse laitteelta",
-    "cancelPicture": "Peru kuva",
+    "chooseFromDevice": "Lataa kuva laitteelta",
+    "addPictureLink": "Lisää kuvalinkki",
+    "cancelPicture": "Poista kuva",
     "cancelComment": "Peru kommentti",
-    "cancelLocation": "Peru Sijainti",
+    "cancelLocation": "Poista sijainti",
     "pictureInput": "Kuva laitteelta",
-    "pictureInputLink": "Kuva linkki ",
+    "pictureInputLink": "Kuva linkki",
     "locationInstructions": "Lisää tähän ohjeita LOKAATION lisäämiseen",
     "picturesInstructions": "Lisää tähän ohjeita KUVIEN lisäämiseen",
     "commentInstructions": "Lisää tähän 'ohjeita' KOMMENTIN lisäämiseen",
     "pictureLabel": "Kuvateksti",
-    "pictureHelperText": "Kuvaile, mitä kuva esittää",
+    "pictureHelperText": "Tekstiä käytetään alt-tekstinä ja kuvatekstinä",
     "generalTooptipButtonLabel": "Apua",
     "generalTooptipLabel": "Apua",
     "altToolTipContent": "Apustusteksti",
@@ -125,9 +146,15 @@
     "pictureHelperTextEng": "Kuvaile mitä kuva esittää englanniksi",
     "sharePictureLicenseLabel": "Kuvan käyttöoikeudet",
     "sharePictureLicenseText": "Kyllä, kuvan saa jakaa",
-    "sharePictureLicense": "Creative Commons VY 4.0. -lisenssilä",
+    "sharePictureLicense": "Creative Commons BY 4.0. -lisenssillä",
     "sourceTooltipText": "Täytä tähän ohjeet kuvalähde fin",
     "sourceTooltipMainLabel": "Kuvalähde",
+    "locationLabel": "Sijainnin kuvaus",
+    "locationHelperText": "Kuvaile sijaintia",
+    "locationLabelSwe": "Sijainnin kuvaus ruotsiksi",
+    "locationHelperTextSwe": "Kuvaile sijaintia ruotsiksi",
+    "locationLabelEng": "Sijainnin kuvaus englanniksi",
+    "locationHelperTextEng": "Kuvaile sijaintia englanniksi",
     "commentMainHeader": "Voit tarkentaa esteettömyystietoja vapaamuotoisella lisätekstillä",
     "addCommentFiErrorText": "Olkaa hyvä ja syöttäkää kuvailu",
     "commentFiHeader": "Lisäteksti",
@@ -141,18 +168,26 @@
     "commentEnLabel": "Kuvailu englanniksi",
     "commentEnLabelHelper" : "Kerro lisää esteettömyydestä englanniksi",
     "pictureLinkConfirmButton": "Vahvista",
-    "picureLinkErrorText": "Olkaa hyvä ja syöttäkää kuvalinkki",
-    "pictureTermsErrorText": "olkaa hyvä ja hyväksykää ehdot",
+    "picureLinkErrorText": "Olkaa hyvä ja syöttäkää kelvollinen kuvalinkki",
+    "pictureTermsErrorText": "Olkaa hyvä ja hyväksykää ehdot",
     "pictureTermsInfoText": "Ehdot tulee hyväksyä, pääset lukemaan ne oheisesta linkistä tekstiä klikkaamalla",
     "picureSourceErrorText": "Olkaa hyvä ja syöttäkää kuvalähde",
     "mainInfoText": "Voit tarkentaa esteettömyystietoja vapaamuotoisella lisätekstillä, kuvalla tai sijaintitiedolla",
-
     "ctrlButtons": {
       "addNewComment": "Lisää tarkennusteksti",
       "addUploadImageFromDevice": "Lataa kuva laitteelta",
       "addPictureLink": "Lisää kuvalinkki",
       "addNewLocation": "Lisää sijainti"
-    }
+    },
+    "additionalInfo": "Lisätiedot",
+    "fillPlaceData1": "Voit täydentää",
+    "fillPlaceData2": "tietoja kuvilla ja/tai sijaintitiedolla.",
+    "orderPlaceData": "Järjestä tiedoista tärkein ylimmäksi ja vähimmän tärkein alimmaksi.",
+    "additionalInfoSet": "Lisätietokokonaisuus",
+    "addAdditionalInfoSet": "Lisää uusi lisätietokokonaisuus",
+    "order": "Järjestä",
+    "pictureTitle": "Kuva",
+    "locationTitle": "Sijainti kartalla"
   },
   "accessibilityForm": {
     "generalInfo1": "Kysymyksiin vastaaminen vie aikaa toimipisteestä ja sisäänkäynnistä riippuen noin 5 - 15 minuuttia. Jokaiseen avautuvaan kysymykseen täytyy vastata ellei toisin mainita. Vastausten perusteella muodostuu esteettömyyslauseet suomeksi, ruotsiksi ja englanniksi.",
@@ -164,7 +199,11 @@
     "additionalInfoPreviewHeader": "Lisätiedot",
     "additionalInfoPreviewAltText": "Kuva: ",
     "additionalInfoPreviewSourceText": "Lähde: ",
-    "optional": "vapaaehtoinen"
+    "optional": "vapaaehtoinen",
+    "fillPlaceData1": "Haluatko täydentää",
+    "fillPlaceData2": "esteettömyystietoja",
+    "placeLink": "Lisää kuva ja/tai sijainti",
+    "editLocationPhoto": "Muokkaa"
   },
   "QuestionFormImportExistingData": {
     "chooseServicepoint": "Valitse toimipiste",

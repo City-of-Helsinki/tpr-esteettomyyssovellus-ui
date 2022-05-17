@@ -1,0 +1,30 @@
+@import "~hds-design-tokens/lib/all.scss";
+@import "../styles/mixins.scss";
+
+.maincontainer {
+  display: flex;
+  flex-direction: row;
+  border: 2px solid $color-black-10;
+  padding: $spacing-xs;
+
+  @include media(xs, s) {
+    flex-direction: column;
+  }
+
+  .sidenavigation {
+    width: 30%;
+    margin-right: $spacing-xs;
+
+    @include media(xs, s) {
+      width: 100%;
+    }
+  }
+
+  .contentcontainer {
+    width: 70%;
+
+    @include media(xs, s) {
+      width: 100%;
+    }
+  }
+}

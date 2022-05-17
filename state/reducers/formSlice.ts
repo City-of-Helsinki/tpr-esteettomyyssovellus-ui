@@ -6,7 +6,7 @@ import { MainPictureProps } from "../../types/general";
 interface formState {
   currentServicepointId: number;
   currentEntranceId: number;
-  answeredChoices: number[];
+  // answeredChoices: number[];
   answers: { [key: number]: number };
   extraAnswers: { [key: number]: string };
   isContinueClicked: boolean;
@@ -25,7 +25,7 @@ interface formState {
 const initialState: formState = {
   currentServicepointId: -1,
   currentEntranceId: -1,
-  answeredChoices: [],
+  // answeredChoices: [],
   answers: {},
   extraAnswers: {},
   isContinueClicked: false,
@@ -57,6 +57,7 @@ export const formSlice = createSlice({
         currentEntranceId: action.payload,
       };
     },
+    /*
     setAnsweredChoice: (state, action: PayloadAction<number>) => {
       return {
         ...state,
@@ -69,6 +70,7 @@ export const formSlice = createSlice({
         answeredChoices: [...(state.answeredChoices?.filter((elem) => elem !== action.payload) ?? [])],
       };
     },
+    */
     setAnswer: (state, action: PayloadAction<{ questionId: number; answer: number }>) => {
       return {
         ...state,
@@ -252,8 +254,8 @@ export const formSlice = createSlice({
 export const {
   setServicepointId,
   setEntranceId,
-  setAnsweredChoice,
-  removeAnsweredChoice,
+  // setAnsweredChoice,
+  // removeAnsweredChoice,
   setAnswer,
   setExtraAnswer,
   setContinue,

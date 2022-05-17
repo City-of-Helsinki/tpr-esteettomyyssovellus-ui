@@ -22,6 +22,8 @@
       "accessibility": "Tillgänglighetsutlåtande"
     },
     "map": {
+      "zoomIn": "Zooma in",
+      "zoomOut": "Zooma ut",
       "osm": "OpenStreetMaps bidragsgivare",
       "point": "punkt",
       "line": "linje"
@@ -31,7 +33,8 @@
       "sv": "på svenska",
       "en": "på engelska"
     },
-    "opensInANewTab": "(öppnar i ny flik)",
+    "opensInANewTab": "Öppnar i ny flik.",
+    "opensExternal": "Flyttar till en annan webbplats.",
     "notAuthorized": "Du har inte behörighet att visa den begärda sidan",
     "noData": "Information är inte tillgänglig",
     "landing": {
@@ -42,15 +45,23 @@
     "generalChoose": "Välja",
     "generalExplanation": "Förklaring",
     "buttons": {
-      "saveAndReturn": "spara och returnera",
-      "returnNoSave": "avsluta utan att spara"
+      "saveAndReturn": "Spara och returnera",
+      "returnNoSave": "Avsluta utan att spara",
+      "deleteAdditionalInfo": "Ta bort alla ytterligare datamängder"
+    },
+    "message": {
+      "validationFailed": {
+        "title": "Det finns fel i blanketten",
+        "message": "Kontrollera uppgifterna, de felaktiga punkterna är markerade här under"
+      }
     },
     "mainEntrance": "Huvudingången",
     "mainEntranceLocation": "Platsen för huvudentren",
     "additionalEntrance": "Alternativ ingång",
+    "additionalEntrances": "Alternativ ingångar",
     "entrance": "Alternativ ingång",
     "newEntrance": "Ny ingång",
-    "updated": "Uppdaterad",
+    "updated": "Senast uppdaterad",
     "search": "Sök",
     "formSaved": "Tillgänglighetsinformation sparad",
     "formSentAndSaved": "Data har skickats och sparats framgångsrikt",
@@ -58,7 +69,8 @@
     "questionBlockShowMoreMainEntrance": "Se mer om huvudingångsvägarna",
     "hideInfo": "Minimera hjälp",
     "editAddinfoText": "Redigera för mer information",
-    "missingAnswerValue": "Svar saknas",
+    "missingAnswerValue": "Inget val",
+    "missingTextValue": "Inget svar",
     "copyDataFromSameAddress": "kopiera uppgifterna om kontoret på samma adress",
     "openInfoWhatIsThis": "Visa mig vad det här är",
     "statusReady": "Färdiga",
@@ -74,6 +86,7 @@
     },
     "contactInfoHeader": "Kontaktinformation",
     "contactFormSummaryHeader": "Tillgänglighetsinformation",
+    "contactFormPreviewHeader": "Förhandsgranska tillgänglighetsinformation",
     "numberOfEntrances1": "ingång",
     "numberOfEntrances2+": "ingångar",
     "noDataContactinfo": "Inga kontaktuppgifter för tillgänglighetsfrågor har lämnats till kontoret",
@@ -86,7 +99,14 @@
     "entranceLocationLabel": "Alternativ ingångens läge",
     "mainEntranceLocationCoordinatesLabel": "Koordinater",
     "mainEntrancePicturesLabel": "Huvudingångens bild",
-    "entrancePicturesLabel": "Alternativ ingångens bild"
+    "entrancePicturesLabel": "Alternativ ingångens bild",
+    "accessibilityPreviewHeader": "Tillgänglighetsinformation",
+    "navigateToPage": "Navigera till sidan",
+    "picturesLocations": "Foton och platser",
+    "photoSource": "Källa",
+    "questionsAndAnswers": "Tillgänglighetsfrågor och svar",
+    "showMore": "Visa mer",
+    "showLess": "Visa mindre"
   },
   "questionFormControlButtons": {
     "quit": "Avbryta",
@@ -102,17 +122,18 @@
     "addPictures": "Lägg till bilder",
     "addComment": "lägg till kommentar",
     "changePicture": "Byt bild",
-    "chooseFromDevice": "Välj från enhet",
-    "cancelPicture": "Avbryta bilden",
+    "chooseFromDevice": "Ladda upp bild från enheten",
+    "addPictureLink": "Lisää kuvalinkki",
+    "cancelPicture": "Radera bilden",
     "cancelComment": "Avbryta kommentar",
-    "cancelLocation": "Avbryta plats",
+    "cancelLocation": "Radera plats",
     "pictureInput": "Bild fron enhet",
     "pictureInputLink": "Bild URL",
     "locationInstructions": "Instructions for creating LOCATION på svenska",
     "picturesInstructions": "Instructions for adding PICTURES på svenska",
     "commentInstructions": "Instructions for adding COMMENT på svenska",
     "pictureLabel": "Bildtext",
-    "pictureHelperText": "Beskriv bilden",
+    "pictureHelperText": "Texten används som alt-text och bildtext",
     "generalTooptipButtonLabel": "Hjälp",
     "generalTooptipLabel": "Hjälp",
     "altToolTipContent": "Hjälp text",
@@ -125,9 +146,15 @@
     "pictureHelperTextEng": "Beskriv vad bilden representerar på engelska",
     "sharePictureLicenseLabel": "bildehörigheter",
     "sharePictureLicenseText": "Ja, bilden kan köras med",
-    "sharePictureLicense": "Creative Commons VY 4.0. -licens",
+    "sharePictureLicense": "Creative Commons BY 4.0. -licens",
     "sourceTooltipText": "Fyll i instruktionerna för den här bildkällan",
     "sourceTooltipMainLabel": "BildKälla",
+    "locationLabel": "Platsbeskrivning",
+    "locationHelperText": "Beskriv platsen",
+    "locationLabelSwe": "Platsbeskrivning på svenska",
+    "locationHelperTextSwe": "Beskriv platsen på svenska",
+    "locationLabelEng": "Platsbeskrivning på engelska",
+    "locationHelperTextEng": "Beskriv platsen på engelska",
     "commentMainHeader": "Du kan förfina tillgänglighetsinformationen med tilläggstext i fri form",
     "addCommentFiErrorText": "Ange en beskrivning",
     "commentFiHeader": "Ytterligare text",
@@ -141,18 +168,26 @@
     "commentEnLabel": "Beskrivning på engelska",
     "commentEnLabelHelper" : "Berätta mer om tillgänglighet på engelska",
     "pictureLinkConfirmButton": "Bekräfta",
-    "picureLinkErrorText": "Ange en bildlänk",
+    "picureLinkErrorText": "Ange en giltig bildlänk",
     "pictureTermsErrorText": "Godkänn villkoren",
     "pictureTermsInfoText": "Villkoren måste accepteras, du kan läsa dem genom att klicka på texten från länken nedan",
     "picureSourceErrorText": "Ange bildkällan",
     "mainInfoText": "Du kan förfina tillgänglighetsinformation med tilläggstext i fri form, en bild eller platsinformation",
-
     "ctrlButtons": {
       "addNewComment": "Lägg kommentar",
       "addUploadImageFromDevice": "Ladda new bild från enhet",
       "addPictureLink": "Lägg bildlänk",
       "addNewLocation": "Lägg plats"
-    }
+    },
+    "additionalInfo": "Ytterligare information",
+    "fillPlaceData1": "Du kan slutföra",
+    "fillPlaceData2": "information med bilder och/eller platsinformation.",
+    "orderPlaceData": "Ordna informationen med det viktigaste överst och minst viktigt längst ner.",
+    "additionalInfoSet": "Ytterligare informationsuppsättning",
+    "addAdditionalInfoSet": "Lägg till en ny uppsättning ytterligare data",
+    "order": "Ordna",
+    "pictureTitle": "Bild",
+    "locationTitle": "Plats på kartan"
   },
   "accessibilityForm": {
     "generalInfo1": "(SV) Kysymyksiin vastaaminen vie aikaa toimipisteestä ja sisäänkäynnistä riippuen noin 5 - 15 minuuttia. Jokaiseen avautuvaan kysymykseen täytyy vastata ellei toisin mainita. Vastausten perusteella muodostuu esteettömyyslauseet suomeksi, ruotsiksi ja englanniksi.",
@@ -164,7 +199,11 @@
     "additionalInfoPreviewHeader": "Ytterligare information",
     "additionalInfoPreviewAltText": "Bild: ",
     "additionalInfoPreviewSourceText": "Källa: ",
-    "optional": "frivillig"
+    "optional": "frivillig",
+    "fillPlaceData1": "Vill du slutföra",
+    "fillPlaceData2": "tillgänglighetsinformation",
+    "placeLink": "Lägg till ett bild och/eller plats",
+    "editLocationPhoto": "Redigera"
   },
   "QuestionFormImportExistingData": {
     "chooseServicepoint": "Välj ett kontor",

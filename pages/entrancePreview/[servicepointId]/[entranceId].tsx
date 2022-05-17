@@ -5,49 +5,60 @@ import { GetServerSideProps } from "next";
 import { IconCrossCircle, IconQuestionCircle, Notification } from "hds-react";
 import Layout from "../../../components/common/Layout";
 import i18nLoader from "../../../utils/i18n";
-import ServicepointLandingSummaryAccessibility from "../../../components/ServicepointLandingSummaryAccessibility";
 import ServicepointLandingSummaryContact from "../../../components/ServicepointLandingSummaryContact";
 import styles from "./preview.module.scss";
 import QuestionInfo from "../../../components/QuestionInfo";
 import ServicepointMainInfoContent from "../../../components/ServicepointMainInfoContent";
 import PathTreeComponent from "../../../components/PathTreeComponent";
 import PreviewControlButtons from "../../../components/PreviewControlButtons";
+import ServicepointLandingSummaryContent from "../../../components/ServicepointLandingSummaryContent";
+import SummaryAccessibility from "../../../components/SummaryAccessibility";
+import SummaryAccessibilityPlace from "../../../components/SummaryAccessibilityPlace";
+import SummaryLocationPicture from "../../../components/SummaryLocationPicture";
 import AddNewEntranceNotice from "../../../components/common/AddNewEntranceNotice";
 import LoadSpinner from "../../../components/common/LoadSpinner";
 import { useAppDispatch, useAppSelector, useLoading } from "../../../state/hooks";
-import { setServicepointId, setEntranceId, setStartDate, setAnsweredChoice, setAnswer, setExtraAnswer } from "../../../state/reducers/formSlice";
+import { setEntranceLocationPhoto, setEntrancePlaceBoxes } from "../../../state/reducers/additionalInfoSlice";
+import { setServicepointId, setEntranceId, setStartDate, setAnswer, setExtraAnswer } from "../../../state/reducers/formSlice";
 import { filterByLanguage, formatAddress, getCurrentDate, getTokenHash } from "../../../utils/utilFunctions";
 import {
   // API_FETCH_ANSWER_LOGS,
   API_FETCH_BACKEND_ENTRANCE,
   API_FETCH_BACKEND_ENTRANCE_ANSWERS,
+  API_FETCH_BACKEND_ENTRANCE_CHOICES,
   API_FETCH_BACKEND_ENTRANCE_FIELD,
+  API_FETCH_BACKEND_ENTRANCE_PLACES,
+  API_FETCH_BACKEND_PLACES,
+  API_FETCH_BACKEND_SENTENCES,
   API_FETCH_BACKEND_SERVICEPOINT,
   API_FETCH_ENTRANCES,
-  API_FETCH_SENTENCE_LANGS,
-  API_FETCH_SERVICEPOINTS,
   API_URL_BASE,
+  LanguageLocales,
 } from "../../../types/constants";
 import { persistor } from "../../../state/store";
 import {
   // AnswerLog,
   BackendEntrance,
   BackendEntranceAnswer,
+  BackendEntranceChoice,
   BackendEntranceField,
+  BackendEntrancePlace,
+  BackendEntranceSentence,
+  BackendPlace,
   BackendServicepoint,
   Entrance,
   EntranceResults,
-  Servicepoint,
-  StoredSentence,
 } from "../../../types/backendModels";
-import { AccessibilityData, EntranceData, PreviewProps } from "../../../types/general";
+import { AccessibilityData, EntranceData, EntrancePlaceData, PreviewProps } from "../../../types/general";
 
 // usage: the preview page of an entrance, displayed before saving the completed form
 const Preview = ({
   servicepointData,
-  servicepointDetail,
   accessibilityData,
+  accessibilityPlaceData,
   entranceData,
+  entrancePlaceData,
+  entranceChoiceData,
   questionAnswerData,
   questionExtraAnswerData,
   isMainEntrancePublished,
@@ -82,13 +93,10 @@ const Preview = ({
         )}`
       : `${i18n.t("common.entrance")}: ${entranceName ?? ""}`;
 
-  useEffect(() => {
+  const initReduxData = () => {
     // Update servicepointId and entranceId in redux state
     if (Object.keys(servicepointData).length > 0) {
       dispatch(setServicepointId(servicepointData.servicepoint_id));
-      if (startedAnswering === "") {
-        dispatch(setStartDate(getCurrentDate()));
-      }
     }
     if (Object.keys(entranceData).length > 0) {
       dispatch(setEntranceId(entranceData[entranceKey].entrance_id));
@@ -100,10 +108,28 @@ const Preview = ({
         const questionId = a.question_id;
         const answer = a.question_choice_id;
         if (questionId !== undefined && answer !== undefined) {
-          dispatch(setAnsweredChoice(answer));
+          // dispatch(setAnsweredChoice(answer));
           dispatch(setAnswer({ questionId, answer }));
         }
       });
+    }
+
+    // Put the existing entrance location and photo into redux state
+    const entranceLocationPhotoAnswer = questionAnswerData.find((a) => a.question_id === undefined || a.question_id === null);
+    if (entranceLocationPhotoAnswer) {
+      // Use the existing location and/or photo
+      dispatch(
+        setEntranceLocationPhoto({
+          entrance_id: entranceData[entranceKey].entrance_id,
+          question_block_id: entranceLocationPhotoAnswer.question_block_id,
+          existingAnswer: entranceLocationPhotoAnswer,
+          modifiedAnswer: entranceLocationPhotoAnswer,
+          termsAccepted: true,
+          invalidValues: [],
+          canAddLocation: false,
+          canAddPhoto: false,
+        })
+      );
     }
 
     // Put existing extra field answers into redux state
@@ -116,16 +142,123 @@ const Preview = ({
         }
       });
     }
-  }, [servicepointData, entranceData, questionAnswerData, questionExtraAnswerData, entranceKey, startedAnswering, dispatch]);
 
-  const hasData = accessibilityData && accessibilityData[entranceKey] && accessibilityData[entranceKey].length > 0;
+    // Put entrance places into redux state
+    dispatch(
+      setEntrancePlaceBoxes(
+        entrancePlaceData.map((place) => {
+          const { entrance_id, place_id, order_number } = place;
+
+          // Try to make sure the order number is 1 or higher
+          return {
+            entrance_id: entrance_id,
+            place_id: place_id,
+            order_number: order_number && order_number > 0 ? order_number : 1,
+            existingBox: place,
+            modifiedBox: place,
+            isDeleted: false,
+            termsAccepted: true,
+            invalidValues: [],
+          };
+        })
+      )
+    );
+  };
+
+  // Initialise the redux data on first render only, using a workaround utilising useEffect with empty dependency array
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const useMountEffect = (fun: () => void) => useEffect(fun, []);
+  useMountEffect(initReduxData);
+
+  useEffect(() => {
+    // Update when the question answering started, if needed
+    // TODO: try to preserve the start date on state purge
+    if (startedAnswering === "") {
+      dispatch(setStartDate(getCurrentDate()));
+    }
+  }, [startedAnswering, dispatch]);
+
+  const hasData = Object.keys(servicepointData).length > 0;
+  const hasAccessibilityData = accessibilityData && accessibilityData[entranceKey] && accessibilityData[entranceKey].length > 0;
+  const hasPlaceData = entrancePlaceData && entrancePlaceData.length > 0;
 
   // Filter by language
-  const filteredAccessibilityData = hasData
+  const filteredAccessibilityData: AccessibilityData = hasAccessibilityData
     ? {
         [entranceKey]: filterByLanguage(accessibilityData[entranceKey], i18n.locale()),
       }
     : {};
+
+  const curLocaleId: number = LanguageLocales[i18n.locale() as keyof typeof LanguageLocales];
+  const filteredPlaces = accessibilityPlaceData.filter((place) => place.language_id === curLocaleId);
+
+  const getGroupedAccessibilityData = (sentences?: BackendEntranceSentence[]): AccessibilityData | undefined => {
+    if (sentences) {
+      return sentences.reduce((acc: AccessibilityData, sentence) => {
+        const { sentence_group_id } = sentence;
+        return {
+          ...acc,
+          [sentence_group_id]: acc[sentence_group_id] ? [...acc[sentence_group_id], sentence] : [sentence],
+        };
+      }, {});
+    }
+  };
+
+  const groupedAccessibilityData = getGroupedAccessibilityData(filteredAccessibilityData ? filteredAccessibilityData[entranceKey] : undefined);
+
+  const getSentenceGroups = (groupedSentences?: AccessibilityData) => {
+    if (groupedSentences) {
+      return Object.keys(groupedSentences).map((sentenceGroupId) => {
+        return (
+          <SummaryAccessibility
+            key={`sentencegroup_${sentenceGroupId}`}
+            entranceKey={entranceKey}
+            sentenceGroupId={sentenceGroupId}
+            sentenceGroup={groupedAccessibilityData ? groupedAccessibilityData[sentenceGroupId] : undefined}
+            entranceChoiceData={{ [entranceKey]: entranceChoiceData }}
+            hasData={hasAccessibilityData}
+          />
+        );
+      });
+    }
+  };
+
+  const getEntrancePlaceName = (entrancePlaceId: string) => {
+    if (filteredPlaces) {
+      const accessibilityPlace = filteredPlaces.find((place) => place.place_id === Number(entrancePlaceId));
+      const { name } = accessibilityPlace ?? {};
+      return name ?? i18n.t("additionalInfo.additionalInfo");
+    }
+    return i18n.t("additionalInfo.additionalInfo");
+  };
+
+  const getGroupedEntrancePlaceData = (entrancePlaces?: BackendEntrancePlace[]): EntrancePlaceData | undefined => {
+    if (entrancePlaces) {
+      return entrancePlaces.reduce((acc: EntrancePlaceData, entrancePlace) => {
+        const { place_id } = entrancePlace;
+        return {
+          ...acc,
+          [place_id]: acc[place_id] ? [...acc[place_id], entrancePlace] : [entrancePlace],
+        };
+      }, {});
+    }
+  };
+
+  const groupedEntrancePlaceData = getGroupedEntrancePlaceData(entrancePlaceData);
+
+  const getEntrancePlaces = (groupedEntrancePlaces?: EntrancePlaceData) => {
+    if (groupedEntrancePlaces) {
+      return Object.keys(groupedEntrancePlaces).map((entrancePlaceId) => {
+        return (
+          <SummaryAccessibilityPlace
+            key={`entranceplace_${entrancePlaceId}`}
+            entrancePlaceName={getEntrancePlaceName(entrancePlaceId)}
+            entrancePlaceData={groupedEntrancePlaceData ? groupedEntrancePlaceData[entrancePlaceId] : undefined}
+          />
+        );
+      });
+    }
+  };
 
   return (
     <Layout>
@@ -162,29 +295,39 @@ const Preview = ({
               <div className={styles.subHeader}>{subHeader}</div>
 
               <div className={styles.entranceHeader}>
-                <h2>{i18n.t("servicepoint.contactFormSummaryHeader")}</h2>
+                <h2>{i18n.t("servicepoint.contactFormPreviewHeader")}</h2>
               </div>
             </div>
 
             {!isSendingComplete && (
-              <div>
+              <div className={styles.contentcontainer}>
                 <PreviewControlButtons hasSaveDraftButton={!isMainEntrancePublished} setSendingComplete={setSendingComplete} />
 
                 {entranceKey === "main" && (
-                  <ServicepointLandingSummaryContact
-                    servicepointData={servicepointDetail}
-                    entranceData={entranceData[entranceKey]}
-                    hasData={hasData}
-                  />
+                  <ServicepointLandingSummaryContact entranceData={entranceData[entranceKey]} hasData={hasAccessibilityData} />
                 )}
 
-                <ServicepointLandingSummaryAccessibility
-                  entranceKey={entranceKey}
-                  entranceData={entranceData[entranceKey]}
-                  servicepointData={servicepointData}
-                  accessibilityData={filteredAccessibilityData}
-                  hasData={hasData}
-                />
+                <ServicepointLandingSummaryContent
+                  contentHeader={
+                    entranceKey === "main" ? i18n.t("servicepoint.mainEntranceLocationLabel") : i18n.t("servicepoint.entranceLocationLabel")
+                  }
+                >
+                  <SummaryLocationPicture entranceKey={entranceKey} entranceData={entranceData[entranceKey]} servicepointData={servicepointData} />
+                </ServicepointLandingSummaryContent>
+
+                {hasAccessibilityData && (
+                  <div>
+                    <h2 className={styles.header}>{i18n.t("servicepoint.accessibilityPreviewHeader")}</h2>
+                    <div className={styles.content}>{getSentenceGroups(groupedAccessibilityData)}</div>
+                  </div>
+                )}
+
+                {hasPlaceData && (
+                  <div>
+                    <h2 className={styles.header}>{i18n.t("servicepoint.picturesLocations")}</h2>
+                    <div className={styles.content}>{getEntrancePlaces(groupedEntrancePlaceData)}</div>
+                  </div>
+                )}
 
                 <div className={styles.footercontainer}>
                   <PreviewControlButtons hasSaveDraftButton={!isMainEntrancePublished} setSendingComplete={setSendingComplete} />
@@ -213,9 +356,11 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   const lngDict = await i18nLoader(locales);
 
   let accessibilityData: AccessibilityData = {};
+  let accessibilityPlaceData: BackendPlace[] = [];
   let entranceData: EntranceData = {};
-  let servicepointData: Servicepoint = {} as Servicepoint;
-  let servicepointDetail: BackendServicepoint = {} as BackendServicepoint;
+  let entrancePlaceData: BackendEntrancePlace[] = [];
+  let entranceChoiceData: BackendEntranceChoice[] = [];
+  let servicepointData: BackendServicepoint = {} as BackendServicepoint;
   let questionAnswerData: BackendEntranceAnswer[] = [];
   let questionExtraAnswerData: BackendEntranceField[] = [];
   // const hasExistingFormData = false;
@@ -223,11 +368,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
 
   if (params !== undefined) {
     try {
-      const servicepointResp = await fetch(`${API_URL_BASE}${API_FETCH_SERVICEPOINTS}${params.servicepointId}/?format=json`, {
-        headers: new Headers({ Authorization: getTokenHash() }),
-      });
-      servicepointData = await (servicepointResp.json() as Promise<Servicepoint>);
-
       const servicepointBackendDetailResp = await fetch(
         `${API_URL_BASE}${API_FETCH_BACKEND_SERVICEPOINT}?servicepoint_id=${params.servicepointId}&format=json`,
         {
@@ -237,7 +377,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       const servicepointBackendDetail = await (servicepointBackendDetailResp.json() as Promise<BackendServicepoint[]>);
 
       if (servicepointBackendDetail?.length > 0) {
-        servicepointDetail = servicepointBackendDetail[0];
+        servicepointData = servicepointBackendDetail[0];
       }
 
       // Get all the existing entrances for the service point
@@ -302,14 +442,49 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         questionExtraAnswerData = allQuestionExtraAnswerData.filter((a) => a.form_submitted === "D");
       }
 
+      // Get the draft entrance place data for pictures and maps
+      const allEntrancePlaceDataResp = await fetch(
+        `${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE_PLACES}?entrance_id=${params.entranceId}&format=json`,
+        {
+          headers: new Headers({ Authorization: getTokenHash() }),
+        }
+      );
+      const allEntrancePlaceData = await (allEntrancePlaceDataResp.json() as Promise<BackendEntrancePlace[]>);
+
+      if (allEntrancePlaceData?.length > 0) {
+        entrancePlaceData = allEntrancePlaceData.filter((a) => a.form_submitted === "D");
+      }
+
+      // Get the draft questions and answers for use in the accessibility summaries
+      const allEntranceChoicesResp = await fetch(
+        `${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE_CHOICES}?entrance_id=${params.entranceId}&format=json`,
+        {
+          headers: new Headers({ Authorization: getTokenHash() }),
+        }
+      );
+      const allEntranceChoiceData = await (allEntranceChoicesResp.json() as Promise<BackendEntranceChoice[]>);
+
+      if (allEntranceChoiceData?.length > 0) {
+        entranceChoiceData = allEntranceChoiceData.filter((a) => a.form_submitted === "D");
+      }
+
       // Get the draft sentences for this entrance
-      const sentenceResp = await fetch(`${API_URL_BASE}${API_FETCH_SENTENCE_LANGS}?entrance_id=${params.entranceId}&form_submitted=D&format=json`, {
-        headers: new Headers({ Authorization: getTokenHash() }),
-      });
-      const sentenceData = await (sentenceResp.json() as Promise<StoredSentence[]>);
+      const sentenceResp = await fetch(
+        `${API_URL_BASE}${API_FETCH_BACKEND_SENTENCES}?entrance_id=${params.entranceId}&form_submitted=D&format=json`,
+        {
+          headers: new Headers({ Authorization: getTokenHash() }),
+        }
+      );
+      const sentenceData = await (sentenceResp.json() as Promise<BackendEntranceSentence[]>);
       accessibilityData = {
         [entranceKey]: sentenceData,
       };
+
+      // Get the accessibility place data for use in the accessibility summaries for entrance place names
+      const accessibilityPlaceResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_PLACES}?format=json`, {
+        headers: new Headers({ Authorization: getTokenHash() }),
+      });
+      accessibilityPlaceData = await (accessibilityPlaceResp.json() as Promise<BackendPlace[]>);
 
       /*
       if (servicepointEntranceData.results.length !== 0 && mainEntranceSentences?.entranceResult) {
@@ -323,10 +498,12 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
     } catch (err) {
       console.error("Error", err);
 
-      servicepointData = {} as Servicepoint;
-      servicepointDetail = {} as BackendServicepoint;
+      servicepointData = {} as BackendServicepoint;
       accessibilityData = {};
+      accessibilityPlaceData = [];
       entranceData = {};
+      entrancePlaceData = [];
+      entranceChoiceData = [];
       questionAnswerData = [];
       questionExtraAnswerData = [];
     }
@@ -336,9 +513,11 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
     props: {
       lngDict,
       servicepointData,
-      servicepointDetail,
       accessibilityData,
+      accessibilityPlaceData,
       entranceData,
+      entrancePlaceData,
+      entranceChoiceData,
       questionAnswerData,
       questionExtraAnswerData,
       // hasExistingFormData,

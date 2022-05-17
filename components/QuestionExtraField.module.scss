@@ -15,26 +15,21 @@
     .infoContainer {
       display: flex;
       flex-direction: column;
-      // width: 70%;
-      border-left: 5px solid #0072c6;
+      border-left: 5px solid $color-bus;
       padding-left: $spacing-m;
-
-      .infoPicture {
-        width: 20rem;
-        height: 15rem;
-      }
     }
 
+    /*
     .alertCircle {
-      color: #b01038;
+      color: $color-error;
       padding-top: 0.8rem;
       margin-right: -4rem;
       padding-left: 2.4rem;
     }
+    */
   }
 
   .maintext {
-    // width: 70%;
     flex-grow: 1;
     flex-basis: 0;
   }
@@ -42,7 +37,6 @@
   .children {
     flex-grow: 1;
     flex-basis: 0;
-    // align-items: center;
     width: 100%;
 
     @include media(m, l, xl) {

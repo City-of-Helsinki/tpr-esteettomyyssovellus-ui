@@ -30,11 +30,7 @@ const QuestionInfo = ({ openText, openIcon, closeText, closeIcon, textOnBottom =
         </>
       ) : (
         <>
-          {textOnBottom ? null : (
-            <div>
-              <p>{children}</p>
-            </div>
-          )}
+          {textOnBottom ? null : <div>{children}</div>}
           <span
             className={styles.infobutton}
             onClick={handleToggleContent}
@@ -46,11 +42,7 @@ const QuestionInfo = ({ openText, openIcon, closeText, closeIcon, textOnBottom =
             {closeIcon ?? null}
             {closeText}
           </span>
-          {textOnBottom ? (
-            <div>
-              <p>{children}</p>
-            </div>
-          ) : null}
+          {textOnBottom ? <div>{children}</div> : null}
         </>
       )}
     </>

@@ -1,29 +1,23 @@
 import React from "react";
-import { IconInfoCircle, IconCrossCircle, IconAlertCircle } from "hds-react";
+import { IconInfoCircle, IconCrossCircle } from "hds-react";
 import { useI18n } from "next-localization";
-import styles from "./QuestionExtraField.module.scss";
+import TextWithLinks from "./common/TextWithLinks";
 import { QuestionExtraFieldProps } from "../types/general";
 import QuestionInfo from "./QuestionInfo";
-import { useAppSelector } from "../state/hooks";
+import styles from "./QuestionExtraField.module.scss";
 
 // usage: container for single extra field row e.g. header/text, text input
 const QuestionExtraField = ({
-  questionBlockId,
-  questionBlockFieldId,
   fieldNumber,
   questionText,
   questionInfo,
   isMandatory,
+  isTextInvalid,
   children,
 }: QuestionExtraFieldProps): JSX.Element => {
   const i18n = useI18n();
 
   const questionInfos = questionInfo?.split("<BR><BR>");
-  const invalidBlocks = useAppSelector((state) => state.formReducer.invalidBlocks);
-  const curExtraAnswers = useAppSelector((state) => state.formReducer.extraAnswers);
-  const isInvalid = invalidBlocks.includes(questionBlockId);
-
-  const isTextInvalid = isInvalid && isMandatory && (!curExtraAnswers[questionBlockFieldId] || curExtraAnswers[questionBlockFieldId] === "");
 
   // set invalid style if validation errors
   const questionStyle = isTextInvalid
@@ -49,9 +43,9 @@ const QuestionExtraField = ({
               textOnBottom
             >
               <div className={styles.infoContainer}>
-                {questionInfos?.map((e, index) => {
+                {questionInfos?.map((text, index) => {
                   const key = `br_${index}`;
-                  return <p key={key}>{e}</p>;
+                  return <TextWithLinks key={key} text={text} />;
                 })}
               </div>
             </QuestionInfo>
@@ -60,7 +54,7 @@ const QuestionExtraField = ({
 
         <div className={styles.children}>{children}</div>
 
-        {isTextInvalid ? <IconAlertCircle className={styles.alertCircle} aria-hidden /> : null}
+        {/*isTextInvalid ? <IconAlertCircle className={styles.alertCircle} aria-hidden /> : null*/}
       </div>
     </div>
   );

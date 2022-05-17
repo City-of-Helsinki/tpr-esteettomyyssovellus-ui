@@ -22,6 +22,8 @@
       "accessibility": "Accessibility"
     },
     "map": {
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out",
       "osm": "OpenStreetMap contributors",
       "point": "point",
       "line": "line"
@@ -31,7 +33,8 @@
       "sv": "in Swedish",
       "en": "in English"
     },
-    "opensInANewTab": "(Open in a new tab)",
+    "opensInANewTab": "Opens in a new tab.",
+    "opensExternal": "Moves to another site.",
     "notAuthorized": "You are not authorized to view the requested page",
     "noData": "Information is not available",
     "landing": {
@@ -43,14 +46,22 @@
     "generalExplanation": "Explanation",
     "buttons": {
       "saveAndReturn": "Save and return",
-      "returnNoSave": "Exit without saving"
+      "returnNoSave": "Exit without saving",
+      "deleteAdditionalInfo": "Delete all additional info sets"
+    },
+    "message": {
+      "validationFailed": {
+        "title": "Errors in the form",
+        "message": "Please check the information, incorrect fields are highlighted below"
+      }
     },
     "mainEntrance": "Main entrance",
     "mainEntranceLocation": "Main entrance location",
     "additionalEntrance": "Additional entrance",
+    "additionalEntrances": "Additional entrances",
     "entrance": "Additional entrance",
     "newEntrance": "New entrance",
-    "updated": "Updated",
+    "updated": "Last updated",
     "search": "Search",
     "formSaved": "Accessibility information saved",
     "formSentAndSaved": "The information has been sent and saved successfully",
@@ -58,7 +69,8 @@
     "questionBlockShowMoreMainEntrance": "See more about the main entrance routes",
     "hideInfo": "Hide info",
     "editAddinfoText": "Edit additional infos",
-    "missingAnswerValue": "Missing answer",
+    "missingAnswerValue": "Missing selection",
+    "missingTextValue": "Missing answer",
     "copyDataFromSameAddress": "copy the details of the office at the same address",
     "openInfoWhatIsThis": "Show me what this is",
     "statusReady": "Finished",
@@ -74,6 +86,7 @@
     },
     "contactInfoHeader": "Contact information",
     "contactFormSummaryHeader": "Accessibility information",
+    "contactFormPreviewHeader": "Preview accessibility information",
     "numberOfEntrances1": "entrance",
     "numberOfEntrances2+": "entrances",
     "noDataContactinfo": "No contact details for accessibility issues have been provided to the location",
@@ -86,7 +99,14 @@
     "entranceLocationLabel": "Additional entrance location",
     "mainEntranceLocationCoordinatesLabel": "Coordinates",
     "mainEntrancePicturesLabel": "Main entrance photo",
-    "entrancePicturesLabel": "Additional entrance photo"
+    "entrancePicturesLabel": "Additional entrance photo",
+    "accessibilityPreviewHeader": "Accessibility information",
+    "navigateToPage": "Navigate to page",
+    "picturesLocations": "Photos and locations",
+    "photoSource": "Source",
+    "questionsAndAnswers": "Accessibility questions and answers",
+    "showMore": "Show more",
+    "showLess": "Show less"
   },
   "questionFormControlButtons": {
     "quit": "Quit",
@@ -102,17 +122,18 @@
     "addPictures": "Add pictures",
     "addComment": "Add comment",
     "changePicture": "Change picture",
-    "chooseFromDevice": "Choose from device",
-    "cancelPicture": "Cancel picture",
-    "cancelComment": "Cancel Comment",
-    "cancelLocation": "Cancel Location",
+    "chooseFromDevice": "Upload picture from device",
+    "addPictureLink": "Add picture link",
+    "cancelPicture": "Delete picture",
+    "cancelComment": "Cancel comment",
+    "cancelLocation": "Delete location",
     "pictureInput": "Picture from device",
     "pictureInputLink": "Picture URL",
     "locationInstructions": "Instructions for creating LOCATION",
     "picturesInstructions": "Instructions for adding PICTURES",
     "commentInstructions": "Instructions for adding COMMENT",
     "pictureLabel": "Picture caption",
-    "pictureHelperText": "Describe what is in the picture",
+    "pictureHelperText": "The text is used as alt-text and the caption",
     "generalTooptipButtonLabel": "Help",
     "generalTooptipLabel": "Help",
     "altToolTipContent": "Help text here",
@@ -125,9 +146,15 @@
     "pictureHelperTextEng": "Describe the picture in english",
     "sharePictureLicenseLabel": "Picture permission",
     "sharePictureLicenseText": "Yes, I allow sharing the picture under the",
-    "sharePictureLicense": "Creative Commons VY 4.0. -license",
+    "sharePictureLicense": "Creative Commons BY 4.0. -license",
     "sourceTooltipText": "Insert here instructions for picture source",
     "sourceTooltipMainLabel": "Picture source",
+    "locationLabel": "Location description",
+    "locationHelperText": "Describe the location",
+    "locationLabelSwe": "Describe the location in swedish",
+    "locationHelperTextSwe": "Describe the location in swedish",
+    "locationLabelEng": "Describe the location in english",
+    "locationHelperTextEng": "Describe the location in english",
     "commentMainHeader": "You can refine the accessibility information with additional text",
     "addCommentFiErrorText": "Please enter a description",
     "commentFiHeader": "Additional text",
@@ -141,18 +168,26 @@
     "commentEnLabel": "Description in English",
     "commentEnLabelHelper" : "Tell us more about accessibility in English",
     "pictureLinkConfirmButton": "Confirm",
-    "picureLinkErrorText": "Please enter a picture link",
+    "picureLinkErrorText": "Please enter a valid picture link",
     "pictureTermsErrorText": "Please accept the terms",
     "pictureTermsInfoText": "The terms must be accepted, you can read them by clicking on the text from the link below",
     "picureSourceErrorText": "Please enter the image source",
     "mainInfoText": "You can refine accessibility information with additional text, an image, or location information",
-
     "ctrlButtons": {
       "addNewComment": "Add description",
       "addUploadImageFromDevice": "Upload picture from device",
       "addPictureLink": "Add picturelink",
       "addNewLocation": "Add location"
-    }
+    },
+    "additionalInfo": "Additional information",
+    "fillPlaceData1": "You can complete the",
+    "fillPlaceData2": "information with images and/or location information.",
+    "orderPlaceData": "Arrange the information with most important at the top and least important at the bottom.",
+    "additionalInfoSet": "Additional information set",
+    "addAdditionalInfoSet": "Add new set of additional data",
+    "order": "Arrange",
+    "pictureTitle": "Picture",
+    "locationTitle": "Location on map"
   },
   "accessibilityForm": {
     "generalInfo1": "Answering the questions takes about 5 - 15 minutes of time depending on the place and entrances. Every open question must be answered unless otherwise mentioned. Accessibility sentences are formed based on the answers in Finnish, Swedish and English.",
@@ -164,7 +199,11 @@
     "additionalInfoPreviewHeader": "Additional Information",
     "additionalInfoPreviewAltText": "Picture: ",
     "additionalInfoPreviewSourceText": "Source: ",
-    "optional": "optional"
+    "optional": "optional",
+    "fillPlaceData1": "Do you want to complete",
+    "fillPlaceData2": "accessibility information",
+    "placeLink": "Add a picture and/or location",
+    "editLocationPhoto": "Edit"
   },
   "QuestionFormImportExistingData": {
     "chooseServicepoint": "Choose servicepoint",

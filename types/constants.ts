@@ -7,6 +7,10 @@ export const CREATIVECOMMONS_URL = "creativecommons.org/licences/by/4.0";
 
 export const HKI_GEOCODING_URL = "https://api.hel.fi/servicemap/v2/search/?format=json&type=address&input=";
 export const GEOCODING_PARAMS = "&language=fi&only=location";
+export const MAP_INITIAL_CENTER = [60.166, 24.942];
+export const MAP_INITIAL_ZOOM = 13;
+export const MAP_MIN_ZOOM = 10;
+export const MAP_MAX_ZOOM = 18;
 
 // The server-side calls should use the local backend directly
 // Note: the client-side calls use the full path, which is handled by getOrigin in request.ts
@@ -33,9 +37,20 @@ export const API_FETCH_QUESTION_BLOCK_ANSWER_FIELD = "api/ArXQuestionBlockAnswer
 // export const API_FETCH_QUESTION_ANSWER_PHOTOS = "api/ArXQuestionAnswerPhoto/";
 // export const API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS = "api/ArXQuestionAnswerPhotoTxt/";
 export const API_FETCH_BACKEND_QUESTIONS = "api/ArBackendQuestions/";
-export const API_FETCH_SENTENCE_LANGS = "api/ArXStoredSentenceLangs/";
+export const API_FETCH_BACKEND_ENTRANCE_CHOICES = "api/ArBackendEntranceChoice/";
+export const API_FETCH_BACKEND_SENTENCES = "api/ArBackendEntranceSentence/";
 export const API_FETCH_SYSTEM_FORMS = "api/ArSystemForms/";
 export const API_FETCH_EXTERNAL_SERVICEPOINTS = "api/ArExternalServicepoint/";
+export const API_FETCH_BACKEND_PLACES = "api/ArBackendPlace/";
+export const API_FETCH_BACKEND_ENTRANCE_PLACES = "api/ArBackendEntrancePlace/";
+export const API_SAVE_PLACE_ANSWER = "api/ArXPlaceAnswer/";
+export const API_SAVE_PLACE_ANSWER_BOX = "api/ArXPlaceAnswerBox/";
+export const API_SAVE_PLACE_ANSWER_BOX_TEXT = "api/ArXPlaceAnswerBoxTxt/";
+export const API_SAVE_QUESTION_BLOCK_ANSWER = "api/ArXQuestionBlockAnswer/";
+export const API_SAVE_QUESTION_BLOCK_ANSWER_TEXT = "api/ArXQuestionBlockAnswerTxt/";
+export const API_AZURE_UPLOAD = "api/azure_upload/";
+export const API_DELETE_PLACE_BOX_TEXT_SUFFIX = "delete_box_txts/";
+export const API_DELETE_PLACE_FROM_ANSWER = "api/DeletePlaceFromAnswer/";
 
 export enum LanguageLocales {
   fi = 1,

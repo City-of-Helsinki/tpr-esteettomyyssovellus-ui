@@ -12,6 +12,7 @@ import {
   API_FETCH_BACKEND_ENTRANCE,
   API_FETCH_BACKEND_ENTRANCE_ANSWERS,
   API_FETCH_BACKEND_ENTRANCE_FIELD,
+  API_FETCH_BACKEND_PLACES,
   API_FETCH_BACKEND_QUESTIONBLOCK_FIELD,
   API_FETCH_BACKEND_SERVICEPOINT,
   API_FETCH_ENTRANCES,
@@ -22,9 +23,9 @@ import {
   API_FETCH_QUESTION_URL,
   API_FETCH_QUESTIONBLOCK_URL,
   API_FETCH_QUESTIONCHOICES,
-  API_FETCH_SERVICEPOINTS,
   API_URL_BASE,
   LanguageLocales,
+  API_FETCH_BACKEND_ENTRANCE_PLACES,
 } from "../../../types/constants";
 import { useAppSelector, useAppDispatch, useLoading } from "../../../state/hooks";
 import QuestionBlock from "../../../components/QuestionBlock";
@@ -32,6 +33,8 @@ import {
   BackendEntrance,
   BackendEntranceAnswer,
   BackendEntranceField,
+  BackendEntrancePlace,
+  BackendPlace,
   BackendQuestion,
   BackendQuestionBlock,
   BackendQuestionBlockField,
@@ -43,15 +46,13 @@ import {
   // QuestionAnswerLocation,
   // QuestionAnswerPhoto,
   // QuestionAnswerPhotoTxt,
-  Servicepoint,
 } from "../../../types/backendModels";
 import { EntranceFormProps } from "../../../types/general";
 import HeadlineQuestionContainer from "../../../components/HeadlineQuestionContainer";
-
 import QuestionFormCtrlButtons from "../../../components/QuestionFormCtrlButtons";
 import PathTreeComponent from "../../../components/PathTreeComponent";
-import { setAnswer, setAnsweredChoice, setEntranceId, setExtraAnswer, setServicepointId, setStartDate } from "../../../state/reducers/formSlice";
-import { getTokenHash, getCurrentDate, formatAddress } from "../../../utils/utilFunctions";
+import { setAnswer, setEntranceId, setExtraAnswer, setServicepointId, setStartDate } from "../../../state/reducers/formSlice";
+import { getTokenHash, getCurrentDate, formatAddress, convertCoordinates } from "../../../utils/utilFunctions";
 /*
 import {
   addComment,
@@ -63,7 +64,9 @@ import {
   setInitAdditionalInfoFromDb,
 } from "../../../state/reducers/additionalInfoSlice";
 */
-import { persistor } from "../../../state/store";
+import { setEntranceLocationPhoto, setEntrancePlaceBoxes } from "../../../state/reducers/additionalInfoSlice";
+// import { persistor } from "../../../state/store";
+import { setServicepointLocationEuref, setServicepointLocationWGS84 } from "../../../state/reducers/generalSlice";
 // import { setCurrentlyEditingBlock, setCurrentlyEditingQuestion } from "../../../state/reducers/generalSlice";
 import LoadSpinner from "../../../components/common/LoadSpinner";
 
@@ -75,7 +78,9 @@ const EntranceAccessibility = ({
   questionBlockFieldData,
   questionAnswerData,
   questionExtraAnswerData,
+  accessibilityPlaceData,
   entranceData,
+  entrancePlaceData,
   servicepointData,
   // additionalInfosData,
   formId,
@@ -91,15 +96,21 @@ const EntranceAccessibility = ({
   const user = useAppSelector((state) => state.generalSlice.user);
   const isUserValid = !!user && user.length > 0;
 
+  // Note: To preserve any edits, entrance data is not cleared with purge, so population is handled in the useEffect below instead
+  /*
   useEffect(() => {
     // Clear the state on initial load
     persistor.purge();
   }, []);
+  */
 
   // const curEditingQuestionAddInfoNumber = useAppSelector((state) => state.generalSlice.currentlyEditingQuestionAddinfo);
   // const curEditingBlockAddInfoNumber = useAppSelector((state) => state.generalSlice.currentlyEditingBlockAddinfo);
 
-  const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
+  const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
+  // const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
+  const curAnswers = useAppSelector((state) => state.formReducer.answers);
+  const curAnsweredChoices = Object.values(curAnswers);
   const curInvalidBlocks = useAppSelector((state) => state.formReducer.invalidBlocks);
   // const additionalInfoInitedFromDb = useAppSelector((state) => state.additionalInfoReducer.initAddInfoFromDb);
   const isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
@@ -110,13 +121,17 @@ const EntranceAccessibility = ({
   const hasData = Object.keys(servicepointData).length > 0;
   const isExistingEntrance = hasData && Object.keys(entranceData).length > 0;
 
-  useEffect(() => {
+  const initReduxData = () => {
     // Update servicepointId and entranceId in redux state
     if (Object.keys(servicepointData).length > 0) {
       dispatch(setServicepointId(servicepointData.servicepoint_id));
-      if (startedAnswering === "") {
-        dispatch(setStartDate(getCurrentDate()));
-      }
+
+      // Update the servicepoint coordinates in redux state, for use as the default location on maps
+      const { loc_easting, loc_northing } = servicepointData;
+      const coordinatesEuref = [loc_easting ?? 0, loc_northing ?? 0] as [number, number];
+      const coordinatesWGS84 = convertCoordinates("EPSG:3067", "WGS84", coordinatesEuref).reverse() as [number, number];
+      dispatch(setServicepointLocationEuref({ coordinatesEuref }));
+      dispatch(setServicepointLocationWGS84({ coordinatesWGS84 }));
     }
     if (Object.keys(entranceData).length > 0) {
       dispatch(setEntranceId(entranceData.entrance_id));
@@ -217,29 +232,101 @@ const EntranceAccessibility = ({
     dispatch(clearEditingInitialState());
     */
 
-    // Put existing answers into redux state
-    if (questionAnswerData.length > 0) {
-      questionAnswerData.forEach((a: BackendEntranceAnswer) => {
-        const questionId = a.question_id;
-        const answer = a.question_choice_id;
-        if (questionId !== undefined && answer !== undefined) {
-          dispatch(setAnsweredChoice(answer));
-          dispatch(setAnswer({ questionId, answer }));
-        }
-      });
-    }
+    // Reset the entrance data if the entrance id changes, otherwise keep any edited entrance data already stored in redux state
+    const resetEntranceData = Object.keys(entranceData).length > 0 && curEntranceId !== entranceData.entrance_id;
 
-    // Put existing extra field answers into redux state
-    if (questionExtraAnswerData.length > 0) {
-      questionExtraAnswerData.forEach((ea: BackendEntranceField) => {
-        const questionBlockFieldId = ea.question_block_field_id;
-        const answer = ea.entry;
-        if (questionBlockFieldId !== undefined && answer !== undefined) {
-          dispatch(setExtraAnswer({ questionBlockFieldId, answer }));
-        }
-      });
+    if (resetEntranceData) {
+      // Put existing answers into redux state
+      if (questionAnswerData.length > 0) {
+        questionAnswerData.forEach((a: BackendEntranceAnswer) => {
+          const questionId = a.question_id;
+          const answer = a.question_choice_id;
+          if (questionId !== undefined && answer !== undefined) {
+            // dispatch(setAnsweredChoice(answer));
+            dispatch(setAnswer({ questionId, answer }));
+          }
+        });
+      }
+
+      const entranceLocationPhotoAnswer = questionAnswerData.find((a) => a.question_id === undefined || a.question_id === null);
+      if (entranceLocationPhotoAnswer) {
+        // Use the existing location and/or photo
+        // The add permissions are set later in QuestionBlockLocationPhotoContent
+        dispatch(
+          setEntranceLocationPhoto({
+            entrance_id: entranceData.entrance_id,
+            question_block_id: entranceLocationPhotoAnswer.question_block_id,
+            existingAnswer: entranceLocationPhotoAnswer,
+            modifiedAnswer: entranceLocationPhotoAnswer,
+            termsAccepted: true,
+            invalidValues: [],
+            canAddLocation: false,
+            canAddPhoto: false,
+          })
+        );
+      } else {
+        // No location or photo defined yet
+        dispatch(
+          setEntranceLocationPhoto({
+            entrance_id: entranceData.entrance_id,
+            question_block_id: -1,
+            existingAnswer: {} as BackendEntranceAnswer,
+            modifiedAnswer: {} as BackendEntranceAnswer,
+            termsAccepted: false,
+            invalidValues: [],
+            canAddLocation: false,
+            canAddPhoto: false,
+          })
+        );
+      }
+
+      // Put existing extra field answers into redux state
+      if (questionExtraAnswerData.length > 0) {
+        questionExtraAnswerData.forEach((ea: BackendEntranceField) => {
+          const questionBlockFieldId = ea.question_block_field_id;
+          const answer = ea.entry;
+          if (questionBlockFieldId !== undefined && answer !== undefined) {
+            dispatch(setExtraAnswer({ questionBlockFieldId, answer }));
+          }
+        });
+      }
+
+      // Put entrance places into redux state
+      dispatch(
+        setEntrancePlaceBoxes(
+          entrancePlaceData.map((place) => {
+            const { entrance_id, place_id, order_number } = place;
+
+            // Try to make sure the order number is 1 or higher
+            return {
+              entrance_id: entrance_id,
+              place_id: place_id,
+              order_number: order_number && order_number > 0 ? order_number : 1,
+              existingBox: place,
+              modifiedBox: place,
+              isDeleted: false,
+              termsAccepted: true,
+              invalidValues: [],
+            };
+          })
+        )
+      );
     }
-  }, [servicepointData, entranceData, questionAnswerData, questionExtraAnswerData, startedAnswering, dispatch]);
+  };
+
+  // Initialise the redux data on first render only, using a workaround utilising useEffect with empty dependency array
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const useMountEffect = (fun: () => void) => useEffect(fun, []);
+  useMountEffect(initReduxData);
+
+  useEffect(() => {
+    // Update when the question answering started
+    if (startedAnswering === "") {
+      dispatch(setStartDate(getCurrentDate()));
+    }
+  }, [startedAnswering, dispatch]);
+
+  const filteredPlaces = accessibilityPlaceData.filter((place) => place.language_id === curLocaleId);
 
   // map visible blocks & questions & answers
   // const nextBlock = 0;
@@ -260,21 +347,21 @@ const EntranceAccessibility = ({
 
           const blockQuestions = isVisible
             ? questionsData.filter((question) => question.question_block_id === block.question_block_id && question.language_id === curLocaleId)
-            : null;
+            : undefined;
 
           const blockExtraFields = isVisible
             ? questionBlockFieldData.filter(
                 (question) => question.question_block_id === block.question_block_id && question.language_id === curLocaleId
               )
-            : null;
+            : undefined;
 
-          const answerChoices = isVisible
+          const blockAnswerChoices = isVisible
             ? questionChoicesData.filter((choice) => choice.question_block_id === block.question_block_id && choice.language_id === curLocaleId)
-            : null;
+            : undefined;
 
           // if (isVisible && blockQuestions && answerChoices && block.question_block_code !== undefined) lastBlockNumber = block.question_block_code;
 
-          return isVisible && blockQuestions && answerChoices && block.question_block_id !== undefined ? (
+          return isVisible && blockQuestions && blockAnswerChoices && block.question_block_id !== undefined ? (
             <HeadlineQuestionContainer
               key={block.question_block_id}
               number={block.question_block_id}
@@ -291,21 +378,16 @@ const EntranceAccessibility = ({
             >
               <QuestionBlock
                 key={block.question_block_id}
-                description={block.description ?? null}
+                block={block}
                 questions={blockQuestions}
-                answerChoices={answerChoices}
+                answerChoices={blockAnswerChoices}
                 extraFields={blockExtraFields}
-                photoUrl={block.photo_url}
-                photoText={block.photo_text}
+                accessibilityPlaces={filteredPlaces}
               />
             </HeadlineQuestionContainer>
           ) : null;
         })
       : null;
-
-  const visibleQuestionChoices = questionChoicesData?.filter((choice) => {
-    return choice.question_block_id !== undefined && visibleBlocks?.map((elem) => Number(elem?.key)).includes(choice.question_block_id);
-  });
 
   /*
   // if returning from additional info page -> init page to correct location / question
@@ -383,7 +465,8 @@ const EntranceAccessibility = ({
                 hasPreviewButton={hasTopLevelAnswer}
                 hasContinueButton={!hasTopLevelAnswer}
                 visibleBlocks={visibleBlocks}
-                visibleQuestionChoices={visibleQuestionChoices}
+                questionsData={questionsData}
+                questionChoicesData={questionChoicesData}
                 formId={formId}
               />
             </div>
@@ -402,10 +485,12 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   let questionChoicesData: BackendQuestionChoice[] = [];
   let questionBlocksData: BackendQuestionBlock[] = [];
   let questionBlockFieldData: BackendQuestionBlockField[] = [];
+  let accessibilityPlaceData: BackendPlace[] = [];
   let questionAnswerData: BackendEntranceAnswer[] = [];
   let questionExtraAnswerData: BackendEntranceField[] = [];
   let entranceData: BackendEntrance = {} as BackendEntrance;
-  let servicepointData: Servicepoint = {} as Servicepoint;
+  let entrancePlaceData: BackendEntrancePlace[] = [];
+  let servicepointData: BackendServicepoint = {} as BackendServicepoint;
   // let additionalInfosData = {};
   // let addInfoCommentsData;
   // let addInfoLocationsData;
@@ -416,10 +501,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
 
   if (params !== undefined) {
     try {
-      const servicepointResp = await fetch(`${API_URL_BASE}${API_FETCH_SERVICEPOINTS}${params.servicepointId}/?format=json`, {
-        headers: new Headers({ Authorization: getTokenHash() }),
-      });
-      servicepointData = await (servicepointResp.json() as Promise<Servicepoint>);
       const servicepointBackendDetailResp = await fetch(
         `${API_URL_BASE}${API_FETCH_BACKEND_SERVICEPOINT}?servicepoint_id=${params.servicepointId}&format=json`,
         {
@@ -427,7 +508,10 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         }
       );
       const servicepointBackendDetail = await (servicepointBackendDetailResp.json() as Promise<BackendServicepoint[]>);
-      const servicepointDetail = servicepointBackendDetail?.length > 0 ? servicepointBackendDetail[0] : undefined;
+
+      if (servicepointBackendDetail?.length > 0) {
+        servicepointData = servicepointBackendDetail[0];
+      }
 
       // Get all the existing entrances for the service point
       const servicepointEntranceResp = await fetch(`${API_URL_BASE}${API_FETCH_ENTRANCES}?servicepoint=${params.servicepointId}&format=json`, {
@@ -448,10 +532,10 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       }
 
       // Check this specific entrance
-      if (params.entranceId === undefined && (!servicepointDetail || servicepointDetail.new_entrance_possible === "Y")) {
+      if (params.entranceId === undefined && (servicepointData.servicepoint_id === undefined || servicepointData.new_entrance_possible === "Y")) {
         // New entrance
         // Make a new main entrance if not existing, otherwise an additional entrance
-        formId = !isMainEntrancePublished || !mainEntrance || !servicepointDetail ? 0 : 1;
+        formId = !isMainEntrancePublished || !mainEntrance || servicepointData.servicepoint_id === undefined ? 0 : 1;
       } else if (params.entranceId !== undefined) {
         // Existing entrance
         const entranceResp = await fetch(`${API_URL_BASE}${API_FETCH_ENTRANCES}${params.entranceId}/?format=json`, {
@@ -474,6 +558,11 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
             })[0].log_id ?? -1;
 
           entranceData = entranceDetail.find((a) => a.log_id === maxLogId) as BackendEntrance;
+
+          // In some cases there is no published entrance, so form_submitted and log_id are null
+          if (!entranceData) {
+            entranceData = entranceDetail[0];
+          }
         }
       }
 
@@ -490,11 +579,15 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         const questionBlockFieldResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_QUESTIONBLOCK_FIELD}${formId}`, {
           headers: new Headers({ Authorization: getTokenHash() }),
         });
+        const accessibilityPlaceResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_PLACES}?format=json`, {
+          headers: new Headers({ Authorization: getTokenHash() }),
+        });
 
         questionsData = await (questionsResp.json() as Promise<BackendQuestion[]>);
         questionChoicesData = await (questionChoicesResp.json() as Promise<BackendQuestionChoice[]>);
         questionBlocksData = await (questionBlocksResp.json() as Promise<BackendQuestionBlock[]>);
         questionBlockFieldData = await (questionBlockFieldResp.json() as Promise<BackendQuestionBlockField[]>);
+        accessibilityPlaceData = await (accessibilityPlaceResp.json() as Promise<BackendPlace[]>);
       }
 
       if (params.entranceId !== undefined) {
@@ -563,6 +656,25 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
 
           questionExtraAnswerData = allQuestionExtraAnswerData.filter((a) => a.log_id === maxLogId);
         }
+
+        const allEntrancePlaceDataResp = await fetch(
+          `${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE_PLACES}?entrance_id=${params.entranceId}&format=json`,
+          {
+            headers: new Headers({ Authorization: getTokenHash() }),
+          }
+        );
+        const allEntrancePlaceData = await (allEntrancePlaceDataResp.json() as Promise<BackendEntrancePlace[]>);
+
+        if (allEntrancePlaceData?.length > 0) {
+          // Return entrance place data for the highest log id only, in case both published and draft data exists (form_submitted = 'Y' and 'D')
+          // Note: This log id value may be different from the main answer data log id
+          const maxLogId =
+            allEntrancePlaceData.sort((a: BackendEntrancePlace, b: BackendEntrancePlace) => {
+              return (b.log_id ?? 0) - (a.log_id ?? 0);
+            })[0].log_id ?? -1;
+
+          entrancePlaceData = allEntrancePlaceData.filter((a) => a.log_id === maxLogId);
+        }
       }
     } catch (e) {
       console.error("Error", e);
@@ -571,10 +683,12 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       questionChoicesData = [];
       questionBlocksData = [];
       questionBlockFieldData = [];
+      accessibilityPlaceData = [];
       questionAnswerData = [];
       questionExtraAnswerData = [];
       entranceData = {} as BackendEntrance;
-      servicepointData = {} as Servicepoint;
+      entrancePlaceData = [];
+      servicepointData = {} as BackendServicepoint;
       // additionalInfosData = {};
     }
   }
@@ -585,9 +699,11 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       questionChoicesData,
       questionBlocksData,
       questionBlockFieldData,
+      accessibilityPlaceData,
       questionAnswerData,
       questionExtraAnswerData,
       entranceData,
+      entrancePlaceData,
       servicepointData,
       // additionalInfosData,
       formId,

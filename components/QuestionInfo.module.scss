@@ -5,7 +5,7 @@
   color: $color-bus;
   cursor: pointer;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
 
   &.closed {
     @include media(xs, s) {
@@ -14,8 +14,6 @@
   }
 
   svg {
-    height: $spacing-s;
-    width: $spacing-s;
     padding-right: $spacing-2-xs;
   }
 }

@@ -1,8 +1,10 @@
 import { IconAngleDown, IconAngleUp } from "hds-react";
 import React, { useEffect } from "react";
 import { useI18n } from "next-localization";
+import TextWithLinks from "./common/TextWithLinks";
 // import QuestionAdditionalInfoCtrlButton from "./QuestionAdditionalInfoCtrlButton";
 import QuestionBlockExtraFieldList from "./QuestionBlockExtraFieldList";
+import QuestionBlockLocationPhotoContent from "./QuestionBlockLocationPhotoContent";
 import QuestionFormImportExistingData from "./QuestionFormImportExistingData";
 import styles from "./QuestionBlock.module.scss";
 import QuestionInfo from "./QuestionInfo";
@@ -13,13 +15,15 @@ import { setFinished, unsetFinished } from "../state/reducers/formSlice";
 
 // usage: in form groups up all questions under a single "question block" / accordion
 // notes: used under headlineQuestionContainer in main form
-const QuestionBlock = ({ description, questions, answerChoices, extraFields, photoUrl, photoText }: QuestionBlockProps): JSX.Element => {
+const QuestionBlock = ({ block, questions, answerChoices, extraFields, accessibilityPlaces }: QuestionBlockProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
   // const [showAdditionalInfo, setShowAdditionalInfo] = useState(false);
-  const showAdditionalInfo = false;
+  // const showAdditionalInfo = false;
   // const isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
   // const [showContinue, setShowContinue] = useState(!isContinueClicked);
+
+  const { question_block_id, description, photo_url, photo_text, put_fields_before_questions, add_location_possible, add_photo_possible } = block;
 
   /*
   const handleAdditionalInfoToggle = () => {
@@ -37,10 +41,17 @@ const QuestionBlock = ({ description, questions, answerChoices, extraFields, pho
   };
   */
 
-  const blockId = questions && questions.length > 0 && questions[0].question_block_id !== undefined ? questions[0].question_block_id : -1;
+  // const blockId = questions && questions.length > 0 && questions[0].question_block_id !== undefined ? questions[0].question_block_id : -1;
+  const blockId = question_block_id;
   const hasInfoAndButtons = questions && questions.length > 0 ? blockId !== 0 : true;
-  const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
+  const putFieldsBeforeQuestions = put_fields_before_questions === "Y";
+  const canAddLocation = add_location_possible === "Y";
+  const canAddPhoto = add_photo_possible === "Y";
+  // const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
+  const curAnswers = useAppSelector((state) => state.formReducer.answers);
+  const curAnsweredChoices = Object.values(curAnswers);
   // const continueActive = curAnsweredChoices.length !== 0;
+  const keys = Object.keys(curAnswers);
 
   // filter questions to get only correct ones with curAnsweredChoices
   const filteredQuestions = questions
@@ -49,10 +60,7 @@ const QuestionBlock = ({ description, questions, answerChoices, extraFields, pho
           question.visible_if_question_choice === null ||
           question.visible_if_question_choice?.split("+").some((elem) => curAnsweredChoices.includes(Number(elem)))
       )
-    : null;
-
-  const curAnswers = useAppSelector((state) => state.formReducer.answers);
-  const keys = Object.keys(curAnswers);
+    : undefined;
 
   useEffect(() => {
     // check if block is finished (all visible questions are answered), also used to display icon if finished and with validation
@@ -68,18 +76,18 @@ const QuestionBlock = ({ description, questions, answerChoices, extraFields, pho
   }, [blockId, filteredQuestions, keys, dispatch]);
 
   // Turn "<BR>" to linebreaks
-  const desc = description?.split("<BR>").map((elem, index) => {
-    const key = `br_${index}`;
-    return <p key={key}>{elem}</p>;
-  });
+  const desc = description?.split("<BR>");
 
   return (
     <>
       {hasInfoAndButtons ? (
         <div className={styles.mainInfo}>
-          <p>{desc ?? null}</p>
+          {desc?.map((text, index) => {
+            const key = `br_${index}`;
+            return <TextWithLinks key={key} text={text} />;
+          })}
 
-          {photoText === null && photoUrl === null ? null : (
+          {(photo_text || photo_url) && (
             <QuestionInfo
               openText={i18n.t("common.questionBlockShowMoreMainEntrance")}
               openIcon={<IconAngleDown aria-hidden />}
@@ -87,8 +95,12 @@ const QuestionBlock = ({ description, questions, answerChoices, extraFields, pho
               closeIcon={<IconAngleUp aria-hidden />}
             >
               <div className={styles.infoContainer}>
-                {photoText !== null ? photoText : null}
-                {photoUrl !== null ? <img alt={photoText ?? ""} src={photoUrl} className={styles.infoPicture} /> : null}
+                {photo_text && <TextWithLinks text={photo_text} />}
+                {photo_url && (
+                  <div>
+                    <img alt={photo_text ?? ""} src={photo_url} className={styles.infoPicture} />
+                  </div>
+                )}
               </div>
             </QuestionInfo>
           )}
@@ -105,12 +117,21 @@ const QuestionBlock = ({ description, questions, answerChoices, extraFields, pho
         </div>
       )}
 
-      <QuestionBlockExtraFieldList extraFields={extraFields} />
+      {putFieldsBeforeQuestions && <QuestionBlockExtraFieldList extraFields={extraFields} />}
 
-      {/* TODO: add QuestionBlockLocationPictureContent component here */}
+      {(canAddLocation || canAddPhoto) && (
+        <QuestionBlockLocationPhotoContent block={block} canAddLocation={canAddLocation} canAddPhoto={canAddPhoto} />
+      )}
 
       {/* QtionList loops the single question row(s) */}
-      <QuestionsList additionalInfoVisible={showAdditionalInfo} questions={filteredQuestions} answerChoices={answerChoices} />
+      <QuestionsList
+        // additionalInfoVisible={showAdditionalInfo}
+        questions={filteredQuestions}
+        answerChoices={answerChoices}
+        accessibilityPlaces={accessibilityPlaces}
+      />
+
+      {!putFieldsBeforeQuestions && <QuestionBlockExtraFieldList extraFields={extraFields} />}
 
       {/*hasInfoAndButtons || !showContinue ? null : (
         <div className={styles.continueButton}>

@@ -1,0 +1,82 @@
+@import "~hds-design-tokens/lib/all.scss";
+@import "../../../styles/mixins.scss";
+
+.maincontainer {
+  margin-top: $spacing-m;
+
+  .treecontainer {
+    display: flex;
+    align-items: center;
+  }
+
+  .infocontainer {
+    margin: $spacing-m 0;
+  }
+
+  .headingcontainer {
+    h1 {
+      word-break: break-word;
+      margin-bottom: 0;
+    }
+
+    .subHeader {
+      font-size: $fontsize-heading-m;
+      font-weight: 700;
+      margin-bottom: $spacing-l;
+
+      @include media(xs) {
+        font-size: $fontsize-heading-s;
+      }
+    }
+
+    .mainbuttons {
+      margin-bottom: $spacing-s;
+    }
+
+    .infoHeader {
+      font-size: $fontsize-heading-m;
+      font-weight: 700;
+      color: $color-white;
+      background-color: $color-bus;
+      padding: $spacing-s $spacing-m;
+
+      @include media(xs) {
+        font-size: $fontsize-heading-s;
+      }
+    }
+
+    .infoText {
+      padding: $spacing-s;
+    }
+  }
+  
+  .contentcontainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-top: $spacing-m;
+
+    > div {
+      width: 50%;
+
+      @include media(xs, s, m) {
+        width: 100%;
+      }
+    }
+
+    .contentheader {
+      font-size: $fontsize-heading-s;
+      font-weight: 700;
+      color: $color-bus;
+      margin-bottom: $spacing-s;
+    }
+  }
+
+  .footercontainer {
+    margin-top: $spacing-5-xl;
+
+    .footerbutton {
+      margin-top: $spacing-l;
+    }
+  }
+}

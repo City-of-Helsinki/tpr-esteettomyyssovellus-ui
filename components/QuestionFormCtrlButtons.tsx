@@ -5,7 +5,7 @@ import { useI18n } from "next-localization";
 import SaveSpinner from "./common/SaveSpinner";
 import Button from "./QuestionButton";
 import { Entrance } from "../types/backendModels";
-import { API_FETCH_ENTRANCES } from "../types/constants";
+import { API_FETCH_ENTRANCES, LanguageLocales } from "../types/constants";
 import { QuestionFormCtrlButtonsProps } from "../types/general";
 import styles from "./QuestionFormCtrlButtons.module.scss";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
@@ -21,18 +21,25 @@ const QuestionFormCtrlButtons = ({
   hasPreviewButton,
   hasContinueButton,
   visibleBlocks,
-  // visibleQuestionChoices,
+  questionsData,
+  questionChoicesData,
   formId,
 }: QuestionFormCtrlButtonsProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const curLocale: string = i18n.locale();
+  const curLocaleId: number = LanguageLocales[curLocale as keyof typeof LanguageLocales];
 
   const [isSavingDraft, setSavingDraft] = useState(false);
   const [isSavingPreview, setSavingPreview] = useState(false);
 
-  const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
+  // const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
+  const curAnswers = useAppSelector((state) => state.formReducer.answers);
+  const curAnsweredChoices = Object.values(curAnswers);
   const curExtraAnswers = useAppSelector((state) => state.formReducer.extraAnswers);
+  const curEntranceLocationPhoto = useAppSelector((state) => state.additionalInfoReducer.entranceLocationPhoto);
+  const curEntrancePlaceBoxes = useAppSelector((state) => state.additionalInfoReducer.entrancePlaceBoxes);
   const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
   const startedAnswering = useAppSelector((state) => state.formReducer.startedAnswering);
   const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
@@ -80,18 +87,49 @@ const QuestionFormCtrlButtons = ({
     dispatch(setEntranceId(entranceId));
 
     if (entranceId > 0) {
-      // Commented out as filteredAnswerChoices doesn't seem to be any different from curAnsweredChoices
-      /*
-      const filteredAnswerChoices = curAnsweredChoices.filter((choice) => {
-        return visibleQuestionChoices
-          ?.map((elem) => {
-            return elem.question_choice_id;
-          })
-          .includes(Number(choice));
-      });
-      */
+      const visibleQuestionChoiceIds = visibleBlocks?.flatMap((elem) => {
+        // Get the visible questions for this block based on the answers chosen
+        const filteredQuestionIds = questionsData
+          .filter((question) => {
+            const visibleQuestions = question.visible_if_question_choice?.split("+");
 
-      await saveFormData(entranceId, curAnsweredChoices, curExtraAnswers, startedAnswering, user, true, router);
+            const answersIncludeAllVisibleQuestions = visibleQuestions
+              ? visibleQuestions.some((elem2) => curAnsweredChoices.includes(Number(elem2)))
+              : false;
+
+            return question.language_id === curLocaleId && (question.visible_if_question_choice === null || answersIncludeAllVisibleQuestions);
+          })
+          .map((question) => question.question_id);
+
+        // Get all possible answer choices for the visible questions
+        const questionChoices = questionChoicesData.filter((choice) => {
+          return (
+            choice.question_block_id === Number(elem?.key) && choice.language_id === curLocaleId && filteredQuestionIds.includes(choice.question_id)
+          );
+        });
+
+        // Return the answer choice ids only for easier lookups
+        return questionChoices.map((choice) => choice.question_choice_id);
+      });
+
+      // Filter to make sure the answered choices only include answers for the visible questions
+      // It is possible to answer a question, then change a previous answer, which then makes this question hidden
+      const filteredAnswerChoices = curAnsweredChoices.filter((choice) => {
+        return visibleQuestionChoiceIds?.includes(Number(choice));
+      });
+
+      await saveFormData(
+        curServicepointId,
+        entranceId,
+        filteredAnswerChoices,
+        curExtraAnswers,
+        curEntranceLocationPhoto,
+        curEntrancePlaceBoxes,
+        startedAnswering,
+        user,
+        true,
+        router
+      );
     }
 
     return entranceId;

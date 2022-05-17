@@ -40,9 +40,9 @@ const AdditionalInfo = ({ questionId, questionData }: AdditionalInfoPageProps): 
 
   // check/init addinfo can add comment / location and number of pictures able to add
   // disable control buttons for adding these components respectively
-  const canAddCommentCount = questionData && questionData[0].can_add_comment === "Y" ? 0 : -1;
-  const photoMaxCount = questionData && questionData[0].can_add_photo_max_count ? questionData[0]?.can_add_photo_max_count : -1;
-  const canAddLocationCount = questionData && questionData[0].can_add_location === "Y" ? 0 : -1;
+  // const canAddCommentCount = questionData && questionData[0].can_add_comment === "Y" ? 0 : -1;
+  // const photoMaxCount = questionData && questionData[0].can_add_photo_max_count ? questionData[0]?.can_add_photo_max_count : -1;
+  // const canAddLocationCount = questionData && questionData[0].can_add_location === "Y" ? 0 : -1;
 
   const filterByLanguage = (data: BackendQuestion[]) => {
     const curLocale: string = i18n.locale();
@@ -218,7 +218,7 @@ const AdditionalInfo = ({ questionId, questionData }: AdditionalInfoPageProps): 
                     variant="secondary"
                     iconRight={<IconSpeechbubbleText />}
                     onClickHandler={() => handleAddElement("comment")}
-                    disabled={elementCounts.comment > canAddCommentCount}
+                    // disabled={elementCounts.comment > canAddCommentCount}
                   >
                     {i18n.t("additionalInfo.ctrlButtons.addNewComment")}
                   </QuestionButton>
@@ -226,7 +226,7 @@ const AdditionalInfo = ({ questionId, questionData }: AdditionalInfoPageProps): 
                     variant="secondary"
                     iconRight={<IconUpload />}
                     onClickHandler={() => handleAddElement("upload")}
-                    disabled={elementCounts.upload + elementCounts.link >= photoMaxCount}
+                    // disabled={elementCounts.upload + elementCounts.link >= photoMaxCount}
                   >
                     {i18n.t("additionalInfo.ctrlButtons.addUploadImageFromDevice")}
                   </QuestionButton>
@@ -234,7 +234,7 @@ const AdditionalInfo = ({ questionId, questionData }: AdditionalInfoPageProps): 
                     variant="secondary"
                     iconRight={<IconLink />}
                     onClickHandler={() => handleAddElement("link")}
-                    disabled={elementCounts.upload + elementCounts.link >= photoMaxCount}
+                    // disabled={elementCounts.upload + elementCounts.link >= photoMaxCount}
                   >
                     {i18n.t("additionalInfo.ctrlButtons.addPictureLink")}
                   </QuestionButton>
@@ -242,7 +242,7 @@ const AdditionalInfo = ({ questionId, questionData }: AdditionalInfoPageProps): 
                     variant="secondary"
                     iconRight={<IconLocation />}
                     onClickHandler={() => handleAddElement("location")}
-                    disabled={elementCounts.location > canAddLocationCount}
+                    // disabled={elementCounts.location > canAddLocationCount}
                   >
                     {i18n.t("additionalInfo.ctrlButtons.addNewLocation")}
                   </QuestionButton>

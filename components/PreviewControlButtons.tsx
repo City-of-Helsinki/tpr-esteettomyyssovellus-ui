@@ -19,8 +19,12 @@ const PreviewControlButtons = ({ hasSaveDraftButton, setSendingComplete }: Previ
   const [isSavingDraft, setSavingDraft] = useState(false);
   const [isSavingFinal, setSavingFinal] = useState(false);
 
-  const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
+  // const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
+  const curAnswers = useAppSelector((state) => state.formReducer.answers);
+  const curAnsweredChoices = Object.values(curAnswers);
   const curExtraAnswers = useAppSelector((state) => state.formReducer.extraAnswers);
+  const curEntranceLocationPhoto = useAppSelector((state) => state.additionalInfoReducer.entranceLocationPhoto);
+  const curEntrancePlaceBoxes = useAppSelector((state) => state.additionalInfoReducer.entrancePlaceBoxes);
   const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
   const startedAnswering = useAppSelector((state) => state.formReducer.startedAnswering);
   const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
@@ -37,8 +41,22 @@ const PreviewControlButtons = ({ hasSaveDraftButton, setSendingComplete }: Previ
   };
 
   const saveData = async (isDraft: boolean): Promise<void> => {
+    // Filter to make sure the answered choices do not include any null values
+    const filteredAnswerChoices = curAnsweredChoices.filter((a) => a);
+
     if (curEntranceId > 0) {
-      await saveFormData(curEntranceId, curAnsweredChoices, curExtraAnswers, startedAnswering, user, isDraft, router);
+      await saveFormData(
+        curServicepointId,
+        curEntranceId,
+        filteredAnswerChoices,
+        curExtraAnswers,
+        curEntranceLocationPhoto,
+        curEntrancePlaceBoxes,
+        startedAnswering,
+        user,
+        isDraft,
+        router
+      );
     }
   };
 

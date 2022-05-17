@@ -1,11 +1,15 @@
 // place for custom typescript interfaces/"models"
 
 import { Dispatch, SetStateAction } from "react";
-import { LatLngExpression } from "leaflet";
+// import { LatLngExpression } from "leaflet";
 import {
   BackendEntrance,
   BackendEntranceAnswer,
+  BackendEntranceChoice,
   BackendEntranceField,
+  BackendEntrancePlace,
+  BackendEntranceSentence,
+  BackendPlace,
   BackendQuestion,
   BackendQuestionBlock,
   BackendQuestionBlockField,
@@ -15,33 +19,25 @@ import {
   // QuestionAnswerLocation,
   // QuestionAnswerPhoto,
   // QuestionAnswerPhotoTxt,
-  Servicepoint,
-  StoredSentence,
 } from "./backendModels";
 
 export interface QuestionContainerProps {
-  questionId: number;
-  questionBlockId: number;
-  questionNumber?: number | string;
-  questionText?: string;
-  questionInfo?: string | null;
+  question: BackendQuestion;
+  accessibilityPlaces: BackendPlace[];
   children: JSX.Element;
-  hasAdditionalInfo: boolean;
-  canAddLocation?: boolean;
-  canAddPhotoMaxCount?: number;
-  canAddComment?: boolean;
-  photoUrl?: string | null;
-  photoText?: string | null;
-  isMainLocPicComponent?: boolean;
+  // hasAdditionalInfo: boolean;
+  // canAddLocation?: boolean;
+  // canAddPhotoMaxCount?: number;
+  // canAddComment?: boolean;
+  // isMainLocPicComponent?: boolean;
 }
 
 export interface QuestionExtraFieldProps {
-  questionBlockId: number;
-  questionBlockFieldId: number;
   fieldNumber?: number;
   questionText?: string;
-  questionInfo?: string | null;
+  questionInfo?: string;
   isMandatory: boolean;
+  isTextInvalid: boolean;
   children: JSX.Element;
 }
 
@@ -92,12 +88,14 @@ export interface QuestionRadioButtonsProps {
   secondButtonLabel?: string;
   options?: InputOption[];
   questionId?: number;
+  blockId?: number;
 }
 
 export interface QuestionTextInputProps {
   id: string;
   questionBlockFieldId: number;
   placeholder?: string;
+  isTextInvalid: boolean;
 }
 
 export interface QuestionFormCtrlButtonsProps {
@@ -107,18 +105,20 @@ export interface QuestionFormCtrlButtonsProps {
   hasPreviewButton?: boolean;
   hasContinueButton?: boolean;
   visibleBlocks?: (JSX.Element | null)[] | null;
-  visibleQuestionChoices?: BackendQuestionChoice[] | undefined;
+  questionsData: BackendQuestion[];
+  questionChoicesData: BackendQuestionChoice[];
   formId: number;
 }
 
 export interface QuestionsListProps {
-  additionalInfoVisible: boolean;
-  questions?: BackendQuestion[] | null;
-  answerChoices?: BackendQuestionChoice[] | null;
+  // additionalInfoVisible: boolean;
+  questions?: BackendQuestion[];
+  answerChoices?: BackendQuestionChoice[];
+  accessibilityPlaces: BackendPlace[];
 }
 
 export interface QuestionBlockExtraFieldListProps {
-  extraFields?: BackendQuestionBlockField[] | null;
+  extraFields?: BackendQuestionBlockField[];
 }
 
 export interface QuestionAdditionalInfoCtrlButtonProps {
@@ -126,8 +126,17 @@ export interface QuestionAdditionalInfoCtrlButtonProps {
   curState: boolean;
 }
 
-export interface ServicepointLandingSummaryContactProps {
+export interface SummarySideNavigationProps {
+  entranceKey: string;
+  entranceData?: BackendEntrance;
+  entrancePlaceData: EntrancePlaceData;
   servicepointData: BackendServicepoint;
+  accessibilityData: AccessibilityData;
+  accessibilityPlaces: BackendPlace[];
+  entranceChoiceData: EntranceChoiceData;
+}
+
+export interface ServicepointLandingSummaryContactProps {
   entranceData?: BackendEntrance;
   hasData: boolean;
   hasModifyButton?: boolean;
@@ -136,10 +145,18 @@ export interface ServicepointLandingSummaryContactProps {
 export interface ServicepointLandingSummaryAccessibilityProps {
   entranceKey: string;
   entranceData?: BackendEntrance;
-  servicepointData: Servicepoint;
+  servicepointData: BackendServicepoint;
   accessibilityData: AccessibilityData;
   hasData: boolean;
   hasModifyButton?: boolean;
+}
+
+export interface SummaryAccessibilityProps {
+  entranceKey: string;
+  sentenceGroupId: string;
+  sentenceGroup?: BackendEntranceSentence[];
+  entranceChoiceData: EntranceChoiceData;
+  hasData: boolean;
 }
 
 export interface PreviewPageLandingSummaryProps {
@@ -154,6 +171,17 @@ export interface ServicepointLandingSummaryContentProps {
 export interface ServicepointLandingSummaryLocationPictureProps {
   entranceKey: string;
   entranceData?: BackendEntrance;
+}
+
+export interface SummaryLocationPictureProps {
+  entranceKey: string;
+  entranceData?: BackendEntrance;
+  servicepointData: BackendServicepoint;
+}
+
+export interface SummaryAccessibilityPlaceProps {
+  entrancePlaceName: string;
+  entrancePlaceData?: BackendEntrancePlace[];
 }
 
 export interface ServicepointLandingSummaryModifyButtonProps {
@@ -172,11 +200,10 @@ export interface PreviewControlButtonsProps {
 
 export interface MapProps {
   questionId: number;
-  initCenter?: [number, number] | number[];
   initZoom: number;
-  initLocation: [number, number] | number[];
+  curLocation: [number, number];
+  setLocation?: (location: [number, number]) => void;
   draggableMarker?: boolean;
-  updateLocationHandler?: (location: LatLngExpression) => void;
   makeStatic?: boolean;
   isMainLocPicComponent?: boolean;
 }
@@ -223,7 +250,7 @@ export interface AdditionalInfos {
 // }
 
 // invalid answers list of
-interface AddinfoInvalidAnswers {
+export interface AddinfoInvalidAnswers {
   id: number;
   invalidAnswers?: string[];
 }
@@ -257,10 +284,52 @@ export interface AdditionalInfoProps {
   [key: string]: AdditionalInfos;
 }
 
+export interface Validation {
+  valid: boolean;
+  fieldId: string;
+  fieldLabel: string;
+}
+
+/*
+export interface KeyValueValidation {
+  [key: string]: Validation;
+}
+*/
+
+export interface EntranceLocationPhoto {
+  entrance_id: number;
+  question_block_id: number;
+  existingAnswer?: BackendEntranceAnswer;
+  modifiedAnswer?: BackendEntranceAnswer;
+  existingPhotoBase64?: string;
+  modifiedPhotoBase64?: string;
+  termsAccepted: boolean;
+  invalidValues: Validation[];
+  canAddLocation: boolean;
+  canAddPhoto: boolean;
+}
+
+export interface EntrancePlaceBox {
+  entrance_id: number;
+  place_id: number;
+  order_number: number;
+  existingBox?: BackendEntrancePlace;
+  modifiedBox?: BackendEntrancePlace;
+  isDeleted: boolean;
+  existingPhotoBase64?: string;
+  modifiedPhotoBase64?: string;
+  termsAccepted: boolean;
+  invalidValues: Validation[];
+}
+
 export interface AdditionalInfoStateProps {
   initAddInfoFromDb: boolean;
   curEditingInitialState: AdditionalInfoProps;
   additionalInfo: AdditionalInfoProps;
+  entranceLocationPhoto: EntranceLocationPhoto;
+  entranceLocationPhotoValid: boolean;
+  entrancePlaceBoxes: EntrancePlaceBox[];
+  entrancePlaceValid: boolean;
 }
 
 export interface MainLocationOrImageProps {
@@ -284,8 +353,10 @@ export interface EntranceFormProps {
   questionChoicesData: BackendQuestionChoice[];
   questionBlocksData: BackendQuestionBlock[];
   questionBlockFieldData: BackendQuestionBlockField[];
+  accessibilityPlaceData: BackendPlace[];
   entranceData: BackendEntrance;
-  servicepointData: Servicepoint;
+  entrancePlaceData: BackendEntrancePlace[];
+  servicepointData: BackendServicepoint;
   questionAnswerData: BackendEntranceAnswer[];
   questionExtraAnswerData: BackendEntranceField[];
   // additionalInfosData: FetchAdditionalInfos;
@@ -301,14 +372,12 @@ interface FetchAdditionalInfos {
   phototexts?: QuestionAnswerPhotoTxt[];
 }
 */
-
 export interface QuestionBlockProps {
-  questions?: BackendQuestion[] | null;
-  answerChoices?: BackendQuestionChoice[] | null;
-  extraFields?: BackendQuestionBlockField[] | null;
-  description?: string | null;
-  photoUrl?: string | null;
-  photoText?: string | null;
+  block: BackendQuestionBlock;
+  questions?: BackendQuestion[];
+  answerChoices?: BackendQuestionChoice[];
+  extraFields?: BackendQuestionBlockField[];
+  accessibilityPlaces: BackendPlace[];
 }
 
 export interface PathTreeProps {
@@ -318,9 +387,9 @@ export interface PathTreeProps {
 export interface QuestionAdditionalInfoProps {
   questionId: number;
   blockId?: number;
-  canAddLocation?: boolean;
-  canAddPhotoMaxCount?: number;
-  canAddComment?: boolean;
+  // canAddLocation?: boolean;
+  // canAddPhotoMaxCount?: number;
+  // canAddComment?: boolean;
   isMainLocPicComponent?: boolean;
 }
 
@@ -359,9 +428,10 @@ export interface SaveSpinnerProps {
   savingFinishedText: string;
 }
 
-export interface MainLocationAndPictureProps {
+export interface QuestionBlockLocationPhotoContentProps {
+  block: BackendQuestionBlock;
   canAddLocation: boolean;
-  canAddPicture: boolean;
+  canAddPhoto: boolean;
 }
 
 export interface EntranceData {
@@ -369,26 +439,84 @@ export interface EntranceData {
 }
 
 export interface AccessibilityData {
-  [key: string]: StoredSentence[];
+  [key: string]: BackendEntranceSentence[];
+}
+
+export interface EntranceChoiceData {
+  [key: string]: BackendEntranceChoice[];
+}
+
+export interface EntrancePlaceData {
+  [key: string]: BackendEntrancePlace[];
 }
 
 export interface DetailsProps {
-  servicepointData: Servicepoint;
-  servicepointDetail: BackendServicepoint;
+  servicepointData: BackendServicepoint;
   accessibilityData: AccessibilityData;
+  accessibilityPlaceData: BackendPlace[];
   entranceData: EntranceData;
+  entrancePlaceData: EntrancePlaceData;
+  entranceChoiceData: EntranceChoiceData;
   // hasExistingFormData: boolean;
   isMainEntrancePublished: boolean;
 }
 
 export interface PreviewProps {
-  servicepointData: Servicepoint;
-  servicepointDetail: BackendServicepoint;
+  servicepointData: BackendServicepoint;
   accessibilityData: AccessibilityData;
+  accessibilityPlaceData: BackendPlace[];
   entranceData: EntranceData;
+  entrancePlaceData: BackendEntrancePlace[];
+  entranceChoiceData: BackendEntranceChoice[];
   questionAnswerData: BackendEntranceAnswer[];
   questionExtraAnswerData: BackendEntranceField[];
   isMainEntrancePublished: boolean;
+}
+
+export interface EntranceLocationPhotoProps {
+  servicepointData: BackendServicepoint;
+  entranceData: BackendEntrance;
+}
+
+export interface EntranceLocationProps {
+  entranceLocationPhoto: EntranceLocationPhoto;
+}
+
+export interface EntrancePhotoProps {
+  entranceLocationPhoto: EntranceLocationPhoto;
+}
+
+export interface EntranceLocationPhotoCtrlButtonsProps {
+  entranceLocationPhoto: EntranceLocationPhoto;
+}
+
+export interface AccessibilityPlaceProps {
+  servicepointData: BackendServicepoint;
+  entranceData: BackendEntrance;
+  accessibilityPlaceData: BackendPlace[];
+}
+
+export interface AccessibilityPlaceBoxProps {
+  entrancePlaceBox: EntrancePlaceBox;
+  canAddLocation: boolean;
+}
+
+export interface AccessibilityPlaceLocationProps {
+  entrancePlaceBox: EntrancePlaceBox;
+}
+
+export interface AccessibilityPlacePictureProps {
+  entrancePlaceBox: EntrancePlaceBox;
+}
+
+export interface AccessibilityPlaceCtrlButtonsProps {
+  placeId: number;
+  entrancePlaceBoxes: EntrancePlaceBox[];
+}
+
+export interface AccessibilityPlaceNewButtonProps {
+  accessibilityPlaceData: BackendPlace;
+  orderNumber: number;
 }
 
 export interface ElementCountProps {

@@ -10,11 +10,8 @@ const ServicepointLandingSummaryLocationPicture = ({ entranceKey, entranceData }
   const i18n = useI18n();
   // const coordinates = useAppSelector((state) => state.generalSlice.coordinatesWGS84) ?? [60.1, 24.9];
   const { loc_easting, loc_northing, photo_url } = entranceData || {};
-
-  const entranceCoordinates: [number, number] = [loc_easting ?? 0, loc_northing ?? 0];
-
-  // @ts-ignore : ignore types because .reverse() returns number[]
-  const coordinates: [number, number] = convertCoordinates("EPSG:3067", "WGS84", entranceCoordinates).reverse();
+  const coordinatesEuref = [loc_easting ?? 0, loc_northing ?? 0] as [number, number];
+  const coordinatesWGS84 = convertCoordinates("EPSG:3067", "WGS84", coordinatesEuref).reverse() as [number, number];
 
   const isDevelopment = false;
 
@@ -23,7 +20,7 @@ const ServicepointLandingSummaryLocationPicture = ({ entranceKey, entranceData }
       <div className={styles.mapcontainer}>
         <h4>{entranceKey === "main" ? i18n.t("servicepoint.mainEntranceLocationLabel") : i18n.t("servicepoint.entranceLocationLabel")}</h4>
         <div className={styles.map}>
-          <Map initCenter={coordinates} initLocation={coordinates} initZoom={17} draggableMarker={false} questionId={-1} makeStatic />
+          <Map curLocation={coordinatesWGS84} initZoom={17} draggableMarker={false} questionId={-1} makeStatic />
           {/*coordinates && coordinates.length === 2 ? (
             <p>{`${i18n.t("servicepoint.mainEntranceLocationCoordinatesLabel")}: E ${coordinates[0].toFixed(2)}, N ${coordinates[1].toFixed(2)}`}</p>
           ) : null*/}

@@ -1,6 +1,5 @@
 import React from "react";
 import { useAccordion, Button, IconMinus, IconPlus, IconCheckCircleFill, Card, IconAlertCircle } from "hds-react";
-// import router from "next/router";
 import { HeadlineQuestionContainerProps } from "../types/general";
 import styles from "./HeadlineQuestionContainer.module.scss";
 import { useAppSelector } from "../state/hooks";
@@ -21,13 +20,6 @@ const HeadlineQuestionContainer = ({ text, number, initOpen = false, children, i
   iconLeft = !isValid ? <IconAlertCircle aria-hidden color="#b01038" /> : iconLeft;
   let buttonVariant: "primary" | "secondary" | "danger" = isOpen ? "primary" : "secondary";
   buttonVariant = number !== undefined && curInvalidBlocks.includes(number) && isOpen ? "danger" : buttonVariant;
-
-  /*
-  const handleOnClickOnFirstAccordion = () => {
-    console.log("CANT OPEN");
-    router.reload();
-  };
-  */
 
   // for custom toggle and firing event resize for the leaflet maps to render properly
   // if they are hidden and no rerender/window event is triggered they will render poorly

@@ -41,6 +41,22 @@
     }
   }
 
+  .contentcontainer {
+    .header {
+      color: $color-bus;
+      font-size: $fontsize-heading-m !important;
+      margin-top: $spacing-l;
+      margin-bottom: $spacing-2-xs;
+    }
+
+    .content {
+      h4 {
+        background-color: $color-bus-light;
+        padding: $spacing-s;
+      }
+    }
+  }
+
   .footercontainer {
     margin-top: $spacing-l;
   }

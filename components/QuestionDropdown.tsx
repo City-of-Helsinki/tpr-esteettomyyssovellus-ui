@@ -4,7 +4,7 @@ import { useI18n } from "next-localization";
 import { InputOption, QuestionDropdownQuestionProps } from "../types/general";
 import style from "./QuestionDropdown.module.scss";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
-import { setAnsweredChoice, setAnswer, removeAnsweredChoice } from "../state/reducers/formSlice";
+import { setAnswer } from "../state/reducers/formSlice";
 
 // usage: general custom dropdown component form HDS
 // notes: this component uses HDS Select, HDS says:
@@ -18,13 +18,15 @@ const QuestionDropdown = ({ options, placeholder = "--Valitse--", label = "", qu
   const handleChange = (selected: InputOption) => {
     const answer = selected.value;
     if (answer !== undefined && questionId !== undefined && options) {
+      /*
       options.forEach((element: InputOption) => {
         if (element.value !== undefined) {
           dispatch(removeAnsweredChoice(element.value));
         }
       });
+      */
       dispatch(setAnswer({ questionId, answer }));
-      dispatch(setAnsweredChoice(answer));
+      // dispatch(setAnsweredChoice(answer));
     }
   };
 
