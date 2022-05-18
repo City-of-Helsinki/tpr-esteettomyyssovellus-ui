@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { PURGE } from "redux-persist";
 import { AdditionalInfoProps, AdditionalInfoStateProps, EntranceLocationPhoto, EntrancePlaceBox, PictureProps } from "../../types/general";
+import { BackendEntranceAnswer } from "../../types/backendModels";
 
 // TODO: maybe delete this before prod
 // notice: many [questionNumber] OR [qNumber] is actually questionId
@@ -71,13 +72,26 @@ export const additionalInfoSlice = createSlice({
         entranceLocationPhoto: { ...state.entranceLocationPhoto, ...action.payload.updatedLocationPhoto },
       };
     },
+    editEntranceLocation: (state, action: PayloadAction<{ entrance_id: number; locEasting?: number; locNorthing?: number }>) => {
+      return {
+        ...state,
+        entranceLocationPhoto: {
+          ...state.entranceLocationPhoto,
+          modifiedAnswer: {
+            ...((state.entranceLocationPhoto.modifiedAnswer ?? {}) as BackendEntranceAnswer),
+            loc_easting: action.payload.locEasting !== undefined ? Math.round(action.payload.locEasting) : undefined,
+            loc_northing: action.payload.locNorthing !== undefined ? Math.round(action.payload.locNorthing) : undefined,
+          },
+        },
+      };
+    },
     revertEntranceLocationPhoto: (state, action: PayloadAction<{ entrance_id: number }>) => {
       return {
         ...state,
         entranceLocationPhoto: {
           ...state.entranceLocationPhoto,
           entrance_id: action.payload.entrance_id,
-          modifiedAnswer: state.entranceLocationPhoto.existingAnswer,
+          modifiedAnswer: (state.entranceLocationPhoto.existingAnswer ?? {}) as BackendEntranceAnswer,
           modifiedPhotoBase64: state.entranceLocationPhoto.existingPhotoBase64,
           invalidValues: [],
         },
@@ -140,6 +154,69 @@ export const additionalInfoSlice = createSlice({
             box.order_number === action.payload.order_number &&
             !box.isDeleted
             ? [...acc, action.payload.updatedPlaceBox]
+            : [...acc, box];
+        }, []),
+      };
+    },
+    editEntrancePlaceBoxLocation: (
+      state,
+      action: PayloadAction<{
+        entrance_id: number;
+        place_id: number;
+        order_number: number;
+        locEasting?: number;
+        locNorthing?: number;
+      }>
+    ) => {
+      return {
+        ...state,
+        entrancePlaceBoxes: state.entrancePlaceBoxes.reduce((acc: EntrancePlaceBox[], box) => {
+          return box.entrance_id === action.payload.entrance_id &&
+            box.place_id === action.payload.place_id &&
+            box.order_number === action.payload.order_number &&
+            !box.isDeleted
+            ? [
+                ...acc,
+                {
+                  ...box,
+                  modifiedBox: {
+                    ...box.modifiedBox,
+                    loc_easting: action.payload.locEasting !== undefined ? Math.round(action.payload.locEasting) : undefined,
+                    loc_northing: action.payload.locNorthing !== undefined ? Math.round(action.payload.locNorthing) : undefined,
+                  },
+                },
+              ]
+            : [...acc, box];
+        }, []),
+      };
+    },
+    editEntrancePlaceBoxLocationText: (
+      state,
+      action: PayloadAction<{
+        entrance_id: number;
+        place_id: number;
+        order_number: number;
+        language: string;
+        locationText?: string;
+      }>
+    ) => {
+      return {
+        ...state,
+        entrancePlaceBoxes: state.entrancePlaceBoxes.reduce((acc: EntrancePlaceBox[], box) => {
+          return box.entrance_id === action.payload.entrance_id &&
+            box.place_id === action.payload.place_id &&
+            box.order_number === action.payload.order_number &&
+            !box.isDeleted
+            ? [
+                ...acc,
+                {
+                  ...box,
+                  modifiedBox: {
+                    ...box.modifiedBox,
+                    [`location_text_${action.payload.language}`]: action.payload.locationText,
+                  },
+                },
+              ]
             : [...acc, box];
         }, []),
       };
@@ -671,6 +748,7 @@ export const {
   setEntranceLocationPhoto,
   setEntranceLocationPhotoValid,
   editEntranceLocationPhoto,
+  editEntranceLocation,
   revertEntranceLocationPhoto,
   addInvalidEntranceLocationPhotoValue,
   removeInvalidEntranceLocationPhotoValue,
@@ -678,6 +756,8 @@ export const {
   setEntrancePlaceValid,
   addEntrancePlaceBox,
   editEntrancePlaceBox,
+  editEntrancePlaceBoxLocation,
+  editEntrancePlaceBoxLocationText,
   changeEntrancePlaceBoxOrder,
   deleteEntrancePlaceBox,
   deleteEntrancePlace,

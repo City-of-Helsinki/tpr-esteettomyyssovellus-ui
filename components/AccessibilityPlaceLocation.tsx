@@ -1,11 +1,10 @@
-import React, { KeyboardEvent, useCallback, useMemo, useState } from "react";
+import React, { KeyboardEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { IconCross, IconLocation, IconMinus, IconPlus, TextArea } from "hds-react";
 import { useI18n } from "next-localization";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
-import { editEntrancePlaceBox } from "../state/reducers/additionalInfoSlice";
-import { BackendEntrancePlace } from "../types/backendModels";
+import { editEntrancePlaceBoxLocation, editEntrancePlaceBoxLocationText } from "../state/reducers/additionalInfoSlice";
 import { MAP_MAX_ZOOM } from "../types/constants";
-import { AccessibilityPlaceLocationProps, EntrancePlaceBox } from "../types/general";
+import { AccessibilityPlaceLocationProps } from "../types/general";
 import { convertCoordinates, isLocationValid } from "../utils/utilFunctions";
 import Map from "./common/Map";
 import QuestionButton from "./QuestionButton";
@@ -37,19 +36,41 @@ const AccessibilityPlaceLocation = ({ entrancePlaceBox }: AccessibilityPlaceLoca
   const coords = !isMainLocPicComponent && coordinates ? coordinates : fallbackLocation;
   */
   const servicepointCoordinatesEuref = useAppSelector((state) => state.generalSlice.coordinatesEuref);
-  const coordinatesEuref = [loc_easting ?? 0, loc_northing ?? 0] as [number, number];
-  const coordinatesWGS84 = convertCoordinates("EPSG:3067", "WGS84", coordinatesEuref).reverse() as [number, number];
 
   const [mapInput, setMapInput] = useState(false);
+  const [coordinatesEuref, setCoordinatesEuref] = useState<[number, number]>([0, 0]);
+  const [coordinatesWGS84, setCoordinatesWGS84] = useState<[number, number]>([0, 0]);
 
-  const updatePlaceBox = useCallback(
-    (updatedPlaceBox: EntrancePlaceBox) => {
+  useEffect(() => {
+    const coordinates = [loc_easting ?? 0, loc_northing ?? 0] as [number, number];
+    setCoordinatesEuref(coordinates);
+    setCoordinatesWGS84(convertCoordinates("EPSG:3067", "WGS84", coordinates).reverse() as [number, number]);
+  }, [loc_easting, loc_northing]);
+
+  const updatePlaceBoxLocation = useCallback(
+    (locEasting?: number, locNorthing?: number) => {
       dispatch(
-        editEntrancePlaceBox({
+        editEntrancePlaceBoxLocation({
           entrance_id,
           place_id,
           order_number,
-          updatedPlaceBox,
+          locEasting,
+          locNorthing,
+        })
+      );
+    },
+    [entrance_id, place_id, order_number, dispatch]
+  );
+
+  const updatePlaceBoxLocationText = useCallback(
+    (language: string, locationText?: string) => {
+      dispatch(
+        editEntrancePlaceBoxLocationText({
+          entrance_id,
+          place_id,
+          order_number,
+          language,
+          locationText,
         })
       );
     },
@@ -62,43 +83,26 @@ const AccessibilityPlaceLocation = ({ entrancePlaceBox }: AccessibilityPlaceLoca
       const lonLatReverseCoordinates = [coordinates[1], coordinates[0]] as [number, number];
       const [locEas, locNor] = convertCoordinates("WGS84", "EPSG:3067", lonLatReverseCoordinates);
 
-      updatePlaceBox({
-        ...entrancePlaceBox,
-        modifiedBox: { ...((modifiedBox || {}) as BackendEntrancePlace), loc_easting: Math.round(locEas), loc_northing: Math.round(locNor) },
-      });
+      updatePlaceBoxLocation(locEas, locNor);
     },
-    [entrancePlaceBox, modifiedBox, updatePlaceBox]
+    [updatePlaceBoxLocation]
   );
 
   const handleAddLocation = () => {
     // If there is no valid location, use the servicepoint location as the default
     if (!isLocationValid(coordinatesEuref) && isLocationValid(servicepointCoordinatesEuref)) {
-      updatePlaceBox({
-        ...entrancePlaceBox,
-        modifiedBox: {
-          ...((modifiedBox || {}) as BackendEntrancePlace),
-          loc_easting: servicepointCoordinatesEuref[0],
-          loc_northing: servicepointCoordinatesEuref[1],
-        },
-      });
+      updatePlaceBoxLocation(servicepointCoordinatesEuref[0], servicepointCoordinatesEuref[1]);
     }
 
     setMapInput(true);
   };
 
-  // on delete button clicked chain delete location from store and delete component cb
   const handleOnDelete = () => {
-    updatePlaceBox({
-      ...entrancePlaceBox,
-      modifiedBox: {
-        ...((modifiedBox || {}) as BackendEntrancePlace),
-        loc_easting: undefined,
-        loc_northing: undefined,
-        location_text_fi: undefined,
-        location_text_sv: undefined,
-        location_text_en: undefined,
-      },
-    });
+    updatePlaceBoxLocation(undefined, undefined);
+    updatePlaceBoxLocationText("fi", undefined);
+    updatePlaceBoxLocationText("sv", undefined);
+    updatePlaceBoxLocationText("en", undefined);
+
     setMapInput(false);
   };
 
@@ -112,57 +116,8 @@ const AccessibilityPlaceLocation = ({ entrancePlaceBox }: AccessibilityPlaceLoca
       dispatch(setAlt({ questionId, language, value, compId: id }));
     }, 500);
     */
-    updatePlaceBox({
-      ...entrancePlaceBox,
-      modifiedBox: { ...((modifiedBox || {}) as BackendEntrancePlace), [`location_text_${language}`]: locationText },
-    });
+    updatePlaceBoxLocationText(language, locationText);
   };
-
-  // So this (geocoding) was done but then decided to drop it out
-  // leaving it here for now for if the plans change
-  // if not needed -> delete
-
-  // const handleShowOnMap = async () => {
-  //   setAddressErrorText("");
-  //   const address =
-  //     addressRef && addressRef.current && addressRef.current !== null
-  //       ? //@ts-ignore
-  //         addressRef.current.value
-  //       : null;
-  //   if (!address || address === null) return;
-  //   const formattedAddress = address.replace(" ", "%");
-  //   const geocodeReq = `${HKI_GEOCODING_URL}${formattedAddress}${GEOCODING_PARAMS}`;
-  //   const geocodeResponse = await fetch(geocodeReq);
-  //   const data = await geocodeResponse.json();
-
-  //   if (!data || data.count === 0) {
-  //     setAddressErrorText("ph: osoitetta ei löytynyt");
-  //     return;
-  //   }
-  //   if (data.count > 1) {
-  //     console.log("More than 1 address found...");
-  //   }
-  //   const geocodedCoordinates: [number, number] =
-  //     data.results[0]?.location?.coordinates;
-
-  //   if (geocodedCoordinates && geocodedCoordinates.length === 2) {
-  //     console.log("setting coordinates", geocodedCoordinates);
-  //     // const reversedCoords = geocodedCoordinates;
-  //     const [locEas, locNor] = convertCoordinates(
-  //       "WGS84",
-  //       "EPSG:3067",
-  //       geocodedCoordinates
-  //     );
-  //     dispatch(
-  //       addLocation({
-  //         questionId: questionId,
-  //         coordinates: geocodedCoordinates.reverse(),
-  //         locNorthing: Math.round(locNor),
-  //         locEasting: Math.round(locEas),
-  //       })
-  //     );
-  //   }
-  // };
 
   // useMemo for preventing leaflet map rendering each time something updates on page
   const memoMap = useMemo(() => {
