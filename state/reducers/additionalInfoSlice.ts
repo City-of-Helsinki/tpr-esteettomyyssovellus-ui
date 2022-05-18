@@ -643,10 +643,8 @@ export const additionalInfoSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    // Don't remove edited entrance place data here, this is handled in the EntranceAccessibility page instead
-    builder.addCase(PURGE, (state) => ({
+    builder.addCase(PURGE, () => ({
       ...initialState,
-      entrancePlaceBoxes: state.entrancePlaceBoxes,
     }));
   },
 });

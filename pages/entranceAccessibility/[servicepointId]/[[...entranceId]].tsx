@@ -47,11 +47,11 @@ import {
   // QuestionAnswerPhoto,
   // QuestionAnswerPhotoTxt,
 } from "../../../types/backendModels";
-import { EntranceFormProps } from "../../../types/general";
+import { EntranceFormProps, KeyValueNumber, KeyValueString } from "../../../types/general";
 import HeadlineQuestionContainer from "../../../components/HeadlineQuestionContainer";
 import QuestionFormCtrlButtons from "../../../components/QuestionFormCtrlButtons";
 import PathTreeComponent from "../../../components/PathTreeComponent";
-import { setAnswer, setEntranceId, setExtraAnswer, setServicepointId, setStartDate } from "../../../state/reducers/formSlice";
+import { setAnswers, setEntranceId, setExtraAnswers, setServicepointId, setStartDate } from "../../../state/reducers/formSlice";
 import { getTokenHash, getCurrentDate, formatAddress, convertCoordinates } from "../../../utils/utilFunctions";
 /*
 import {
@@ -107,6 +107,7 @@ const EntranceAccessibility = ({
   // const curEditingQuestionAddInfoNumber = useAppSelector((state) => state.generalSlice.currentlyEditingQuestionAddinfo);
   // const curEditingBlockAddInfoNumber = useAppSelector((state) => state.generalSlice.currentlyEditingBlockAddinfo);
 
+  // const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
   const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
   // const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
   const curAnswers = useAppSelector((state) => state.formReducer.answers);
@@ -233,20 +234,30 @@ const EntranceAccessibility = ({
     */
 
     // Reset the entrance data if the entrance id changes, otherwise keep any edited entrance data already stored in redux state
-    const resetEntranceData = Object.keys(entranceData).length > 0 && curEntranceId !== entranceData.entrance_id;
+    const resetEntranceData =
+      (Object.keys(entranceData).length === 0 && curEntranceId !== -2) ||
+      (Object.keys(entranceData).length > 0 && curEntranceId !== entranceData.entrance_id);
 
     if (resetEntranceData) {
-      // Put existing answers into redux state
-      if (questionAnswerData.length > 0) {
-        questionAnswerData.forEach((a: BackendEntranceAnswer) => {
-          const questionId = a.question_id;
-          const answer = a.question_choice_id;
-          if (questionId !== undefined && answer !== undefined) {
-            // dispatch(setAnsweredChoice(answer));
-            dispatch(setAnswer({ questionId, answer }));
-          }
-        });
+      // Special case for new entrances to prevent the state being reset once editing has started, since curEntranceId is -1 otherwise
+      if (Object.keys(entranceData).length === 0) {
+        dispatch(setEntranceId(-2));
       }
+
+      // Put existing answers into redux state
+      dispatch(
+        setAnswers(
+          questionAnswerData.reduce((acc: KeyValueNumber, a: BackendEntranceAnswer) => {
+            const questionId = a.question_id;
+            const answer = a.question_choice_id;
+            if (questionId !== undefined && answer !== undefined) {
+              return { ...acc, [questionId]: answer };
+            } else {
+              return acc;
+            }
+          }, {})
+        )
+      );
 
       const entranceLocationPhotoAnswer = questionAnswerData.find((a) => a.question_id === undefined || a.question_id === null);
       if (entranceLocationPhotoAnswer) {
@@ -281,15 +292,19 @@ const EntranceAccessibility = ({
       }
 
       // Put existing extra field answers into redux state
-      if (questionExtraAnswerData.length > 0) {
-        questionExtraAnswerData.forEach((ea: BackendEntranceField) => {
-          const questionBlockFieldId = ea.question_block_field_id;
-          const answer = ea.entry;
-          if (questionBlockFieldId !== undefined && answer !== undefined) {
-            dispatch(setExtraAnswer({ questionBlockFieldId, answer }));
-          }
-        });
-      }
+      dispatch(
+        setExtraAnswers(
+          questionExtraAnswerData.reduce((acc: KeyValueString, ea: BackendEntranceField) => {
+            const questionBlockFieldId = ea.question_block_field_id;
+            const answer = ea.entry;
+            if (questionBlockFieldId !== undefined && answer !== undefined) {
+              return { ...acc, [questionBlockFieldId]: answer };
+            } else {
+              return acc;
+            }
+          }, {})
+        )
+      );
 
       // Put entrance places into redux state
       dispatch(
@@ -534,7 +549,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       // Check this specific entrance
       if (params.entranceId === undefined && (servicepointData.servicepoint_id === undefined || servicepointData.new_entrance_possible === "Y")) {
         // New entrance
-        // Make a new main entrance if not existing, otherwise an additional entrance
+        // This is a new main entrance if not existing, otherwise an additional entrance
         formId = !isMainEntrancePublished || !mainEntrance || servicepointData.servicepoint_id === undefined ? 0 : 1;
       } else if (params.entranceId !== undefined) {
         // Existing entrance

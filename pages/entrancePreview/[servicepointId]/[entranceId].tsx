@@ -19,7 +19,7 @@ import AddNewEntranceNotice from "../../../components/common/AddNewEntranceNotic
 import LoadSpinner from "../../../components/common/LoadSpinner";
 import { useAppDispatch, useAppSelector, useLoading } from "../../../state/hooks";
 import { setEntranceLocationPhoto, setEntrancePlaceBoxes } from "../../../state/reducers/additionalInfoSlice";
-import { setServicepointId, setEntranceId, setStartDate, setAnswer, setExtraAnswer } from "../../../state/reducers/formSlice";
+import { setServicepointId, setEntranceId, setStartDate, setAnswers, setExtraAnswers } from "../../../state/reducers/formSlice";
 import { filterByLanguage, formatAddress, getCurrentDate, getTokenHash } from "../../../utils/utilFunctions";
 import {
   // API_FETCH_ANSWER_LOGS,
@@ -49,7 +49,7 @@ import {
   Entrance,
   EntranceResults,
 } from "../../../types/backendModels";
-import { AccessibilityData, EntranceData, EntrancePlaceData, PreviewProps } from "../../../types/general";
+import { AccessibilityData, EntranceData, EntrancePlaceData, KeyValueNumber, KeyValueString, PreviewProps } from "../../../types/general";
 
 // usage: the preview page of an entrance, displayed before saving the completed form
 const Preview = ({
@@ -82,7 +82,7 @@ const Preview = ({
 
   const startedAnswering = useAppSelector((state) => state.formReducer.startedAnswering);
 
-  const entranceKey = Object.keys(accessibilityData)[0];
+  const entranceKey = accessibilityData && Object.keys(accessibilityData).length > 0 ? Object.keys(accessibilityData)[0] : "";
   const entranceName = entranceData && entranceData[entranceKey] ? entranceData[entranceKey][`name_${curLocale}`] : "";
   const subHeader =
     entranceKey === "main"
@@ -92,6 +92,10 @@ const Preview = ({
           servicepointData.address_city
         )}`
       : `${i18n.t("common.entrance")}: ${entranceName ?? ""}`;
+
+  const hasData = Object.keys(servicepointData).length > 0;
+  const hasAccessibilityData = accessibilityData && accessibilityData[entranceKey] && accessibilityData[entranceKey].length > 0;
+  const hasPlaceData = entrancePlaceData && entrancePlaceData.length > 0;
 
   const initReduxData = () => {
     // Update servicepointId and entranceId in redux state
@@ -103,16 +107,19 @@ const Preview = ({
     }
 
     // Put existing answers into redux state
-    if (questionAnswerData.length > 0) {
-      questionAnswerData.forEach((a: BackendEntranceAnswer) => {
-        const questionId = a.question_id;
-        const answer = a.question_choice_id;
-        if (questionId !== undefined && answer !== undefined) {
-          // dispatch(setAnsweredChoice(answer));
-          dispatch(setAnswer({ questionId, answer }));
-        }
-      });
-    }
+    dispatch(
+      setAnswers(
+        questionAnswerData.reduce((acc: KeyValueNumber, a: BackendEntranceAnswer) => {
+          const questionId = a.question_id;
+          const answer = a.question_choice_id;
+          if (questionId !== undefined && answer !== undefined) {
+            return { ...acc, [questionId]: answer };
+          } else {
+            return acc;
+          }
+        }, {})
+      )
+    );
 
     // Put the existing entrance location and photo into redux state
     const entranceLocationPhotoAnswer = questionAnswerData.find((a) => a.question_id === undefined || a.question_id === null);
@@ -133,15 +140,19 @@ const Preview = ({
     }
 
     // Put existing extra field answers into redux state
-    if (questionExtraAnswerData.length > 0) {
-      questionExtraAnswerData.forEach((ea: BackendEntranceField) => {
-        const questionBlockFieldId = ea.question_block_field_id;
-        const answer = ea.entry;
-        if (questionBlockFieldId !== undefined && answer !== undefined) {
-          dispatch(setExtraAnswer({ questionBlockFieldId, answer }));
-        }
-      });
-    }
+    dispatch(
+      setExtraAnswers(
+        questionExtraAnswerData.reduce((acc: KeyValueString, ea: BackendEntranceField) => {
+          const questionBlockFieldId = ea.question_block_field_id;
+          const answer = ea.entry;
+          if (questionBlockFieldId !== undefined && answer !== undefined) {
+            return { ...acc, [questionBlockFieldId]: answer };
+          } else {
+            return acc;
+          }
+        }, {})
+      )
+    );
 
     // Put entrance places into redux state
     dispatch(
@@ -177,10 +188,6 @@ const Preview = ({
       dispatch(setStartDate(getCurrentDate()));
     }
   }, [startedAnswering, dispatch]);
-
-  const hasData = Object.keys(servicepointData).length > 0;
-  const hasAccessibilityData = accessibilityData && accessibilityData[entranceKey] && accessibilityData[entranceKey].length > 0;
-  const hasPlaceData = entrancePlaceData && entrancePlaceData.length > 0;
 
   // Filter by language
   const filteredAccessibilityData: AccessibilityData = hasAccessibilityData

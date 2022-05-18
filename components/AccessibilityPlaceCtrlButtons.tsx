@@ -132,14 +132,16 @@ const AccessibilityPlaceCtrlButtons = ({ placeId, entrancePlaceBoxes }: Accessib
   const handleSaveAndReturn = () => {
     if (validateForm()) {
       setPageSaved(true);
-      router.push(`/entranceAccessibility/${curServicepointId}/${curEntranceId}/`);
+      const url = curEntranceId > 0 ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}` : `/entranceAccessibility/${curServicepointId}`;
+      router.push(url);
     }
   };
 
   // handle user clicked return no save button
   const handleReturnNoSave = () => {
     revertPlace();
-    router.push(`/entranceAccessibility/${curServicepointId}/${curEntranceId}/`);
+    const url = curEntranceId > 0 ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}` : `/entranceAccessibility/${curServicepointId}`;
+    router.push(url);
   };
 
   const handleDeleteAdditionalInfo = () => {

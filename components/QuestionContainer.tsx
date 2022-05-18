@@ -131,7 +131,11 @@ const QuestionContainer = ({
       )
     );
 
-    router.push(`/accessibilityPlace/${curServicepointId}/${curEntranceId}/${placeId}`);
+    const url =
+      curEntranceId > 0
+        ? `/accessibilityPlace/${curServicepointId}/${placeId}/${curEntranceId}`
+        : `/accessibilityPlace/${curServicepointId}/${placeId}`;
+    router.push(url);
   };
 
   return (

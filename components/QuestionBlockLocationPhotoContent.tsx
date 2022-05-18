@@ -46,7 +46,8 @@ const QuestionBlockLocationPhotoContent = ({ block, canAddLocation, canAddPhoto 
       })
     );
 
-    router.push(`/entranceLocationPhoto/${curServicepointId}/${curEntranceId}`);
+    const url = curEntranceId > 0 ? `/entranceLocationPhoto/${curServicepointId}/${curEntranceId}` : `/entranceLocationPhoto/${curServicepointId}`;
+    router.push(url);
   };
 
   return (

@@ -21,6 +21,14 @@ import {
   // QuestionAnswerPhotoTxt,
 } from "./backendModels";
 
+export interface KeyValueNumber {
+  [key: number]: number;
+}
+
+export interface KeyValueString {
+  [key: number]: string;
+}
+
 export interface QuestionContainerProps {
   question: BackendQuestion;
   accessibilityPlaces: BackendPlace[];
@@ -476,6 +484,7 @@ export interface PreviewProps {
 export interface EntranceLocationPhotoProps {
   servicepointData: BackendServicepoint;
   entranceData: BackendEntrance;
+  formId: number;
 }
 
 export interface EntranceLocationProps {
@@ -494,6 +503,7 @@ export interface AccessibilityPlaceProps {
   servicepointData: BackendServicepoint;
   entranceData: BackendEntrance;
   accessibilityPlaceData: BackendPlace[];
+  formId: number;
 }
 
 export interface AccessibilityPlaceBoxProps {

@@ -20,7 +20,7 @@ import {
   LanguageLocales,
 } from "../types/constants";
 import { API_TOKEN } from "./checksumSecret";
-import { EntranceLocationPhoto, EntrancePlaceBox } from "../types/general";
+import { EntranceLocationPhoto, EntrancePlaceBox, KeyValueString } from "../types/general";
 /*
 import { QuestionAnswerPhoto } from "../types/backendModels";
 import {
@@ -108,11 +108,7 @@ export const splitTextUrls = (text: string) => {
   return text.split(regex).filter((t) => t.length > 0);
 };
 
-interface KeyValue {
-  [key: number]: string;
-}
-
-const saveExtraFieldAnswers = async (logId: number, extraAnswers: KeyValue, router: NextRouter) => {
+const saveExtraFieldAnswers = async (logId: number, extraAnswers: KeyValueString, router: NextRouter) => {
   // Save extra field answers to the database such as contact information
   await Promise.all(
     Object.keys(extraAnswers).map(async (questionBlockFieldIdStr) => {
@@ -406,7 +402,7 @@ export const saveFormData = async (
   servicePointId: number,
   entranceId: number,
   answeredChoices: number[],
-  extraAnswers: KeyValue,
+  extraAnswers: KeyValueString,
   entranceLocationPhoto: EntranceLocationPhoto,
   entrancePlaceBoxes: EntrancePlaceBox[],
   startedAnswering: string,
