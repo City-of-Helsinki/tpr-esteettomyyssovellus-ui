@@ -21,6 +21,14 @@ import {
   // QuestionAnswerPhotoTxt,
 } from "./backendModels";
 
+export interface KeyValueNumber {
+  [key: number]: number;
+}
+
+export interface KeyValueString {
+  [key: number]: string;
+}
+
 export interface QuestionContainerProps {
   question: BackendQuestion;
   accessibilityPlaces: BackendPlace[];
@@ -300,7 +308,7 @@ export interface EntranceLocationPhoto {
   entrance_id: number;
   question_block_id: number;
   existingAnswer?: BackendEntranceAnswer;
-  modifiedAnswer?: BackendEntranceAnswer;
+  modifiedAnswer: BackendEntranceAnswer;
   existingPhotoBase64?: string;
   modifiedPhotoBase64?: string;
   termsAccepted: boolean;
@@ -314,7 +322,7 @@ export interface EntrancePlaceBox {
   place_id: number;
   order_number: number;
   existingBox?: BackendEntrancePlace;
-  modifiedBox?: BackendEntrancePlace;
+  modifiedBox: BackendEntrancePlace;
   isDeleted: boolean;
   existingPhotoBase64?: string;
   modifiedPhotoBase64?: string;
@@ -476,6 +484,7 @@ export interface PreviewProps {
 export interface EntranceLocationPhotoProps {
   servicepointData: BackendServicepoint;
   entranceData: BackendEntrance;
+  formId: number;
 }
 
 export interface EntranceLocationProps {
@@ -494,6 +503,7 @@ export interface AccessibilityPlaceProps {
   servicepointData: BackendServicepoint;
   entranceData: BackendEntrance;
   accessibilityPlaceData: BackendPlace[];
+  formId: number;
 }
 
 export interface AccessibilityPlaceBoxProps {

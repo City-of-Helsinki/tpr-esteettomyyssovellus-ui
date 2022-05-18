@@ -1,14 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { PURGE } from "redux-persist";
-import { MainPictureProps } from "../../types/general";
+import { KeyValueNumber, KeyValueString, MainPictureProps } from "../../types/general";
 
 interface formState {
   currentServicepointId: number;
   currentEntranceId: number;
   // answeredChoices: number[];
-  answers: { [key: number]: number };
-  extraAnswers: { [key: number]: string };
+  answers: KeyValueNumber;
+  extraAnswers: KeyValueString;
   isContinueClicked: boolean;
   finishedBlocks: number[];
   startedAnswering: string;
@@ -77,10 +77,22 @@ export const formSlice = createSlice({
         answers: { ...state.answers, [action.payload.questionId]: action.payload.answer },
       };
     },
+    setAnswers: (state, action: PayloadAction<KeyValueNumber>) => {
+      return {
+        ...state,
+        answers: { ...action.payload },
+      };
+    },
     setExtraAnswer: (state, action: PayloadAction<{ questionBlockFieldId: number; answer: string }>) => {
       return {
         ...state,
         extraAnswers: { ...state.extraAnswers, [action.payload.questionBlockFieldId]: action.payload.answer },
+      };
+    },
+    setExtraAnswers: (state, action: PayloadAction<KeyValueString>) => {
+      return {
+        ...state,
+        extraAnswers: { ...action.payload },
       };
     },
     setContinue: (state) => {
@@ -257,7 +269,9 @@ export const {
   // setAnsweredChoice,
   // removeAnsweredChoice,
   setAnswer,
+  setAnswers,
   setExtraAnswer,
+  setExtraAnswers,
   setContinue,
   // unsetContinue,
   setFinished,

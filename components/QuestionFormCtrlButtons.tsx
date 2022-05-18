@@ -179,8 +179,9 @@ const QuestionFormCtrlButtons = ({
       const entranceId = await saveDraft();
       setSavingPreview(false);
 
-      // router.push(`/preview/${curServicepointId}`);
-      router.push(`/entrancePreview/${curServicepointId}/${entranceId}`);
+      if (entranceId > 0) {
+        router.push(`/entrancePreview/${curServicepointId}/${entranceId}`);
+      }
     }
   };
 

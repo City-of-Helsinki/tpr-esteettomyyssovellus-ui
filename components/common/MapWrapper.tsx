@@ -132,7 +132,9 @@ const MapWrapper = ({
       map.scrollWheelZoom.disable();
       map.boxZoom.disable();
       map.keyboard.disable();
-      if (map.tap) map.tap.disable();
+      if (map.tap) {
+        map.tap.disable();
+      }
     }
 
     // Force a map update otherwise the map does not always render correctly after a page is first loaded
@@ -181,7 +183,7 @@ const MapWrapper = ({
       whenReady={whenReady}
     >
       <CustomMapHandler />
-      <ZoomControl position="topleft" zoomInTitle={i18n.t("common.map.zoomIn")} zoomOutTitle={i18n.t("common.map.zoomOut")} />
+      {!makeStatic && <ZoomControl position="topleft" zoomInTitle={i18n.t("common.map.zoomIn")} zoomOutTitle={i18n.t("common.map.zoomOut")} />}
       <TileLayer
         url="http://tiles.hel.ninja/styles/hel-osm-bright/{z}/{x}/{y}@2x@fi.png"
         attribution={`<a href="https://www.openstreetmap.org/copyright" target="_blank">© ${i18n.t("common.map.osm")}</a>`}

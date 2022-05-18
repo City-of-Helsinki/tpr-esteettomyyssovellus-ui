@@ -20,7 +20,7 @@ import {
   LanguageLocales,
 } from "../types/constants";
 import { API_TOKEN } from "./checksumSecret";
-import { EntranceLocationPhoto, EntrancePlaceBox } from "../types/general";
+import { EntranceLocationPhoto, EntrancePlaceBox, KeyValueString } from "../types/general";
 /*
 import { QuestionAnswerPhoto } from "../types/backendModels";
 import {
@@ -108,11 +108,7 @@ export const splitTextUrls = (text: string) => {
   return text.split(regex).filter((t) => t.length > 0);
 };
 
-interface KeyValue {
-  [key: number]: string;
-}
-
-const saveExtraFieldAnswers = async (logId: number, extraAnswers: KeyValue, router: NextRouter) => {
+const saveExtraFieldAnswers = async (logId: number, extraAnswers: KeyValueString, router: NextRouter) => {
   // Save extra field answers to the database such as contact information
   await Promise.all(
     Object.keys(extraAnswers).map(async (questionBlockFieldIdStr) => {
@@ -213,18 +209,20 @@ const uploadPictureToAzure = async (servicePointId: number, photoBase64: string,
 const saveEntrancePlaceBox = async (entrancePlaceBox: EntrancePlaceBox, placeAnswerId: number, router: NextRouter, photoUrl?: string) => {
   console.log("saveEntrancePlaceBox", placeAnswerId, entrancePlaceBox);
 
-  if (entrancePlaceBox.modifiedBox) {
+  if (entrancePlaceBox.modifiedBox && placeAnswerId > 0) {
+    const { modifiedBox, order_number } = entrancePlaceBox;
+
     // Save the entrance place box using the specified photo url or Azure url created earlier
     const boxRequest = {
       method: "POST",
       headers: { "Content-Type": "application/json", Authorization: getTokenHash() },
       body: JSON.stringify({
         place_answer_id: placeAnswerId,
-        loc_easting: entrancePlaceBox.modifiedBox.loc_easting,
-        loc_northing: entrancePlaceBox.modifiedBox.loc_northing,
+        ...(modifiedBox.loc_easting !== undefined && { loc_easting: modifiedBox.loc_easting }),
+        ...(modifiedBox.loc_northing !== undefined && { loc_northing: modifiedBox.loc_northing }),
         ...(photoUrl && { photo_url: photoUrl }),
-        ...(photoUrl && { photo_source_text: entrancePlaceBox.modifiedBox.photo_source_text ?? "" }),
-        order_number: entrancePlaceBox.order_number,
+        ...(photoUrl && { photo_source_text: modifiedBox.photo_source_text ?? "" }),
+        order_number: order_number,
       }),
     };
 
@@ -236,9 +234,9 @@ const saveEntrancePlaceBox = async (entrancePlaceBox: EntrancePlaceBox, placeAns
     // Save the photo text for each language if available
     const languages = ["fi", "sv", "en"];
     languages.forEach(async (lang) => {
-      if (entrancePlaceBox.modifiedBox && boxJson.box_id > 0) {
-        const locationText = entrancePlaceBox.modifiedBox[`location_text_${lang}`] as string;
-        const photoText = entrancePlaceBox.modifiedBox[`photo_text_${lang}`] as string;
+      if (modifiedBox && boxJson.box_id > 0) {
+        const locationText = modifiedBox[`location_text_${lang}`] as string;
+        const photoText = modifiedBox[`photo_text_${lang}`] as string;
 
         if (locationText && locationText.length > 0) {
           await postData(
@@ -349,12 +347,14 @@ const saveEntrancePlaces = async (logId: number, servicePointId: number, entranc
 const saveEntranceLocationPhoto = async (logId: number, servicePointId: number, entranceLocationPhoto: EntranceLocationPhoto, router: NextRouter) => {
   console.log("saveEntranceLocationPhoto", servicePointId, entranceLocationPhoto);
 
-  if (entranceLocationPhoto && entranceLocationPhoto.modifiedAnswer) {
+  if (entranceLocationPhoto && entranceLocationPhoto.modifiedAnswer && entranceLocationPhoto.question_block_id > 0) {
+    const { question_block_id, modifiedAnswer, modifiedPhotoBase64 } = entranceLocationPhoto;
+
     // Use the specified photo url or upload an imported photo to Azure
-    let photoUrl = entranceLocationPhoto.modifiedAnswer.photo_url;
-    if (entranceLocationPhoto.modifiedPhotoBase64) {
+    let photoUrl = modifiedAnswer.photo_url;
+    if (modifiedPhotoBase64) {
       // Uploaded photo, save to Azure first to get the url for the database
-      photoUrl = await uploadPictureToAzure(servicePointId, entranceLocationPhoto.modifiedPhotoBase64, router);
+      photoUrl = await uploadPictureToAzure(servicePointId, modifiedPhotoBase64, router);
     }
 
     // Save the entrance photo using the specified photo url or Azure url created above
@@ -363,24 +363,24 @@ const saveEntranceLocationPhoto = async (logId: number, servicePointId: number, 
       headers: { "Content-Type": "application/json", Authorization: getTokenHash() },
       body: JSON.stringify({
         log_id: logId,
-        question_block_id: entranceLocationPhoto.question_block_id,
-        loc_easting: entranceLocationPhoto.modifiedAnswer.loc_easting,
-        loc_northing: entranceLocationPhoto.modifiedAnswer.loc_northing,
+        question_block_id: question_block_id,
+        ...(modifiedAnswer.loc_easting !== undefined && { loc_easting: modifiedAnswer.loc_easting }),
+        ...(modifiedAnswer.loc_northing !== undefined && { loc_northing: modifiedAnswer.loc_northing }),
         ...(photoUrl && { photo_url: photoUrl }),
-        ...(photoUrl && { photo_source_text: entranceLocationPhoto.modifiedAnswer.photo_source_text ?? "" }),
+        ...(photoUrl && { photo_source_text: modifiedAnswer.photo_source_text ?? "" }),
       }),
     };
 
     const answerResponse = await fetch(`${getOrigin(router)}/${API_SAVE_QUESTION_BLOCK_ANSWER}`, answerRequest);
     const answerJson = await (answerResponse.json() as Promise<{ question_block_answer_id: number }>);
 
-    console.log("block", entranceLocationPhoto.question_block_id, "answerJson", answerJson);
+    console.log("block", question_block_id, "answerJson", answerJson);
 
     // Save the photo text for each language if available
     const languages = ["fi", "sv", "en"];
     languages.forEach(async (lang) => {
-      if (entranceLocationPhoto.modifiedAnswer && answerJson.question_block_answer_id > 0) {
-        const photoText = entranceLocationPhoto.modifiedAnswer[`photo_text_${lang}`] as string;
+      if (modifiedAnswer && answerJson.question_block_answer_id > 0) {
+        const photoText = modifiedAnswer[`photo_text_${lang}`] as string;
 
         if (photoText && photoText.length > 0) {
           await postData(
@@ -402,7 +402,7 @@ export const saveFormData = async (
   servicePointId: number,
   entranceId: number,
   answeredChoices: number[],
-  extraAnswers: KeyValue,
+  extraAnswers: KeyValueString,
   entranceLocationPhoto: EntranceLocationPhoto,
   entrancePlaceBoxes: EntrancePlaceBox[],
   startedAnswering: string,

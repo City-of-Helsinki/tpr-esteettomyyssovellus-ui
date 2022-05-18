@@ -36,8 +36,9 @@ const PreviewControlButtons = ({ hasSaveDraftButton, setSendingComplete }: Previ
   const handleContinueEditing = (): void => {
     // dispatch(setContinue());
     // TODO: Add errorpage
-    const url = curServicepointId === -1 ? "/" : `/entranceAccessibility/${curServicepointId}/${curEntranceId}`;
-    router.push(url);
+    const url = curEntranceId > 0 ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}` : `/entranceAccessibility/${curServicepointId}`;
+    const pageUrl = curServicepointId === -1 ? "/" : url;
+    router.push(pageUrl);
   };
 
   const saveData = async (isDraft: boolean): Promise<void> => {

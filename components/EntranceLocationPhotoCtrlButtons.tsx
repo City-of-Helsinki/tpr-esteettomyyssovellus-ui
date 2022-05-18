@@ -109,14 +109,16 @@ const EntranceLocationPhotoCtrlButtons = ({ entranceLocationPhoto }: EntranceLoc
   const handleSaveAndReturn = () => {
     if (validateForm()) {
       setPageSaved(true);
-      router.push(`/entranceAccessibility/${curServicepointId}/${curEntranceId}/`);
+      const url = curEntranceId > 0 ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}` : `/entranceAccessibility/${curServicepointId}`;
+      router.push(url);
     }
   };
 
   // handle user clicked return no save button
   const handleReturnNoSave = () => {
     revertLocationPhoto();
-    router.push(`/entranceAccessibility/${curServicepointId}/${curEntranceId}/`);
+    const url = curEntranceId > 0 ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}` : `/entranceAccessibility/${curServicepointId}`;
+    router.push(url);
   };
 
   return (
