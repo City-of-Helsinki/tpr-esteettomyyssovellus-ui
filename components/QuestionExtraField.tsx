@@ -17,7 +17,7 @@ const QuestionExtraField = ({
 }: QuestionExtraFieldProps): JSX.Element => {
   const i18n = useI18n();
 
-  const questionInfos = questionInfo?.split("<BR><BR>");
+  const questionInfos = questionInfo?.split("<BR>");
 
   // set invalid style if validation errors
   const questionStyle = isTextInvalid
