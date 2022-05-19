@@ -45,7 +45,7 @@ const QuestionContainer = ({
   // const questionDepth = (questionNumber?.toString().split(".") || []).length;
   // const paddingLeft = `${(questionDepth - 2) * 5}rem`;
   const photoTexts = photoText?.split("<BR>");
-  const questionInfos = questionInfo?.split("<BR><BR>");
+  const questionInfos = questionInfo?.split("<BR>");
   const invalidBlocks = useAppSelector((state) => state.formReducer.invalidBlocks);
   // const curQuestionAddinfos = useAppSelector((state) => state.additionalInfoReducer.additionalInfo[questionId]);
   const curAnswers = useAppSelector((state) => state.formReducer.answers);
@@ -146,7 +146,7 @@ const QuestionContainer = ({
             <p>
               {questionNumber} {questionText}
             </p>
-            {questionInfo ? (
+            {questionInfo || photoUrl || photoTexts ? (
               <QuestionInfo
                 openText={i18n.t("accessibilityForm.whatDoesThisMean")}
                 openIcon={<IconInfoCircle aria-hidden />}
