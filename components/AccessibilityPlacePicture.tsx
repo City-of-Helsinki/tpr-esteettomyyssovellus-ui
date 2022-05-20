@@ -83,6 +83,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
   };
 
   // todo: maybe needs more refined error message if not found image (?)
+  /*
   const validateUrlIsImage = async (url: string) => {
     const res = await fetch(url).catch((err) => console.log("ERROR", err));
     if (res && res.status === 200) {
@@ -90,6 +91,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
     }
     return false;
   };
+  */
 
   const handleImageAdded = async (e?: ChangeEvent<HTMLInputElement>) => {
     if (e && e.target.files && e.target.files.length > 0) {
@@ -117,7 +119,9 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
   };
 
   const handleConfirmImageLink = async (fieldId: string, fieldLabel: string) => {
-    const isImage = await validateUrlIsImage(linkText);
+    // Don't validate the image anymore, since this caused CORS issues with aineistopankki.hel.fi
+    // const isImage = await validateUrlIsImage(linkText);
+    const isImage = true;
     if (isImage) {
       updatePlaceBox({
         ...entrancePlaceBox,
