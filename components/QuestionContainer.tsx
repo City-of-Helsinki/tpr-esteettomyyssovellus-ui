@@ -189,7 +189,7 @@ const QuestionContainer = ({
         </div>
 
         {visiblePlaces && (
-          <div className={styles.questioncontainer}>
+          <div>
             {visiblePlaces.map((place) => {
               const { place_id, name } = place;
               const key = `place_${place_id}`;

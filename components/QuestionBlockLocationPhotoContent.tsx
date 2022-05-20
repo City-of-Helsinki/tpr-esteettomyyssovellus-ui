@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/router";
 import { useI18n } from "next-localization";
 import { IconCrossCircle, IconInfoCircle, Link as HdsLink } from "hds-react";
@@ -8,7 +8,7 @@ import { setEntranceLocationPhoto } from "../state/reducers/additionalInfoSlice"
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { MAP_MAX_ZOOM } from "../types/constants";
 import { QuestionBlockLocationPhotoContentProps } from "../types/general";
-import { convertCoordinates } from "../utils/utilFunctions";
+import { convertCoordinates, isLocationValid } from "../utils/utilFunctions";
 import QuestionInfo from "./QuestionInfo";
 import styles from "./QuestionBlockLocationPhotoContent.module.scss";
 
@@ -20,6 +20,7 @@ const QuestionBlockLocationPhotoContent = ({ block, canAddLocation, canAddPhoto 
   const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
   const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
   const curEntranceLocationPhoto = useAppSelector((state) => state.additionalInfoReducer.entranceLocationPhoto);
+  const servicepointCoordinatesEuref = useAppSelector((state) => state.generalSlice.coordinatesEuref);
 
   const { question_block_id, add_location_title, add_location_description, add_photo_title, add_photo_description } = block;
   const locationTexts = add_location_description?.split("<BR>");
@@ -33,16 +34,36 @@ const QuestionBlockLocationPhotoContent = ({ block, canAddLocation, canAddPhoto 
   const coordinatesEuref = [loc_easting ?? 0, loc_northing ?? 0] as [number, number];
   const coordinatesWGS84 = convertCoordinates("EPSG:3067", "WGS84", coordinatesEuref).reverse() as [number, number];
 
+  const initLocationPhotoData = () => {
+    // Update the block id and add permissions
+    // Use the servicepoint location as the default if the entrance location is not defined
+    dispatch(
+      setEntranceLocationPhoto({
+        ...curEntranceLocationPhoto,
+        question_block_id,
+        modifiedAnswer: {
+          ...modifiedAnswer,
+          loc_easting: isLocationValid(coordinatesEuref) ? coordinatesEuref[0] : servicepointCoordinatesEuref[0],
+          loc_northing: isLocationValid(coordinatesEuref) ? coordinatesEuref[1] : servicepointCoordinatesEuref[1],
+        },
+        canAddLocation,
+        canAddPhoto,
+      })
+    );
+  };
+
+  // Initialise the location and photo data on first render only, using a workaround utilising useEffect with empty dependency array
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const useMountEffect = (fun: () => void) => useEffect(fun, []);
+  useMountEffect(initLocationPhotoData);
+
   const editLocationPhoto = () => {
     // Update the existing data in case the user returns without saving
     dispatch(
       setEntranceLocationPhoto({
         ...curEntranceLocationPhoto,
-        question_block_id,
         existingAnswer: curEntranceLocationPhoto.modifiedAnswer,
         existingPhotoBase64: curEntranceLocationPhoto.modifiedPhotoBase64,
-        canAddLocation,
-        canAddPhoto,
       })
     );
 
