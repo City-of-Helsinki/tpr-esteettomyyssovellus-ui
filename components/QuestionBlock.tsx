@@ -77,6 +77,7 @@ const QuestionBlock = ({ block, questions, answerChoices, extraFields, accessibi
 
   // Turn "<BR>" to linebreaks
   const desc = description?.split("<BR>");
+  const photoText = photo_text?.split("<BR>");
 
   return (
     <>
@@ -95,12 +96,15 @@ const QuestionBlock = ({ block, questions, answerChoices, extraFields, accessibi
               closeIcon={<IconAngleUp aria-hidden />}
             >
               <div className={styles.infoContainer}>
-                {photo_text && <TextWithLinks text={photo_text} />}
                 {photo_url && (
                   <div>
                     <img alt={photo_text ?? ""} src={photo_url} className={styles.infoPicture} />
                   </div>
                 )}
+                {photoText?.map((text, index) => {
+                  const key = `br_${index}`;
+                  return <TextWithLinks key={key} text={text} />;
+                })}
               </div>
             </QuestionInfo>
           )}
