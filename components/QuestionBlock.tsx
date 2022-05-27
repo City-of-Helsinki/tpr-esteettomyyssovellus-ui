@@ -4,7 +4,7 @@ import { useI18n } from "next-localization";
 import TextWithLinks from "./common/TextWithLinks";
 // import QuestionAdditionalInfoCtrlButton from "./QuestionAdditionalInfoCtrlButton";
 import QuestionBlockExtraFieldList from "./QuestionBlockExtraFieldList";
-import QuestionBlockLocationPhotoContent from "./QuestionBlockLocationPhotoContent";
+import QuestionBlockLocationPhoto from "./QuestionBlockLocationPhoto";
 import QuestionFormImportExistingData from "./QuestionFormImportExistingData";
 import styles from "./QuestionBlock.module.scss";
 import QuestionInfo from "./QuestionInfo";
@@ -123,9 +123,7 @@ const QuestionBlock = ({ block, questions, answerChoices, extraFields, accessibi
 
       {putFieldsBeforeQuestions && <QuestionBlockExtraFieldList extraFields={extraFields} />}
 
-      {(canAddLocation || canAddPhoto) && (
-        <QuestionBlockLocationPhotoContent block={block} canAddLocation={canAddLocation} canAddPhoto={canAddPhoto} />
-      )}
+      {(canAddLocation || canAddPhoto) && <QuestionBlockLocationPhoto block={block} canAddLocation={canAddLocation} canAddPhoto={canAddPhoto} />}
 
       {/* QtionList loops the single question row(s) */}
       <QuestionsList

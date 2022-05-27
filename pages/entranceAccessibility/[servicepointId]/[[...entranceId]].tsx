@@ -262,7 +262,7 @@ const EntranceAccessibility = ({
       const entranceLocationPhotoAnswer = questionAnswerData.find((a) => a.question_id === undefined || a.question_id === null);
       if (entranceLocationPhotoAnswer) {
         // Use the existing location and/or photo
-        // The add permissions are set later in QuestionBlockLocationPhotoContent
+        // The add permissions are set later in QuestionBlockLocationPhoto
         dispatch(
           setEntranceLocationPhoto({
             entrance_id: entranceData.entrance_id,

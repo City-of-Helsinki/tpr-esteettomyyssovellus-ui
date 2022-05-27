@@ -436,7 +436,7 @@ export interface SaveSpinnerProps {
   savingFinishedText: string;
 }
 
-export interface QuestionBlockLocationPhotoContentProps {
+export interface QuestionBlockLocationPhotoProps {
   block: BackendQuestionBlock;
   canAddLocation: boolean;
   canAddPhoto: boolean;
