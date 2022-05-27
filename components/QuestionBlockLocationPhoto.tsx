@@ -10,9 +10,9 @@ import { MAP_MAX_ZOOM } from "../types/constants";
 import { QuestionBlockLocationPhotoProps } from "../types/general";
 import { convertCoordinates, isLocationValid } from "../utils/utilFunctions";
 import QuestionInfo from "./QuestionInfo";
-import styles from "./QuestionBlockLocationPhotoContent.module.scss";
+import styles from "./QuestionBlockLocationPhoto.module.scss";
 
-const QuestionBlockLocationPhotoContent = ({ block, canAddLocation, canAddPhoto }: QuestionBlockLocationPhotoProps): JSX.Element => {
+const QuestionBlockLocationPhoto = ({ block, canAddLocation, canAddPhoto }: QuestionBlockLocationPhotoProps): JSX.Element => {
   const i18n = useI18n();
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -170,4 +170,4 @@ const QuestionBlockLocationPhotoContent = ({ block, canAddLocation, canAddPhoto 
   );
 };
 
-export default QuestionBlockLocationPhotoContent;
+export default QuestionBlockLocationPhoto;
