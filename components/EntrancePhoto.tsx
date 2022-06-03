@@ -1,4 +1,4 @@
-import React, { ChangeEvent, KeyboardEvent, useRef, useState } from "react";
+import React, { ChangeEvent, useRef, useState } from "react";
 import { IconPlus, IconMinus, TextArea, TextInput, Checkbox, Tooltip, SelectionGroup, IconUpload, IconLink, IconCross } from "hds-react";
 import { useI18n } from "next-localization";
 import QuestionButton from "./QuestionButton";
@@ -151,7 +151,7 @@ const EntrancePhoto = ({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
 
   // only update state after X (0.5) sec from prev KeyDown, set Alt text with correct lang
   // let timer: NodeJS.Timeout;
-  const handleAddAltText = (evt: KeyboardEvent<HTMLTextAreaElement>, language: string, fieldLabel: string) => {
+  const handleAddAltText = (evt: ChangeEvent<HTMLTextAreaElement>, language: string, fieldLabel: string) => {
     const fieldId = evt.currentTarget.id;
     const altText = evt.currentTarget.value;
     /*
@@ -295,8 +295,8 @@ const EntrancePhoto = ({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
               tooltipButtonLabel={i18n.t("additionalInfo.generalTooptipButtonLabel")}
               tooltipLabel={i18n.t("additionalInfo.generalTooptipLabel")}
               tooltipText={i18n.t("additionalInfo.altToolTipContent")}
-              onKeyUp={(evt: KeyboardEvent<HTMLTextAreaElement>) => handleAddAltText(evt, "fi", i18n.t("additionalInfo.pictureLabel"))}
-              defaultValue={photo_text_fi ?? ""}
+              onChange={(evt: ChangeEvent<HTMLTextAreaElement>) => handleAddAltText(evt, "fi", i18n.t("additionalInfo.pictureLabel"))}
+              value={photo_text_fi ?? ""}
               invalid={invalidValues.some((v) => v.fieldId === "text-fin")}
               errorText={invalidValues.some((v) => v.fieldId === "text-fin") ? i18n.t("additionalInfo.addCommentFiErrorText") : ""}
             />
@@ -313,8 +313,8 @@ const EntrancePhoto = ({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
                   id={"text-sv"}
                   label={i18n.t("additionalInfo.pictureLabelSwe")}
                   helperText={i18n.t("additionalInfo.pictureHelperTextSwe")}
-                  onKeyUp={(evt: KeyboardEvent<HTMLTextAreaElement>) => handleAddAltText(evt, "sv", i18n.t("additionalInfo.pictureLabelSwe"))}
-                  defaultValue={photo_text_sv ?? ""}
+                  onChange={(evt: ChangeEvent<HTMLTextAreaElement>) => handleAddAltText(evt, "sv", i18n.t("additionalInfo.pictureLabelSwe"))}
+                  value={photo_text_sv ?? ""}
                 />
               </QuestionInfo>
             </div>
@@ -331,8 +331,8 @@ const EntrancePhoto = ({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
                   id={"text-eng"}
                   label={i18n.t("additionalInfo.pictureLabelEng")}
                   helperText={i18n.t("additionalInfo.pictureHelperTextEng")}
-                  onKeyUp={(evt: KeyboardEvent<HTMLTextAreaElement>) => handleAddAltText(evt, "en", i18n.t("additionalInfo.pictureLabelEng"))}
-                  defaultValue={photo_text_en ?? ""}
+                  onChange={(evt: ChangeEvent<HTMLTextAreaElement>) => handleAddAltText(evt, "en", i18n.t("additionalInfo.pictureLabelEng"))}
+                  value={photo_text_en ?? ""}
                 />
               </QuestionInfo>
             </div>
