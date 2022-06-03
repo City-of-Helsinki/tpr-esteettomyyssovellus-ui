@@ -1,9 +1,10 @@
 import React from "react";
 import { useI18n } from "next-localization";
 import Map from "./common/Map";
+import { useAppSelector } from "../state/hooks";
 import { MAP_MAX_ZOOM } from "../types/constants";
 import { SummaryLocationPictureProps } from "../types/general";
-import { convertCoordinates, formatAddress } from "../utils/utilFunctions";
+import { convertCoordinates, formatAddress, isLocationValid } from "../utils/utilFunctions";
 import styles from "./SummaryLocationPicture.module.scss";
 
 // usage: component for entrance location and picture, used in details page
@@ -12,6 +13,8 @@ const SummaryLocationPicture = ({ entranceKey, entranceData, servicepointData }:
   const curLocale = i18n.locale();
 
   // const coordinates = useAppSelector((state) => state.generalSlice.coordinatesWGS84) ?? [60.1, 24.9];
+  const servicepointCoordinatesWGS84 = useAppSelector((state) => state.generalSlice.coordinatesWGS84);
+
   const { loc_easting, loc_northing, photo_url, photo_source_text, photo_text_fi, photo_text_sv, photo_text_en } = entranceData || {};
   const coordinatesEuref = [loc_easting ?? 0, loc_northing ?? 0] as [number, number];
   const coordinatesWGS84 = convertCoordinates("EPSG:3067", "WGS84", coordinatesEuref).reverse() as [number, number];
@@ -35,7 +38,13 @@ const SummaryLocationPicture = ({ entranceKey, entranceData, servicepointData }:
           </div>
 
           <div className={styles.map}>
-            <Map curLocation={coordinatesWGS84} initZoom={MAP_MAX_ZOOM} draggableMarker={false} questionId={-1} makeStatic />
+            <Map
+              curLocation={isLocationValid(coordinatesEuref) ? coordinatesWGS84 : servicepointCoordinatesWGS84}
+              initZoom={MAP_MAX_ZOOM}
+              draggableMarker={false}
+              questionId={-1}
+              makeStatic
+            />
           </div>
         </div>
       </div>

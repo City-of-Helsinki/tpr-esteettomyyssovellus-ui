@@ -1,0 +1,29 @@
+@import "~hds-design-tokens/lib/all.scss";
+@import "../styles/mixins.scss";
+
+.maincontainer {
+  @include media(l, xl) {
+    margin-right: $spacing-l;
+  }
+
+  .inputcontainer {
+    .commentcontainer {
+      label {
+        margin: $spacing-s 0;
+      }
+
+      button {
+        color: $color-black;
+        background-color: $color-white;
+      }
+
+      textArea {
+        height: $spacing-xl * 3;
+      }
+
+      .altLabel {
+        margin: $spacing-s 0;
+      }
+    }
+  }
+}

@@ -3,15 +3,16 @@ import React, { useEffect } from "react";
 import { useI18n } from "next-localization";
 import TextWithLinks from "./common/TextWithLinks";
 // import QuestionAdditionalInfoCtrlButton from "./QuestionAdditionalInfoCtrlButton";
+import QuestionBlockComment from "./QuestionBlockComment";
 import QuestionBlockExtraFieldList from "./QuestionBlockExtraFieldList";
-import QuestionBlockLocationPhotoContent from "./QuestionBlockLocationPhotoContent";
+import QuestionBlockLocationPhoto from "./QuestionBlockLocationPhoto";
 import QuestionFormImportExistingData from "./QuestionFormImportExistingData";
-import styles from "./QuestionBlock.module.scss";
 import QuestionInfo from "./QuestionInfo";
 import QuestionsList from "./QuestionsList";
 import { QuestionBlockProps } from "../types/general";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
 import { setFinished, unsetFinished } from "../state/reducers/formSlice";
+import styles from "./QuestionBlock.module.scss";
 
 // usage: in form groups up all questions under a single "question block" / accordion
 // notes: used under headlineQuestionContainer in main form
@@ -77,6 +78,7 @@ const QuestionBlock = ({ block, questions, answerChoices, extraFields, accessibi
 
   // Turn "<BR>" to linebreaks
   const desc = description?.split("<BR>");
+  const photoText = photo_text?.split("<BR>");
 
   return (
     <>
@@ -95,12 +97,15 @@ const QuestionBlock = ({ block, questions, answerChoices, extraFields, accessibi
               closeIcon={<IconAngleUp aria-hidden />}
             >
               <div className={styles.infoContainer}>
-                {photo_text && <TextWithLinks text={photo_text} />}
                 {photo_url && (
                   <div>
                     <img alt={photo_text ?? ""} src={photo_url} className={styles.infoPicture} />
                   </div>
                 )}
+                {photoText?.map((text, index) => {
+                  const key = `br_${index}`;
+                  return <TextWithLinks key={key} text={text} />;
+                })}
               </div>
             </QuestionInfo>
           )}
@@ -119,9 +124,7 @@ const QuestionBlock = ({ block, questions, answerChoices, extraFields, accessibi
 
       {putFieldsBeforeQuestions && <QuestionBlockExtraFieldList extraFields={extraFields} />}
 
-      {(canAddLocation || canAddPhoto) && (
-        <QuestionBlockLocationPhotoContent block={block} canAddLocation={canAddLocation} canAddPhoto={canAddPhoto} />
-      )}
+      {(canAddLocation || canAddPhoto) && <QuestionBlockLocationPhoto block={block} canAddLocation={canAddLocation} canAddPhoto={canAddPhoto} />}
 
       {/* QtionList loops the single question row(s) */}
       <QuestionsList
@@ -132,6 +135,8 @@ const QuestionBlock = ({ block, questions, answerChoices, extraFields, accessibi
       />
 
       {!putFieldsBeforeQuestions && <QuestionBlockExtraFieldList extraFields={extraFields} />}
+
+      {blockId > 0 && <QuestionBlockComment block={block} />}
 
       {/*hasInfoAndButtons || !showContinue ? null : (
         <div className={styles.continueButton}>

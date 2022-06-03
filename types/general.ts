@@ -15,6 +15,7 @@ import {
   BackendQuestionBlockField,
   BackendQuestionChoice,
   BackendServicepoint,
+  QuestionBlockAnswerCmt,
   // QuestionAnswerComment,
   // QuestionAnswerLocation,
   // QuestionAnswerPhoto,
@@ -330,6 +331,22 @@ export interface EntrancePlaceBox {
   invalidValues: Validation[];
 }
 
+export interface BlockComment {
+  question_block_id: number;
+  comment_text_fi?: string;
+  comment_text_sv?: string;
+  comment_text_en?: string;
+  [key: string]: number | string | undefined;
+}
+
+export interface QuestionBlockComment {
+  entrance_id: number;
+  question_block_id: number;
+  existingComment?: BlockComment;
+  modifiedComment?: BlockComment;
+  invalidValues: Validation[];
+}
+
 export interface AdditionalInfoStateProps {
   initAddInfoFromDb: boolean;
   curEditingInitialState: AdditionalInfoProps;
@@ -338,6 +355,8 @@ export interface AdditionalInfoStateProps {
   entranceLocationPhotoValid: boolean;
   entrancePlaceBoxes: EntrancePlaceBox[];
   entrancePlaceValid: boolean;
+  questionBlockComments: QuestionBlockComment[];
+  questionBlockCommentValid: boolean;
 }
 
 export interface MainLocationOrImageProps {
@@ -364,6 +383,7 @@ export interface EntranceFormProps {
   accessibilityPlaceData: BackendPlace[];
   entranceData: BackendEntrance;
   entrancePlaceData: BackendEntrancePlace[];
+  questionBlockCommentData: QuestionBlockAnswerCmt[];
   servicepointData: BackendServicepoint;
   questionAnswerData: BackendEntranceAnswer[];
   questionExtraAnswerData: BackendEntranceField[];
@@ -436,10 +456,14 @@ export interface SaveSpinnerProps {
   savingFinishedText: string;
 }
 
-export interface QuestionBlockLocationPhotoContentProps {
+export interface QuestionBlockLocationPhotoProps {
   block: BackendQuestionBlock;
   canAddLocation: boolean;
   canAddPhoto: boolean;
+}
+
+export interface QuestionBlockCommentProps {
+  block: BackendQuestionBlock;
 }
 
 export interface EntranceData {
@@ -527,6 +551,23 @@ export interface AccessibilityPlaceCtrlButtonsProps {
 export interface AccessibilityPlaceNewButtonProps {
   accessibilityPlaceData: BackendPlace;
   orderNumber: number;
+}
+
+export interface EntranceQuestionBlockCommentProps {
+  servicepointData: BackendServicepoint;
+  entranceData: BackendEntrance;
+  questionBlockId: number;
+  formId: number;
+}
+
+export interface AdditionalCommentProps {
+  questionBlockId: number;
+  questionBlockComment?: QuestionBlockComment;
+}
+
+export interface AdditionalCommentCtrlButtonsProps {
+  questionBlockId: number;
+  questionBlockComment?: QuestionBlockComment;
 }
 
 export interface ElementCountProps {

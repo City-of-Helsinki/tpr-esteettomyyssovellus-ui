@@ -1,7 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { PURGE } from "redux-persist";
-import { AdditionalInfoProps, AdditionalInfoStateProps, EntranceLocationPhoto, EntrancePlaceBox, PictureProps } from "../../types/general";
+import {
+  AdditionalInfoProps,
+  AdditionalInfoStateProps,
+  EntranceLocationPhoto,
+  EntrancePlaceBox,
+  PictureProps,
+  QuestionBlockComment,
+} from "../../types/general";
 import { BackendEntranceAnswer } from "../../types/backendModels";
 
 // TODO: maybe delete this before prod
@@ -43,6 +50,8 @@ const initialState: AdditionalInfoStateProps = {
   entranceLocationPhotoValid: true,
   entrancePlaceBoxes: [],
   entrancePlaceValid: true,
+  questionBlockComments: [],
+  questionBlockCommentValid: true,
 };
 
 export const additionalInfoSlice = createSlice({
@@ -370,6 +379,147 @@ export const additionalInfoSlice = createSlice({
             !box.isDeleted
             ? [...acc, { ...box, invalidValues: (box.invalidValues ?? []).filter((val) => val.fieldId !== action.payload.invalidFieldIdToRemove) }]
             : [...acc, box];
+        }, []),
+      };
+    },
+    setQuestionBlockComments: (state, action: PayloadAction<QuestionBlockComment[]>) => {
+      return { ...state, questionBlockComments: action.payload };
+    },
+    setQuestionBlockComment: (state, action: PayloadAction<QuestionBlockComment>) => {
+      return {
+        ...state,
+        questionBlockComments: state.questionBlockComments.reduce(
+          (acc: QuestionBlockComment[], blockComment) => {
+            return blockComment.entrance_id === action.payload.entrance_id && blockComment.question_block_id === action.payload.question_block_id
+              ? acc
+              : [...acc, blockComment];
+          },
+          [action.payload]
+        ),
+      };
+    },
+    setQuestionBlockCommentValid: (state, action: PayloadAction<boolean>) => {
+      return { ...state, questionBlockCommentValid: action.payload };
+    },
+    editQuestionBlockComment: (
+      state,
+      action: PayloadAction<{
+        entrance_id: number;
+        question_block_id: number;
+        language: string;
+        commentText?: string;
+      }>
+    ) => {
+      return {
+        ...state,
+        questionBlockComments: state.questionBlockComments.reduce((acc: QuestionBlockComment[], blockComment) => {
+          return blockComment.entrance_id === action.payload.entrance_id && blockComment.question_block_id === action.payload.question_block_id
+            ? [
+                ...acc,
+                {
+                  ...blockComment,
+                  modifiedComment: {
+                    ...(blockComment.modifiedComment ?? {}),
+                    question_block_id: action.payload.question_block_id,
+                    [`comment_text_${action.payload.language}`]: action.payload.commentText,
+                  },
+                },
+              ]
+            : [...acc, blockComment];
+        }, []),
+      };
+    },
+    removeQuestionBlockComment: (state, action: PayloadAction<{ entrance_id: number; question_block_id: number }>) => {
+      return {
+        ...state,
+        questionBlockComments: state.questionBlockComments.reduce((acc: QuestionBlockComment[], blockComment) => {
+          return blockComment.entrance_id === action.payload.entrance_id && blockComment.question_block_id === action.payload.question_block_id
+            ? [
+                ...acc,
+                {
+                  ...blockComment,
+                  modifiedComment: undefined,
+                  invalidValues: [],
+                },
+              ]
+            : [...acc, blockComment];
+        }, []),
+      };
+    },
+    revertQuestionBlockComment: (state, action: PayloadAction<{ entrance_id: number; question_block_id: number }>) => {
+      return {
+        ...state,
+        questionBlockComments: state.questionBlockComments.reduce((acc: QuestionBlockComment[], blockComment) => {
+          if (blockComment.entrance_id === action.payload.entrance_id && blockComment.question_block_id === action.payload.question_block_id) {
+            // Revert this question block comment
+            if (blockComment.existingComment !== undefined) {
+              // This comment existed before, so revert to the existing values
+              return [
+                ...acc,
+                {
+                  ...blockComment,
+                  modifiedComment: blockComment.existingComment,
+                  invalidValues: [],
+                },
+              ];
+            } else {
+              // This comment did not exist before, so remove it
+              return acc;
+            }
+          } else {
+            return [...acc, blockComment];
+          }
+        }, []),
+      };
+    },
+    addInvalidQuestionBlockCommentValue: (
+      state,
+      action: PayloadAction<{
+        entrance_id: number;
+        question_block_id: number;
+        invalidFieldId: string;
+        invalidFieldLabel: string;
+      }>
+    ) => {
+      const validationToAdd = { valid: false, fieldId: action.payload.invalidFieldId, fieldLabel: action.payload.invalidFieldLabel };
+
+      return {
+        ...state,
+        questionBlockComments: state.questionBlockComments.reduce((acc: QuestionBlockComment[], blockComment) => {
+          return blockComment.entrance_id === action.payload.entrance_id && blockComment.question_block_id === action.payload.question_block_id
+            ? [
+                ...acc,
+                {
+                  ...blockComment,
+                  invalidValues: [...(blockComment.invalidValues ?? []), validationToAdd].filter(
+                    (v, i, a) => v && a.findIndex((v2) => v2.fieldId === v.fieldId) === i
+                  ),
+                },
+              ]
+            : [...acc, blockComment];
+        }, []),
+      };
+    },
+    removeInvalidQuestionBlockCommentValue: (
+      state,
+      action: PayloadAction<{
+        entrance_id: number;
+        question_block_id: number;
+        invalidFieldIdToRemove: string;
+      }>
+    ) => {
+      return {
+        ...state,
+        questionBlockComments: state.questionBlockComments.reduce((acc: QuestionBlockComment[], blockComment) => {
+          return blockComment.entrance_id === action.payload.entrance_id && blockComment.question_block_id === action.payload.question_block_id
+            ? [
+                ...acc,
+                {
+                  ...blockComment,
+                  invalidValues: (blockComment.invalidValues ?? []).filter((val) => val.fieldId !== action.payload.invalidFieldIdToRemove),
+                },
+              ]
+            : [...acc, blockComment];
         }, []),
       };
     },
@@ -764,6 +914,14 @@ export const {
   revertEntrancePlace,
   addInvalidEntrancePlaceBoxValue,
   removeInvalidEntrancePlaceBoxValue,
+  setQuestionBlockComments,
+  setQuestionBlockComment,
+  setQuestionBlockCommentValid,
+  editQuestionBlockComment,
+  removeQuestionBlockComment,
+  revertQuestionBlockComment,
+  addInvalidQuestionBlockCommentValue,
+  removeInvalidQuestionBlockCommentValue,
 } = additionalInfoSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type

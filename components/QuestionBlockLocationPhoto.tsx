@@ -7,12 +7,12 @@ import TextWithLinks from "./common/TextWithLinks";
 import { setEntranceLocationPhoto } from "../state/reducers/additionalInfoSlice";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { MAP_MAX_ZOOM } from "../types/constants";
-import { QuestionBlockLocationPhotoContentProps } from "../types/general";
+import { QuestionBlockLocationPhotoProps } from "../types/general";
 import { convertCoordinates, isLocationValid } from "../utils/utilFunctions";
 import QuestionInfo from "./QuestionInfo";
-import styles from "./QuestionBlockLocationPhotoContent.module.scss";
+import styles from "./QuestionBlockLocationPhoto.module.scss";
 
-const QuestionBlockLocationPhotoContent = ({ block, canAddLocation, canAddPhoto }: QuestionBlockLocationPhotoContentProps): JSX.Element => {
+const QuestionBlockLocationPhoto = ({ block, canAddLocation, canAddPhoto }: QuestionBlockLocationPhotoProps): JSX.Element => {
   const i18n = useI18n();
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -170,4 +170,4 @@ const QuestionBlockLocationPhotoContent = ({ block, canAddLocation, canAddPhoto 
   );
 };
 
-export default QuestionBlockLocationPhotoContent;
+export default QuestionBlockLocationPhoto;

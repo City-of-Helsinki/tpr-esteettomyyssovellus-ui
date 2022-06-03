@@ -47,7 +47,8 @@
     "buttons": {
       "saveAndReturn": "Spara och returnera",
       "returnNoSave": "Avsluta utan att spara",
-      "deleteAdditionalInfo": "Ta bort alla ytterligare datamängder"
+      "deleteAdditionalInfo": "Ta bort ytterligare information",
+      "deleteAdditionalInfoSets": "Ta bort alla ytterligare datamängder"
     },
     "message": {
       "validationFailed": {
@@ -157,16 +158,16 @@
     "locationHelperTextEng": "Beskriv platsen på engelska",
     "commentMainHeader": "Du kan förfina tillgänglighetsinformationen med tilläggstext i fri form",
     "addCommentFiErrorText": "Ange en beskrivning",
-    "commentFiHeader": "Ytterligare text",
-    "commentFiHeaderHelperText": "Du kan lägga till en beskrivning på finska",
-    "commentSvButtonText": "Lägg till en beskrivning på svenska",
-    "commentSvButtonLabel": "Beskrivning på svenska",
-    "commentSvButtonCloseText": "Dölj svensk beskrivning",
-    "commentSvButtonLabelHelper": "Berätta mer om tillgänglighet på svenska",
-    "commentAddEnButtonText": "Lägg till en beskrivning på engelska",
-    "commentAddEnButtonCloseText": "Dölj engelsk beskrivning",
-    "commentEnLabel": "Beskrivning på engelska",
-    "commentEnLabelHelper" : "Berätta mer om tillgänglighet på engelska",
+    "commentLabel": "Ytterligare text",
+    "commentHelperText": "Berätta mer om tillgänglighet",
+    "commentButtonSwe": "Lägg till text på svenska",
+    "commentLabelSwe": "Ytterligare text på svenska",
+    "commentButtonCloseSwe": "Dölj ytterligare text",
+    "commentHelperTextSwe": "Berätta mer om tillgänglighet på svenska",
+    "commentButtonEng": "Lägg till text på engelska",
+    "commentButtonCloseEng": "Dölj ytterligare text",
+    "commentLabelEng": "Ytterligare text på engelska",
+    "commentHelperTextEng" : "Berätta mer om tillgänglighet på engelska",
     "pictureLinkConfirmButton": "Bekräfta",
     "picureLinkErrorText": "Ange en giltig bildlänk",
     "pictureTermsErrorText": "Godkänn villkoren",
@@ -180,6 +181,7 @@
       "addNewLocation": "Lägg plats"
     },
     "additionalInfo": "Ytterligare information",
+    "fillComment": "Du kan förfina tillgänglighetsinformationen med tilläggstext i fritt format. Ytterligare text visas i tillgänglighetsinformationen utöver tillgänglighetsförklaringarna.",
     "fillPlaceData1": "Du kan slutföra",
     "fillPlaceData2": "information med bilder och/eller platsinformation.",
     "orderPlaceData": "Ordna informationen med det viktigaste överst och minst viktigt längst ner.",
@@ -203,7 +205,10 @@
     "fillPlaceData1": "Vill du slutföra",
     "fillPlaceData2": "tillgänglighetsinformation",
     "placeLink": "Lägg till ett bild och/eller plats",
-    "editLocationPhoto": "Redigera"
+    "editLocationPhoto": "Redigera",
+    "addComment": "Ge mer information",
+    "editComment": "Redigera information",
+    "additionalInfo": "Ytterligare information"
   },
   "QuestionFormImportExistingData": {
     "chooseServicepoint": "Välj ett kontor",

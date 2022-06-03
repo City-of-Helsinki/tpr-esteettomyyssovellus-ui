@@ -1,4 +1,4 @@
-import React, { KeyboardEvent, useCallback, useEffect, useMemo, useState } from "react";
+import React, { ChangeEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { IconCross, IconLocation, IconMinus, IconPlus, TextArea } from "hds-react";
 import { useI18n } from "next-localization";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
@@ -108,7 +108,7 @@ const AccessibilityPlaceLocation = ({ entrancePlaceBox }: AccessibilityPlaceLoca
 
   // only update state after X (0.5) sec from prev KeyDown, set Alt text with correct lang
   // let timer: NodeJS.Timeout;
-  const handleAddLocationText = (evt: KeyboardEvent<HTMLTextAreaElement>, language: string) => {
+  const handleAddLocationText = (evt: ChangeEvent<HTMLTextAreaElement>, language: string) => {
     const locationText = evt.currentTarget.value;
     /*
     clearTimeout(timer);
@@ -164,8 +164,8 @@ const AccessibilityPlaceLocation = ({ entrancePlaceBox }: AccessibilityPlaceLoca
               tooltipButtonLabel={i18n.t("additionalInfo.generalTooptipButtonLabel")}
               tooltipLabel={i18n.t("additionalInfo.generalTooptipLabel")}
               tooltipText={i18n.t("additionalInfo.altToolTipContent")}
-              onKeyUp={(evt: KeyboardEvent<HTMLTextAreaElement>) => handleAddLocationText(evt, "fi")}
-              defaultValue={location_text_fi ?? ""}
+              onChange={(evt: ChangeEvent<HTMLTextAreaElement>) => handleAddLocationText(evt, "fi")}
+              value={location_text_fi ?? ""}
             />
 
             <div className={styles.altLabel}>
@@ -180,8 +180,8 @@ const AccessibilityPlaceLocation = ({ entrancePlaceBox }: AccessibilityPlaceLoca
                   id={`text-sv-${currentId}`}
                   label={i18n.t("additionalInfo.locationLabelSwe")}
                   helperText={i18n.t("additionalInfo.locationHelperTextSwe")}
-                  onKeyUp={(evt: KeyboardEvent<HTMLTextAreaElement>) => handleAddLocationText(evt, "sv")}
-                  defaultValue={location_text_sv ?? ""}
+                  onChange={(evt: ChangeEvent<HTMLTextAreaElement>) => handleAddLocationText(evt, "sv")}
+                  value={location_text_sv ?? ""}
                 />
               </QuestionInfo>
             </div>
@@ -198,8 +198,8 @@ const AccessibilityPlaceLocation = ({ entrancePlaceBox }: AccessibilityPlaceLoca
                   id={`text-eng-${currentId}`}
                   label={i18n.t("additionalInfo.locationLabelEng")}
                   helperText={i18n.t("additionalInfo.locationHelperTextEng")}
-                  onKeyUp={(evt: KeyboardEvent<HTMLTextAreaElement>) => handleAddLocationText(evt, "en")}
-                  defaultValue={location_text_en ?? ""}
+                  onChange={(evt: ChangeEvent<HTMLTextAreaElement>) => handleAddLocationText(evt, "en")}
+                  value={location_text_en ?? ""}
                 />
               </QuestionInfo>
             </div>
