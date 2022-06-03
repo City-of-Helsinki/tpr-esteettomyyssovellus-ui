@@ -17,10 +17,11 @@ import {
   API_SAVE_PLACE_ANSWER_BOX_TEXT,
   API_SAVE_QUESTION_BLOCK_ANSWER,
   API_SAVE_QUESTION_BLOCK_ANSWER_TEXT,
+  API_SAVE_QUESTION_BLOCK_COMMENT,
   LanguageLocales,
 } from "../types/constants";
 import { API_TOKEN } from "./checksumSecret";
-import { EntranceLocationPhoto, EntrancePlaceBox, KeyValueString } from "../types/general";
+import { EntranceLocationPhoto, EntrancePlaceBox, KeyValueString, QuestionBlockComment } from "../types/general";
 /*
 import { QuestionAnswerPhoto } from "../types/backendModels";
 import {
@@ -398,6 +399,45 @@ const saveEntranceLocationPhoto = async (logId: number, servicePointId: number, 
   }
 };
 
+const saveQuestionBlockComments = async (
+  logId: number,
+  servicePointId: number,
+  questionBlockComments: QuestionBlockComment[],
+  router: NextRouter
+) => {
+  console.log("saveQuestionBlockComments", servicePointId, questionBlockComments);
+
+  if (questionBlockComments && questionBlockComments.length > 0) {
+    // Save the question block comments for this entrance
+    questionBlockComments.forEach((comment) => {
+      const { question_block_id, modifiedComment } = comment;
+
+      console.log("comment", comment);
+
+      // Save the comment text for each language if available
+      const languages = ["fi", "sv", "en"];
+      languages.forEach(async (lang) => {
+        if (modifiedComment && question_block_id > 0) {
+          const commentText = modifiedComment[`comment_text_${lang}`] as string;
+
+          if (commentText && commentText.length > 0) {
+            await postData(
+              API_SAVE_QUESTION_BLOCK_COMMENT,
+              JSON.stringify({
+                log_id: logId,
+                question_block_id: question_block_id,
+                language_id: LanguageLocales[lang as keyof typeof LanguageLocales],
+                comment: commentText,
+              }),
+              router
+            );
+          }
+        }
+      });
+    });
+  }
+};
+
 export const saveFormData = async (
   servicePointId: number,
   entranceId: number,
@@ -405,6 +445,7 @@ export const saveFormData = async (
   extraAnswers: KeyValueString,
   entranceLocationPhoto: EntranceLocationPhoto,
   entrancePlaceBoxes: EntrancePlaceBox[],
+  questionBlockComments: QuestionBlockComment[],
   startedAnswering: string,
   user: string,
   isDraft: boolean,
@@ -447,6 +488,7 @@ export const saveFormData = async (
       await saveExtraFieldAnswers(logId, extraAnswers, router);
       await saveEntranceLocationPhoto(logId, servicePointId, entranceLocationPhoto, router);
       await saveEntrancePlaces(logId, servicePointId, entrancePlaceBoxes, router);
+      await saveQuestionBlockComments(logId, servicePointId, questionBlockComments, router);
 
       // GENERATE SENTENCES
       // This may take a few seconds, so use await before continuing

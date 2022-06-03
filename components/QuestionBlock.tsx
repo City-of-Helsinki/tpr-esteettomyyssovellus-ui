@@ -3,15 +3,16 @@ import React, { useEffect } from "react";
 import { useI18n } from "next-localization";
 import TextWithLinks from "./common/TextWithLinks";
 // import QuestionAdditionalInfoCtrlButton from "./QuestionAdditionalInfoCtrlButton";
+import QuestionBlockComment from "./QuestionBlockComment";
 import QuestionBlockExtraFieldList from "./QuestionBlockExtraFieldList";
 import QuestionBlockLocationPhoto from "./QuestionBlockLocationPhoto";
 import QuestionFormImportExistingData from "./QuestionFormImportExistingData";
-import styles from "./QuestionBlock.module.scss";
 import QuestionInfo from "./QuestionInfo";
 import QuestionsList from "./QuestionsList";
 import { QuestionBlockProps } from "../types/general";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
 import { setFinished, unsetFinished } from "../state/reducers/formSlice";
+import styles from "./QuestionBlock.module.scss";
 
 // usage: in form groups up all questions under a single "question block" / accordion
 // notes: used under headlineQuestionContainer in main form
@@ -134,6 +135,8 @@ const QuestionBlock = ({ block, questions, answerChoices, extraFields, accessibi
       />
 
       {!putFieldsBeforeQuestions && <QuestionBlockExtraFieldList extraFields={extraFields} />}
+
+      {blockId > 0 && <QuestionBlockComment block={block} />}
 
       {/*hasInfoAndButtons || !showContinue ? null : (
         <div className={styles.continueButton}>

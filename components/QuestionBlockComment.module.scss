@@ -1,0 +1,93 @@
+@import "~hds-design-tokens/lib/all.scss";
+@import "../styles/mixins.scss";
+
+.maincontainer {
+  .questionwrapper {
+    padding: $spacing-m $spacing-s;
+  }
+
+  .questioncontainer {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+    align-items: center;
+    color: $color-bus;
+
+    @include media(xs, s) {
+      flex-direction: column;
+    }
+
+    .question {
+      display: flex;
+      flex-direction: row;
+      flex-grow: 1;
+      flex-basis: 0;
+      align-items: center;
+      margin: $spacing-s 0;
+    }
+
+    .commenticon {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      width: $spacing-xl;
+      height: $spacing-xl;
+      background-color: $color-bus;
+      color: $color-white;
+    }
+
+    .maintext {
+      padding-left: $spacing-2-xs;
+    }
+  }
+
+  .commentcontainer {
+    padding: 0 $spacing-s;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+
+    @include media(xs, s) {
+      flex-direction: column;
+    }
+
+    .maintext {
+      flex-grow: 1;
+      flex-basis: 0;
+      width: 100%;
+
+      p {
+        font-weight: 700;
+      }
+    }
+
+    .label {
+      @include media(m, l, xl) {
+        margin-top: $spacing-m;
+      }
+
+      div {
+        margin-bottom: $spacing-m;
+      }
+    }
+  }
+
+  .maintext {
+    flex-grow: 1;
+    flex-basis: 0;
+  }
+
+  .children {
+    flex-grow: 1;
+    flex-basis: 0;
+    // align-items: center;
+    width: 100%;
+
+    @include media(m, l, xl) {
+      display: flex;
+      justify-content: flex-end;
+      margin-left: $spacing-l;
+    }
+  }
+}

@@ -5,17 +5,17 @@ import { useRouter } from "next/router";
 import QuestionButton from "./QuestionButton";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import {
-  addInvalidEntrancePlaceBoxValue,
-  deleteEntrancePlace,
-  revertEntrancePlace,
-  setEntrancePlaceValid,
+  // addInvalidQuestionBlockCommentValue,
+  removeQuestionBlockComment,
+  revertQuestionBlockComment,
+  setQuestionBlockCommentValid,
 } from "../state/reducers/additionalInfoSlice";
-import { AccessibilityPlaceCtrlButtonsProps, EntrancePlaceBox } from "../types/general";
-import styles from "./AccessibilityPlaceCtrlButtons.module.scss";
+import { AdditionalCommentCtrlButtonsProps } from "../types/general";
+import styles from "./AdditionalCommentCtrlButtons.module.scss";
 
 // usage: save and return without saving buttons in additionalinfo page
 // notes: only save if save clicked, if return no save or back button (browser, mice etc) returns to old or empty value
-const AccessibilityPlaceCtrlButtons = ({ placeId, entrancePlaceBoxes }: AccessibilityPlaceCtrlButtonsProps): JSX.Element => {
+const AdditionalCommentCtrlButtons = ({ questionBlockId, questionBlockComment }: AdditionalCommentCtrlButtonsProps): JSX.Element => {
   const i18n = useI18n();
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -26,61 +26,36 @@ const AccessibilityPlaceCtrlButtons = ({ placeId, entrancePlaceBoxes }: Accessib
   const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
   // const prevState = useAppSelector((state) => state.additionalInfoReducer.curEditingInitialState as AdditionalInfoProps);
 
-  const handleAddInvalidValue = (entrancePlaceBox: EntrancePlaceBox, invalidFieldId: string, invalidFieldLabel: string) => {
-    const { entrance_id, place_id, order_number } = entrancePlaceBox;
-
+  /*
+  const handleAddInvalidValue = (invalidFieldId: string, invalidFieldLabel: string) => {
     dispatch(
-      addInvalidEntrancePlaceBoxValue({
-        entrance_id,
-        place_id,
-        order_number,
+      addInvalidQuestionBlockCommentValue({
+        entrance_id: curEntranceId,
+        question_block_id: questionBlockId,
         invalidFieldId,
         invalidFieldLabel,
       })
     );
   };
+  */
 
   const validateForm = () => {
     // Check whether all data on the form is valid
     // Everything needs to be validated, so make sure lazy evaluation is not used
-    const formValidation = entrancePlaceBoxes.map((box) => {
-      const { order_number, modifiedBox, modifiedPhotoBase64, termsAccepted, isDeleted } = box;
-      const { loc_easting, loc_northing, photo_url, photo_text_fi, photo_source_text } = modifiedBox || {};
-      let isValid = true;
+    const { modifiedComment } = questionBlockComment || {};
+    const { comment_text_fi } = modifiedComment || {};
+    const isFormValid = true;
 
-      if (!isDeleted) {
-        if (modifiedPhotoBase64 || photo_url) {
-          // Photo added, so validate the mandatory fields
-          if (!photo_text_fi || photo_text_fi.length === 0) {
-            handleAddInvalidValue(box, `text-fin-${order_number}`, `${order_number}. ${i18n.t("additionalInfo.pictureLabel")}`);
-            isValid = false;
-          }
-          if (!termsAccepted) {
-            handleAddInvalidValue(box, `picture-license-${order_number}`, `${order_number}. ${i18n.t("additionalInfo.sharePictureLicenseLabel")}`);
-            isValid = false;
-          }
-          if (!photo_source_text || photo_source_text.length === 0) {
-            handleAddInvalidValue(box, `tooltip-source-${order_number}`, `${order_number}. ${i18n.t("additionalInfo.sourceTooltipMainLabel")}`);
-            isValid = false;
-          }
-        }
+    // TODO - check if any validation is needed for text comments
+    if (!comment_text_fi || comment_text_fi.length === 0) {
+      /*
+      handleAddInvalidValue("text-fin", i18n.t("additionalInfo.pictureLabel"));
+      isFormValid = false;
+      */
+      console.log(comment_text_fi);
+    }
 
-        if (!modifiedPhotoBase64 && !photo_url && !loc_easting && !loc_northing) {
-          // No photo or location
-          handleAddInvalidValue(
-            box,
-            `placebox-${order_number}`,
-            `${order_number}. ${i18n.t("additionalInfo.pictureTitle")} / ${i18n.t("additionalInfo.locationTitle")}`
-          );
-          isValid = false;
-        }
-      }
-
-      return isValid;
-    });
-
-    const isFormValid = formValidation.every((valid) => valid);
-    dispatch(setEntrancePlaceValid(isFormValid));
+    dispatch(setQuestionBlockCommentValid(isFormValid));
 
     return isFormValid;
   };
@@ -90,15 +65,15 @@ const AccessibilityPlaceCtrlButtons = ({ placeId, entrancePlaceBoxes }: Accessib
   const useMountEffect = (fun: () => void) => useEffect(fun, []);
   useMountEffect(validateForm);
 
-  const revertPlace = useCallback(() => {
-    // Revert this entrance place using existing values
+  const revertComment = useCallback(() => {
+    // Revert this question block comment using existing values
     dispatch(
-      revertEntrancePlace({
+      revertQuestionBlockComment({
         entrance_id: curEntranceId,
-        place_id: placeId,
+        question_block_id: questionBlockId,
       })
     );
-  }, [curEntranceId, placeId, dispatch]);
+  }, [curEntranceId, questionBlockId, dispatch]);
 
   // handle user clicking back button on browser / mouse ->
   // needs to remove the "saved" values same as clicking return no save
@@ -122,11 +97,11 @@ const AccessibilityPlaceCtrlButtons = ({ placeId, entrancePlaceBoxes }: Accessib
   useEffect(() => {
     router.beforePopState(() => {
       if (!pageSaved) {
-        revertPlace();
+        revertComment();
       }
       return true;
     });
-  }, [pageSaved, revertPlace, router]);
+  }, [pageSaved, revertComment, router]);
 
   // don't alter already saved state, set pageSaved to true
   const handleSaveAndReturn = () => {
@@ -139,16 +114,16 @@ const AccessibilityPlaceCtrlButtons = ({ placeId, entrancePlaceBoxes }: Accessib
 
   // handle user clicked return no save button
   const handleReturnNoSave = () => {
-    revertPlace();
+    revertComment();
     const url = curEntranceId > 0 ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}` : `/entranceAccessibility/${curServicepointId}`;
     router.push(url);
   };
 
   const handleDeleteAdditionalInfo = () => {
     dispatch(
-      deleteEntrancePlace({
+      removeQuestionBlockComment({
         entrance_id: curEntranceId,
-        place_id: placeId,
+        question_block_id: questionBlockId,
       })
     );
   };
@@ -165,11 +140,11 @@ const AccessibilityPlaceCtrlButtons = ({ placeId, entrancePlaceBoxes }: Accessib
       </span>
       <span className={styles.noborderbutton}>
         <QuestionButton variant="secondary" onClickHandler={() => handleDeleteAdditionalInfo()}>
-          {i18n.t("common.buttons.deleteAdditionalInfoSets")}
+          {i18n.t("common.buttons.deleteAdditionalInfo")}
         </QuestionButton>
       </span>
     </div>
   );
 };
 
-export default AccessibilityPlaceCtrlButtons;
+export default AdditionalCommentCtrlButtons;

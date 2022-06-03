@@ -47,7 +47,8 @@
     "buttons": {
       "saveAndReturn": "Save and return",
       "returnNoSave": "Exit without saving",
-      "deleteAdditionalInfo": "Delete all additional info sets"
+      "deleteAdditionalInfo": "Delete additional information",
+      "deleteAdditionalInfoSets": "Delete all additional info sets"
     },
     "message": {
       "validationFailed": {
@@ -157,16 +158,16 @@
     "locationHelperTextEng": "Describe the location in english",
     "commentMainHeader": "You can refine the accessibility information with additional text",
     "addCommentFiErrorText": "Please enter a description",
-    "commentFiHeader": "Additional text",
-    "commentFiHeaderHelperText": "You can add an additional description in Finnish",
-    "commentSvButtonText": "Add a description in Swedish",
-    "commentSvButtonLabel": "Description in Swedish",
-    "commentSvButtonCloseText": "Hide Swedish description",
-    "commentSvButtonLabelHelper": "Tell us more about accessibility in Swedish",
-    "commentAddEnButtonText": "Add a description in English",
-    "commentAddEnButtonCloseText": "Hide English description",
-    "commentEnLabel": "Description in English",
-    "commentEnLabelHelper" : "Tell us more about accessibility in English",
+    "commentLabel": "Additional text",
+    "commentHelperText": "Tell us more about the accessibility",
+    "commentButtonSwe": "Add additional text in Swedish",
+    "commentLabelSwe": "Additional text in Swedish",
+    "commentButtonCloseSwe": "Hide additional text",
+    "commentHelperTextSwe": "Tell us more about the accessibility in Swedish",
+    "commentButtonEng": "Add additional text in English",
+    "commentButtonCloseEng": "Hide additional text",
+    "commentLabelEng": "Additional text in English",
+    "commentHelperTextEng" : "Tell us more about the accessibility in English",
     "pictureLinkConfirmButton": "Confirm",
     "picureLinkErrorText": "Please enter a valid picture link",
     "pictureTermsErrorText": "Please accept the terms",
@@ -180,6 +181,7 @@
       "addNewLocation": "Add location"
     },
     "additionalInfo": "Additional information",
+    "fillComment": "You can refine the accessibility information with free-form additional text. The additional text is displayed in the accessibility information in addition to the accessibility statements.",
     "fillPlaceData1": "You can complete the",
     "fillPlaceData2": "information with images and/or location information.",
     "orderPlaceData": "Arrange the information with most important at the top and least important at the bottom.",
@@ -203,7 +205,10 @@
     "fillPlaceData1": "Do you want to complete",
     "fillPlaceData2": "accessibility information",
     "placeLink": "Add a picture and/or location",
-    "editLocationPhoto": "Edit"
+    "editLocationPhoto": "Edit",
+    "addComment": "Provide more information",
+    "editComment": "Edit information",
+    "additionalInfo": "Additional information"
   },
   "QuestionFormImportExistingData": {
     "chooseServicepoint": "Choose servicepoint",

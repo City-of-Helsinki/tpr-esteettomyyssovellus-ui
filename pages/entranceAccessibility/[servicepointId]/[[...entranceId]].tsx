@@ -26,6 +26,7 @@ import {
   API_URL_BASE,
   LanguageLocales,
   API_FETCH_BACKEND_ENTRANCE_PLACES,
+  API_FETCH_QUESTION_BLOCK_COMMENT,
 } from "../../../types/constants";
 import { useAppSelector, useAppDispatch, useLoading } from "../../../state/hooks";
 import QuestionBlock from "../../../components/QuestionBlock";
@@ -42,12 +43,13 @@ import {
   BackendServicepoint,
   Entrance,
   EntranceResults,
+  QuestionBlockAnswerCmt,
   // QuestionAnswerComment,
   // QuestionAnswerLocation,
   // QuestionAnswerPhoto,
   // QuestionAnswerPhotoTxt,
 } from "../../../types/backendModels";
-import { EntranceFormProps, KeyValueNumber, KeyValueString } from "../../../types/general";
+import { BlockComment, EntranceFormProps, KeyValueNumber, KeyValueString, QuestionBlockComment } from "../../../types/general";
 import HeadlineQuestionContainer from "../../../components/HeadlineQuestionContainer";
 import QuestionFormCtrlButtons from "../../../components/QuestionFormCtrlButtons";
 import PathTreeComponent from "../../../components/PathTreeComponent";
@@ -64,7 +66,7 @@ import {
   setInitAdditionalInfoFromDb,
 } from "../../../state/reducers/additionalInfoSlice";
 */
-import { setEntranceLocationPhoto, setEntrancePlaceBoxes } from "../../../state/reducers/additionalInfoSlice";
+import { setEntranceLocationPhoto, setEntrancePlaceBoxes, setQuestionBlockComments } from "../../../state/reducers/additionalInfoSlice";
 // import { persistor } from "../../../state/store";
 import { setServicepointLocationEuref, setServicepointLocationWGS84 } from "../../../state/reducers/generalSlice";
 // import { setCurrentlyEditingBlock, setCurrentlyEditingQuestion } from "../../../state/reducers/generalSlice";
@@ -81,6 +83,7 @@ const EntranceAccessibility = ({
   accessibilityPlaceData,
   entranceData,
   entrancePlaceData,
+  questionBlockCommentData,
   servicepointData,
   // additionalInfosData,
   formId,
@@ -326,6 +329,47 @@ const EntranceAccessibility = ({
           })
         )
       );
+
+      // Put question block comments into redux state
+      const questionBlockComments: QuestionBlockComment[] = [];
+
+      questionBlockCommentData.forEach((answerComment) => {
+        const { question_block_id, language_id, comment } = answerComment;
+        const language = LanguageLocales[language_id];
+
+        const blockComment: BlockComment = {
+          question_block_id: question_block_id,
+          [`comment_text_${language}`]: comment,
+        };
+
+        const questionBlockComment = questionBlockComments.find(
+          (c) => c.entrance_id === entranceData.entrance_id && c.question_block_id === question_block_id
+        );
+
+        if (questionBlockComment) {
+          // Add the comment for the different language
+          questionBlockComment.existingComment = {
+            ...questionBlockComment.existingComment,
+            ...blockComment,
+          };
+          questionBlockComment.modifiedComment = {
+            ...questionBlockComment.modifiedComment,
+            ...blockComment,
+          };
+        } else {
+          // Add a new question block comment
+          const newQuestionBlockComment: QuestionBlockComment = {
+            entrance_id: entranceData.entrance_id,
+            question_block_id: question_block_id,
+            existingComment: blockComment,
+            modifiedComment: blockComment,
+            invalidValues: [],
+          };
+          questionBlockComments.push(newQuestionBlockComment);
+        }
+      });
+
+      dispatch(setQuestionBlockComments(questionBlockComments));
     }
   };
 
@@ -505,6 +549,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   let questionExtraAnswerData: BackendEntranceField[] = [];
   let entranceData: BackendEntrance = {} as BackendEntrance;
   let entrancePlaceData: BackendEntrancePlace[] = [];
+  let questionBlockCommentData: QuestionBlockAnswerCmt[] = [];
   let servicepointData: BackendServicepoint = {} as BackendServicepoint;
   // let additionalInfosData = {};
   // let addInfoCommentsData;
@@ -690,6 +735,25 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
 
           entrancePlaceData = allEntrancePlaceData.filter((a) => a.log_id === maxLogId);
         }
+
+        const allQuestionBlockCommentDataResp = await fetch(
+          `${API_URL_BASE}${API_FETCH_QUESTION_BLOCK_COMMENT}?entrance_id=${params.entranceId}&format=json`,
+          {
+            headers: new Headers({ Authorization: getTokenHash() }),
+          }
+        );
+        const allQuestionBlockCommentData = await (allQuestionBlockCommentDataResp.json() as Promise<QuestionBlockAnswerCmt[]>);
+
+        if (allQuestionBlockCommentData?.length > 0) {
+          // Return question block comment data for the highest log id only, in case both published and draft data exists (form_submitted = 'Y' and 'D')
+          // Note: This log id value may be different from the main answer data log id
+          const maxLogId =
+            allQuestionBlockCommentData.sort((a: QuestionBlockAnswerCmt, b: QuestionBlockAnswerCmt) => {
+              return (b.log_id ?? 0) - (a.log_id ?? 0);
+            })[0].log_id ?? -1;
+
+          questionBlockCommentData = allQuestionBlockCommentData.filter((a) => a.log_id === maxLogId);
+        }
       }
     } catch (e) {
       console.error("Error", e);
@@ -703,6 +767,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       questionExtraAnswerData = [];
       entranceData = {} as BackendEntrance;
       entrancePlaceData = [];
+      questionBlockCommentData = [];
       servicepointData = {} as BackendServicepoint;
       // additionalInfosData = {};
     }
@@ -719,6 +784,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       questionExtraAnswerData,
       entranceData,
       entrancePlaceData,
+      questionBlockCommentData,
       servicepointData,
       // additionalInfosData,
       formId,

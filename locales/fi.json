@@ -47,7 +47,8 @@
     "buttons": {
       "saveAndReturn": "Tallenna ja palaa",
       "returnNoSave": "Poistu tallentamatta",
-      "deleteAdditionalInfo": "Poista kaikki lisätietokokonaisuudet"
+      "deleteAdditionalInfo": "Poista lisätiedot",
+      "deleteAdditionalInfoSets": "Poista kaikki lisätietokokonaisuudet"
     },
     "message": {
       "validationFailed": {
@@ -157,16 +158,16 @@
     "locationHelperTextEng": "Kuvaile sijaintia englanniksi",
     "commentMainHeader": "Voit tarkentaa esteettömyystietoja vapaamuotoisella lisätekstillä",
     "addCommentFiErrorText": "Olkaa hyvä ja syöttäkää kuvailu",
-    "commentFiHeader": "Lisäteksti",
-    "commentFiHeaderHelperText": "Voit lisätä halutessasi kuvailun suomeksi",
-    "commentSvButtonText": "Lisää kuvailu ruotsiksi",
-    "commentSvButtonLabel": "Kuvailu ruotsiksi",
-    "commentSvButtonCloseText": "Piilota ruotsinkielinen kuvailu",
-    "commentSvButtonLabelHelper": "Kerro lisää esteettömyydestä ruotsiksi",
-    "commentAddEnButtonText": "Lisää kuvailu englanniksi",
-    "commentAddEnButtonCloseText": "Piilota englanninkielinen kuvailu",
-    "commentEnLabel": "Kuvailu englanniksi",
-    "commentEnLabelHelper" : "Kerro lisää esteettömyydestä englanniksi",
+    "commentLabel": "Lisäteksti",
+    "commentHelperText": "Kerro lisää esteettömyydestä",
+    "commentButtonSwe": "Lisää teksti ruotsiksi",
+    "commentLabelSwe": "Lisäteksti ruotsiksi",
+    "commentButtonCloseSwe": "Piilota lisäteksti",
+    "commentHelperTextSwe": "Kerro lisää esteettömyydestä ruotsiksi",
+    "commentButtonEng": "Lisää teksti englanniksi",
+    "commentButtonCloseEng": "Piilota lisäteksti",
+    "commentLabelEng": "Lisäteksti englanniksi",
+    "commentHelperTextEng" : "Kerro lisää esteettömyydestä englanniksi",
     "pictureLinkConfirmButton": "Vahvista",
     "picureLinkErrorText": "Olkaa hyvä ja syöttäkää kelvollinen kuvalinkki",
     "pictureTermsErrorText": "Olkaa hyvä ja hyväksykää ehdot",
@@ -180,6 +181,7 @@
       "addNewLocation": "Lisää sijainti"
     },
     "additionalInfo": "Lisätiedot",
+    "fillComment": "Voit tarkentaa esteettömyystietoja vapaamuotoisella lisätekstillä. Lisäteksti näkyy esteettömyyslauseiden lisäksi esteettömyystiedoissa.",
     "fillPlaceData1": "Voit täydentää",
     "fillPlaceData2": "tietoja kuvilla ja/tai sijaintitiedolla.",
     "orderPlaceData": "Järjestä tiedoista tärkein ylimmäksi ja vähimmän tärkein alimmaksi.",
@@ -203,7 +205,10 @@
     "fillPlaceData1": "Haluatko täydentää",
     "fillPlaceData2": "esteettömyystietoja",
     "placeLink": "Lisää kuva ja/tai sijainti",
-    "editLocationPhoto": "Muokkaa"
+    "editLocationPhoto": "Muokkaa",
+    "addComment": "Anna lisätietoja",
+    "editComment": "Muokkaa tietoja",
+    "additionalInfo": "Lisätiedot"
   },
   "QuestionFormImportExistingData": {
     "chooseServicepoint": "Valitse toimipiste",
