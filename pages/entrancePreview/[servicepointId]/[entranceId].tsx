@@ -18,7 +18,7 @@ import SummaryLocationPicture from "../../../components/SummaryLocationPicture";
 import AddNewEntranceNotice from "../../../components/common/AddNewEntranceNotice";
 import LoadSpinner from "../../../components/common/LoadSpinner";
 import { useAppDispatch, useAppSelector, useLoading } from "../../../state/hooks";
-import { setEntranceLocationPhoto, setEntrancePlaceBoxes } from "../../../state/reducers/additionalInfoSlice";
+import { setEntranceLocationPhoto, setEntrancePlaceBoxes, setQuestionBlockComments } from "../../../state/reducers/additionalInfoSlice";
 import { setServicepointId, setEntranceId, setStartDate, setAnswers, setExtraAnswers } from "../../../state/reducers/formSlice";
 import { filterByLanguage, formatAddress, getCurrentDate, getTokenHash } from "../../../utils/utilFunctions";
 import {
@@ -32,6 +32,7 @@ import {
   API_FETCH_BACKEND_SENTENCES,
   API_FETCH_BACKEND_SERVICEPOINT,
   API_FETCH_ENTRANCES,
+  API_FETCH_QUESTION_BLOCK_COMMENT,
   API_URL_BASE,
   LanguageLocales,
 } from "../../../types/constants";
@@ -48,8 +49,18 @@ import {
   BackendServicepoint,
   Entrance,
   EntranceResults,
+  QuestionBlockAnswerCmt,
 } from "../../../types/backendModels";
-import { AccessibilityData, EntranceData, EntrancePlaceData, KeyValueNumber, KeyValueString, PreviewProps } from "../../../types/general";
+import {
+  AccessibilityData,
+  BlockComment,
+  EntranceData,
+  EntrancePlaceData,
+  KeyValueNumber,
+  KeyValueString,
+  PreviewProps,
+  QuestionBlockComment,
+} from "../../../types/general";
 
 // usage: the preview page of an entrance, displayed before saving the completed form
 const Preview = ({
@@ -58,6 +69,7 @@ const Preview = ({
   accessibilityPlaceData,
   entranceData,
   entrancePlaceData,
+  questionBlockCommentData,
   entranceChoiceData,
   questionAnswerData,
   questionExtraAnswerData,
@@ -174,6 +186,47 @@ const Preview = ({
         })
       )
     );
+
+    // Put question block comments into redux state
+    const questionBlockComments: QuestionBlockComment[] = [];
+
+    questionBlockCommentData.forEach((answerComment) => {
+      const { question_block_id, language_id, comment } = answerComment;
+      const language = LanguageLocales[language_id];
+
+      const blockComment: BlockComment = {
+        question_block_id: question_block_id,
+        [`comment_text_${language}`]: comment,
+      };
+
+      const questionBlockComment = questionBlockComments.find(
+        (c) => c.entrance_id === entranceData[entranceKey].entrance_id && c.question_block_id === question_block_id
+      );
+
+      if (questionBlockComment) {
+        // Add the comment for the different language
+        questionBlockComment.existingComment = {
+          ...questionBlockComment.existingComment,
+          ...blockComment,
+        };
+        questionBlockComment.modifiedComment = {
+          ...questionBlockComment.modifiedComment,
+          ...blockComment,
+        };
+      } else {
+        // Add a new question block comment
+        const newQuestionBlockComment: QuestionBlockComment = {
+          entrance_id: entranceData[entranceKey].entrance_id,
+          question_block_id: question_block_id,
+          existingComment: blockComment,
+          modifiedComment: blockComment,
+          invalidValues: [],
+        };
+        questionBlockComments.push(newQuestionBlockComment);
+      }
+    });
+
+    dispatch(setQuestionBlockComments(questionBlockComments));
   };
 
   // Initialise the redux data on first render only, using a workaround utilising useEffect with empty dependency array
@@ -366,6 +419,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   let accessibilityPlaceData: BackendPlace[] = [];
   let entranceData: EntranceData = {};
   let entrancePlaceData: BackendEntrancePlace[] = [];
+  let questionBlockCommentData: QuestionBlockAnswerCmt[] = [];
   let entranceChoiceData: BackendEntranceChoice[] = [];
   let servicepointData: BackendServicepoint = {} as BackendServicepoint;
   let questionAnswerData: BackendEntranceAnswer[] = [];
@@ -462,6 +516,20 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         entrancePlaceData = allEntrancePlaceData.filter((a) => a.form_submitted === "D");
       }
 
+      // Get the draft question block comment data
+      const allQuestionBlockCommentDataResp = await fetch(
+        `${API_URL_BASE}${API_FETCH_QUESTION_BLOCK_COMMENT}?entrance_id=${params.entranceId}&format=json`,
+        {
+          headers: new Headers({ Authorization: getTokenHash() }),
+        }
+      );
+      const allQuestionBlockCommentData = await (allQuestionBlockCommentDataResp.json() as Promise<QuestionBlockAnswerCmt[]>);
+
+      if (allQuestionBlockCommentData?.length > 0) {
+        // Note: in this case use the draftEntrance log id to filter since QuestionBlockAnswerCmt does not contain form_submitted
+        questionBlockCommentData = allQuestionBlockCommentData.filter((a) => a.log_id === draftEntrance?.log_id);
+      }
+
       // Get the draft questions and answers for use in the accessibility summaries
       const allEntranceChoicesResp = await fetch(
         `${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE_CHOICES}?entrance_id=${params.entranceId}&format=json`,
@@ -510,6 +578,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       accessibilityPlaceData = [];
       entranceData = {};
       entrancePlaceData = [];
+      questionBlockCommentData = [];
       entranceChoiceData = [];
       questionAnswerData = [];
       questionExtraAnswerData = [];
@@ -524,6 +593,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       accessibilityPlaceData,
       entranceData,
       entrancePlaceData,
+      questionBlockCommentData,
       entranceChoiceData,
       questionAnswerData,
       questionExtraAnswerData,

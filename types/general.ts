@@ -499,6 +499,7 @@ export interface PreviewProps {
   accessibilityPlaceData: BackendPlace[];
   entranceData: EntranceData;
   entrancePlaceData: BackendEntrancePlace[];
+  questionBlockCommentData: QuestionBlockAnswerCmt[];
   entranceChoiceData: BackendEntranceChoice[];
   questionAnswerData: BackendEntranceAnswer[];
   questionExtraAnswerData: BackendEntranceField[];

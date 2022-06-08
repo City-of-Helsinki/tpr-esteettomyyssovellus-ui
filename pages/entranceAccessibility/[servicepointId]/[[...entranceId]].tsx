@@ -717,6 +717,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
           questionExtraAnswerData = allQuestionExtraAnswerData.filter((a) => a.log_id === maxLogId);
         }
 
+        // Get the entrance place data for pictures and maps
         const allEntrancePlaceDataResp = await fetch(
           `${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE_PLACES}?entrance_id=${params.entranceId}&format=json`,
           {
@@ -736,6 +737,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
           entrancePlaceData = allEntrancePlaceData.filter((a) => a.log_id === maxLogId);
         }
 
+        // Get the question block comment data
         const allQuestionBlockCommentDataResp = await fetch(
           `${API_URL_BASE}${API_FETCH_QUESTION_BLOCK_COMMENT}?entrance_id=${params.entranceId}&format=json`,
           {
