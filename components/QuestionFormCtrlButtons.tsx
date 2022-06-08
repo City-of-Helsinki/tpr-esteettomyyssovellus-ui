@@ -46,7 +46,6 @@ const QuestionFormCtrlButtons = ({
   const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
   const finishedBlocks = useAppSelector((state) => state.formReducer.finishedBlocks);
   // const isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
-  // const additionalInfo = useAppSelector((state) => state.additionalInfoReducer);
   const user = useAppSelector((state) => state.generalSlice.user);
 
   const handleCancel = (): void => {

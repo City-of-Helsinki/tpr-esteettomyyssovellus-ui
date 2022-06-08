@@ -12,14 +12,9 @@ import QuestionInfo from "./QuestionInfo";
 import styles from "./AccessibilityPlaceLocation.module.scss";
 
 // usage: accessibility place page location component
-// notes: remove geocoding if not needed
-// const AccessibilityPlaceLocation = ({ questionId, onDelete, canDelete = true, initValue, isMainLocPicComponent = false }: AccessibilityPlaceLocationProps): JSX.Element => {
 const AccessibilityPlaceLocation = ({ entrancePlaceBox }: AccessibilityPlaceLocationProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
-
-  // geodocing related -> delete if not used in final production
-  //   const [addressErrorText, setAddressErrorText] = useState("");
 
   const { entrance_id, place_id, order_number, modifiedBox } = entrancePlaceBox;
   const { loc_easting, loc_northing, location_text_fi, location_text_sv, location_text_en } = modifiedBox || {};

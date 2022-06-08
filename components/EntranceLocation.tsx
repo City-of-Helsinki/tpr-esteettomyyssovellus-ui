@@ -11,13 +11,9 @@ import QuestionButton from "./QuestionButton";
 import styles from "./EntranceLocation.module.scss";
 
 // usage: entrance location photo page location component
-// notes: remove geocoding if not needed
 const EntranceLocation = ({ entranceLocationPhoto }: EntranceLocationProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
-
-  // geodocing related -> delete if not used in final production
-  //   const [addressErrorText, setAddressErrorText] = useState("");
 
   const { entrance_id, modifiedAnswer } = entranceLocationPhoto;
   const { loc_easting, loc_northing } = modifiedAnswer || {};
