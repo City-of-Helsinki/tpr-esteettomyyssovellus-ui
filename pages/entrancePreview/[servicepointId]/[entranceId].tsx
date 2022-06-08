@@ -22,7 +22,6 @@ import { setEntranceLocationPhoto, setEntrancePlaceBoxes, setQuestionBlockCommen
 import { setServicepointId, setEntranceId, setStartDate, setAnswers, setExtraAnswers } from "../../../state/reducers/formSlice";
 import { filterByLanguage, formatAddress, getCurrentDate, getTokenHash } from "../../../utils/utilFunctions";
 import {
-  // API_FETCH_ANSWER_LOGS,
   API_FETCH_BACKEND_ENTRANCE,
   API_FETCH_BACKEND_ENTRANCE_ANSWERS,
   API_FETCH_BACKEND_ENTRANCE_CHOICES,
@@ -424,7 +423,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   let servicepointData: BackendServicepoint = {} as BackendServicepoint;
   let questionAnswerData: BackendEntranceAnswer[] = [];
   let questionExtraAnswerData: BackendEntranceField[] = [];
-  // const hasExistingFormData = false;
   let isMainEntrancePublished = false;
 
   if (params !== undefined) {
@@ -560,16 +558,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         headers: new Headers({ Authorization: getTokenHash() }),
       });
       accessibilityPlaceData = await (accessibilityPlaceResp.json() as Promise<BackendPlace[]>);
-
-      /*
-      if (servicepointEntranceData.results.length !== 0 && mainEntranceSentences?.entranceResult) {
-        const logResp = await fetch(`${API_URL_BASE}${API_FETCH_ANSWER_LOGS}?entrance=${mainEntranceSentences?.entranceResult.entrance_id}&format=json`);
-        const logData = await (logResp.json() as Promise<AnswerLog[]>);
-
-        // TODO: Should this be true even if the form has not been submitted
-        hasExistingFormData = logData.length !== 0;
-      }
-      */
     } catch (err) {
       console.error("Error", err);
 
@@ -597,7 +585,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       entranceChoiceData,
       questionAnswerData,
       questionExtraAnswerData,
-      // hasExistingFormData,
       isMainEntrancePublished,
     },
   };

@@ -23,7 +23,6 @@ const EntranceLocationPhotoCtrlButtons = ({ entranceLocationPhoto }: EntranceLoc
 
   const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
   const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
-  // const prevState = useAppSelector((state) => state.additionalInfoReducer.curEditingInitialState as AdditionalInfoProps);
 
   const handleAddInvalidValue = (invalidFieldId: string, invalidFieldLabel: string) => {
     dispatch(
@@ -80,22 +79,6 @@ const EntranceLocationPhotoCtrlButtons = ({ entranceLocationPhoto }: EntranceLoc
   // handle user clicking back button on browser / mouse ->
   // needs to remove the "saved" values same as clicking return no save
   // also check if pageSaved (saved button clicked), if so then just return
-  // otherwise set initStateAddinfo to current addinfo / remove all added answers -> for user didn't save
-  /*
-  useEffect(() => {
-    router.beforePopState(() => {
-      if (pageSaved) {
-        return true;
-      }
-      if (prevState && Object.entries(prevState).length > 0) {
-        dispatch(setPreviousInitStateAdditionalinfo({ questionId, prevState }));
-      } else {
-        dispatch(removeSingleQuestionAdditionalinfo({ questionId }));
-      }
-      return true;
-    });
-  }, [prevState, pageSaved, questionId, dispatch, router]);
-  */
   useEffect(() => {
     router.beforePopState(() => {
       if (!pageSaved) {

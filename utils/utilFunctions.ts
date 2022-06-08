@@ -22,16 +22,6 @@ import {
 } from "../types/constants";
 import { API_TOKEN } from "./checksumSecret";
 import { EntranceLocationPhoto, EntrancePlaceBox, KeyValueString, QuestionBlockComment } from "../types/general";
-/*
-import { QuestionAnswerPhoto } from "../types/backendModels";
-import {
-  API_FETCH_QUESTION_ANSWER_COMMENTS,
-  API_FETCH_QUESTION_ANSWER_LOCATIONS,
-  API_FETCH_QUESTION_ANSWER_PHOTOS,
-  API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS,
-} from "../types/constants";
-import { AdditionalInfoProps } from "../types/general";
-*/
 
 export const validateChecksum = (string: string, checksum: string | string[]): boolean => {
   const hash = crypto.createHash("sha256").update(string).digest("hex").toUpperCase();
@@ -484,7 +474,6 @@ export const saveFormData = async (
       const questionAnswerData = { log: logId, data: answeredChoices };
       await postData(API_FETCH_QUESTION_ANSWERS, JSON.stringify(questionAnswerData), router);
 
-      // await postAdditionalInfo(logId, additionalInfo.additionalInfo);
       await saveExtraFieldAnswers(logId, extraAnswers, router);
       await saveEntranceLocationPhoto(logId, servicePointId, entranceLocationPhoto, router);
       await saveEntrancePlaces(logId, servicePointId, entrancePlaceBoxes, router);
@@ -497,114 +486,3 @@ export const saveFormData = async (
     }
   }
 };
-
-// The additional info structure will be changing, so the backend calls have been removed for now
-/*
-export const postAdditionalInfo = async (logId: number, data: AdditionalInfoProps): Promise<void> => {
-  console.log("Started posting additional info");
-  Object.keys(data)
-    .filter((key) => !Number.isNaN(Number(key)))
-    .forEach((question) => {
-      const additionalInfo = data[question];
-
-      if (question !== undefined) {
-        const { comments, pictures, locations } = additionalInfo;
-
-        // COMMENTS
-        if (comments !== undefined) {
-          Object.keys(comments).forEach((key) => {
-            const comment = comments[key];
-            let language = 0;
-            switch (key) {
-              case "fi":
-                language = 1;
-                break;
-              case "sv":
-                language = 2;
-                break;
-              case "en":
-                language = 3;
-                break;
-              default:
-                language = 1;
-            }
-            const commentData = {
-              comment,
-              log: logId,
-              question,
-              language,
-            };
-            postData(API_FETCH_QUESTION_ANSWER_COMMENTS, JSON.stringify(commentData), router);
-            console.log("Posted additionalinfo comments for question ", question[0]);
-          });
-        }
-
-        // LOCATION
-        if (locations !== undefined) {
-          const locationData = {
-            loc_easting: locations.locEasting,
-            loc_northing: locations.locNorthing,
-            log: logId,
-            question: question[0],
-          };
-          postData(API_FETCH_QUESTION_ANSWER_LOCATIONS, JSON.stringify(locationData), router);
-          console.log("Posted additionalinfo location for question ", question[0]);
-        }
-
-        // PICTURES
-        if (pictures !== undefined) {
-          pictures.map(async (pic) => {
-            const pictureData = {
-              photo_url: pic.url,
-              log: logId,
-              question: pic.qNumber,
-            };
-            const requestOptions = {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(pictureData),
-            };
-            const response = await fetch(`${getOrigin(router)}/${API_FETCH_QUESTION_ANSWER_PHOTOS}`, requestOptions);
-            const responseData = await (response.json() as Promise<QuestionAnswerPhoto>);
-            console.log("Posted additionalinfo pictures for question ", question[0]);
-            const photoId = responseData !== null ? responseData.answer_photo_id : null;
-
-            const fiComment = pic.altText.fi;
-            const svComment = pic.altText.sv;
-            const enComment = pic.altText.en;
-            if (photoId !== null) {
-              if (fiComment !== "") {
-                const pictureTextData = {
-                  photo_text: fiComment,
-                  answer_photo: photoId,
-                  language: 1,
-                };
-                postData(API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS, JSON.stringify(pictureTextData), router);
-                // console.log("Posted additionalinfo picture text in fi for question ", question[0]);
-              }
-              if (svComment !== "") {
-                const pictureTextData = {
-                  photo_text: svComment,
-                  answer_photo: photoId,
-                  language: 2,
-                };
-                postData(API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS, JSON.stringify(pictureTextData), router);
-                // console.log("Posted additionalinfo picture text in sv ");
-              }
-              if (enComment !== "") {
-                const pictureTextData = {
-                  photo_text: enComment,
-                  answer_photo: photoId,
-                  language: 3,
-                };
-                postData(API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS, JSON.stringify(pictureTextData), router);
-                // console.log("Posted additionalinfo picture text in en");
-              }
-              console.log("Posted additionalinfo picture texts for question ", question[0]);
-            }
-          });
-        }
-      }
-    });
-};
-*/

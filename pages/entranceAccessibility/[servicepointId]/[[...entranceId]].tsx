@@ -16,10 +16,6 @@ import {
   API_FETCH_BACKEND_QUESTIONBLOCK_FIELD,
   API_FETCH_BACKEND_SERVICEPOINT,
   API_FETCH_ENTRANCES,
-  // API_FETCH_QUESTION_ANSWER_COMMENTS,
-  // API_FETCH_QUESTION_ANSWER_LOCATIONS,
-  // API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS,
-  // API_FETCH_QUESTION_ANSWER_PHOTOS,
   API_FETCH_QUESTION_URL,
   API_FETCH_QUESTIONBLOCK_URL,
   API_FETCH_QUESTIONCHOICES,
@@ -44,10 +40,6 @@ import {
   Entrance,
   EntranceResults,
   QuestionBlockAnswerCmt,
-  // QuestionAnswerComment,
-  // QuestionAnswerLocation,
-  // QuestionAnswerPhoto,
-  // QuestionAnswerPhotoTxt,
 } from "../../../types/backendModels";
 import { BlockComment, EntranceFormProps, KeyValueNumber, KeyValueString, QuestionBlockComment } from "../../../types/general";
 import HeadlineQuestionContainer from "../../../components/HeadlineQuestionContainer";
@@ -55,21 +47,9 @@ import QuestionFormCtrlButtons from "../../../components/QuestionFormCtrlButtons
 import PathTreeComponent from "../../../components/PathTreeComponent";
 import { setAnswers, setEntranceId, setExtraAnswers, setServicepointId, setStartDate } from "../../../state/reducers/formSlice";
 import { getTokenHash, getCurrentDate, formatAddress, convertCoordinates } from "../../../utils/utilFunctions";
-/*
-import {
-  addComment,
-  addComponent,
-  addLocation,
-  addPicture,
-  clearEditingInitialState,
-  setAlt,
-  setInitAdditionalInfoFromDb,
-} from "../../../state/reducers/additionalInfoSlice";
-*/
 import { setEntranceLocationPhoto, setEntrancePlaceBoxes, setQuestionBlockComments } from "../../../state/reducers/additionalInfoSlice";
 // import { persistor } from "../../../state/store";
 import { setServicepointLocationEuref, setServicepointLocationWGS84 } from "../../../state/reducers/generalSlice";
-// import { setCurrentlyEditingBlock, setCurrentlyEditingQuestion } from "../../../state/reducers/generalSlice";
 import LoadSpinner from "../../../components/common/LoadSpinner";
 
 // usage: the main form / entrance page
@@ -85,7 +65,6 @@ const EntranceAccessibility = ({
   entrancePlaceData,
   questionBlockCommentData,
   servicepointData,
-  // additionalInfosData,
   formId,
   isMainEntrancePublished,
 }: EntranceFormProps): ReactElement => {
@@ -107,16 +86,12 @@ const EntranceAccessibility = ({
   }, []);
   */
 
-  // const curEditingQuestionAddInfoNumber = useAppSelector((state) => state.generalSlice.currentlyEditingQuestionAddinfo);
-  // const curEditingBlockAddInfoNumber = useAppSelector((state) => state.generalSlice.currentlyEditingBlockAddinfo);
-
   // const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
   const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
   // const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
   const curAnswers = useAppSelector((state) => state.formReducer.answers);
   const curAnsweredChoices = Object.values(curAnswers);
   const curInvalidBlocks = useAppSelector((state) => state.formReducer.invalidBlocks);
-  // const additionalInfoInitedFromDb = useAppSelector((state) => state.additionalInfoReducer.initAddInfoFromDb);
   const isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
   const startedAnswering = useAppSelector((state) => state.formReducer.startedAnswering);
 
@@ -140,101 +115,6 @@ const EntranceAccessibility = ({
     if (Object.keys(entranceData).length > 0) {
       dispatch(setEntranceId(entranceData.entrance_id));
     }
-
-    // The additional info structure will be changing, so the frontend handling has been removed for now
-    /*
-    // loop additional info to state if first landing to form page and if data found
-    if (additionalInfosData && !additionalInfoInitedFromDb) {
-      // dispatch(removeImproperlySavedAddInfos());
-      dispatch(setInitAdditionalInfoFromDb({ isInited: true }));
-      if (additionalInfosData.comments) {
-        additionalInfosData.comments.forEach((comment) => {
-          const curLangStr = LanguageLocales[comment.language];
-          dispatch(
-            addComment({
-              questionId: comment.question,
-              language: curLangStr,
-              value: comment.comment ?? "",
-            })
-          );
-          // little hacky, only add component for the 1st language => fi (mandatory) for not adding 3 components if all languages
-          if (curLangStr === "fi") {
-            dispatch(
-              addComponent({
-                questionId: comment.question,
-                type: "comment",
-                id: comment.answer_comment_id,
-              })
-            );
-          }
-        });
-      }
-      if (additionalInfosData.locations) {
-        additionalInfosData.locations.forEach((location) => {
-          dispatch(
-            addLocation({
-              questionId: location.question,
-              coordinates: [location.loc_northing ?? 0, location.loc_easting ?? 0],
-              locNorthing: location.loc_northing ?? 0,
-              locEasting: location.loc_easting ?? 0,
-            })
-          );
-          dispatch(
-            addComponent({
-              questionId: location.question,
-              type: "location",
-              id: location.answer_location_id,
-            })
-          );
-        });
-      }
-
-      if (additionalInfosData.photos) {
-        additionalInfosData.photos.forEach((photo: QuestionAnswerPhoto) => {
-          const picture = {
-            qNumber: photo.question,
-            id: photo.answer_photo_id,
-            base: photo.photo_url,
-            url: photo.photo_url,
-            altText: {
-              fi: "",
-              sv: "",
-              en: "",
-            },
-          };
-
-          dispatch(addPicture(picture));
-          dispatch(
-            addComponent({
-              questionId: photo.question,
-              type: "link",
-              id: photo.answer_photo_id,
-            })
-          );
-
-          if (additionalInfosData.phototexts) {
-            const curPhotoAlts = additionalInfosData.phototexts.filter((phototext) => phototext.answer_photo === photo.answer_photo_id);
-            if (curPhotoAlts) {
-              curPhotoAlts.forEach((alt: QuestionAnswerPhotoTxt) => {
-                const curLangStr = LanguageLocales[alt.language];
-                dispatch(
-                  setAlt({
-                    questionId: photo.question,
-                    language: curLangStr,
-                    value: alt.photo_text ?? "",
-                    compId: photo.answer_photo_id,
-                  })
-                );
-              });
-            }
-          }
-        });
-      }
-    }
-
-    // clear addinfo initState
-    dispatch(clearEditingInitialState());
-    */
 
     // Reset the entrance data if the entrance id changes, otherwise keep any edited entrance data already stored in redux state
     const resetEntranceData =
@@ -388,8 +268,6 @@ const EntranceAccessibility = ({
   const filteredPlaces = accessibilityPlaceData.filter((place) => place.language_id === curLocaleId);
 
   // map visible blocks & questions & answers
-  // const nextBlock = 0;
-  // const lastBlockNumber = "";
   const visibleBlocks =
     questionBlocksData && questionsData && questionChoicesData
       ? questionBlocksData.map((block: BackendQuestionBlock) => {
@@ -418,21 +296,12 @@ const EntranceAccessibility = ({
             ? questionChoicesData.filter((choice) => choice.question_block_id === block.question_block_id && choice.language_id === curLocaleId)
             : undefined;
 
-          // if (isVisible && blockQuestions && answerChoices && block.question_block_code !== undefined) lastBlockNumber = block.question_block_code;
-
           return isVisible && blockQuestions && blockAnswerChoices && block.question_block_id !== undefined ? (
             <HeadlineQuestionContainer
               key={block.question_block_id}
               number={block.question_block_id}
               text={`${block.question_block_code} ${block.text}`}
               id={`questionblockid-${block.question_block_id}`}
-              /*
-              initOpen={
-                curEditingBlockAddInfoNumber && curEditingBlockAddInfoNumber === block.question_block_id
-                  ? true
-                  : block.question_block_id === nextBlock
-              }
-              */
               isValid={!curInvalidBlocks.includes(block.question_block_id)}
             >
               <QuestionBlock
@@ -447,17 +316,6 @@ const EntranceAccessibility = ({
           ) : null;
         })
       : null;
-
-  /*
-  // if returning from additional info page -> init page to correct location / question
-  // when the window.location.hash is set -> set states of question and block numbers to -1
-  // (useEffect [] didn't work for some reason)
-  if (curEditingQuestionAddInfoNumber >= 0 && curEditingBlockAddInfoNumber >= 0) {
-    window.location.hash = `questionid-${curEditingQuestionAddInfoNumber}`;
-    dispatch(setCurrentlyEditingQuestion(-1));
-    dispatch(setCurrentlyEditingBlock(-1));
-  }
-  */
 
   // const formSubmitted = useAppSelector((state) => state.formReducer.formSubmitted);
 
@@ -551,11 +409,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   let entrancePlaceData: BackendEntrancePlace[] = [];
   let questionBlockCommentData: QuestionBlockAnswerCmt[] = [];
   let servicepointData: BackendServicepoint = {} as BackendServicepoint;
-  // let additionalInfosData = {};
-  // let addInfoCommentsData;
-  // let addInfoLocationsData;
-  // let addInfoPhotosData;
-  // let addInfoPhotoTextsData;
   let formId = -1;
   let isMainEntrancePublished = false;
 
@@ -669,35 +522,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
           questionAnswerData = allQuestionAnswerData.filter((a) => a.log_id === maxLogId);
         }
 
-        // The additional info structure will be changing, so the backend calls have been removed for now
-        /*
-        if (questionAnswerData?.length > 0) {
-          const logId =
-            questionAnswerData.sort((a: BackendEntranceAnswer, b: BackendEntranceAnswer) => {
-              return (b.log_id ?? 0) - (a.log_id ?? 0);
-            })[0].log_id ?? -1;
-
-          if (logId && logId >= 0) {
-            const addInfoComments = await fetch(`${API_URL_BASE}${API_FETCH_QUESTION_ANSWER_COMMENTS}?log=${logId}`);
-            const addInfoLocations = await fetch(`${API_URL_BASE}${API_FETCH_QUESTION_ANSWER_LOCATIONS}?log=${logId}`);
-            const addInfoPhotos = await fetch(`${API_URL_BASE}${API_FETCH_QUESTION_ANSWER_PHOTOS}?log=${logId}`);
-            const addInfoPhotoTexts = await fetch(`${API_URL_BASE}${API_FETCH_QUESTION_ANSWER_PHOTO_TEXTS}?log=${logId}`);
-
-            addInfoCommentsData = await (addInfoComments.json() as Promise<QuestionAnswerComment[]>);
-            addInfoLocationsData = await (addInfoLocations.json() as Promise<QuestionAnswerLocation[]>);
-            addInfoPhotosData = await (addInfoPhotos.json() as Promise<QuestionAnswerPhoto[]>);
-            addInfoPhotoTextsData = await (addInfoPhotoTexts.json() as Promise<QuestionAnswerPhotoTxt[]>);
-
-            additionalInfosData = {
-              comments: addInfoCommentsData,
-              locations: addInfoLocationsData,
-              photos: addInfoPhotosData,
-              phototexts: addInfoPhotoTextsData,
-            };
-          }
-        }
-        */
-
         const allQuestionExtraAnswersResp = await fetch(
           `${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE_FIELD}?entrance_id=${params.entranceId}&format=json`,
           {
@@ -771,7 +595,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       entrancePlaceData = [];
       questionBlockCommentData = [];
       servicepointData = {} as BackendServicepoint;
-      // additionalInfosData = {};
     }
   }
   return {
@@ -788,7 +611,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       entrancePlaceData,
       questionBlockCommentData,
       servicepointData,
-      // additionalInfosData,
       formId,
       isMainEntrancePublished,
     },

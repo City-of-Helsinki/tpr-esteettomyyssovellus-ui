@@ -3,95 +3,28 @@ import { useRouter } from "next/router";
 import { useI18n } from "next-localization";
 import { MapContainer, TileLayer, Marker, useMap, useMapEvents, ZoomControl } from "react-leaflet";
 import { Marker as LeafletMarker, Icon } from "leaflet";
-// import { useDispatch } from "react-redux";
 import getOrigin from "../../utils/request";
-// import { addLocation } from "../../state/reducers/additionalInfoSlice";
-// import { useAppSelector } from "../../state/hooks";
-// import { setServicepointLocationEuref, setServicepointLocationWGS84 } from "../../state/reducers/generalSlice";
 import { MAP_INITIAL_CENTER, MAP_INITIAL_ZOOM, MAP_MAX_ZOOM, MAP_MIN_ZOOM } from "../../types/constants";
 import { isLocationValid } from "../../utils/utilFunctions";
 import styles from "./MapWrapper.module.scss";
 
 interface MapWrapperProps {
-  questionId: number;
   initialZoom: number;
   curLocation: [number, number];
   setLocation?: (location: [number, number]) => void;
   setMapReady?: (ready: boolean) => void;
   draggableMarker?: boolean;
   makeStatic: boolean;
-  isMainLocPicComponent?: boolean;
 }
 
 // usage: leaflet map used in the project
 // notes: editable in additionalinfo page, in form/details pages only static "preview"
 // gets the main location from state (fetched from db). User can either click the map or drag-n-drop marker for new location
-const MapWrapper = ({
-  // questionId,
-  initialZoom,
-  curLocation,
-  setLocation,
-  setMapReady,
-  draggableMarker,
-  // isMainLocPicComponent = false,
-  makeStatic,
-}: MapWrapperProps): ReactElement => {
+const MapWrapper = ({ initialZoom, curLocation, setLocation, setMapReady, draggableMarker, makeStatic }: MapWrapperProps): ReactElement => {
   const i18n = useI18n();
   const router = useRouter();
-  // const dispatch = useDispatch();
 
   const markerRef = useRef<LeafletMarker>(null);
-
-  /*
-  // state location for addinfos for getting location from addinfo question state
-  const stateLocation = useAppSelector((state) => state.additionalInfoReducer.additionalInfo[questionId]?.locations?.coordinates);
-
-  // for setting initLocation or fallback getting it from state
-  const coordinatesWGS84 = useAppSelector((state) => state.generalSlice.coordinatesWGS84);
-  const initGeneralLocation = initLocation || coordinatesWGS84;
-
-  // @ts-ignore : ignore types because .reverse() returns number[]
-  const curLocation: [number, number] = stateLocation && stateLocation !== undefined && !isMainLocPicComponent ? stateLocation : initGeneralLocation;
-  */
-
-  /*
-  const setLocation = (coordinates: [number, number]) => {
-    // transform coordinates to northing and easting for db
-    const lonLatReverseCoordinates: [number, number] = [coordinates[1], coordinates[0]];
-
-    const [locEas, locNor] = convertCoordinates("WGS84", "EPSG:3067", lonLatReverseCoordinates);
-
-    // this case is for mainform mainlocation, questionId -1
-    if (isMainLocPicComponent && questionId === -1) {
-      // set state main location main form
-      const coordinatesEPSG: [number, number] = [locEas, locNor];
-
-      dispatch(
-        setServicepointLocationEuref({
-          coordinates: coordinatesEPSG,
-        })
-      );
-
-      dispatch(
-        setServicepointLocationWGS84({
-          coordinatesWGS84: coordinates,
-        })
-      );
-    } else if (isMainLocPicComponent && questionId >= 0) {
-      // todo: state set state addentrance location
-    } else {
-      // for additionalinfo location adding
-      dispatch(
-        addLocation({
-          questionId,
-          coordinates,
-          locNorthing: Math.round(locNor),
-          locEasting: Math.round(locEas),
-        })
-      );
-    }
-  };
-  */
 
   // Use the icon images from the public folder
   const icon = new Icon.Default({ imagePath: `${getOrigin(router)}/` });
@@ -199,7 +132,6 @@ MapWrapper.defaultProps = {
   initLocation: undefined,
   setMapReady: undefined,
   draggableMarker: false,
-  isMainLocPicComponent: false,
 };
 
 export default MapWrapper;
