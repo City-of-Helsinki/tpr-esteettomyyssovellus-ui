@@ -41,7 +41,7 @@ const QuestionBlockComment = ({ block }: QuestionBlockCommentProps): JSX.Element
     const url =
       curEntranceId > 0
         ? `/blockComment/${curServicepointId}/${question_block_id}/${curEntranceId}`
-        : `/entranceLocationPhoto/${curServicepointId}/${question_block_id}`;
+        : `/blockComment/${curServicepointId}/${question_block_id}`;
     router.push(url);
   };
 
