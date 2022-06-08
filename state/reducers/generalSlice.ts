@@ -6,10 +6,6 @@ interface generalSliceProps {
   coordinatesEuref: [number, number];
   coordinatesWGS84: [number, number];
   user: string;
-  currentlyEditingQuestionAddinfo: number;
-  currentlyEditingBlockAddinfo: number;
-  coordinatesTemp?: [number, number];
-  coordinatesWGS84Temp?: [number, number];
 }
 
 // todo: get the initial location to here
@@ -17,30 +13,12 @@ const initialState: generalSliceProps = {
   coordinatesEuref: [0, 0],
   coordinatesWGS84: [0, 0],
   user: "",
-  currentlyEditingQuestionAddinfo: -1,
-  currentlyEditingBlockAddinfo: -1,
-  coordinatesTemp: [0, 0],
-  coordinatesWGS84Temp: [0, 0],
 };
 
 export const generalSlice = createSlice({
   name: "generalSlice",
   initialState,
   reducers: {
-    // used to store question number to state when going/coming from addinfo page, to be able to init screen to correct place
-    setCurrentlyEditingQuestion: (state, action: PayloadAction<number>) => {
-      return {
-        ...state,
-        currentlyEditingQuestionAddinfo: action.payload,
-      };
-    },
-    // used to store block number to state when going/coming from addinfo page, to be able to init screen to correct place
-    setCurrentlyEditingBlock: (state, action: PayloadAction<number>) => {
-      return {
-        ...state,
-        currentlyEditingBlockAddinfo: action.payload,
-      };
-    },
     setServicepointLocationEuref: (state, action: PayloadAction<{ coordinatesEuref: [number, number] }>) => {
       const { coordinatesEuref } = action.payload;
       return { ...state, coordinatesEuref };
@@ -56,19 +34,6 @@ export const generalSlice = createSlice({
         user: action.payload,
       };
     },
-    setCurEditingBothCoordinateTemps: (
-      state,
-      action: PayloadAction<{
-        coordinates: [number, number];
-        coordinatesWGS84: [number, number];
-      }>
-    ) => {
-      return {
-        ...state,
-        coordinatesTemp: action.payload.coordinates,
-        coordinatesWGS84Temp: action.payload.coordinatesWGS84,
-      };
-    },
   },
   extraReducers: (builder) => {
     builder.addCase(PURGE, (state) => ({
@@ -78,13 +43,6 @@ export const generalSlice = createSlice({
   },
 });
 
-export const {
-  setServicepointLocationEuref,
-  setServicepointLocationWGS84,
-  setCurrentlyEditingBlock,
-  setUser,
-  setCurrentlyEditingQuestion,
-  setCurEditingBothCoordinateTemps,
-} = generalSlice.actions;
+export const { setServicepointLocationEuref, setServicepointLocationWGS84, setUser } = generalSlice.actions;
 
 export default generalSlice.reducer;

@@ -2,7 +2,6 @@ import { IconAngleDown, IconAngleUp } from "hds-react";
 import React, { useEffect } from "react";
 import { useI18n } from "next-localization";
 import TextWithLinks from "./common/TextWithLinks";
-// import QuestionAdditionalInfoCtrlButton from "./QuestionAdditionalInfoCtrlButton";
 import QuestionBlockComment from "./QuestionBlockComment";
 import QuestionBlockExtraFieldList from "./QuestionBlockExtraFieldList";
 import QuestionBlockLocationPhoto from "./QuestionBlockLocationPhoto";
@@ -19,18 +18,10 @@ import styles from "./QuestionBlock.module.scss";
 const QuestionBlock = ({ block, questions, answerChoices, extraFields, accessibilityPlaces }: QuestionBlockProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
-  // const [showAdditionalInfo, setShowAdditionalInfo] = useState(false);
-  // const showAdditionalInfo = false;
   // const isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
   // const [showContinue, setShowContinue] = useState(!isContinueClicked);
 
   const { question_block_id, description, photo_url, photo_text, put_fields_before_questions, add_location_possible, add_photo_possible } = block;
-
-  /*
-  const handleAdditionalInfoToggle = () => {
-    setShowAdditionalInfo(!showAdditionalInfo);
-  };
-  */
 
   // todo: what is this onClick? Seems obsolete?
   /*
@@ -112,7 +103,6 @@ const QuestionBlock = ({ block, questions, answerChoices, extraFields, accessibi
 
           <div className={styles.importAddinfoContainer}>
             <QuestionFormImportExistingData />
-            {/*<QuestionAdditionalInfoCtrlButton curState={showAdditionalInfo} onClick={handleAdditionalInfoToggle} />*/}
           </div>
         </div>
       ) : (
@@ -127,12 +117,7 @@ const QuestionBlock = ({ block, questions, answerChoices, extraFields, accessibi
       {(canAddLocation || canAddPhoto) && <QuestionBlockLocationPhoto block={block} canAddLocation={canAddLocation} canAddPhoto={canAddPhoto} />}
 
       {/* QtionList loops the single question row(s) */}
-      <QuestionsList
-        // additionalInfoVisible={showAdditionalInfo}
-        questions={filteredQuestions}
-        answerChoices={answerChoices}
-        accessibilityPlaces={accessibilityPlaces}
-      />
+      <QuestionsList questions={filteredQuestions} answerChoices={answerChoices} accessibilityPlaces={accessibilityPlaces} />
 
       {!putFieldsBeforeQuestions && <QuestionBlockExtraFieldList extraFields={extraFields} />}
 

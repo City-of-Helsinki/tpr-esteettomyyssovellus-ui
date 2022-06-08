@@ -42,7 +42,6 @@ const SummaryLocationPicture = ({ entranceKey, entranceData, servicepointData }:
               curLocation={isLocationValid(coordinatesEuref) ? coordinatesWGS84 : servicepointCoordinatesWGS84}
               initZoom={MAP_MAX_ZOOM}
               draggableMarker={false}
-              questionId={-1}
               makeStatic
             />
           </div>

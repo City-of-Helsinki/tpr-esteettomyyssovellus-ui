@@ -1,7 +1,6 @@
 // place for custom typescript interfaces/"models"
 
 import { Dispatch, SetStateAction } from "react";
-// import { LatLngExpression } from "leaflet";
 import {
   BackendEntrance,
   BackendEntranceAnswer,
@@ -16,10 +15,6 @@ import {
   BackendQuestionChoice,
   BackendServicepoint,
   QuestionBlockAnswerCmt,
-  // QuestionAnswerComment,
-  // QuestionAnswerLocation,
-  // QuestionAnswerPhoto,
-  // QuestionAnswerPhotoTxt,
 } from "./backendModels";
 
 export interface KeyValueNumber {
@@ -34,11 +29,6 @@ export interface QuestionContainerProps {
   question: BackendQuestion;
   accessibilityPlaces: BackendPlace[];
   children: JSX.Element;
-  // hasAdditionalInfo: boolean;
-  // canAddLocation?: boolean;
-  // canAddPhotoMaxCount?: number;
-  // canAddComment?: boolean;
-  // isMainLocPicComponent?: boolean;
 }
 
 export interface QuestionExtraFieldProps {
@@ -208,89 +198,11 @@ export interface PreviewControlButtonsProps {
 }
 
 export interface MapProps {
-  questionId: number;
   initZoom: number;
   curLocation: [number, number];
   setLocation?: (location: [number, number]) => void;
   draggableMarker?: boolean;
   makeStatic?: boolean;
-  isMainLocPicComponent?: boolean;
-}
-
-// general for qnumber
-export interface AdditionalContentProps {
-  onlyLink?: boolean;
-  questionId: number;
-  compId: number;
-  onDelete?: (id?: number, type?: string) => void;
-  canDelete?: boolean;
-  initValue?: [number, number] | Languages | PictureProps[];
-  isMainLocPicComponent?: boolean;
-}
-
-export interface MainPictureContentProps {
-  onlyLink?: boolean;
-  pageId: number;
-  onDelete?: (id?: number, type?: string) => void;
-  initValue?: MainPictureProps;
-}
-
-export interface Location {
-  coordinates?: [number, number];
-  locNorthing?: number;
-  locEasting?: number;
-  usedZoom?: number;
-}
-
-// notice/todo: names locationS and commentS can atm have only one location and commend -> maybe rename
-export interface AdditionalInfos {
-  properlySaved?: boolean;
-  locations?: Location;
-  comments?: Languages;
-  pictures?: PictureProps[];
-  components?: AdditionalComponentProps[];
-  invalidValues?: AddinfoInvalidAnswers[];
-}
-
-// invalid values 1 per component
-// interface AddinfoInvalidValues {
-//   id: number;
-//   invalidValues?: AddinfoInvalidAnswers;
-// }
-
-// invalid answers list of
-export interface AddinfoInvalidAnswers {
-  id: number;
-  invalidAnswers?: string[];
-}
-
-export interface AdditionalComponentProps {
-  id: number;
-  type: string;
-}
-
-export interface PictureProps {
-  qNumber: number;
-  id: number;
-  base?: string;
-  uuid?: string;
-  url?: string;
-  name?: string;
-  source?: string;
-  altText: Languages;
-}
-
-export interface MainPictureProps {
-  base?: string;
-  uuid?: string;
-  url?: string;
-  name?: string;
-  source?: string;
-  altText: Languages;
-}
-
-export interface AdditionalInfoProps {
-  [key: string]: AdditionalInfos;
 }
 
 export interface Validation {
@@ -348,20 +260,12 @@ export interface QuestionBlockComment {
 }
 
 export interface AdditionalInfoStateProps {
-  initAddInfoFromDb: boolean;
-  curEditingInitialState: AdditionalInfoProps;
-  additionalInfo: AdditionalInfoProps;
   entranceLocationPhoto: EntranceLocationPhoto;
   entranceLocationPhotoValid: boolean;
   entrancePlaceBoxes: EntrancePlaceBox[];
   entrancePlaceValid: boolean;
   questionBlockComments: QuestionBlockComment[];
   questionBlockCommentValid: boolean;
-}
-
-export interface MainLocationOrImageProps {
-  pageId: number;
-  caseId: number;
 }
 
 // Common interfaces
@@ -387,19 +291,10 @@ export interface EntranceFormProps {
   servicepointData: BackendServicepoint;
   questionAnswerData: BackendEntranceAnswer[];
   questionExtraAnswerData: BackendEntranceField[];
-  // additionalInfosData: FetchAdditionalInfos;
   formId: number;
   isMainEntrancePublished: boolean;
 }
 
-/*
-interface FetchAdditionalInfos {
-  comments?: QuestionAnswerComment[];
-  locations?: QuestionAnswerLocation[];
-  photos?: QuestionAnswerPhoto[];
-  phototexts?: QuestionAnswerPhotoTxt[];
-}
-*/
 export interface QuestionBlockProps {
   block: BackendQuestionBlock;
   questions?: BackendQuestion[];
@@ -415,10 +310,6 @@ export interface PathTreeProps {
 export interface QuestionAdditionalInfoProps {
   questionId: number;
   blockId?: number;
-  // canAddLocation?: boolean;
-  // canAddPhotoMaxCount?: number;
-  // canAddComment?: boolean;
-  isMainLocPicComponent?: boolean;
 }
 
 export interface AdditionalInfoPageProps {
@@ -489,7 +380,6 @@ export interface DetailsProps {
   entranceData: EntranceData;
   entrancePlaceData: EntrancePlaceData;
   entranceChoiceData: EntranceChoiceData;
-  // hasExistingFormData: boolean;
   isMainEntrancePublished: boolean;
 }
 
@@ -499,6 +389,7 @@ export interface PreviewProps {
   accessibilityPlaceData: BackendPlace[];
   entranceData: EntranceData;
   entrancePlaceData: BackendEntrancePlace[];
+  questionBlockCommentData: QuestionBlockAnswerCmt[];
   entranceChoiceData: BackendEntranceChoice[];
   questionAnswerData: BackendEntranceAnswer[];
   questionExtraAnswerData: BackendEntranceField[];
@@ -568,12 +459,4 @@ export interface AdditionalCommentProps {
 export interface AdditionalCommentCtrlButtonsProps {
   questionBlockId: number;
   questionBlockComment?: QuestionBlockComment;
-}
-
-export interface ElementCountProps {
-  comment: number;
-  upload: number;
-  link: number;
-  location: number;
-  [key: string]: number;
 }

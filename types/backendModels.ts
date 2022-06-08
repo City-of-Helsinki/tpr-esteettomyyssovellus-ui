@@ -81,38 +81,6 @@ export interface AnswerLog {
 }
 */
 
-/*
-export interface QuestionAnswerComment {
-  answer_comment_id: number;
-  log: number;
-  question: number;
-  language: number;
-  comment?: string;
-}
-
-export interface QuestionAnswerLocation {
-  answer_location_id: number;
-  log: number;
-  question: number;
-  loc_easting?: number;
-  loc_northing?: number;
-}
-
-export interface QuestionAnswerPhoto {
-  answer_photo_id: number;
-  log: number;
-  question: number;
-  photo_url?: string;
-}
-
-export interface QuestionAnswerPhotoTxt {
-  answer_photo_txt_id: number;
-  answer_photo: number;
-  language: number;
-  photo_text?: string;
-}
-*/
-
 export interface QuestionBlockAnswerCmt {
   question_block_answer_cmt_id: number;
   log_id: number;

@@ -27,7 +27,6 @@ const QuestionBlockLocationPhoto = ({ block, canAddLocation, canAddPhoto }: Ques
   const photoTexts = add_photo_description?.split("<BR>");
 
   // const coordinatesWGS84 = useAppSelector((state) => state.generalSlice.coordinatesWGS84) ?? [60.1, 24.9];
-  // const mainImage = useAppSelector((state) => state.formReducer.mainImage);
   const { modifiedPhotoBase64, modifiedAnswer } = curEntranceLocationPhoto;
   const { loc_easting, loc_northing, photo_url, photo_text_fi, photo_text_sv, photo_text_en, photo_source_text } = modifiedAnswer || {};
 
@@ -97,14 +96,7 @@ const QuestionBlockLocationPhoto = ({ block, canAddLocation, canAddPhoto }: Ques
 
             <div className={styles.detailcontainer}>
               <div className={styles.mapcontainer}>
-                <Map
-                  curLocation={coordinatesWGS84}
-                  initZoom={MAP_MAX_ZOOM}
-                  draggableMarker={false}
-                  questionId={-1}
-                  makeStatic
-                  isMainLocPicComponent
-                />
+                <Map curLocation={coordinatesWGS84} initZoom={MAP_MAX_ZOOM} draggableMarker={false} makeStatic />
               </div>
             </div>
           </div>

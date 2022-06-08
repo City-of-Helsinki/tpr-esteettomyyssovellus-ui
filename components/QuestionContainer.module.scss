@@ -31,15 +31,6 @@
         max-height: 20rem;
       }
     }
-
-    /*
-    .alertCircle {
-      color: $color-error;
-      padding-top: 0.8rem;
-      margin-right: -4rem;
-      padding-left: 2.4rem;
-    }
-    */
   }
 
   .placecontainer {
@@ -84,75 +75,4 @@
       margin-left: $spacing-l;
     }
   }
-
-  /*
-  .addinfos {
-    padding: 0 $spacing-s;
-
-    p {
-      word-wrap: break-word;
-      max-width: 80%;
-    }
-
-    h4 {
-      padding: 0;
-    }
-
-    .addinfopreviewcontainer {
-      display: flex;
-      justify-content: space-between;
-      border-bottom: 1px solid $color-black-40;
-      padding: $spacing-m 0;
-      @include media(xs, s) {
-        flex-direction: column;
-      }
-      .nomargintop {
-        margin-top: 0;
-      }
-      .picturetextcontainer {
-        min-width: 50%;
-        @include media(xs, s) {
-          width: 100%;
-        }
-      }
-      .mapcontainerspacer {
-        min-width: 50%;
-        @include media(xs, s) {
-          display: none;
-        }
-      }
-      .addinfopicturepreview {
-        padding: $spacing-s;
-        padding-right: $spacing-2-xl;
-        @include media(xs, s) {
-          padding: 0;
-        }
-        height: 15rem;
-        width: 15rem;
-        background-repeat: no-repeat;
-        background-size: contain;
-        background-position: left;
-        @include media(xs, s) {
-          height: 12.5rem;
-          width: 12.5rem;
-        }
-      }
-    }
-    .mappreview {
-      padding: $spacing-s $spacing-l;
-      // width: 40%;
-      @include media(xs, s, m) {
-        padding: 0;
-        // width: 70%;
-      }
-    }
-    .editaddinfobutton {
-      margin-left: 0;
-      padding-left: 0;
-      button {
-        border: 0;
-      }
-    }
-  }
-  */
 }

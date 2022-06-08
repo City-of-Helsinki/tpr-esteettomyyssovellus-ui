@@ -31,7 +31,6 @@ const PreviewControlButtons = ({ hasSaveDraftButton, setSendingComplete }: Previ
   const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
   // const formFinished = useAppSelector((state) => state.formReducer.formFinished);
   // const formSubmitted = useAppSelector((state) => state.formReducer.formSubmitted);
-  // const additionalInfo = useAppSelector((state) => state.additionalInfoReducer);
   const user = useAppSelector((state) => state.generalSlice.user);
 
   const handleContinueEditing = (): void => {

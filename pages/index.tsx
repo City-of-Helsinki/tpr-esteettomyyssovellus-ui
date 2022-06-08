@@ -6,8 +6,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import i18nLoader from "../utils/i18n";
 import Layout from "../components/common/Layout";
 import styles from "./index.module.scss";
-// import SearchBoxWithButtons from "../components/SearchBoxWithButtons";
-// import SearchBoxWithButtonsMobile from "../components/SearchBoxWithButtonsMobile";
 import { Hero, HeroShallow } from "../components/common/Hero";
 import homepagephoto from "../public/homepagephoto.png";
 
@@ -67,7 +65,6 @@ const Main = (): ReactElement => {
         <div className={classes.hero}>
           {heroShallow ? <HeroShallow title={heroTitle} imageUrl={heroUrl} /> : <Hero title={heroTitle} text={heroText} imageUrl={heroUrl} />}
         </div>
-        {/*<div>{isMobile ? <SearchBoxWithButtonsMobile /> : <SearchBoxWithButtons />}</div>*/}
       </main>
     </Layout>
   );

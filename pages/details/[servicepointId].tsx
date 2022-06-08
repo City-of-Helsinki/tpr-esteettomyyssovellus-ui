@@ -18,7 +18,6 @@ import { setServicepointId } from "../../state/reducers/formSlice";
 import { convertCoordinates, filterByLanguage, formatAddress, getFinnishDate, getTokenHash } from "../../utils/utilFunctions";
 import { setServicepointLocationEuref, setServicepointLocationWGS84 } from "../../state/reducers/generalSlice";
 import {
-  // API_FETCH_ANSWER_LOGS,
   API_FETCH_BACKEND_ENTRANCE,
   API_FETCH_BACKEND_ENTRANCE_CHOICES,
   API_FETCH_BACKEND_ENTRANCE_PLACES,
@@ -50,7 +49,6 @@ const Details = ({
   entranceData,
   entrancePlaceData,
   entranceChoiceData,
-  // hasExistingFormData,
   isMainEntrancePublished,
 }: DetailsProps): ReactElement => {
   const i18n = useI18n();
@@ -318,21 +316,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       });
       accessibilityPlaceData = await (accessibilityPlaceResp.json() as Promise<BackendPlace[]>);
 
-      /*
-      if (servicepointEntranceData.results.length !== 0 && mainEntranceSentences?.entranceResult) {
-        const logResp = await fetch(
-          `${API_URL_BASE}${API_FETCH_ANSWER_LOGS}?entrance=${mainEntranceSentences?.entranceResult.entrance_id}&format=json`,
-          {
-            headers: new Headers({ Authorization: getTokenHash() }),
-          }
-        );
-        const logData = await (logResp.json() as Promise<AnswerLog[]>);
-
-        // TODO: Should this be true even if the form has not been submitted
-        hasExistingFormData = logData.length !== 0;
-      }
-      */
-
       // Get the entrance place data for all the entrances for use in the accessibility summaries for pictures and maps
       const entranceAccessibilityPlaceData = await Promise.all(
         Object.keys(entranceData).map(async (entranceKey) => {
@@ -397,7 +380,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       entranceData,
       entrancePlaceData,
       entranceChoiceData,
-      // hasExistingFormData,
       isMainEntrancePublished,
     },
   };

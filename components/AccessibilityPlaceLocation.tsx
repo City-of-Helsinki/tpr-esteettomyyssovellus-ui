@@ -12,29 +12,15 @@ import QuestionInfo from "./QuestionInfo";
 import styles from "./AccessibilityPlaceLocation.module.scss";
 
 // usage: accessibility place page location component
-// notes: remove geocoding if not needed
-// const AccessibilityPlaceLocation = ({ questionId, onDelete, canDelete = true, initValue, isMainLocPicComponent = false }: AccessibilityPlaceLocationProps): JSX.Element => {
 const AccessibilityPlaceLocation = ({ entrancePlaceBox }: AccessibilityPlaceLocationProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
-
-  // geodocing related -> delete if not used in final production
-  //   const [addressErrorText, setAddressErrorText] = useState("");
 
   const { entrance_id, place_id, order_number, modifiedBox } = entrancePlaceBox;
   const { loc_easting, loc_northing, location_text_fi, location_text_sv, location_text_en } = modifiedBox || {};
 
   const currentId = order_number;
-  const questionId = -1;
-  const isMainLocPicComponent = false;
 
-  /*
-  const coordinatesWGS84 = useAppSelector((state) => state.generalSlice.coordinatesWGS84);
-  const fallbackLocation = !initValue && !isMainLocPicComponent ? coordinatesWGS84 : (initValue as [number, number]);
-
-  const coordinates = useAppSelector((state) => state.additionalInfoReducer.additionalInfo[questionId].locations?.coordinates);
-  const coords = !isMainLocPicComponent && coordinates ? coordinates : fallbackLocation;
-  */
   const servicepointCoordinatesEuref = useAppSelector((state) => state.generalSlice.coordinatesEuref);
 
   const [mapInput, setMapInput] = useState(false);
@@ -121,17 +107,8 @@ const AccessibilityPlaceLocation = ({ entrancePlaceBox }: AccessibilityPlaceLoca
 
   // useMemo for preventing leaflet map rendering each time something updates on page
   const memoMap = useMemo(() => {
-    return (
-      <Map
-        curLocation={coordinatesWGS84}
-        setLocation={setLocation}
-        initZoom={MAP_MAX_ZOOM}
-        draggableMarker
-        questionId={questionId}
-        isMainLocPicComponent={isMainLocPicComponent}
-      />
-    );
-  }, [coordinatesWGS84, setLocation, isMainLocPicComponent, questionId]);
+    return <Map curLocation={coordinatesWGS84} setLocation={setLocation} initZoom={MAP_MAX_ZOOM} draggableMarker />;
+  }, [coordinatesWGS84, setLocation]);
 
   // The map should not be visible to screen readers, so use aria-hidden here
   return (
