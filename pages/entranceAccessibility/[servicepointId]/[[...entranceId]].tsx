@@ -4,10 +4,35 @@ import Head from "next/head";
 import { GetServerSideProps } from "next";
 import { IconCrossCircle, IconQuestionCircle } from "hds-react";
 import Layout from "../../../components/common/Layout";
-import i18nLoader from "../../../utils/i18n";
+import LoadSpinner from "../../../components/common/LoadSpinner";
+import ValidationSummary from "../../../components/common/ValidationSummary";
+import HeadlineQuestionContainer from "../../../components/HeadlineQuestionContainer";
+import PathTreeComponent from "../../../components/PathTreeComponent";
+import QuestionBlock from "../../../components/QuestionBlock";
+import QuestionFormCtrlButtons from "../../../components/QuestionFormCtrlButtons";
+import QuestionFormGuide from "../../../components/QuestionFormGuide";
 import QuestionInfo from "../../../components/QuestionInfo";
-import styles from "./entranceAccessibility.module.scss";
-import ServicepointMainInfoContent from "../../../components/ServicepointMainInfoContent";
+import { useAppSelector, useAppDispatch, useLoading } from "../../../state/hooks";
+import { setEntranceLocationPhoto, setEntrancePlaceBoxes, setQuestionBlockComments } from "../../../state/reducers/additionalInfoSlice";
+import { setAnswers, setEntranceId, setExtraAnswers, setServicepointId, setStartDate } from "../../../state/reducers/formSlice";
+import { setServicepointLocationEuref, setServicepointLocationWGS84 } from "../../../state/reducers/generalSlice";
+// import { persistor } from "../../../state/store";
+import {
+  BackendEntrance,
+  BackendEntranceAnswer,
+  BackendEntranceField,
+  BackendEntrancePlace,
+  BackendFormGuide,
+  BackendPlace,
+  BackendQuestion,
+  BackendQuestionBlock,
+  BackendQuestionBlockField,
+  BackendQuestionChoice,
+  BackendServicepoint,
+  Entrance,
+  EntranceResults,
+  QuestionBlockAnswerCmt,
+} from "../../../types/backendModels";
 import {
   API_FETCH_BACKEND_ENTRANCE,
   API_FETCH_BACKEND_ENTRANCE_ANSWERS,
@@ -23,34 +48,12 @@ import {
   LanguageLocales,
   API_FETCH_BACKEND_ENTRANCE_PLACES,
   API_FETCH_QUESTION_BLOCK_COMMENT,
+  API_FETCH_BACKEND_FORM_GUIDE,
 } from "../../../types/constants";
-import { useAppSelector, useAppDispatch, useLoading } from "../../../state/hooks";
-import QuestionBlock from "../../../components/QuestionBlock";
-import {
-  BackendEntrance,
-  BackendEntranceAnswer,
-  BackendEntranceField,
-  BackendEntrancePlace,
-  BackendPlace,
-  BackendQuestion,
-  BackendQuestionBlock,
-  BackendQuestionBlockField,
-  BackendQuestionChoice,
-  BackendServicepoint,
-  Entrance,
-  EntranceResults,
-  QuestionBlockAnswerCmt,
-} from "../../../types/backendModels";
-import { BlockComment, EntranceFormProps, KeyValueNumber, KeyValueString, QuestionBlockComment } from "../../../types/general";
-import HeadlineQuestionContainer from "../../../components/HeadlineQuestionContainer";
-import QuestionFormCtrlButtons from "../../../components/QuestionFormCtrlButtons";
-import PathTreeComponent from "../../../components/PathTreeComponent";
-import { setAnswers, setEntranceId, setExtraAnswers, setServicepointId, setStartDate } from "../../../state/reducers/formSlice";
+import { BlockComment, EntranceFormProps, KeyValueNumber, KeyValueString, QuestionBlockComment, Validation } from "../../../types/general";
+import i18nLoader from "../../../utils/i18n";
 import { getTokenHash, getCurrentDate, formatAddress, convertCoordinates } from "../../../utils/utilFunctions";
-import { setEntranceLocationPhoto, setEntrancePlaceBoxes, setQuestionBlockComments } from "../../../state/reducers/additionalInfoSlice";
-// import { persistor } from "../../../state/store";
-import { setServicepointLocationEuref, setServicepointLocationWGS84 } from "../../../state/reducers/generalSlice";
-import LoadSpinner from "../../../components/common/LoadSpinner";
+import styles from "./entranceAccessibility.module.scss";
 
 // usage: the main form / entrance page
 const EntranceAccessibility = ({
@@ -65,6 +68,7 @@ const EntranceAccessibility = ({
   entrancePlaceData,
   questionBlockCommentData,
   servicepointData,
+  formGuideData,
   formId,
   isMainEntrancePublished,
 }: EntranceFormProps): ReactElement => {
@@ -362,7 +366,7 @@ const EntranceAccessibility = ({
                 closeIcon={<IconCrossCircle />}
                 textOnBottom
               >
-                <ServicepointMainInfoContent />
+                <QuestionFormGuide formGuideData={formGuideData} />
               </QuestionInfo>
             </div>
 
@@ -409,6 +413,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   let entrancePlaceData: BackendEntrancePlace[] = [];
   let questionBlockCommentData: QuestionBlockAnswerCmt[] = [];
   let servicepointData: BackendServicepoint = {} as BackendServicepoint;
+  let formGuideData: BackendFormGuide[] = [];
   let formId = -1;
   let isMainEntrancePublished = false;
 
@@ -495,12 +500,19 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         const accessibilityPlaceResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_PLACES}?format=json`, {
           headers: new Headers({ Authorization: getTokenHash() }),
         });
+        const formGuideResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_FORM_GUIDE}`, {
+          headers: new Headers({ Authorization: getTokenHash() }),
+        });
 
         questionsData = await (questionsResp.json() as Promise<BackendQuestion[]>);
         questionChoicesData = await (questionChoicesResp.json() as Promise<BackendQuestionChoice[]>);
         questionBlocksData = await (questionBlocksResp.json() as Promise<BackendQuestionBlock[]>);
         questionBlockFieldData = await (questionBlockFieldResp.json() as Promise<BackendQuestionBlockField[]>);
         accessibilityPlaceData = await (accessibilityPlaceResp.json() as Promise<BackendPlace[]>);
+        const allFormGuideData = await (formGuideResp.json() as Promise<BackendFormGuide[]>);
+        if (allFormGuideData.length > 0) {
+          formGuideData = allFormGuideData.filter((g) => g.form_id === formId);
+        }
       }
 
       if (params.entranceId !== undefined) {
@@ -595,6 +607,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       entrancePlaceData = [];
       questionBlockCommentData = [];
       servicepointData = {} as BackendServicepoint;
+      formGuideData = [];
     }
   }
   return {
@@ -611,6 +624,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       entrancePlaceData,
       questionBlockCommentData,
       servicepointData,
+      formGuideData,
       formId,
       isMainEntrancePublished,
     },

@@ -8,6 +8,7 @@ import {
   BackendEntranceField,
   BackendEntrancePlace,
   BackendEntranceSentence,
+  BackendFormGuide,
   BackendPlace,
   BackendQuestion,
   BackendQuestionBlock,
@@ -107,6 +108,10 @@ export interface QuestionFormCtrlButtonsProps {
   questionsData: BackendQuestion[];
   questionChoicesData: BackendQuestionChoice[];
   formId: number;
+}
+
+export interface QuestionFormGuideProps {
+  formGuideData: BackendFormGuide[];
 }
 
 export interface QuestionsListProps {
@@ -291,6 +296,7 @@ export interface EntranceFormProps {
   servicepointData: BackendServicepoint;
   questionAnswerData: BackendEntranceAnswer[];
   questionExtraAnswerData: BackendEntranceField[];
+  formGuideData: BackendFormGuide[];
   formId: number;
   isMainEntrancePublished: boolean;
 }

@@ -250,8 +250,6 @@ export interface BackendForm {
   language_id: number;
   text?: string;
   description?: string;
-  guide_title?: string;
-  guide_url?: string;
 }
 
 // BackendQuestion - use in accessibility form page
@@ -269,6 +267,8 @@ export interface BackendQuestion {
   description?: string;
   photo_url?: string;
   photo_text?: string;
+  guide_title?: string; // 0.8
+  guide_url?: string; // 0.8
   yes_no_question?: string;
   // can_add_location?: string;
   // can_add_photo_max_count?: number;
@@ -299,6 +299,8 @@ export interface BackendQuestionBlock {
   show_details_in_titlebar?: string; // v0.4
   add_comment_possible?: string; // v0.6
   put_fields_before_questions?: string; // 0.7
+  guide_title?: string; // 0.9
+  guide_url?: string; // 0.9
 }
 
 // BackendQuestionBlockField - use in accessibility form page
@@ -335,4 +337,16 @@ export interface BackendPlace {
   name?: string;
   description?: string;
   can_add_location?: string;
+}
+
+// BackendFormGuide - use in accessibility form page - v0.9
+export interface BackendFormGuide {
+  technical_id: string;
+  form_id: number;
+  language_id: number;
+  guide_id: number;
+  guide_icon?: string;
+  description?: string;
+  guide_title?: string;
+  guide_url?: string;
 }
