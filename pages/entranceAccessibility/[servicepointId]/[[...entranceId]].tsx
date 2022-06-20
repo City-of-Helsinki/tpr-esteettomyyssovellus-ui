@@ -103,6 +103,7 @@ const EntranceAccessibility = ({
 
   const hasData = Object.keys(servicepointData).length > 0;
   const isExistingEntrance = hasData && Object.keys(entranceData).length > 0;
+  const isInvalid = curInvalidBlocks.length > 0;
 
   const initReduxData = () => {
     // Update servicepointId and entranceId in redux state
@@ -321,6 +322,26 @@ const EntranceAccessibility = ({
         })
       : null;
 
+  // Determine which blocks are invalid for the validation summary, if any
+  const invalidBlockIds =
+    visibleBlocks?.reduce((acc: Validation[], elem) => {
+      if (elem !== null) {
+        const { id: blockFieldId, number: blockId, text: blockText } = elem.props;
+
+        return curInvalidBlocks.includes(blockId)
+          ? [
+              ...acc,
+              {
+                valid: false,
+                fieldId: blockFieldId,
+                fieldLabel: blockText,
+              },
+            ]
+          : acc;
+      }
+      return acc;
+    }, []) ?? [];
+
   // const formSubmitted = useAppSelector((state) => state.formReducer.formSubmitted);
 
   const entranceName = entranceData ? entranceData[`name_${curLocale}`] : "";
@@ -374,6 +395,8 @@ const EntranceAccessibility = ({
               <h1>{servicepointData.servicepoint_name}</h1>
               <h2>{header}</h2>
             </div>
+
+            <div className={styles.mainbuttons}>{isInvalid && <ValidationSummary pageValid={!isInvalid} validationSummary={invalidBlockIds} />}</div>
 
             <div>
               {visibleBlocks}
