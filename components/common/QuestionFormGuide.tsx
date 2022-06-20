@@ -1,7 +1,7 @@
 import { useI18n } from "next-localization";
 import { IconClock, IconPenLine, IconPersonWheelchair, Link as HdsLink } from "hds-react";
-import { LanguageLocales } from "../types/constants";
-import { QuestionFormGuideProps } from "../types/general";
+import { LanguageLocales } from "../../types/constants";
+import { QuestionFormGuideProps } from "../../types/general";
 import styles from "./QuestionFormGuide.module.scss";
 
 // usage: Question form help guide at top of page

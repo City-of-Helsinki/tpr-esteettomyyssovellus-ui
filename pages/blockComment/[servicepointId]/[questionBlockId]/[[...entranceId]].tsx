@@ -4,17 +4,23 @@ import { useI18n } from "next-localization";
 import Head from "next/head";
 import { IconCrossCircle, IconQuestionCircle } from "hds-react";
 import Layout from "../../../../components/common/Layout";
+import LoadSpinner from "../../../../components/common/LoadSpinner";
 import ValidationSummary from "../../../../components/common/ValidationSummary";
 import QuestionInfo from "../../../../components/QuestionInfo";
-import ServicepointMainInfoContent from "../../../../components/ServicepointMainInfoContent";
 import PathTreeComponent from "../../../../components/PathTreeComponent";
 import AdditionalComment from "../../../../components/AdditionalComment";
 import AdditionalCommentCtrlButtons from "../../../../components/AdditionalCommentCtrlButtons";
-import LoadSpinner from "../../../../components/common/LoadSpinner";
+import QuestionFormGuide from "../../../../components/common/QuestionFormGuide";
 import { useAppSelector, useLoading } from "../../../../state/hooks";
 import { formatAddress, getTokenHash } from "../../../../utils/utilFunctions";
-import { API_FETCH_BACKEND_ENTRANCE, API_FETCH_BACKEND_SERVICEPOINT, API_FETCH_ENTRANCES, API_URL_BASE } from "../../../../types/constants";
-import { BackendEntrance, BackendServicepoint, Entrance, EntranceResults } from "../../../../types/backendModels";
+import {
+  API_FETCH_BACKEND_ENTRANCE,
+  API_FETCH_BACKEND_FORM_GUIDE,
+  API_FETCH_BACKEND_SERVICEPOINT,
+  API_FETCH_ENTRANCES,
+  API_URL_BASE,
+} from "../../../../types/constants";
+import { BackendEntrance, BackendFormGuide, BackendServicepoint, Entrance, EntranceResults } from "../../../../types/backendModels";
 import { EntranceQuestionBlockCommentProps } from "../../../../types/general";
 import i18nLoader from "../../../../utils/i18n";
 import styles from "./blockComment.module.scss";
@@ -24,6 +30,7 @@ const EntranceQuestionBlockComment = ({
   servicepointData,
   entranceData,
   questionBlockId,
+  formGuideData,
   formId,
 }: EntranceQuestionBlockCommentProps): ReactElement => {
   const i18n = useI18n();
@@ -96,7 +103,7 @@ const EntranceQuestionBlockComment = ({
                 closeIcon={<IconCrossCircle />}
                 textOnBottom
               >
-                <ServicepointMainInfoContent />
+                <QuestionFormGuide formGuideData={formGuideData} />
               </QuestionInfo>
             </div>
 
@@ -138,6 +145,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   let servicepointData: BackendServicepoint = {} as BackendServicepoint;
   let entranceData: BackendEntrance = {} as BackendEntrance;
   let questionBlockId = -1;
+  let formGuideData: BackendFormGuide[] = [];
   let formId = -1;
 
   if (params !== undefined) {
@@ -209,11 +217,20 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
           }
         }
       }
+
+      // Get the guide text using the form id for this entrance
+      if (formId >= 0) {
+        const formGuideResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_FORM_GUIDE}?form_id=${formId}`, {
+          headers: new Headers({ Authorization: getTokenHash() }),
+        });
+        formGuideData = await (formGuideResp.json() as Promise<BackendFormGuide[]>);
+      }
     } catch (err) {
       console.error("Error", err);
 
       servicepointData = {} as BackendServicepoint;
       entranceData = {} as BackendEntrance;
+      formGuideData = [];
     }
   }
 
@@ -223,6 +240,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       servicepointData,
       entranceData,
       questionBlockId,
+      formGuideData,
       formId,
     },
   };

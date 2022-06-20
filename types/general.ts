@@ -386,6 +386,7 @@ export interface DetailsProps {
   entranceData: EntranceData;
   entrancePlaceData: EntrancePlaceData;
   entranceChoiceData: EntranceChoiceData;
+  formGuideData: BackendFormGuide[];
   isMainEntrancePublished: boolean;
 }
 
@@ -399,12 +400,15 @@ export interface PreviewProps {
   entranceChoiceData: BackendEntranceChoice[];
   questionAnswerData: BackendEntranceAnswer[];
   questionExtraAnswerData: BackendEntranceField[];
+  formGuideData: BackendFormGuide[];
+  formId: number;
   isMainEntrancePublished: boolean;
 }
 
 export interface EntranceLocationPhotoProps {
   servicepointData: BackendServicepoint;
   entranceData: BackendEntrance;
+  formGuideData: BackendFormGuide[];
   formId: number;
 }
 
@@ -424,6 +428,7 @@ export interface AccessibilityPlaceProps {
   servicepointData: BackendServicepoint;
   entranceData: BackendEntrance;
   accessibilityPlaceData: BackendPlace[];
+  formGuideData: BackendFormGuide[];
   formId: number;
 }
 
@@ -454,6 +459,7 @@ export interface EntranceQuestionBlockCommentProps {
   servicepointData: BackendServicepoint;
   entranceData: BackendEntrance;
   questionBlockId: number;
+  formGuideData: BackendFormGuide[];
   formId: number;
 }
 

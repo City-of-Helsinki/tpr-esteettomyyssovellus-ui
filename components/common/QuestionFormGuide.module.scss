@@ -1,5 +1,5 @@
 @import "~hds-design-tokens/lib/all.scss";
-@import "../styles/mixins.scss";
+@import "../../styles/mixins.scss";
 
 .maincontainer {
   display: flex;
@@ -27,9 +27,7 @@
       padding: $spacing-s 0;
     }
 
-    p {
-      padding: $spacing-s 0;
-    }
+    /*
     a {
       display: flex;
       flex-direction: row;
@@ -39,6 +37,7 @@
         transform: scale(0.6);
       }
     }
+    */
     svg {
       color: $color-bus;
     }

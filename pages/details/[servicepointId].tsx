@@ -4,23 +4,23 @@ import Head from "next/head";
 import { GetServerSideProps } from "next";
 import { IconCrossCircle, IconQuestionCircle, StatusLabel } from "hds-react";
 import Layout from "../../components/common/Layout";
-import i18nLoader from "../../utils/i18n";
+import LoadSpinner from "../../components/common/LoadSpinner";
+import PathTreeComponent from "../../components/PathTreeComponent";
+import QuestionFormGuide from "../../components/common/QuestionFormGuide";
+import QuestionInfo from "../../components/QuestionInfo";
 import SummarySideNavigation from "../../components/SummarySideNavigation";
 import ServicepointLandingSummaryContact from "../../components/ServicepointLandingSummaryContact";
 import ServicepointLandingSummaryNewButton from "../../components/ServicepointLandingSummaryNewButton";
 import ServicepointLandingSummaryModifyButton from "../../components/ServicepointLandingSummaryModifyButton";
-import styles from "./details.module.scss";
-import QuestionInfo from "../../components/QuestionInfo";
-import ServicepointMainInfoContent from "../../components/ServicepointMainInfoContent";
-import PathTreeComponent from "../../components/PathTreeComponent";
 import { useAppDispatch, useAppSelector, useLoading } from "../../state/hooks";
 import { setServicepointId } from "../../state/reducers/formSlice";
-import { convertCoordinates, filterByLanguage, formatAddress, getFinnishDate, getTokenHash } from "../../utils/utilFunctions";
 import { setServicepointLocationEuref, setServicepointLocationWGS84 } from "../../state/reducers/generalSlice";
+import { persistor } from "../../state/store";
 import {
   API_FETCH_BACKEND_ENTRANCE,
   API_FETCH_BACKEND_ENTRANCE_CHOICES,
   API_FETCH_BACKEND_ENTRANCE_PLACES,
+  API_FETCH_BACKEND_FORM_GUIDE,
   API_FETCH_BACKEND_PLACES,
   API_FETCH_BACKEND_SENTENCES,
   API_FETCH_BACKEND_SERVICEPOINT,
@@ -28,18 +28,20 @@ import {
   API_URL_BASE,
   LanguageLocales,
 } from "../../types/constants";
-import LoadSpinner from "../../components/common/LoadSpinner";
-import { persistor } from "../../state/store";
 import {
   BackendEntrance,
   BackendEntranceChoice,
   BackendEntrancePlace,
   BackendEntranceSentence,
+  BackendFormGuide,
   BackendPlace,
   BackendServicepoint,
   EntranceResults,
 } from "../../types/backendModels";
 import { AccessibilityData, DetailsProps, EntranceChoiceData, EntranceData, EntrancePlaceData } from "../../types/general";
+import i18nLoader from "../../utils/i18n";
+import { convertCoordinates, filterByLanguage, formatAddress, getFinnishDate, getTokenHash } from "../../utils/utilFunctions";
+import styles from "./details.module.scss";
 
 // usage: the details / landing page of servicepoint
 const Details = ({
@@ -49,6 +51,7 @@ const Details = ({
   entranceData,
   entrancePlaceData,
   entranceChoiceData,
+  formGuideData,
   isMainEntrancePublished,
 }: DetailsProps): ReactElement => {
   const i18n = useI18n();
@@ -140,7 +143,7 @@ const Details = ({
                 closeIcon={<IconCrossCircle />}
                 textOnBottom
               >
-                <ServicepointMainInfoContent />
+                <QuestionFormGuide formGuideData={formGuideData} />
               </QuestionInfo>
             </div>
 
@@ -219,6 +222,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   let entrancePlaceData: EntrancePlaceData = {};
   let servicepointData: BackendServicepoint = {} as BackendServicepoint;
   let entranceChoiceData: EntranceChoiceData = {};
+  let formGuideData: BackendFormGuide[] = [];
   let isMainEntrancePublished = false;
 
   if (params !== undefined) {
@@ -359,6 +363,12 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         const entrance = entranceData[answerData.entranceKey];
         return { ...acc, [answerData.entranceKey]: answerData.allEntranceChoiceData.filter((a) => a.log_id === entrance.log_id) };
       }, {});
+
+      // Get the guide text using the main entrance form id 0 for the details page
+      const formGuideResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_FORM_GUIDE}?form_id=0`, {
+        headers: new Headers({ Authorization: getTokenHash() }),
+      });
+      formGuideData = await (formGuideResp.json() as Promise<BackendFormGuide[]>);
     } catch (err) {
       console.error("Error", err);
 
@@ -368,6 +378,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       entranceData = {};
       entrancePlaceData = {};
       entranceChoiceData = {};
+      formGuideData = [];
     }
   }
 
@@ -380,6 +391,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       entranceData,
       entrancePlaceData,
       entranceChoiceData,
+      formGuideData,
       isMainEntrancePublished,
     },
   };

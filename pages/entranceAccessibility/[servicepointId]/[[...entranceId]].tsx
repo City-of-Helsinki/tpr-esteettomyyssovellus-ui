@@ -10,7 +10,7 @@ import HeadlineQuestionContainer from "../../../components/HeadlineQuestionConta
 import PathTreeComponent from "../../../components/PathTreeComponent";
 import QuestionBlock from "../../../components/QuestionBlock";
 import QuestionFormCtrlButtons from "../../../components/QuestionFormCtrlButtons";
-import QuestionFormGuide from "../../../components/QuestionFormGuide";
+import QuestionFormGuide from "../../../components/common/QuestionFormGuide";
 import QuestionInfo from "../../../components/QuestionInfo";
 import { useAppSelector, useAppDispatch, useLoading } from "../../../state/hooks";
 import { setEntranceLocationPhoto, setEntrancePlaceBoxes, setQuestionBlockComments } from "../../../state/reducers/additionalInfoSlice";
@@ -500,7 +500,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         const accessibilityPlaceResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_PLACES}?format=json`, {
           headers: new Headers({ Authorization: getTokenHash() }),
         });
-        const formGuideResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_FORM_GUIDE}`, {
+        const formGuideResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_FORM_GUIDE}?form_id=${formId}`, {
           headers: new Headers({ Authorization: getTokenHash() }),
         });
 
@@ -509,10 +509,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         questionBlocksData = await (questionBlocksResp.json() as Promise<BackendQuestionBlock[]>);
         questionBlockFieldData = await (questionBlockFieldResp.json() as Promise<BackendQuestionBlockField[]>);
         accessibilityPlaceData = await (accessibilityPlaceResp.json() as Promise<BackendPlace[]>);
-        const allFormGuideData = await (formGuideResp.json() as Promise<BackendFormGuide[]>);
-        if (allFormGuideData.length > 0) {
-          formGuideData = allFormGuideData.filter((g) => g.form_id === formId);
-        }
+        formGuideData = await (formGuideResp.json() as Promise<BackendFormGuide[]>);
       }
 
       if (params.entranceId !== undefined) {
