@@ -11,6 +11,7 @@ import {
   setEntrancePlaceValid,
 } from "../state/reducers/additionalInfoSlice";
 import { AccessibilityPlaceCtrlButtonsProps, EntrancePlaceBox } from "../types/general";
+import { isLocationValid } from "../utils/utilFunctions";
 import styles from "./AccessibilityPlaceCtrlButtons.module.scss";
 
 // usage: save and return without saving buttons in additionalinfo page
@@ -37,6 +38,19 @@ const AccessibilityPlaceCtrlButtons = ({ placeId, entrancePlaceBoxes }: Accessib
         invalidFieldLabel,
       })
     );
+  };
+
+  const hasData = () => {
+    const pictures = entrancePlaceBoxes.filter((box) => {
+      return box.modifiedBox.photo_url || box.modifiedPhotoBase64;
+    });
+
+    const locations = entrancePlaceBoxes.filter((box) => {
+      const coordinatesEuref = [box.modifiedBox.loc_easting ?? 0, box.modifiedBox.loc_northing ?? 0] as [number, number];
+      return isLocationValid(coordinatesEuref);
+    });
+
+    return pictures.length > 0 || locations.length > 0;
   };
 
   const validateForm = () => {
@@ -138,9 +152,15 @@ const AccessibilityPlaceCtrlButtons = ({ placeId, entrancePlaceBoxes }: Accessib
 
   return (
     <div className={styles.maincontainer}>
-      <QuestionButton variant="secondary" iconLeft={<IconArrowLeft />} onClickHandler={handleSaveAndReturn}>
-        {i18n.t("common.buttons.saveAndReturn")}
-      </QuestionButton>
+      {hasData() ? (
+        <QuestionButton variant="secondary" iconLeft={<IconArrowLeft />} onClickHandler={handleSaveAndReturn}>
+          {i18n.t("common.buttons.saveAndReturn")}
+        </QuestionButton>
+      ) : (
+        <QuestionButton variant="secondary" iconLeft={<IconArrowLeft />} onClickHandler={handleReturnNoSave}>
+          {i18n.t("common.buttons.return")}
+        </QuestionButton>
+      )}
       <span className={styles.noborderbutton}>
         <QuestionButton variant="secondary" onClickHandler={() => handleReturnNoSave()}>
           {i18n.t("common.buttons.returnNoSave")}

@@ -46,9 +46,10 @@
     "generalExplanation": "Förklaring",
     "buttons": {
       "saveAndReturn": "Spara och returnera",
+      "return": "Returnera",
       "returnNoSave": "Avsluta utan att spara",
       "deleteAdditionalInfo": "Ta bort ytterligare information",
-      "deleteAdditionalInfoSets": "Ta bort alla ytterligare datamängder"
+      "deleteAdditionalInfoSets": "Radera allt"
     },
     "message": {
       "validationFailed": {
@@ -186,7 +187,7 @@
     "fillPlaceData2": "information med bilder och/eller platsinformation.",
     "orderPlaceData": "Ordna informationen med det viktigaste överst och minst viktigt längst ner.",
     "additionalInfoSet": "Ytterligare informationsuppsättning",
-    "addAdditionalInfoSet": "Lägg till en ny uppsättning ytterligare data",
+    "addAdditionalInfoSet": "Lägg ny",
     "order": "Ordna",
     "pictureTitle": "Bild",
     "locationTitle": "Plats på kartan"
