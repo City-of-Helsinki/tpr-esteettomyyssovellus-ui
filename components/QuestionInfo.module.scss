@@ -6,12 +6,7 @@
   cursor: pointer;
   display: flex;
   align-items: center;
-
-  &.closed {
-    @include media(xs, s) {
-      padding-bottom: $spacing-s;
-    }
-  }
+  margin-bottom: $spacing-s;
 
   svg {
     padding-right: $spacing-2-xs;

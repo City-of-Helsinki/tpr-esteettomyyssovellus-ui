@@ -18,6 +18,7 @@ import { setAnswers, setEntranceId, setExtraAnswers, setServicepointId, setStart
 import { setServicepointLocationEuref, setServicepointLocationWGS84 } from "../../../state/reducers/generalSlice";
 // import { persistor } from "../../../state/store";
 import {
+  BackendCopyableEntrance,
   BackendEntrance,
   BackendEntranceAnswer,
   BackendEntranceField,
@@ -49,6 +50,7 @@ import {
   API_FETCH_BACKEND_ENTRANCE_PLACES,
   API_FETCH_QUESTION_BLOCK_COMMENT,
   API_FETCH_BACKEND_FORM_GUIDE,
+  API_FETCH_COPYABLE_ENTRANCE,
 } from "../../../types/constants";
 import { BlockComment, EntranceFormProps, KeyValueNumber, KeyValueString, QuestionBlockComment, Validation } from "../../../types/general";
 import i18nLoader from "../../../utils/i18n";
@@ -67,6 +69,7 @@ const EntranceAccessibility = ({
   entranceData,
   entrancePlaceData,
   questionBlockCommentData,
+  copyableEntranceData,
   servicepointData,
   formGuideData,
   formId,
@@ -301,6 +304,10 @@ const EntranceAccessibility = ({
             ? questionChoicesData.filter((choice) => choice.question_block_id === block.question_block_id && choice.language_id === curLocaleId)
             : undefined;
 
+          const blockCopyableEntrances = isVisible
+            ? copyableEntranceData.filter((copy) => copy.question_block_id === block.question_block_id)
+            : undefined;
+
           return isVisible && blockQuestions && blockAnswerChoices && block.question_block_id !== undefined ? (
             <HeadlineQuestionContainer
               key={block.question_block_id}
@@ -316,6 +323,7 @@ const EntranceAccessibility = ({
                 answerChoices={blockAnswerChoices}
                 extraFields={blockExtraFields}
                 accessibilityPlaces={filteredPlaces}
+                copyableEntrances={blockCopyableEntrances}
               />
             </HeadlineQuestionContainer>
           ) : null;
@@ -435,6 +443,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   let entranceData: BackendEntrance = {} as BackendEntrance;
   let entrancePlaceData: BackendEntrancePlace[] = [];
   let questionBlockCommentData: QuestionBlockAnswerCmt[] = [];
+  let copyableEntranceData: BackendCopyableEntrance[] = [];
   let servicepointData: BackendServicepoint = {} as BackendServicepoint;
   let formGuideData: BackendFormGuide[] = [];
   let formId = -1;
@@ -612,6 +621,12 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
 
           questionBlockCommentData = allQuestionBlockCommentData.filter((a) => a.log_id === maxLogId);
         }
+
+        // Get the copyable entrance data, used in question blocks
+        const copyableEntranceDataResp = await fetch(`${API_URL_BASE}${API_FETCH_COPYABLE_ENTRANCE}?entrance_id=${params.entranceId}&format=json`, {
+          headers: new Headers({ Authorization: getTokenHash() }),
+        });
+        copyableEntranceData = await (copyableEntranceDataResp.json() as Promise<BackendCopyableEntrance[]>);
       }
     } catch (e) {
       console.error("Error", e);
@@ -626,6 +641,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       entranceData = {} as BackendEntrance;
       entrancePlaceData = [];
       questionBlockCommentData = [];
+      copyableEntranceData = [];
       servicepointData = {} as BackendServicepoint;
       formGuideData = [];
     }
@@ -643,6 +659,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       entranceData,
       entrancePlaceData,
       questionBlockCommentData,
+      copyableEntranceData,
       servicepointData,
       formGuideData,
       formId,

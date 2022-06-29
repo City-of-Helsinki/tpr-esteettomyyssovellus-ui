@@ -2,6 +2,7 @@
 
 import { Dispatch, SetStateAction } from "react";
 import {
+  BackendCopyableEntrance,
   BackendEntrance,
   BackendEntranceAnswer,
   BackendEntranceChoice,
@@ -293,6 +294,7 @@ export interface EntranceFormProps {
   entranceData: BackendEntrance;
   entrancePlaceData: BackendEntrancePlace[];
   questionBlockCommentData: QuestionBlockAnswerCmt[];
+  copyableEntranceData: BackendCopyableEntrance[];
   servicepointData: BackendServicepoint;
   questionAnswerData: BackendEntranceAnswer[];
   questionExtraAnswerData: BackendEntranceField[];
@@ -307,6 +309,7 @@ export interface QuestionBlockProps {
   answerChoices?: BackendQuestionChoice[];
   extraFields?: BackendQuestionBlockField[];
   accessibilityPlaces: BackendPlace[];
+  copyableEntrances?: BackendCopyableEntrance[];
 }
 
 export interface PathTreeProps {
@@ -361,6 +364,11 @@ export interface QuestionBlockLocationPhotoProps {
 
 export interface QuestionBlockCommentProps {
   block: BackendQuestionBlock;
+}
+
+export interface QuestionBlockImportProps {
+  block: BackendQuestionBlock;
+  copyableEntrances: BackendCopyableEntrance[];
 }
 
 export interface EntranceData {

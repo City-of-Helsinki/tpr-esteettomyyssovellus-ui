@@ -5,7 +5,7 @@ import TextWithLinks from "./common/TextWithLinks";
 import QuestionBlockComment from "./QuestionBlockComment";
 import QuestionBlockExtraFieldList from "./QuestionBlockExtraFieldList";
 import QuestionBlockLocationPhoto from "./QuestionBlockLocationPhoto";
-import QuestionFormImportExistingData from "./QuestionFormImportExistingData";
+import QuestionBlockImportExistingData from "./QuestionBlockImportExistingData";
 import QuestionInfo from "./QuestionInfo";
 import QuestionsList from "./QuestionsList";
 import { QuestionBlockProps } from "../types/general";
@@ -15,7 +15,7 @@ import styles from "./QuestionBlock.module.scss";
 
 // usage: in form groups up all questions under a single "question block" / accordion
 // notes: used under headlineQuestionContainer in main form
-const QuestionBlock = ({ block, questions, answerChoices, extraFields, accessibilityPlaces }: QuestionBlockProps): JSX.Element => {
+const QuestionBlock = ({ block, questions, answerChoices, extraFields, accessibilityPlaces, copyableEntrances }: QuestionBlockProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
   // const isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
@@ -101,9 +101,11 @@ const QuestionBlock = ({ block, questions, answerChoices, extraFields, accessibi
             </QuestionInfo>
           )}
 
-          <div className={styles.importAddinfoContainer}>
-            <QuestionFormImportExistingData />
-          </div>
+          {copyableEntrances && copyableEntrances.length > 0 && (
+            <div className={styles.importAddinfoContainer}>
+              <QuestionBlockImportExistingData block={block} copyableEntrances={copyableEntrances} />
+            </div>
+          )}
         </div>
       ) : (
         <div>

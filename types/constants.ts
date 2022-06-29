@@ -33,6 +33,7 @@ export const API_FETCH_BACKEND_ENTRANCE_ANSWERS = "api/ArBackendEntranceAnswer/"
 export const API_FETCH_BACKEND_ENTRANCE_FIELD = "api/ArBackendEntranceField/";
 export const API_FETCH_QUESTION_BLOCK_ANSWER_FIELD = "api/ArXQuestionBlockAnswerField/";
 export const API_FETCH_QUESTION_BLOCK_COMMENT = "api/ArXQuestionBlockAnswerCmt/";
+export const API_FETCH_COPYABLE_ENTRANCE = "api/ArBackendCopyableEntrance/";
 export const API_FETCH_BACKEND_QUESTIONS = "api/ArBackendQuestions/";
 export const API_FETCH_BACKEND_ENTRANCE_CHOICES = "api/ArBackendEntranceChoice/";
 export const API_FETCH_BACKEND_SENTENCES = "api/ArBackendEntranceSentence/";

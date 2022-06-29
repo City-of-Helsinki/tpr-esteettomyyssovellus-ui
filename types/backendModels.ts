@@ -145,6 +145,7 @@ export interface BackendEntrance {
 
 // BackendCopyableEntrance - use in accessibility form page
 export interface BackendCopyableEntrance {
+  technical_id: string;
   entrance_id: number;
   question_block_id: number;
   copyable_entrance_id: number;
