@@ -545,6 +545,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       }
 
       if (params.entranceId !== undefined) {
+        // Get the question answer data for the entrance
         const allQuestionAnswersResp = await fetch(
           `${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE_ANSWERS}?entrance_id=${params.entranceId}&format=json`,
           {
@@ -563,6 +564,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
           questionAnswerData = allQuestionAnswerData.filter((a) => a.log_id === maxLogId);
         }
 
+        // Get the extra field data for the entrance
         const allQuestionExtraAnswersResp = await fetch(
           `${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE_FIELD}?entrance_id=${params.entranceId}&format=json`,
           {
