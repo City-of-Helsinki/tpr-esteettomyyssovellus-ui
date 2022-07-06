@@ -208,7 +208,10 @@
     "placeLink": "Lisää kuva ja/tai sijainti",
     "pictures": "Kuvat",
     "locations": "Sijainnit",
-    "editLocationPhoto": "Muokkaa",
+    "addLocation": "Lisää sisäänkäynnin sijainti",
+    "addPhoto": "Lisää sisäänkäynnin kuva",
+    "editLocation": "Muokkaa sisäänkäynnin sijaintia",
+    "editPhoto": "Muokkaa sisäänkäynnin kuvaa",
     "addComment": "Anna lisätietoja",
     "editComment": "Muokkaa tietoja",
     "additionalInfo": "Lisätiedot"

@@ -208,7 +208,10 @@
     "placeLink": "Lägg till ett bild och/eller plats",
     "pictures": "Bilder",
     "locations": "Platser",
-    "editLocationPhoto": "Redigera",
+    "addLocation": "Lägg till entréplats",
+    "addPhoto": "Lägg till entréfoto",
+    "editLocation": "Redigera entréplats",
+    "editPhoto": "Redigera entréfoto",
     "addComment": "Ge mer information",
     "editComment": "Redigera information",
     "additionalInfo": "Ytterligare information"

@@ -208,7 +208,10 @@
     "placeLink": "Add a picture and/or location",
     "pictures": "Pictures",
     "locations": "Locations",
-    "editLocationPhoto": "Edit",
+    "addLocation": "Add entrance location",
+    "addPhoto": "Add entrance photo",
+    "editLocation": "Edit entrance location",
+    "editPhoto": "Edit entrance photo",
     "addComment": "Provide more information",
     "editComment": "Edit information",
     "additionalInfo": "Additional information"
