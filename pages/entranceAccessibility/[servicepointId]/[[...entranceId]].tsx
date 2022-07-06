@@ -1,6 +1,7 @@
 import React, { ReactElement, useEffect } from "react";
 import { useI18n } from "next-localization";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
 import { IconCrossCircle, IconQuestionCircle } from "hds-react";
 import Layout from "../../../components/common/Layout";
@@ -78,6 +79,7 @@ const EntranceAccessibility = ({
   const i18n = useI18n();
   const curLocale: string = i18n.locale();
   const dispatch = useAppDispatch();
+  const router = useRouter();
   const curLocaleId: number = LanguageLocales[curLocale as keyof typeof LanguageLocales];
   const isLoading = useLoading();
 
@@ -107,6 +109,10 @@ const EntranceAccessibility = ({
   const hasData = Object.keys(servicepointData).length > 0;
   const isExistingEntrance = hasData && Object.keys(entranceData).length > 0;
   const isInvalid = curInvalidBlocks.length > 0;
+
+  // Get the question block id hash if added to the url, for example "#questionblockid-1"
+  const { asPath } = router;
+  const pathHash = asPath.indexOf("#") > 0 ? asPath.split("#")[1] : undefined;
 
   const initReduxData = () => {
     // Update servicepointId and entranceId in redux state
@@ -201,11 +207,12 @@ const EntranceAccessibility = ({
       dispatch(
         setEntrancePlaceBoxes(
           entrancePlaceData.map((place) => {
-            const { entrance_id, place_id, order_number } = place;
+            const { entrance_id, question_block_id, place_id, order_number } = place;
 
             // Try to make sure the order number is 1 or higher
             return {
               entrance_id: entrance_id,
+              question_block_id: question_block_id,
               place_id: place_id,
               order_number: order_number && order_number > 0 ? order_number : 1,
               existingBox: place,
@@ -314,6 +321,7 @@ const EntranceAccessibility = ({
               number={block.question_block_id}
               text={`${block.question_block_code} ${block.text}`}
               id={`questionblockid-${block.question_block_id}`}
+              initOpen={pathHash === `questionblockid-${block.question_block_id}`}
               isValid={!curInvalidBlocks.includes(block.question_block_id)}
             >
               <QuestionBlock

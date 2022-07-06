@@ -125,11 +125,24 @@ const AccessibilityPlaceCtrlButtons = ({ placeId, entrancePlaceBoxes }: Accessib
     });
   }, [pageSaved, revertPlace, router]);
 
+  const getPathHash = () => {
+    // Try to get the question block id for returning to the block via the path hash
+    // Note: this is not available for a new entrance place box
+    const savedBox = entrancePlaceBoxes.find((box) => {
+      return box.question_block_id > 0;
+    });
+    return savedBox ? `#questionblockid-${savedBox.question_block_id}` : "";
+  };
+
   // don't alter already saved state, set pageSaved to true
   const handleSaveAndReturn = () => {
     if (validateForm()) {
       setPageSaved(true);
-      const url = curEntranceId > 0 ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}` : `/entranceAccessibility/${curServicepointId}`;
+
+      const url =
+        curEntranceId > 0
+          ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}${getPathHash()}`
+          : `/entranceAccessibility/${curServicepointId}${getPathHash()}`;
       router.push(url);
     }
   };
@@ -137,7 +150,10 @@ const AccessibilityPlaceCtrlButtons = ({ placeId, entrancePlaceBoxes }: Accessib
   // handle user clicked return no save button
   const handleReturnNoSave = () => {
     revertPlace();
-    const url = curEntranceId > 0 ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}` : `/entranceAccessibility/${curServicepointId}`;
+    const url =
+      curEntranceId > 0
+        ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}${getPathHash()}`
+        : `/entranceAccessibility/${curServicepointId}${getPathHash()}`;
     router.push(url);
   };
 

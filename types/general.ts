@@ -238,6 +238,7 @@ export interface EntranceLocationPhoto {
 
 export interface EntrancePlaceBox {
   entrance_id: number;
+  question_block_id: number;
   place_id: number;
   order_number: number;
   existingBox?: BackendEntrancePlace;

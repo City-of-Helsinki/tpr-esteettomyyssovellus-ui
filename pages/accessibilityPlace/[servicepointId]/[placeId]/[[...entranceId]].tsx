@@ -102,6 +102,7 @@ const AccessibilityPlace = ({
     if (filteredEntrancePlaceBoxes.length === 0) {
       const newBox: EntrancePlaceBox = {
         entrance_id: curEntranceId,
+        question_block_id: -1,
         place_id: filteredPlaceData.place_id,
         order_number: 1,
         modifiedBox: {} as BackendEntrancePlace,

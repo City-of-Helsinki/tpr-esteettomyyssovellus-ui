@@ -213,6 +213,8 @@ export interface BackendEntrancePlace {
   log_id: number;
   entrance_id: number;
   form_submitted?: string;
+  question_block_id: number; // v0.8
+  sentence_group_id?: number;
   place_id: number;
   box_id?: number;
   order_number?: number;

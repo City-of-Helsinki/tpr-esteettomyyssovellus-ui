@@ -17,6 +17,7 @@ const AccessibilityPlaceNewButton = ({ accessibilityPlaceData, orderNumber }: Ac
   const handleAddPlaceData = () => {
     const newBox: EntrancePlaceBox = {
       entrance_id: curEntranceId,
+      question_block_id: -1,
       place_id: accessibilityPlaceData.place_id,
       order_number: orderNumber,
       modifiedBox: {} as BackendEntrancePlace,

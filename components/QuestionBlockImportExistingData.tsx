@@ -122,6 +122,7 @@ const QuestionBlockImportExistingData = ({ block, copyableEntrances }: QuestionB
           dispatch(
             addEntrancePlaceBox({
               entrance_id: curEntranceId,
+              question_block_id: question_block_id,
               place_id: place_id,
               order_number: order_number && order_number > 0 ? order_number : 1,
               existingBox: copiedPlace,
