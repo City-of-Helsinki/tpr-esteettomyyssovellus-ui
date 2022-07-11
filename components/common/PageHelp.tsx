@@ -1,23 +1,26 @@
 import { useI18n } from "next-localization";
-import { useState } from "react";
 import { IconCrossCircle, IconQuestionCircle } from "hds-react";
 import PathTreeComponent from "./PathTreeComponent";
 import Button from "../QuestionButton";
 import QuestionFormGuide from "./QuestionFormGuide";
+import { useAppDispatch, useAppSelector } from "../../state/hooks";
+import { setHelpOpen } from "../../state/reducers/generalSlice";
 import { PageHelpProps } from "../../types/general";
 import styles from "./PageHelp.module.scss";
 
 // usage: display help at top of page
 const PageHelp = ({ formGuideData, treeItems }: PageHelpProps): JSX.Element => {
   const i18n = useI18n();
+  const dispatch = useAppDispatch();
 
-  const [showContent, setShowContent] = useState(false);
+  const isHelpOpen = useAppSelector((state) => state.generalSlice.isHelpOpen);
+
   const handleToggleContent = () => {
-    setShowContent(!showContent);
+    dispatch(setHelpOpen(!isHelpOpen));
   };
 
-  return !showContent ? (
-    <div className={styles.pageHelp}>
+  return !isHelpOpen ? (
+    <div id="help" className={styles.pageHelp}>
       <div>
         <PathTreeComponent treeItems={treeItems} />
       </div>
@@ -29,7 +32,7 @@ const PageHelp = ({ formGuideData, treeItems }: PageHelpProps): JSX.Element => {
     </div>
   ) : (
     <>
-      <div className={styles.pageHelp}>
+      <div id="help" className={styles.pageHelp}>
         <div>
           <PathTreeComponent treeItems={treeItems} />
         </div>

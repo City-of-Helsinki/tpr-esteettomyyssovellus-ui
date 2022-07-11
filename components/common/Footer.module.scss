@@ -92,11 +92,13 @@
     font-size: initial !important;
   }
 
+  /*
   div > :nth-child(3) {
     @include media(l, xl) {
       padding-bottom: 5rem;
     }
   }
+  */
 
   div {
     fill: $color-bus;
