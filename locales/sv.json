@@ -188,6 +188,7 @@
     "fillPlaceData1": "Du kan slutföra",
     "fillPlaceData2": "information med bilder och/eller platsinformation.",
     "orderPlaceData": "Ordna informationen med det viktigaste överst och minst viktigt längst ner.",
+    "mandatoryPlaceData": "Information markerad med en asterisk (*) är obligatorisk.",
     "additionalInfoSet": "Ytterligare informationsuppsättning",
     "addAdditionalInfoSet": "Lägg ny",
     "order": "Ordna",

@@ -188,6 +188,7 @@
     "fillPlaceData1": "You can complete the",
     "fillPlaceData2": "information with images and/or location information.",
     "orderPlaceData": "Arrange the information with most important at the top and least important at the bottom.",
+    "mandatoryPlaceData": "Information marked with an asterisk (*) is mandatory.",
     "additionalInfoSet": "Additional information set",
     "addAdditionalInfoSet": "Add new",
     "order": "Arrange",

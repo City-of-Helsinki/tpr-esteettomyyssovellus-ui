@@ -149,6 +149,7 @@ const AccessibilityPlace = ({
               <div className={styles.infoText}>
                 <div>{`${i18n.t("additionalInfo.fillPlaceData1")} '${filteredPlaceData.name}' ${i18n.t("additionalInfo.fillPlaceData2")}`}</div>
                 <div>{i18n.t("additionalInfo.orderPlaceData")}</div>
+                <div>{i18n.t("additionalInfo.mandatoryPlaceData")}</div>
               </div>
             </div>
 
