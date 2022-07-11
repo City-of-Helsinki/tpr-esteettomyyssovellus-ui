@@ -58,7 +58,7 @@ import {
   QuestionBlockComment,
 } from "../../../types/general";
 import i18nLoader from "../../../utils/i18n";
-import { filterByLanguage, formatAddress, getCurrentDate, getTokenHash } from "../../../utils/utilFunctions";
+import { filterByLanguage, formatAddress, getCurrentDate, getTokenHash, isLocationValid } from "../../../utils/utilFunctions";
 import styles from "./preview.module.scss";
 
 // usage: the preview page of an entrance, displayed before saving the completed form
@@ -134,7 +134,12 @@ const Preview = ({
     );
 
     // Put the existing entrance location and photo into redux state
-    const entranceLocationPhotoAnswer = questionAnswerData.find((a) => a.question_id === undefined || a.question_id === null);
+    // Get the answer with the location and/or photo data (not comment data, which also has empty question_id)
+    const entranceLocationPhotoAnswer = questionAnswerData.find((a) => {
+      const { loc_easting, loc_northing, photo_url } = a || {};
+      const coordinatesEuref = [loc_easting ?? 0, loc_northing ?? 0] as [number, number];
+      return (a.question_id === undefined || a.question_id === null) && (photo_url || isLocationValid(coordinatesEuref));
+    });
     if (entranceLocationPhotoAnswer) {
       // Use the existing location and/or photo
       dispatch(

@@ -52,7 +52,7 @@ import {
 } from "../../../types/constants";
 import { BlockComment, EntranceFormProps, KeyValueNumber, KeyValueString, QuestionBlockComment, Validation } from "../../../types/general";
 import i18nLoader from "../../../utils/i18n";
-import { getTokenHash, getCurrentDate, formatAddress, convertCoordinates } from "../../../utils/utilFunctions";
+import { getTokenHash, getCurrentDate, formatAddress, convertCoordinates, isLocationValid } from "../../../utils/utilFunctions";
 import styles from "./entranceAccessibility.module.scss";
 
 // usage: the main form / entrance page
@@ -154,7 +154,12 @@ const EntranceAccessibility = ({
         )
       );
 
-      const entranceLocationPhotoAnswer = questionAnswerData.find((a) => a.question_id === undefined || a.question_id === null);
+      // Try to get the answer with the location and/or photo data (not comment data, which also has empty question_id)
+      const entranceLocationPhotoAnswer = questionAnswerData.find((a) => {
+        const { loc_easting, loc_northing, photo_url } = a || {};
+        const coordinatesEuref = [loc_easting ?? 0, loc_northing ?? 0] as [number, number];
+        return (a.question_id === undefined || a.question_id === null) && (photo_url || isLocationValid(coordinatesEuref));
+      });
       if (entranceLocationPhotoAnswer) {
         // Use the existing location and/or photo
         // The add permissions are set later in QuestionBlockLocationPhoto
