@@ -1,8 +1,8 @@
 import React from "react";
 import Link from "next/link";
 import { Link as HdsLink } from "hds-react";
-import { PathTreeProps } from "../types/general";
-import { useAppSelector } from "../state/hooks";
+import { PathTreeProps } from "../../types/general";
+import { useAppSelector } from "../../state/hooks";
 import styles from "./PathTreeComponent.module.scss";
 
 // usage: general breadcrumb component

@@ -5,7 +5,7 @@ import { GetServerSideProps } from "next";
 import { StatusLabel } from "hds-react";
 import Layout from "../../components/common/Layout";
 import LoadSpinner from "../../components/common/LoadSpinner";
-import PageHelp from "../../components/PageHelp";
+import PageHelp from "../../components/common/PageHelp";
 import SummarySideNavigation from "../../components/SummarySideNavigation";
 import ServicepointLandingSummaryContact from "../../components/ServicepointLandingSummaryContact";
 import ServicepointLandingSummaryNewButton from "../../components/ServicepointLandingSummaryNewButton";

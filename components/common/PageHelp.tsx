@@ -2,9 +2,9 @@ import { useI18n } from "next-localization";
 import { useState } from "react";
 import { IconCrossCircle, IconQuestionCircle } from "hds-react";
 import PathTreeComponent from "./PathTreeComponent";
-import Button from "./QuestionButton";
-import QuestionFormGuide from "./common/QuestionFormGuide";
-import { PageHelpProps } from "../types/general";
+import Button from "../QuestionButton";
+import QuestionFormGuide from "./QuestionFormGuide";
+import { PageHelpProps } from "../../types/general";
 import styles from "./PageHelp.module.scss";
 
 // usage: display help at top of page
