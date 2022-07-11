@@ -215,8 +215,8 @@
     "addPhoto": "Lägg till entréfoto",
     "editLocation": "Redigera entréplats",
     "editPhoto": "Redigera entréfoto",
-    "addComment": "Ge mer information",
-    "editComment": "Redigera information",
+    "addComment": "Lägg till ytterligare en kommentar",
+    "editComment": "Redigera ytterligare kommentar",
     "additionalInfo": "Ytterligare information"
   },
   "QuestionFormImportExistingData": {

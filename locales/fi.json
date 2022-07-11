@@ -215,8 +215,8 @@
     "addPhoto": "Lisää sisäänkäynnin kuva",
     "editLocation": "Muokkaa sisäänkäynnin sijaintia",
     "editPhoto": "Muokkaa sisäänkäynnin kuvaa",
-    "addComment": "Anna lisätietoja",
-    "editComment": "Muokkaa tietoja",
+    "addComment": "Anna lisäkommentti",
+    "editComment": "Muokkaa lisäkommenttia",
     "additionalInfo": "Lisätiedot"
   },
   "QuestionFormImportExistingData": {
