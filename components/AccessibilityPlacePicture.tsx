@@ -1,5 +1,17 @@
 import React, { ChangeEvent, useRef, useState } from "react";
-import { IconPlus, IconMinus, TextArea, TextInput, Checkbox, Tooltip, SelectionGroup, IconUpload, IconLink, IconCross } from "hds-react";
+import {
+  Checkbox,
+  IconCross,
+  IconLink,
+  IconMinus,
+  IconPlus,
+  IconUpload,
+  Link as HdsLink,
+  SelectionGroup,
+  TextArea,
+  TextInput,
+  Tooltip,
+} from "hds-react";
 import { useI18n } from "next-localization";
 import QuestionButton from "./QuestionButton";
 import QuestionInfo from "./QuestionInfo";
@@ -349,7 +361,22 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
             <SelectionGroup label={i18n.t("additionalInfo.sharePictureLicenseLabel")} required>
               <Checkbox
                 id={`picture-license-${currentId}`}
-                label={`${i18n.t("additionalInfo.sharePictureLicenseText")} ${i18n.t("additionalInfo.sharePictureLicense")}`}
+                label={
+                  <span>
+                    {`${i18n.t("additionalInfo.sharePictureLicenseText")} `}
+                    <HdsLink
+                      href="https://creativecommons.org/licenses/by/4.0/"
+                      size="M"
+                      openInNewTab
+                      openInNewTabAriaLabel={i18n.t("common.opensInANewTab")}
+                      external
+                      openInExternalDomainAriaLabel={i18n.t("common.opensExternal")}
+                      disableVisitedStyles
+                    >
+                      {i18n.t("additionalInfo.sharePictureLicense")}
+                    </HdsLink>
+                  </span>
+                }
                 name="agreeToPictureTerms"
                 checked={termsAccepted}
                 onChange={(evt) => handleTermsChange(evt, i18n.t("additionalInfo.sharePictureLicenseLabel"))}
