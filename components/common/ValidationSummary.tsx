@@ -7,19 +7,21 @@ import styles from "./ValidationSummary.module.scss";
 interface ValidationSummaryProps {
   pageValid: boolean;
   validationSummary: Validation[];
+  validationTime?: number;
 }
 
-const ValidationSummary = ({ pageValid, validationSummary }: ValidationSummaryProps): ReactElement => {
+const ValidationSummary = ({ pageValid, validationSummary, validationTime }: ValidationSummaryProps): ReactElement => {
   const i18n = useI18n();
   const ref = useRef<HTMLDivElement>(null);
 
+  // The validationTime value can be updated to force the summary to be scrolled into view if already visible
   useEffect(() => {
     if (ref.current) {
       window.scrollTo(0, 0);
       ref.current.scrollIntoView();
       ref.current.focus();
     }
-  }, [pageValid]);
+  }, [pageValid, validationTime]);
 
   return (
     <div className={styles.validationSummary} ref={ref} tabIndex={-1}>

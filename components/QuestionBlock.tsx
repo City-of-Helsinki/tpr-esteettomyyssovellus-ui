@@ -10,7 +10,7 @@ import QuestionInfo from "./QuestionInfo";
 import QuestionsList from "./QuestionsList";
 import { QuestionBlockProps } from "../types/general";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
-import { setFinished, unsetFinished } from "../state/reducers/formSlice";
+import { setFinished, unsetFinished, unsetInvalid } from "../state/reducers/formSlice";
 import styles from "./QuestionBlock.module.scss";
 
 // usage: in form groups up all questions under a single "question block" / accordion
@@ -42,6 +42,7 @@ const QuestionBlock = ({ block, questions, answerChoices, extraFields, accessibi
   // const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
   const curAnswers = useAppSelector((state) => state.formReducer.answers);
   const curAnsweredChoices = Object.values(curAnswers);
+  const curInvalidBlocks = useAppSelector((state) => state.formReducer.invalidBlocks);
   // const continueActive = curAnsweredChoices.length !== 0;
   const keys = Object.keys(curAnswers);
 
@@ -61,11 +62,18 @@ const QuestionBlock = ({ block, questions, answerChoices, extraFields, accessibi
     });
 
     if (blockFinished) {
+      // Reset any previously stored validation for this block so the block header colour is reset
+      // The validation will be done again when the user clicks the preview button
+      const isBlockInvalid = curInvalidBlocks.includes(blockId);
+      if (isBlockInvalid) {
+        dispatch(unsetInvalid(blockId));
+      }
+
       dispatch(setFinished(blockId));
     } else {
       dispatch(unsetFinished(blockId));
     }
-  }, [blockId, filteredQuestions, keys, dispatch]);
+  }, [blockId, filteredQuestions, keys, curInvalidBlocks, dispatch]);
 
   // Turn "<BR>" to linebreaks
   const desc = description?.split("<BR>");

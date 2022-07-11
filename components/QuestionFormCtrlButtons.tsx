@@ -9,7 +9,7 @@ import { API_FETCH_ENTRANCES, LanguageLocales } from "../types/constants";
 import { QuestionFormCtrlButtonsProps } from "../types/general";
 import styles from "./QuestionFormCtrlButtons.module.scss";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
-import { setContinue, setEntranceId, setInvalid, unsetInvalid } from "../state/reducers/formSlice";
+import { setContinue, setEntranceId, setInvalid, setValidationTime, unsetInvalid } from "../state/reducers/formSlice";
 import getOrigin from "../utils/request";
 import { getTokenHash, saveFormData } from "../utils/utilFunctions";
 
@@ -157,6 +157,10 @@ const QuestionFormCtrlButtons = ({
       }
       return true;
     });
+
+    // Store the time when the validation occurred to force the validation summary to be scrolled into view again if needed
+    dispatch(setValidationTime(new Date().getTime()));
+
     return validBlocks?.every((b) => b) || false;
   };
 

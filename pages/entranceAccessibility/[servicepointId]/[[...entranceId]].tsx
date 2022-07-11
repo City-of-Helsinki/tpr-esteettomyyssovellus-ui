@@ -100,6 +100,7 @@ const EntranceAccessibility = ({
   // const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
   const curAnswers = useAppSelector((state) => state.formReducer.answers);
   const curAnsweredChoices = Object.values(curAnswers);
+  const validationTime = useAppSelector((state) => state.formReducer.validationTime);
   const curInvalidBlocks = useAppSelector((state) => state.formReducer.invalidBlocks);
   const isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
   const startedAnswering = useAppSelector((state) => state.formReducer.startedAnswering);
@@ -412,7 +413,9 @@ const EntranceAccessibility = ({
               <h2>{header}</h2>
             </div>
 
-            <div className={styles.mainbuttons}>{isInvalid && <ValidationSummary pageValid={!isInvalid} validationSummary={invalidBlockIds} />}</div>
+            <div className={styles.mainbuttons}>
+              {isInvalid && <ValidationSummary pageValid={!isInvalid} validationSummary={invalidBlockIds} validationTime={validationTime} />}
+            </div>
 
             <div>
               {visibleBlocks}
