@@ -17,7 +17,7 @@ const HeadlineQuestionContainer = ({ text, number, initOpen = false, children, i
   // Change icon based on accordion open state
   const icon = isOpen ? <IconMinus aria-hidden /> : <IconPlus aria-hidden />;
   let iconLeft = curFinishedBlocks.includes(Number(number)) ? <IconCheckCircleFill aria-hidden /> : null;
-  iconLeft = !isValid ? <IconAlertCircle aria-hidden color="#b01038" /> : iconLeft;
+  iconLeft = !isValid ? <IconAlertCircle className={styles.invalidIcon} aria-hidden /> : iconLeft;
   let buttonVariant: "primary" | "secondary" | "danger" = isOpen ? "primary" : "secondary";
   buttonVariant = number !== undefined && curInvalidBlocks.includes(number) && isOpen ? "danger" : buttonVariant;
 
