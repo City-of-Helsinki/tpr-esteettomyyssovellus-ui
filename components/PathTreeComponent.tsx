@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Link as HdsLink } from "hds-react";
 import { PathTreeProps } from "../types/general";
 import { useAppSelector } from "../state/hooks";
+import styles from "./PathTreeComponent.module.scss";
 
 // usage: general breadcrumb component
 const PathTreeComponent = ({ treeItems }: PathTreeProps): JSX.Element => {
@@ -26,7 +27,7 @@ const PathTreeComponent = ({ treeItems }: PathTreeProps): JSX.Element => {
     });
   };
 
-  return <>{getPathTree()}</>;
+  return <div className={styles.pathTree}>{getPathTree()}</div>;
 };
 
 export default PathTreeComponent;

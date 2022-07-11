@@ -3,16 +3,13 @@ import { useI18n } from "next-localization";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
-import { IconCrossCircle, IconQuestionCircle } from "hds-react";
 import Layout from "../../../components/common/Layout";
 import LoadSpinner from "../../../components/common/LoadSpinner";
 import ValidationSummary from "../../../components/common/ValidationSummary";
 import HeadlineQuestionContainer from "../../../components/HeadlineQuestionContainer";
-import PathTreeComponent from "../../../components/PathTreeComponent";
 import QuestionBlock from "../../../components/QuestionBlock";
 import QuestionFormCtrlButtons from "../../../components/QuestionFormCtrlButtons";
-import QuestionFormGuide from "../../../components/common/QuestionFormGuide";
-import QuestionInfo from "../../../components/QuestionInfo";
+import PageHelp from "../../../components/PageHelp";
 import { useAppSelector, useAppDispatch, useLoading } from "../../../state/hooks";
 import { setEntranceLocationPhoto, setEntrancePlaceBoxes, setQuestionBlockComments } from "../../../state/reducers/additionalInfoSlice";
 import { setAnswers, setEntranceId, setExtraAnswers, setServicepointId, setStartDate } from "../../../state/reducers/formSlice";
@@ -392,20 +389,8 @@ const EntranceAccessibility = ({
       {isUserValid && !isLoading && hasData && (
         <main id="content">
           <div className={styles.maincontainer}>
-            <div className={styles.treecontainer}>
-              <PathTreeComponent treeItems={treeItems} />
-            </div>
-
             <div className={styles.infocontainer}>
-              <QuestionInfo
-                openText={i18n.t("common.generalMainInfoIsClose")}
-                closeText={i18n.t("common.generalMainInfoIsOpen")}
-                openIcon={<IconQuestionCircle />}
-                closeIcon={<IconCrossCircle />}
-                textOnBottom
-              >
-                <QuestionFormGuide formGuideData={formGuideData} />
-              </QuestionInfo>
+              <PageHelp formGuideData={formGuideData} treeItems={treeItems} />
             </div>
 
             <div className={styles.headingcontainer}>

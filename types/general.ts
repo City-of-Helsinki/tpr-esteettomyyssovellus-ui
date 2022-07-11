@@ -73,6 +73,11 @@ export interface QuestionInfoProps {
   children: string | JSX.Element;
 }
 
+export interface PageHelpProps {
+  formGuideData: BackendFormGuide[];
+  treeItems: string[];
+}
+
 export interface QuestionButtonProps {
   children: string;
   variant: "primary" | "secondary" | "success" | "danger";

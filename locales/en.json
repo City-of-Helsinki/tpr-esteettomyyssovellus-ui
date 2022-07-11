@@ -40,8 +40,8 @@
     "landing": {
       "title": "Welcome to updating accessibity information"
     },
-    "generalMainInfoIsOpen": "Close instructions",
-    "generalMainInfoIsClose": "Instructions for filling accessibility information",
+    "generalMainInfoIsOpen": "Close help",
+    "generalMainInfoIsClose": "Help",
     "generalChoose": "Choose",
     "generalExplanation": "Explanation",
     "buttons": {

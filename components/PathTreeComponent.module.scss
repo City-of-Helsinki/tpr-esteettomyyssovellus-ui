@@ -1,0 +1,8 @@
+@import "~hds-design-tokens/lib/all.scss";
+@import "../styles/mixins.scss";
+
+.pathTree {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}

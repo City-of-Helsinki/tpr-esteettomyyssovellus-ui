@@ -2,16 +2,13 @@ import React, { ReactElement } from "react";
 import { GetServerSideProps } from "next";
 import { useI18n } from "next-localization";
 import Head from "next/head";
-import { IconCrossCircle, IconQuestionCircle } from "hds-react";
 import Layout from "../../../components/common/Layout";
 import LoadSpinner from "../../../components/common/LoadSpinner";
 import ValidationSummary from "../../../components/common/ValidationSummary";
-import QuestionInfo from "../../../components/QuestionInfo";
-import PathTreeComponent from "../../../components/PathTreeComponent";
+import PageHelp from "../../../components/PageHelp";
 import EntranceLocation from "../../../components/EntranceLocation";
 import EntranceLocationPhotoCtrlButtons from "../../../components/EntranceLocationPhotoCtrlButtons";
 import EntrancePhoto from "../../../components/EntrancePhoto";
-import QuestionFormGuide from "../../../components/common/QuestionFormGuide";
 import { useAppSelector, useLoading } from "../../../state/hooks";
 import { formatAddress, getTokenHash } from "../../../utils/utilFunctions";
 import {
@@ -82,20 +79,8 @@ const EntranceBlockLocationPhoto = ({ servicepointData, entranceData, formGuideD
       {isUserValid && !isLoading && hasData && (
         <main id="content">
           <div className={styles.maincontainer}>
-            <div className={styles.treecontainer}>
-              <PathTreeComponent treeItems={treeItems} />
-            </div>
-
             <div className={styles.infocontainer}>
-              <QuestionInfo
-                openText={i18n.t("common.generalMainInfoIsClose")}
-                closeText={i18n.t("common.generalMainInfoIsOpen")}
-                openIcon={<IconQuestionCircle />}
-                closeIcon={<IconCrossCircle />}
-                textOnBottom
-              >
-                <QuestionFormGuide formGuideData={formGuideData} />
-              </QuestionInfo>
+              <PageHelp formGuideData={formGuideData} treeItems={treeItems} />
             </div>
 
             <div className={styles.headingcontainer}>
