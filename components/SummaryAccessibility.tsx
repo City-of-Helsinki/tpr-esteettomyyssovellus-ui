@@ -29,8 +29,10 @@ const SummaryAccessibility = ({
               return a.sentence_order_text.localeCompare(b.sentence_order_text);
             })
             .map((s) => {
+              const { sentence_type } = s;
               return (
                 <li key={`sentence_${s.sentence_id}`} className={styles.sentence}>
+                  {sentence_type === "COMMENT" && <span className={styles.comment}>{`${i18n.t("servicepoint.sentenceComment")}: `}</span>}
                   {s.sentence}
                 </li>
               );

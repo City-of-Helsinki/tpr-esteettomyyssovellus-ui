@@ -33,6 +33,10 @@
 
     .sentence {
       margin: $spacing-s 0;
+
+      .comment {
+        font-weight: 700;
+      }
     }
   }
 
