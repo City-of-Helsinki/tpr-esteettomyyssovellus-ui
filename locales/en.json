@@ -15,6 +15,7 @@
       "logotext": "TPR-family",
       "title": "Accessibility information",
       "backToTop": "Back to top",
+      "instructions": "Instructions",
       "contact": "Contact",
       "copyright": "Copyright",
       "rightsReserved": "All rights reserved",
@@ -40,15 +41,16 @@
     "landing": {
       "title": "Welcome to updating accessibity information"
     },
-    "generalMainInfoIsOpen": "Close instructions",
-    "generalMainInfoIsClose": "Instructions for filling accessibility information",
+    "generalMainInfoIsOpen": "Close help",
+    "generalMainInfoIsClose": "Help",
     "generalChoose": "Choose",
     "generalExplanation": "Explanation",
     "buttons": {
       "saveAndReturn": "Save and return",
+      "return": "Return",
       "returnNoSave": "Exit without saving",
       "deleteAdditionalInfo": "Delete additional information",
-      "deleteAdditionalInfoSets": "Delete all additional info sets"
+      "deleteAdditionalInfoSets": "Delete all"
     },
     "message": {
       "validationFailed": {
@@ -72,7 +74,7 @@
     "editAddinfoText": "Edit additional infos",
     "missingAnswerValue": "Missing selection",
     "missingTextValue": "Missing answer",
-    "copyDataFromSameAddress": "copy the details of the office at the same address",
+    "copyDataFromSameAddress": "Copy the details of the servicepoint at the same address",
     "openInfoWhatIsThis": "Show me what this is",
     "statusReady": "Finished",
     "statusNotReady": "Not Finished"
@@ -105,6 +107,7 @@
     "navigateToPage": "Navigate to page",
     "picturesLocations": "Photos and locations",
     "photoSource": "Source",
+    "sentenceComment": "Additional information provided by the location",
     "questionsAndAnswers": "Accessibility questions and answers",
     "showMore": "Show more",
     "showLess": "Show less"
@@ -146,8 +149,8 @@
     "pictureLabelEng": "Picture caption in english",
     "pictureHelperTextEng": "Describe the picture in english",
     "sharePictureLicenseLabel": "Picture permission",
-    "sharePictureLicenseText": "Yes, I allow sharing the picture under the",
-    "sharePictureLicense": "Creative Commons BY 4.0. -license",
+    "sharePictureLicenseText": "Yes, the image can be used freely",
+    "sharePictureLicense": "See license terms",
     "sourceTooltipText": "Insert here instructions for picture source",
     "sourceTooltipMainLabel": "Picture source",
     "locationLabel": "Location description",
@@ -185,8 +188,9 @@
     "fillPlaceData1": "You can complete the",
     "fillPlaceData2": "information with images and/or location information.",
     "orderPlaceData": "Arrange the information with most important at the top and least important at the bottom.",
+    "mandatoryPlaceData": "Information marked with an asterisk (*) is mandatory.",
     "additionalInfoSet": "Additional information set",
-    "addAdditionalInfoSet": "Add new set of additional data",
+    "addAdditionalInfoSet": "Add new",
     "order": "Arrange",
     "pictureTitle": "Picture",
     "locationTitle": "Location on map"
@@ -205,9 +209,14 @@
     "fillPlaceData1": "Do you want to complete",
     "fillPlaceData2": "accessibility information",
     "placeLink": "Add a picture and/or location",
-    "editLocationPhoto": "Edit",
-    "addComment": "Provide more information",
-    "editComment": "Edit information",
+    "pictures": "Pictures",
+    "locations": "Locations",
+    "addLocation": "Add entrance location",
+    "addPhoto": "Add entrance photo",
+    "editLocation": "Edit entrance location",
+    "editPhoto": "Edit entrance photo",
+    "addComment": "Add an additional comment",
+    "editComment": "Edit additional comment",
     "additionalInfo": "Additional information"
   },
   "QuestionFormImportExistingData": {

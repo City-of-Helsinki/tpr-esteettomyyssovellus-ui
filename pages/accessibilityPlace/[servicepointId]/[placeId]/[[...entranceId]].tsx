@@ -1,37 +1,51 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useEffect } from "react";
 import { GetServerSideProps } from "next";
 import { useI18n } from "next-localization";
 import Head from "next/head";
-import { IconCrossCircle, IconQuestionCircle } from "hds-react";
 import Layout from "../../../../components/common/Layout";
+import LoadSpinner from "../../../../components/common/LoadSpinner";
+import PageHelp from "../../../../components/common/PageHelp";
 import ValidationSummary from "../../../../components/common/ValidationSummary";
-import QuestionInfo from "../../../../components/QuestionInfo";
-import ServicepointMainInfoContent from "../../../../components/ServicepointMainInfoContent";
-import PathTreeComponent from "../../../../components/PathTreeComponent";
 import AccessibilityPlaceBox from "../../../../components/AccessibilityPlaceBox";
 import AccessibilityPlaceCtrlButtons from "../../../../components/AccessibilityPlaceCtrlButtons";
 import AccessibilityPlaceNewButton from "../../../../components/AccessibilityPlaceNewButton";
-import LoadSpinner from "../../../../components/common/LoadSpinner";
-import { useAppSelector, useLoading } from "../../../../state/hooks";
+import { useAppDispatch, useAppSelector, useLoading } from "../../../../state/hooks";
+import { addEntrancePlaceBox } from "../../../../state/reducers/additionalInfoSlice";
 import { formatAddress, getTokenHash } from "../../../../utils/utilFunctions";
 import {
   API_FETCH_BACKEND_ENTRANCE,
+  API_FETCH_BACKEND_FORM_GUIDE,
   API_FETCH_BACKEND_PLACES,
   API_FETCH_BACKEND_SERVICEPOINT,
   API_FETCH_ENTRANCES,
   API_URL_BASE,
   LanguageLocales,
 } from "../../../../types/constants";
-import { BackendEntrance, BackendPlace, BackendServicepoint, Entrance, EntranceResults } from "../../../../types/backendModels";
-import { AccessibilityPlaceProps } from "../../../../types/general";
+import {
+  BackendEntrance,
+  BackendEntrancePlace,
+  BackendFormGuide,
+  BackendPlace,
+  BackendServicepoint,
+  Entrance,
+  EntranceResults,
+} from "../../../../types/backendModels";
+import { AccessibilityPlaceProps, EntrancePlaceBox } from "../../../../types/general";
 import i18nLoader from "../../../../utils/i18n";
 import styles from "./accessibilityPlace.module.scss";
 
 // usage: the accessibility place of a question
-const AccessibilityPlace = ({ servicepointData, entranceData, accessibilityPlaceData, formId }: AccessibilityPlaceProps): ReactElement => {
+const AccessibilityPlace = ({
+  servicepointData,
+  entranceData,
+  accessibilityPlaceData,
+  formGuideData,
+  formId,
+}: AccessibilityPlaceProps): ReactElement => {
   const i18n = useI18n();
   const curLocale: string = i18n.locale();
   const isLoading = useLoading();
+  const dispatch = useAppDispatch();
 
   const treeItems = [servicepointData.servicepoint_name ?? ""];
 
@@ -48,7 +62,7 @@ const AccessibilityPlace = ({ servicepointData, entranceData, accessibilityPlace
   */
 
   const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
-  // const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
+  const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
   const curEntrancePlaceBoxes = useAppSelector((state) => state.additionalInfoReducer.entrancePlaceBoxes);
   const curEntrancePlaceValid = useAppSelector((state) => state.additionalInfoReducer.entrancePlaceValid);
 
@@ -80,6 +94,28 @@ const AccessibilityPlace = ({ servicepointData, entranceData, accessibilityPlace
     : [];
   const filteredEntrancePlaceInvalidValues = filteredEntrancePlaceBoxes.flatMap((box) => box.invalidValues);
 
+  const initPlaceBoxes = () => {
+    // Add a new entrance place box if none have been added yet
+    if (filteredEntrancePlaceBoxes.length === 0) {
+      const newBox: EntrancePlaceBox = {
+        entrance_id: curEntranceId,
+        question_block_id: -1,
+        place_id: filteredPlaceData.place_id,
+        order_number: 1,
+        modifiedBox: {} as BackendEntrancePlace,
+        isDeleted: false,
+        termsAccepted: false,
+        invalidValues: [],
+      };
+      dispatch(addEntrancePlaceBox(newBox));
+    }
+  };
+
+  // Initialise the entrance place box data on first render only, using a workaround utilising useEffect with empty dependency array
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const useMountEffect = (fun: () => void) => useEffect(fun, []);
+  useMountEffect(initPlaceBoxes);
+
   return (
     <Layout>
       <Head>
@@ -94,20 +130,8 @@ const AccessibilityPlace = ({ servicepointData, entranceData, accessibilityPlace
       {isUserValid && !isLoading && hasData && (
         <main id="content">
           <div className={styles.maincontainer}>
-            <div className={styles.treecontainer}>
-              <PathTreeComponent treeItems={treeItems} />
-            </div>
-
             <div className={styles.infocontainer}>
-              <QuestionInfo
-                openText={i18n.t("common.generalMainInfoIsClose")}
-                closeText={i18n.t("common.generalMainInfoIsOpen")}
-                openIcon={<IconQuestionCircle />}
-                closeIcon={<IconCrossCircle />}
-                textOnBottom
-              >
-                <ServicepointMainInfoContent />
-              </QuestionInfo>
+              <PageHelp formGuideData={formGuideData} treeItems={treeItems} />
             </div>
 
             <div className={styles.headingcontainer}>
@@ -125,6 +149,7 @@ const AccessibilityPlace = ({ servicepointData, entranceData, accessibilityPlace
               <div className={styles.infoText}>
                 <div>{`${i18n.t("additionalInfo.fillPlaceData1")} '${filteredPlaceData.name}' ${i18n.t("additionalInfo.fillPlaceData2")}`}</div>
                 <div>{i18n.t("additionalInfo.orderPlaceData")}</div>
+                <div>{i18n.t("additionalInfo.mandatoryPlaceData")}</div>
               </div>
             </div>
 
@@ -159,6 +184,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   let entranceData: BackendEntrance = {} as BackendEntrance;
   let servicepointData: BackendServicepoint = {} as BackendServicepoint;
   let accessibilityPlaceData: BackendPlace[] = [];
+  let formGuideData: BackendFormGuide[] = [];
   let formId = -1;
 
   if (params !== undefined) {
@@ -234,12 +260,21 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
           }
         }
       }
+
+      // Get the guide text using the form id for this entrance
+      if (formId >= 0) {
+        const formGuideResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_FORM_GUIDE}?form_id=${formId}`, {
+          headers: new Headers({ Authorization: getTokenHash() }),
+        });
+        formGuideData = await (formGuideResp.json() as Promise<BackendFormGuide[]>);
+      }
     } catch (err) {
       console.error("Error", err);
 
       servicepointData = {} as BackendServicepoint;
       entranceData = {} as BackendEntrance;
       accessibilityPlaceData = [];
+      formGuideData = [];
     }
   }
 
@@ -249,6 +284,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       servicepointData,
       entranceData,
       accessibilityPlaceData,
+      formGuideData,
       formId,
     },
   };

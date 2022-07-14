@@ -2,12 +2,14 @@
 
 import { Dispatch, SetStateAction } from "react";
 import {
+  BackendCopyableEntrance,
   BackendEntrance,
   BackendEntranceAnswer,
   BackendEntranceChoice,
   BackendEntranceField,
   BackendEntrancePlace,
   BackendEntranceSentence,
+  BackendFormGuide,
   BackendPlace,
   BackendQuestion,
   BackendQuestionBlock,
@@ -71,6 +73,11 @@ export interface QuestionInfoProps {
   children: string | JSX.Element;
 }
 
+export interface PageHelpProps {
+  formGuideData: BackendFormGuide[];
+  treeItems: string[];
+}
+
 export interface QuestionButtonProps {
   children: string;
   variant: "primary" | "secondary" | "success" | "danger";
@@ -107,6 +114,10 @@ export interface QuestionFormCtrlButtonsProps {
   questionsData: BackendQuestion[];
   questionChoicesData: BackendQuestionChoice[];
   formId: number;
+}
+
+export interface QuestionFormGuideProps {
+  formGuideData: BackendFormGuide[];
 }
 
 export interface QuestionsListProps {
@@ -232,6 +243,7 @@ export interface EntranceLocationPhoto {
 
 export interface EntrancePlaceBox {
   entrance_id: number;
+  question_block_id: number;
   place_id: number;
   order_number: number;
   existingBox?: BackendEntrancePlace;
@@ -288,9 +300,11 @@ export interface EntranceFormProps {
   entranceData: BackendEntrance;
   entrancePlaceData: BackendEntrancePlace[];
   questionBlockCommentData: QuestionBlockAnswerCmt[];
+  copyableEntranceData: BackendCopyableEntrance[];
   servicepointData: BackendServicepoint;
   questionAnswerData: BackendEntranceAnswer[];
   questionExtraAnswerData: BackendEntranceField[];
+  formGuideData: BackendFormGuide[];
   formId: number;
   isMainEntrancePublished: boolean;
 }
@@ -301,6 +315,7 @@ export interface QuestionBlockProps {
   answerChoices?: BackendQuestionChoice[];
   extraFields?: BackendQuestionBlockField[];
   accessibilityPlaces: BackendPlace[];
+  copyableEntrances?: BackendCopyableEntrance[];
 }
 
 export interface PathTreeProps {
@@ -357,6 +372,11 @@ export interface QuestionBlockCommentProps {
   block: BackendQuestionBlock;
 }
 
+export interface QuestionBlockImportProps {
+  block: BackendQuestionBlock;
+  copyableEntrances: BackendCopyableEntrance[];
+}
+
 export interface EntranceData {
   [key: string]: BackendEntrance;
 }
@@ -380,6 +400,7 @@ export interface DetailsProps {
   entranceData: EntranceData;
   entrancePlaceData: EntrancePlaceData;
   entranceChoiceData: EntranceChoiceData;
+  formGuideData: BackendFormGuide[];
   isMainEntrancePublished: boolean;
 }
 
@@ -393,12 +414,15 @@ export interface PreviewProps {
   entranceChoiceData: BackendEntranceChoice[];
   questionAnswerData: BackendEntranceAnswer[];
   questionExtraAnswerData: BackendEntranceField[];
+  formGuideData: BackendFormGuide[];
+  formId: number;
   isMainEntrancePublished: boolean;
 }
 
 export interface EntranceLocationPhotoProps {
   servicepointData: BackendServicepoint;
   entranceData: BackendEntrance;
+  formGuideData: BackendFormGuide[];
   formId: number;
 }
 
@@ -418,6 +442,7 @@ export interface AccessibilityPlaceProps {
   servicepointData: BackendServicepoint;
   entranceData: BackendEntrance;
   accessibilityPlaceData: BackendPlace[];
+  formGuideData: BackendFormGuide[];
   formId: number;
 }
 
@@ -448,6 +473,7 @@ export interface EntranceQuestionBlockCommentProps {
   servicepointData: BackendServicepoint;
   entranceData: BackendEntrance;
   questionBlockId: number;
+  formGuideData: BackendFormGuide[];
   formId: number;
 }
 

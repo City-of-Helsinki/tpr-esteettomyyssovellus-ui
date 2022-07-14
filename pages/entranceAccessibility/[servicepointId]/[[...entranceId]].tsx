@@ -1,13 +1,37 @@
 import React, { ReactElement, useEffect } from "react";
 import { useI18n } from "next-localization";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
-import { IconCrossCircle, IconQuestionCircle } from "hds-react";
 import Layout from "../../../components/common/Layout";
-import i18nLoader from "../../../utils/i18n";
-import QuestionInfo from "../../../components/QuestionInfo";
-import styles from "./entranceAccessibility.module.scss";
-import ServicepointMainInfoContent from "../../../components/ServicepointMainInfoContent";
+import LoadSpinner from "../../../components/common/LoadSpinner";
+import PageHelp from "../../../components/common/PageHelp";
+import ValidationSummary from "../../../components/common/ValidationSummary";
+import HeadlineQuestionContainer from "../../../components/HeadlineQuestionContainer";
+import QuestionBlock from "../../../components/QuestionBlock";
+import QuestionFormCtrlButtons from "../../../components/QuestionFormCtrlButtons";
+import { useAppSelector, useAppDispatch, useLoading } from "../../../state/hooks";
+import { setEntranceLocationPhoto, setEntrancePlaceBoxes, setQuestionBlockComments } from "../../../state/reducers/additionalInfoSlice";
+import { setAnswers, setEntranceId, setExtraAnswers, setServicepointId, setStartDate } from "../../../state/reducers/formSlice";
+import { setServicepointLocationEuref, setServicepointLocationWGS84 } from "../../../state/reducers/generalSlice";
+// import { persistor } from "../../../state/store";
+import {
+  BackendCopyableEntrance,
+  BackendEntrance,
+  BackendEntranceAnswer,
+  BackendEntranceField,
+  BackendEntrancePlace,
+  BackendFormGuide,
+  BackendPlace,
+  BackendQuestion,
+  BackendQuestionBlock,
+  BackendQuestionBlockField,
+  BackendQuestionChoice,
+  BackendServicepoint,
+  Entrance,
+  EntranceResults,
+  QuestionBlockAnswerCmt,
+} from "../../../types/backendModels";
 import {
   API_FETCH_BACKEND_ENTRANCE,
   API_FETCH_BACKEND_ENTRANCE_ANSWERS,
@@ -23,34 +47,13 @@ import {
   LanguageLocales,
   API_FETCH_BACKEND_ENTRANCE_PLACES,
   API_FETCH_QUESTION_BLOCK_COMMENT,
+  API_FETCH_BACKEND_FORM_GUIDE,
+  API_FETCH_COPYABLE_ENTRANCE,
 } from "../../../types/constants";
-import { useAppSelector, useAppDispatch, useLoading } from "../../../state/hooks";
-import QuestionBlock from "../../../components/QuestionBlock";
-import {
-  BackendEntrance,
-  BackendEntranceAnswer,
-  BackendEntranceField,
-  BackendEntrancePlace,
-  BackendPlace,
-  BackendQuestion,
-  BackendQuestionBlock,
-  BackendQuestionBlockField,
-  BackendQuestionChoice,
-  BackendServicepoint,
-  Entrance,
-  EntranceResults,
-  QuestionBlockAnswerCmt,
-} from "../../../types/backendModels";
-import { BlockComment, EntranceFormProps, KeyValueNumber, KeyValueString, QuestionBlockComment } from "../../../types/general";
-import HeadlineQuestionContainer from "../../../components/HeadlineQuestionContainer";
-import QuestionFormCtrlButtons from "../../../components/QuestionFormCtrlButtons";
-import PathTreeComponent from "../../../components/PathTreeComponent";
-import { setAnswers, setEntranceId, setExtraAnswers, setServicepointId, setStartDate } from "../../../state/reducers/formSlice";
-import { getTokenHash, getCurrentDate, formatAddress, convertCoordinates } from "../../../utils/utilFunctions";
-import { setEntranceLocationPhoto, setEntrancePlaceBoxes, setQuestionBlockComments } from "../../../state/reducers/additionalInfoSlice";
-// import { persistor } from "../../../state/store";
-import { setServicepointLocationEuref, setServicepointLocationWGS84 } from "../../../state/reducers/generalSlice";
-import LoadSpinner from "../../../components/common/LoadSpinner";
+import { BlockComment, EntranceFormProps, KeyValueNumber, KeyValueString, QuestionBlockComment, Validation } from "../../../types/general";
+import i18nLoader from "../../../utils/i18n";
+import { getTokenHash, getCurrentDate, formatAddress, convertCoordinates, isLocationValid } from "../../../utils/utilFunctions";
+import styles from "./entranceAccessibility.module.scss";
 
 // usage: the main form / entrance page
 const EntranceAccessibility = ({
@@ -64,13 +67,16 @@ const EntranceAccessibility = ({
   entranceData,
   entrancePlaceData,
   questionBlockCommentData,
+  copyableEntranceData,
   servicepointData,
+  formGuideData,
   formId,
   isMainEntrancePublished,
 }: EntranceFormProps): ReactElement => {
   const i18n = useI18n();
   const curLocale: string = i18n.locale();
   const dispatch = useAppDispatch();
+  const router = useRouter();
   const curLocaleId: number = LanguageLocales[curLocale as keyof typeof LanguageLocales];
   const isLoading = useLoading();
 
@@ -91,6 +97,7 @@ const EntranceAccessibility = ({
   // const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
   const curAnswers = useAppSelector((state) => state.formReducer.answers);
   const curAnsweredChoices = Object.values(curAnswers);
+  const validationTime = useAppSelector((state) => state.formReducer.validationTime);
   const curInvalidBlocks = useAppSelector((state) => state.formReducer.invalidBlocks);
   const isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
   const startedAnswering = useAppSelector((state) => state.formReducer.startedAnswering);
@@ -99,6 +106,11 @@ const EntranceAccessibility = ({
 
   const hasData = Object.keys(servicepointData).length > 0;
   const isExistingEntrance = hasData && Object.keys(entranceData).length > 0;
+  const isInvalid = curInvalidBlocks.length > 0;
+
+  // Get the question block id hash if added to the url, for example "#questionblockid-1"
+  const { asPath } = router;
+  const pathHash = asPath.indexOf("#") > 0 ? asPath.split("#")[1] : undefined;
 
   const initReduxData = () => {
     // Update servicepointId and entranceId in redux state
@@ -142,7 +154,12 @@ const EntranceAccessibility = ({
         )
       );
 
-      const entranceLocationPhotoAnswer = questionAnswerData.find((a) => a.question_id === undefined || a.question_id === null);
+      // Try to get the answer with the location and/or photo data (not comment data, which also has empty question_id)
+      const entranceLocationPhotoAnswer = questionAnswerData.find((a) => {
+        const { loc_easting, loc_northing, photo_url } = a || {};
+        const coordinatesEuref = [loc_easting ?? 0, loc_northing ?? 0] as [number, number];
+        return (a.question_id === undefined || a.question_id === null) && (photo_url || isLocationValid(coordinatesEuref));
+      });
       if (entranceLocationPhotoAnswer) {
         // Use the existing location and/or photo
         // The add permissions are set later in QuestionBlockLocationPhoto
@@ -193,11 +210,12 @@ const EntranceAccessibility = ({
       dispatch(
         setEntrancePlaceBoxes(
           entrancePlaceData.map((place) => {
-            const { entrance_id, place_id, order_number } = place;
+            const { entrance_id, question_block_id, place_id, order_number } = place;
 
             // Try to make sure the order number is 1 or higher
             return {
               entrance_id: entrance_id,
+              question_block_id: question_block_id,
               place_id: place_id,
               order_number: order_number && order_number > 0 ? order_number : 1,
               existingBox: place,
@@ -296,12 +314,17 @@ const EntranceAccessibility = ({
             ? questionChoicesData.filter((choice) => choice.question_block_id === block.question_block_id && choice.language_id === curLocaleId)
             : undefined;
 
+          const blockCopyableEntrances = isVisible
+            ? copyableEntranceData.filter((copy) => copy.question_block_id === block.question_block_id)
+            : undefined;
+
           return isVisible && blockQuestions && blockAnswerChoices && block.question_block_id !== undefined ? (
             <HeadlineQuestionContainer
               key={block.question_block_id}
               number={block.question_block_id}
               text={`${block.question_block_code} ${block.text}`}
               id={`questionblockid-${block.question_block_id}`}
+              initOpen={pathHash === `questionblockid-${block.question_block_id}`}
               isValid={!curInvalidBlocks.includes(block.question_block_id)}
             >
               <QuestionBlock
@@ -311,11 +334,32 @@ const EntranceAccessibility = ({
                 answerChoices={blockAnswerChoices}
                 extraFields={blockExtraFields}
                 accessibilityPlaces={filteredPlaces}
+                copyableEntrances={blockCopyableEntrances}
               />
             </HeadlineQuestionContainer>
           ) : null;
         })
       : null;
+
+  // Determine which blocks are invalid for the validation summary, if any
+  const invalidBlockIds =
+    visibleBlocks?.reduce((acc: Validation[], elem) => {
+      if (elem !== null) {
+        const { id: blockFieldId, number: blockId, text: blockText } = elem.props;
+
+        return curInvalidBlocks.includes(blockId)
+          ? [
+              ...acc,
+              {
+                valid: false,
+                fieldId: blockFieldId,
+                fieldLabel: blockText,
+              },
+            ]
+          : acc;
+      }
+      return acc;
+    }, []) ?? [];
 
   // const formSubmitted = useAppSelector((state) => state.formReducer.formSubmitted);
 
@@ -350,25 +394,17 @@ const EntranceAccessibility = ({
       {isUserValid && !isLoading && hasData && (
         <main id="content">
           <div className={styles.maincontainer}>
-            <div className={styles.treecontainer}>
-              <PathTreeComponent treeItems={treeItems} />
-            </div>
-
             <div className={styles.infocontainer}>
-              <QuestionInfo
-                openText={i18n.t("common.generalMainInfoIsClose")}
-                closeText={i18n.t("common.generalMainInfoIsOpen")}
-                openIcon={<IconQuestionCircle />}
-                closeIcon={<IconCrossCircle />}
-                textOnBottom
-              >
-                <ServicepointMainInfoContent />
-              </QuestionInfo>
+              <PageHelp formGuideData={formGuideData} treeItems={treeItems} />
             </div>
 
             <div className={styles.headingcontainer}>
               <h1>{servicepointData.servicepoint_name}</h1>
               <h2>{header}</h2>
+            </div>
+
+            <div className={styles.mainbuttons}>
+              {isInvalid && <ValidationSummary pageValid={!isInvalid} validationSummary={invalidBlockIds} validationTime={validationTime} />}
             </div>
 
             <div>
@@ -408,7 +444,9 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   let entranceData: BackendEntrance = {} as BackendEntrance;
   let entrancePlaceData: BackendEntrancePlace[] = [];
   let questionBlockCommentData: QuestionBlockAnswerCmt[] = [];
+  let copyableEntranceData: BackendCopyableEntrance[] = [];
   let servicepointData: BackendServicepoint = {} as BackendServicepoint;
+  let formGuideData: BackendFormGuide[] = [];
   let formId = -1;
   let isMainEntrancePublished = false;
 
@@ -495,15 +533,20 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         const accessibilityPlaceResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_PLACES}?format=json`, {
           headers: new Headers({ Authorization: getTokenHash() }),
         });
+        const formGuideResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_FORM_GUIDE}?form_id=${formId}`, {
+          headers: new Headers({ Authorization: getTokenHash() }),
+        });
 
         questionsData = await (questionsResp.json() as Promise<BackendQuestion[]>);
         questionChoicesData = await (questionChoicesResp.json() as Promise<BackendQuestionChoice[]>);
         questionBlocksData = await (questionBlocksResp.json() as Promise<BackendQuestionBlock[]>);
         questionBlockFieldData = await (questionBlockFieldResp.json() as Promise<BackendQuestionBlockField[]>);
         accessibilityPlaceData = await (accessibilityPlaceResp.json() as Promise<BackendPlace[]>);
+        formGuideData = await (formGuideResp.json() as Promise<BackendFormGuide[]>);
       }
 
       if (params.entranceId !== undefined) {
+        // Get the question answer data for the entrance
         const allQuestionAnswersResp = await fetch(
           `${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE_ANSWERS}?entrance_id=${params.entranceId}&format=json`,
           {
@@ -522,6 +565,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
           questionAnswerData = allQuestionAnswerData.filter((a) => a.log_id === maxLogId);
         }
 
+        // Get the extra field data for the entrance
         const allQuestionExtraAnswersResp = await fetch(
           `${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE_FIELD}?entrance_id=${params.entranceId}&format=json`,
           {
@@ -580,6 +624,12 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
 
           questionBlockCommentData = allQuestionBlockCommentData.filter((a) => a.log_id === maxLogId);
         }
+
+        // Get the copyable entrance data, used in question blocks
+        const copyableEntranceDataResp = await fetch(`${API_URL_BASE}${API_FETCH_COPYABLE_ENTRANCE}?entrance_id=${params.entranceId}&format=json`, {
+          headers: new Headers({ Authorization: getTokenHash() }),
+        });
+        copyableEntranceData = await (copyableEntranceDataResp.json() as Promise<BackendCopyableEntrance[]>);
       }
     } catch (e) {
       console.error("Error", e);
@@ -594,7 +644,9 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       entranceData = {} as BackendEntrance;
       entrancePlaceData = [];
       questionBlockCommentData = [];
+      copyableEntranceData = [];
       servicepointData = {} as BackendServicepoint;
+      formGuideData = [];
     }
   }
   return {
@@ -610,7 +662,9 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       entranceData,
       entrancePlaceData,
       questionBlockCommentData,
+      copyableEntranceData,
       servicepointData,
+      formGuideData,
       formId,
       isMainEntrancePublished,
     },

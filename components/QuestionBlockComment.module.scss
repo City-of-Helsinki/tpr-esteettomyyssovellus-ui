@@ -2,7 +2,12 @@
 @import "../styles/mixins.scss";
 
 .maincontainer {
+  border-left: 5px solid $color-bus;
+  background-color: $color-white !important;
+
   .questionwrapper {
+    border: 2px solid $color-bus-medium-light;
+    border-left: 0;
     padding: $spacing-m $spacing-s;
   }
 
@@ -35,6 +40,7 @@
       height: $spacing-xl;
       background-color: $color-bus;
       color: $color-white;
+      cursor: pointer;
     }
 
     .maintext {

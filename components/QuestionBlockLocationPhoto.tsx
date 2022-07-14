@@ -61,8 +61,20 @@ const QuestionBlockLocationPhoto = ({ block, canAddLocation, canAddPhoto }: Ques
     dispatch(
       setEntranceLocationPhoto({
         ...curEntranceLocationPhoto,
-        existingAnswer: curEntranceLocationPhoto.modifiedAnswer,
+        question_block_id,
+        existingAnswer: {
+          ...modifiedAnswer,
+          loc_easting: isLocationValid(coordinatesEuref) ? coordinatesEuref[0] : servicepointCoordinatesEuref[0],
+          loc_northing: isLocationValid(coordinatesEuref) ? coordinatesEuref[1] : servicepointCoordinatesEuref[1],
+        },
         existingPhotoBase64: curEntranceLocationPhoto.modifiedPhotoBase64,
+        modifiedAnswer: {
+          ...modifiedAnswer,
+          loc_easting: isLocationValid(coordinatesEuref) ? coordinatesEuref[0] : servicepointCoordinatesEuref[0],
+          loc_northing: isLocationValid(coordinatesEuref) ? coordinatesEuref[1] : servicepointCoordinatesEuref[1],
+        },
+        canAddLocation,
+        canAddPhoto,
       })
     );
 
@@ -92,20 +104,18 @@ const QuestionBlockLocationPhoto = ({ block, canAddLocation, canAddPhoto }: Ques
                   })}
                 </div>
               </QuestionInfo>
+
+              <div className={styles.link}>
+                <HdsLink href="#" size="M" disableVisitedStyles onClick={editLocationPhoto}>
+                  {isLocationValid(coordinatesWGS84) ? i18n.t("accessibilityForm.editLocation") : i18n.t("accessibilityForm.addLocation")}
+                </HdsLink>
+              </div>
             </div>
 
             <div className={styles.detailcontainer}>
               <div className={styles.mapcontainer}>
                 <Map curLocation={coordinatesWGS84} initZoom={MAP_MAX_ZOOM} draggableMarker={false} makeStatic />
               </div>
-            </div>
-          </div>
-
-          <div className={styles.questioncontainer}>
-            <div className={styles.detailcontainer}>
-              <HdsLink href="#" size="M" disableVisitedStyles onClick={editLocationPhoto}>
-                {i18n.t("accessibilityForm.editLocationPhoto")}
-              </HdsLink>
             </div>
           </div>
         </div>
@@ -132,11 +142,19 @@ const QuestionBlockLocationPhoto = ({ block, canAddLocation, canAddPhoto }: Ques
                 </div>
               </QuestionInfo>
 
-              <div className={styles.label}>
-                <div>{`FI: ${photo_text_fi ?? ""}`}</div>
-                <div>{`SV: ${photo_text_sv ?? ""}`}</div>
-                <div>{`EN: ${photo_text_en ?? ""}`}</div>
-                <div>{`${i18n.t("servicepoint.photoSource")}: ${photo_source_text ?? ""}`}</div>
+              {(modifiedPhotoBase64 || photo_url) && (
+                <div className={styles.label}>
+                  <div>{`FI: ${photo_text_fi ?? ""}`}</div>
+                  <div>{`SV: ${photo_text_sv ?? ""}`}</div>
+                  <div>{`EN: ${photo_text_en ?? ""}`}</div>
+                  <div>{`${i18n.t("servicepoint.photoSource")}: ${photo_source_text ?? ""}`}</div>
+                </div>
+              )}
+
+              <div className={styles.link}>
+                <HdsLink href="#" size="M" disableVisitedStyles onClick={editLocationPhoto}>
+                  {modifiedPhotoBase64 || photo_url ? i18n.t("accessibilityForm.editPhoto") : i18n.t("accessibilityForm.addPhoto")}
+                </HdsLink>
               </div>
             </div>
 
@@ -146,14 +164,6 @@ const QuestionBlockLocationPhoto = ({ block, canAddLocation, canAddPhoto }: Ques
                   <img src={modifiedPhotoBase64 ?? photo_url} alt="" />
                 </div>
               )}
-            </div>
-          </div>
-
-          <div className={styles.questioncontainer}>
-            <div className={styles.detailcontainer}>
-              <HdsLink href="#" size="M" disableVisitedStyles onClick={editLocationPhoto}>
-                {i18n.t("accessibilityForm.editLocationPhoto")}
-              </HdsLink>
             </div>
           </div>
         </div>

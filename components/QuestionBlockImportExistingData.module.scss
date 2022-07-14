@@ -3,16 +3,28 @@
 
 .mainContainer {
   padding: $spacing-s;
+  padding-top: 0;
+
   .inputContainer {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+
     @include media(l, xl) {
       flex-direction: row;
     }
 
     :focus::after {
       margin-left: 0;
+    }
+
+    .selectDropdown {
+      width: 100%;
+    }
+
+    .selectDropdown li[aria-selected="true"] {
+      background-color: var(--menu-item-background-selected-hover);
+      color: var(--menu-item-color-selected-hover);
     }
 
     Button {

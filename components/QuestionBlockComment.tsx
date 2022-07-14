@@ -51,18 +51,17 @@ const QuestionBlockComment = ({ block }: QuestionBlockCommentProps): JSX.Element
         <div className={styles.questioncontainer}>
           <div className={styles.question}>
             <div className={styles.commenticon}>
-              <IconPenLine aria-hidden />
+              <IconPenLine aria-hidden onClick={editComment} />
             </div>
             <div className={styles.maintext}>
-              {`${i18n.t("accessibilityForm.fillPlaceData1")} '${text}' ${i18n.t("accessibilityForm.fillPlaceData2")}?`}
+              <HdsLink href="#" size="M" disableVisitedStyles onClick={editComment}>
+                {`${
+                  comment_text_fi || comment_text_sv || comment_text_en
+                    ? i18n.t("accessibilityForm.editComment")
+                    : i18n.t("accessibilityForm.addComment")
+                } '${text}'`}
+              </HdsLink>
             </div>
-          </div>
-          <div className={styles.children}>
-            <HdsLink href="#" size="M" disableVisitedStyles onClick={editComment}>
-              {comment_text_fi || comment_text_sv || comment_text_en
-                ? i18n.t("accessibilityForm.editComment")
-                : i18n.t("accessibilityForm.addComment")}
-            </HdsLink>
           </div>
         </div>
 

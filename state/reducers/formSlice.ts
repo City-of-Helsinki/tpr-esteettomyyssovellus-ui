@@ -12,6 +12,7 @@ interface formState {
   isContinueClicked: boolean;
   finishedBlocks: number[];
   startedAnswering: string;
+  validationTime: number;
   invalidBlocks: number[];
   // formFinished: boolean;
   // formSubmitted: boolean;
@@ -26,6 +27,7 @@ const initialState: formState = {
   isContinueClicked: false,
   finishedBlocks: [],
   startedAnswering: "",
+  validationTime: 0,
   invalidBlocks: [],
   // formFinished: false,
   // formSubmitted: false,
@@ -122,6 +124,12 @@ export const formSlice = createSlice({
         startedAnswering: action.payload,
       };
     },
+    setValidationTime: (state, action: PayloadAction<number>) => {
+      return {
+        ...state,
+        validationTime: action.payload,
+      };
+    },
     setInvalid: (state, action: PayloadAction<number>) => {
       if (!state.invalidBlocks.includes(action.payload)) {
         return {
@@ -182,6 +190,7 @@ export const {
   setFinished,
   unsetFinished,
   setStartDate,
+  setValidationTime,
   setInvalid,
   unsetInvalid,
   // setFormFinished,

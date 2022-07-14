@@ -39,6 +39,12 @@
     }
   }
 
+  .headlineButton[aria-expanded="false"] {
+    .invalidIcon {
+      color: $color-error;
+    }
+  }
+
   :focus::after {
     margin-left: -0.95rem;
   }

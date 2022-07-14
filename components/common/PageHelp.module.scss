@@ -1,0 +1,18 @@
+@import "~hds-design-tokens/lib/all.scss";
+@import "../../styles/mixins.scss";
+
+.pageHelp {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  @include media(xs) {
+    flex-direction: column;
+  }
+
+  .helpbutton {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+}

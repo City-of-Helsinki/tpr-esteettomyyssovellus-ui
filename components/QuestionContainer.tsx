@@ -6,6 +6,7 @@ import TextWithLinks from "./common/TextWithLinks";
 import { QuestionContainerProps } from "../types/general";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { setEntrancePlaceBoxes } from "../state/reducers/additionalInfoSlice";
+import { isLocationValid } from "../utils/utilFunctions";
 import QuestionInfo from "./QuestionInfo";
 import styles from "./QuestionContainer.module.scss";
 
@@ -98,6 +99,25 @@ const QuestionContainer = ({ question, accessibilityPlaces, children }: Question
     router.push(url);
   };
 
+  const getAccessibilityPlaceText = (placeId: number) => {
+    if (curEntrancePlaceBoxes) {
+      const pictures = curEntrancePlaceBoxes.filter((placeBox) => {
+        return placeBox.place_id === placeId && !placeBox.isDeleted && (placeBox.modifiedBox.photo_url || placeBox.modifiedPhotoBase64);
+      });
+      const picturesText = pictures.length > 0 ? `${i18n.t("accessibilityForm.pictures")} (${pictures.length})` : "";
+
+      const locations = curEntrancePlaceBoxes.filter((placeBox) => {
+        const coordinatesEuref = [placeBox.modifiedBox.loc_easting ?? 0, placeBox.modifiedBox.loc_northing ?? 0] as [number, number];
+        return placeBox.place_id === placeId && !placeBox.isDeleted && isLocationValid(coordinatesEuref);
+      });
+      const locationsText = locations.length > 0 ? `${i18n.t("accessibilityForm.locations")} (${locations.length})` : "";
+
+      return `${picturesText} ${locationsText}`.trim();
+    }
+
+    return "";
+  };
+
   return (
     <div className={styles.maincontainer} style={questionStyle} id={`questionid-${questionId}`}>
       <div className={styles.questionwrapper}>
@@ -145,15 +165,18 @@ const QuestionContainer = ({ question, accessibilityPlaces, children }: Question
               return (
                 <div key={key} className={styles.placecontainer}>
                   <div className={styles.place}>
-                    <IconPenLine aria-hidden />
-                    <div className={styles.maintext}>
-                      {`${i18n.t("accessibilityForm.fillPlaceData1")} '${name}' ${i18n.t("accessibilityForm.fillPlaceData2")}?`}
-                    </div>
-                  </div>
-                  <div className={styles.children}>
-                    <HdsLink href="#" size="M" disableVisitedStyles onClick={() => editAccessibilityPlace(place_id)}>
-                      {i18n.t("accessibilityForm.placeLink")}
+                    <HdsLink
+                      href="#"
+                      size="M"
+                      disableVisitedStyles
+                      iconLeft={<IconPenLine aria-hidden />}
+                      onClick={() => editAccessibilityPlace(place_id)}
+                    >
+                      {`${i18n.t("accessibilityForm.placeLink")} '${name}'?`}
                     </HdsLink>
+                  </div>
+                  <div className={styles.placeresult}>
+                    <div>{getAccessibilityPlaceText(place_id)}</div>
                   </div>
                 </div>
               );

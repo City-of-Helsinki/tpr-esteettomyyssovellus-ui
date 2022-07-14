@@ -2,26 +2,29 @@ import React, { ReactElement } from "react";
 import { GetServerSideProps } from "next";
 import { useI18n } from "next-localization";
 import Head from "next/head";
-import { IconCrossCircle, IconQuestionCircle } from "hds-react";
 import Layout from "../../../components/common/Layout";
+import LoadSpinner from "../../../components/common/LoadSpinner";
+import PageHelp from "../../../components/common/PageHelp";
 import ValidationSummary from "../../../components/common/ValidationSummary";
-import QuestionInfo from "../../../components/QuestionInfo";
-import ServicepointMainInfoContent from "../../../components/ServicepointMainInfoContent";
-import PathTreeComponent from "../../../components/PathTreeComponent";
 import EntranceLocation from "../../../components/EntranceLocation";
 import EntranceLocationPhotoCtrlButtons from "../../../components/EntranceLocationPhotoCtrlButtons";
 import EntrancePhoto from "../../../components/EntrancePhoto";
-import LoadSpinner from "../../../components/common/LoadSpinner";
 import { useAppSelector, useLoading } from "../../../state/hooks";
 import { formatAddress, getTokenHash } from "../../../utils/utilFunctions";
-import { API_FETCH_BACKEND_ENTRANCE, API_FETCH_BACKEND_SERVICEPOINT, API_FETCH_ENTRANCES, API_URL_BASE } from "../../../types/constants";
-import { BackendEntrance, BackendServicepoint, Entrance, EntranceResults } from "../../../types/backendModels";
+import {
+  API_FETCH_BACKEND_ENTRANCE,
+  API_FETCH_BACKEND_FORM_GUIDE,
+  API_FETCH_BACKEND_SERVICEPOINT,
+  API_FETCH_ENTRANCES,
+  API_URL_BASE,
+} from "../../../types/constants";
+import { BackendEntrance, BackendFormGuide, BackendServicepoint, Entrance, EntranceResults } from "../../../types/backendModels";
 import { EntranceLocationPhotoProps } from "../../../types/general";
 import i18nLoader from "../../../utils/i18n";
 import styles from "./entranceLocationPhoto.module.scss";
 
 // usage: the location and/or photo of an entrance
-const EntranceBlockLocationPhoto = ({ servicepointData, entranceData, formId }: EntranceLocationPhotoProps): ReactElement => {
+const EntranceBlockLocationPhoto = ({ servicepointData, entranceData, formGuideData, formId }: EntranceLocationPhotoProps): ReactElement => {
   const i18n = useI18n();
   const curLocale: string = i18n.locale();
   const isLoading = useLoading();
@@ -76,20 +79,8 @@ const EntranceBlockLocationPhoto = ({ servicepointData, entranceData, formId }: 
       {isUserValid && !isLoading && hasData && (
         <main id="content">
           <div className={styles.maincontainer}>
-            <div className={styles.treecontainer}>
-              <PathTreeComponent treeItems={treeItems} />
-            </div>
-
             <div className={styles.infocontainer}>
-              <QuestionInfo
-                openText={i18n.t("common.generalMainInfoIsClose")}
-                closeText={i18n.t("common.generalMainInfoIsOpen")}
-                openIcon={<IconQuestionCircle />}
-                closeIcon={<IconCrossCircle />}
-                textOnBottom
-              >
-                <ServicepointMainInfoContent />
-              </QuestionInfo>
+              <PageHelp formGuideData={formGuideData} treeItems={treeItems} />
             </div>
 
             <div className={styles.headingcontainer}>
@@ -138,6 +129,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
 
   let entranceData: BackendEntrance = {} as BackendEntrance;
   let servicepointData: BackendServicepoint = {} as BackendServicepoint;
+  let formGuideData: BackendFormGuide[] = [];
   let formId = -1;
 
   if (params !== undefined) {
@@ -207,11 +199,20 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
           }
         }
       }
+
+      // Get the guide text using the form id for this entrance
+      if (formId >= 0) {
+        const formGuideResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_FORM_GUIDE}?form_id=${formId}`, {
+          headers: new Headers({ Authorization: getTokenHash() }),
+        });
+        formGuideData = await (formGuideResp.json() as Promise<BackendFormGuide[]>);
+      }
     } catch (err) {
       console.error("Error", err);
 
       servicepointData = {} as BackendServicepoint;
       entranceData = {} as BackendEntrance;
+      formGuideData = [];
     }
   }
 
@@ -220,6 +221,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       lngDict,
       servicepointData,
       entranceData,
+      formGuideData,
       formId,
     },
   };

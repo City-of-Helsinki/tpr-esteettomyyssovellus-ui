@@ -1,11 +1,10 @@
 @import "~hds-design-tokens/lib/all.scss";
-@import "../styles/mixins.scss";
+@import "../../styles/mixins.scss";
 
 .maincontainer {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  margin: $spacing-3-xl auto;
   flex-direction: row;
 
   @include media(xs, s) {
@@ -19,7 +18,6 @@
     align-items: flex-start;
     border-left: 4px solid $color-bus-medium-light;
     padding: 0 $spacing-s;
-    color: #424242;
 
     @include media(xs, s) {
       border-left: 0;
@@ -27,9 +25,7 @@
       padding: $spacing-s 0;
     }
 
-    p {
-      padding: $spacing-s 0;
-    }
+    /*
     a {
       display: flex;
       flex-direction: row;
@@ -39,6 +35,7 @@
         transform: scale(0.6);
       }
     }
+    */
     svg {
       color: $color-bus;
     }

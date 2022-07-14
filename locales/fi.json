@@ -15,6 +15,7 @@
       "logotext": "TPR-perhe",
       "title": "Esteettömyystiedot",
       "backToTop": "Takaisin ylös",
+      "instructions": "Käyttöohjeet",
       "contact": "Ota yhteyttä",
       "copyright": "Copyright",
       "rightsReserved": "Kaikki oikeudet pidätetään",
@@ -41,14 +42,15 @@
       "title": "Tervetuloa päivittämään esteettömyystietoja"
     },
     "generalMainInfoIsOpen": "Sulje ohje",
-    "generalMainInfoIsClose": "Ohje esteettömyystietojen antamiseen",
+    "generalMainInfoIsClose": "Ohje",
     "generalChoose": "Valitse",
     "generalExplanation": "Selite",
     "buttons": {
       "saveAndReturn": "Tallenna ja palaa",
+      "return": "Palaa",
       "returnNoSave": "Poistu tallentamatta",
       "deleteAdditionalInfo": "Poista lisätiedot",
-      "deleteAdditionalInfoSets": "Poista kaikki lisätietokokonaisuudet"
+      "deleteAdditionalInfoSets": "Poista kaikki"
     },
     "message": {
       "validationFailed": {
@@ -72,7 +74,7 @@
     "editAddinfoText": "Muokkaa lisätietoja",
     "missingAnswerValue": "Valinta puuttuu",
     "missingTextValue": "Vastaus puuttuu",
-    "copyDataFromSameAddress": "kopioi samassa osoitteessa olevan toimipisteen tiedot",
+    "copyDataFromSameAddress": "Kopioi samassa osoitteessa olevan toimipisteen tiedot",
     "openInfoWhatIsThis": "Näytä mikä tämä on",
     "statusReady": "Valmis",
     "statusNotReady": "Kesken"
@@ -105,6 +107,7 @@
     "navigateToPage": "Siirry sivulle",
     "picturesLocations": "Kuvat ja sijainnit",
     "photoSource": "Lähde",
+    "sentenceComment": "Toimipisteen antama lisätieto",
     "questionsAndAnswers": "Esteettömyyskysymykset ja vastaukset",
     "showMore": "Näytä lisää",
     "showLess": "Näytä vähemmän"
@@ -146,8 +149,8 @@
     "pictureLabelEng": "Kuvateksti englanniksi",
     "pictureHelperTextEng": "Kuvaile mitä kuva esittää englanniksi",
     "sharePictureLicenseLabel": "Kuvan käyttöoikeudet",
-    "sharePictureLicenseText": "Kyllä, kuvan saa jakaa",
-    "sharePictureLicense": "Creative Commons BY 4.0. -lisenssillä",
+    "sharePictureLicenseText": "Kyllä, kuvan saa käyttää vapaasti",
+    "sharePictureLicense": "Katso lisenssiehdot",
     "sourceTooltipText": "Täytä tähän ohjeet kuvalähde fin",
     "sourceTooltipMainLabel": "Kuvalähde",
     "locationLabel": "Sijainnin kuvaus",
@@ -185,8 +188,9 @@
     "fillPlaceData1": "Voit täydentää",
     "fillPlaceData2": "tietoja kuvilla ja/tai sijaintitiedolla.",
     "orderPlaceData": "Järjestä tiedoista tärkein ylimmäksi ja vähimmän tärkein alimmaksi.",
+    "mandatoryPlaceData": "Tähdellä (*) merkityt tiedot on pakollisia.",
     "additionalInfoSet": "Lisätietokokonaisuus",
-    "addAdditionalInfoSet": "Lisää uusi lisätietokokonaisuus",
+    "addAdditionalInfoSet": "Lisää uusi",
     "order": "Järjestä",
     "pictureTitle": "Kuva",
     "locationTitle": "Sijainti kartalla"
@@ -205,9 +209,14 @@
     "fillPlaceData1": "Haluatko täydentää",
     "fillPlaceData2": "esteettömyystietoja",
     "placeLink": "Lisää kuva ja/tai sijainti",
-    "editLocationPhoto": "Muokkaa",
-    "addComment": "Anna lisätietoja",
-    "editComment": "Muokkaa tietoja",
+    "pictures": "Kuvat",
+    "locations": "Sijainnit",
+    "addLocation": "Lisää sisäänkäynnin sijainti",
+    "addPhoto": "Lisää sisäänkäynnin kuva",
+    "editLocation": "Muokkaa sisäänkäynnin sijaintia",
+    "editPhoto": "Muokkaa sisäänkäynnin kuvaa",
+    "addComment": "Anna lisäkommentti",
+    "editComment": "Muokkaa lisäkommenttia",
     "additionalInfo": "Lisätiedot"
   },
   "QuestionFormImportExistingData": {

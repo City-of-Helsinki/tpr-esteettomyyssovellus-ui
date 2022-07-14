@@ -15,6 +15,7 @@
       "logotext": "TPR-familj",
       "title": "Information om tillgänglighet",
       "backToTop": "Tillbaka upp",
+      "instructions": "Instruktioner",
       "contact": "Ta kontakt",
       "copyright": "Copyright",
       "rightsReserved": "Alla rättigheter förbehålles",
@@ -41,14 +42,15 @@
       "title": "Välkommen till uppdatering av tillgänglighetsinformation"
     },
     "generalMainInfoIsOpen": "Nära hjälp",
-    "generalMainInfoIsClose": "Instruktioner för tillhandahållande av tillgänglighetsinformation",
+    "generalMainInfoIsClose": "Hjälp",
     "generalChoose": "Välja",
     "generalExplanation": "Förklaring",
     "buttons": {
       "saveAndReturn": "Spara och returnera",
+      "return": "Returnera",
       "returnNoSave": "Avsluta utan att spara",
       "deleteAdditionalInfo": "Ta bort ytterligare information",
-      "deleteAdditionalInfoSets": "Ta bort alla ytterligare datamängder"
+      "deleteAdditionalInfoSets": "Radera allt"
     },
     "message": {
       "validationFailed": {
@@ -72,7 +74,7 @@
     "editAddinfoText": "Redigera för mer information",
     "missingAnswerValue": "Inget val",
     "missingTextValue": "Inget svar",
-    "copyDataFromSameAddress": "kopiera uppgifterna om kontoret på samma adress",
+    "copyDataFromSameAddress": "Kopiera uppgifterna om kontoret på samma adress",
     "openInfoWhatIsThis": "Visa mig vad det här är",
     "statusReady": "Färdiga",
     "statusNotReady": "Inte färdig"
@@ -105,6 +107,7 @@
     "navigateToPage": "Navigera till sidan",
     "picturesLocations": "Foton och platser",
     "photoSource": "Källa",
+    "sentenceComment": "Ytterligare information tillhandahålls av kontoret",
     "questionsAndAnswers": "Tillgänglighetsfrågor och svar",
     "showMore": "Visa mer",
     "showLess": "Visa mindre"
@@ -146,8 +149,8 @@
     "pictureLabelEng": "Bildtext på engelska",
     "pictureHelperTextEng": "Beskriv vad bilden representerar på engelska",
     "sharePictureLicenseLabel": "bildehörigheter",
-    "sharePictureLicenseText": "Ja, bilden kan köras med",
-    "sharePictureLicense": "Creative Commons BY 4.0. -licens",
+    "sharePictureLicenseText": "Ja, bilden kan användas fritt",
+    "sharePictureLicense": "Se licensvillkor",
     "sourceTooltipText": "Fyll i instruktionerna för den här bildkällan",
     "sourceTooltipMainLabel": "BildKälla",
     "locationLabel": "Platsbeskrivning",
@@ -185,8 +188,9 @@
     "fillPlaceData1": "Du kan slutföra",
     "fillPlaceData2": "information med bilder och/eller platsinformation.",
     "orderPlaceData": "Ordna informationen med det viktigaste överst och minst viktigt längst ner.",
+    "mandatoryPlaceData": "Information markerad med en asterisk (*) är obligatorisk.",
     "additionalInfoSet": "Ytterligare informationsuppsättning",
-    "addAdditionalInfoSet": "Lägg till en ny uppsättning ytterligare data",
+    "addAdditionalInfoSet": "Lägg ny",
     "order": "Ordna",
     "pictureTitle": "Bild",
     "locationTitle": "Plats på kartan"
@@ -205,9 +209,14 @@
     "fillPlaceData1": "Vill du slutföra",
     "fillPlaceData2": "tillgänglighetsinformation",
     "placeLink": "Lägg till ett bild och/eller plats",
-    "editLocationPhoto": "Redigera",
-    "addComment": "Ge mer information",
-    "editComment": "Redigera information",
+    "pictures": "Bilder",
+    "locations": "Platser",
+    "addLocation": "Lägg till entréplats",
+    "addPhoto": "Lägg till entréfoto",
+    "editLocation": "Redigera entréplats",
+    "editPhoto": "Redigera entréfoto",
+    "addComment": "Lägg till ytterligare en kommentar",
+    "editComment": "Redigera ytterligare kommentar",
     "additionalInfo": "Ytterligare information"
   },
   "QuestionFormImportExistingData": {

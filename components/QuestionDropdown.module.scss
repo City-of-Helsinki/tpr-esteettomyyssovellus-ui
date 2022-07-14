@@ -4,3 +4,8 @@
 .selectDropdown {
   width: 100%;
 }
+
+.selectDropdown li[aria-selected="true"] {
+  background-color: var(--menu-item-background-selected-hover);
+  color: var(--menu-item-color-selected-hover);
+}

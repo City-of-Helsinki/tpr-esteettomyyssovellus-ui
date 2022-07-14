@@ -11,6 +11,7 @@ import {
   setEntrancePlaceValid,
 } from "../state/reducers/additionalInfoSlice";
 import { AccessibilityPlaceCtrlButtonsProps, EntrancePlaceBox } from "../types/general";
+import { isLocationValid } from "../utils/utilFunctions";
 import styles from "./AccessibilityPlaceCtrlButtons.module.scss";
 
 // usage: save and return without saving buttons in additionalinfo page
@@ -37,6 +38,19 @@ const AccessibilityPlaceCtrlButtons = ({ placeId, entrancePlaceBoxes }: Accessib
         invalidFieldLabel,
       })
     );
+  };
+
+  const hasData = () => {
+    const pictures = entrancePlaceBoxes.filter((box) => {
+      return box.modifiedBox.photo_url || box.modifiedPhotoBase64;
+    });
+
+    const locations = entrancePlaceBoxes.filter((box) => {
+      const coordinatesEuref = [box.modifiedBox.loc_easting ?? 0, box.modifiedBox.loc_northing ?? 0] as [number, number];
+      return isLocationValid(coordinatesEuref);
+    });
+
+    return pictures.length > 0 || locations.length > 0;
   };
 
   const validateForm = () => {
@@ -111,11 +125,24 @@ const AccessibilityPlaceCtrlButtons = ({ placeId, entrancePlaceBoxes }: Accessib
     });
   }, [pageSaved, revertPlace, router]);
 
+  const getPathHash = () => {
+    // Try to get the question block id for returning to the block via the path hash
+    // Note: this is not available for a new entrance place box
+    const savedBox = entrancePlaceBoxes.find((box) => {
+      return box.question_block_id > 0;
+    });
+    return savedBox ? `#questionblockid-${savedBox.question_block_id}` : "";
+  };
+
   // don't alter already saved state, set pageSaved to true
   const handleSaveAndReturn = () => {
     if (validateForm()) {
       setPageSaved(true);
-      const url = curEntranceId > 0 ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}` : `/entranceAccessibility/${curServicepointId}`;
+
+      const url =
+        curEntranceId > 0
+          ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}${getPathHash()}`
+          : `/entranceAccessibility/${curServicepointId}${getPathHash()}`;
       router.push(url);
     }
   };
@@ -123,7 +150,10 @@ const AccessibilityPlaceCtrlButtons = ({ placeId, entrancePlaceBoxes }: Accessib
   // handle user clicked return no save button
   const handleReturnNoSave = () => {
     revertPlace();
-    const url = curEntranceId > 0 ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}` : `/entranceAccessibility/${curServicepointId}`;
+    const url =
+      curEntranceId > 0
+        ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}${getPathHash()}`
+        : `/entranceAccessibility/${curServicepointId}${getPathHash()}`;
     router.push(url);
   };
 
@@ -138,9 +168,15 @@ const AccessibilityPlaceCtrlButtons = ({ placeId, entrancePlaceBoxes }: Accessib
 
   return (
     <div className={styles.maincontainer}>
-      <QuestionButton variant="secondary" iconLeft={<IconArrowLeft />} onClickHandler={handleSaveAndReturn}>
-        {i18n.t("common.buttons.saveAndReturn")}
-      </QuestionButton>
+      {hasData() ? (
+        <QuestionButton variant="secondary" iconLeft={<IconArrowLeft />} onClickHandler={handleSaveAndReturn}>
+          {i18n.t("common.buttons.saveAndReturn")}
+        </QuestionButton>
+      ) : (
+        <QuestionButton variant="secondary" iconLeft={<IconArrowLeft />} onClickHandler={handleReturnNoSave}>
+          {i18n.t("common.buttons.return")}
+        </QuestionButton>
+      )}
       <span className={styles.noborderbutton}>
         <QuestionButton variant="secondary" onClickHandler={() => handleReturnNoSave()}>
           {i18n.t("common.buttons.returnNoSave")}

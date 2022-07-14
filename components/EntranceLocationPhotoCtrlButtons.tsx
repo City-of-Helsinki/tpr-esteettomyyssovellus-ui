@@ -88,11 +88,21 @@ const EntranceLocationPhotoCtrlButtons = ({ entranceLocationPhoto }: EntranceLoc
     });
   }, [pageSaved, revertLocationPhoto, router]);
 
+  const getPathHash = () => {
+    // Get the question block id for returning to the block via the path hash
+    const { question_block_id } = entranceLocationPhoto;
+    return `#questionblockid-${question_block_id}`;
+  };
+
   // don't alter already saved state, set pageSaved to true
   const handleSaveAndReturn = () => {
     if (validateForm()) {
       setPageSaved(true);
-      const url = curEntranceId > 0 ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}` : `/entranceAccessibility/${curServicepointId}`;
+
+      const url =
+        curEntranceId > 0
+          ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}${getPathHash()}`
+          : `/entranceAccessibility/${curServicepointId}${getPathHash()}`;
       router.push(url);
     }
   };
@@ -100,7 +110,11 @@ const EntranceLocationPhotoCtrlButtons = ({ entranceLocationPhoto }: EntranceLoc
   // handle user clicked return no save button
   const handleReturnNoSave = () => {
     revertLocationPhoto();
-    const url = curEntranceId > 0 ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}` : `/entranceAccessibility/${curServicepointId}`;
+
+    const url =
+      curEntranceId > 0
+        ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}${getPathHash()}`
+        : `/entranceAccessibility/${curServicepointId}${getPathHash()}`;
     router.push(url);
   };
 
