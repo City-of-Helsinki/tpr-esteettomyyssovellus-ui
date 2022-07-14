@@ -452,6 +452,7 @@ export interface AccessibilityPlacePictureProps {
 export interface AccessibilityPlaceCtrlButtonsProps {
   placeId: number;
   entrancePlaceBoxes: EntrancePlaceBox[];
+  deletedEntrancePlaceBoxes: EntrancePlaceBox[];
 }
 
 export interface AccessibilityPlaceNewButtonProps {

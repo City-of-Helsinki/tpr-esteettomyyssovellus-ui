@@ -16,7 +16,11 @@ import styles from "./AccessibilityPlaceCtrlButtons.module.scss";
 
 // usage: save and return without saving buttons in additionalinfo page
 // notes: only save if save clicked, if return no save or back button (browser, mice etc) returns to old or empty value
-const AccessibilityPlaceCtrlButtons = ({ placeId, entrancePlaceBoxes }: AccessibilityPlaceCtrlButtonsProps): JSX.Element => {
+const AccessibilityPlaceCtrlButtons = ({
+  placeId,
+  entrancePlaceBoxes,
+  deletedEntrancePlaceBoxes,
+}: AccessibilityPlaceCtrlButtonsProps): JSX.Element => {
   const i18n = useI18n();
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -50,7 +54,8 @@ const AccessibilityPlaceCtrlButtons = ({ placeId, entrancePlaceBoxes }: Accessib
       return isLocationValid(coordinatesEuref);
     });
 
-    return pictures.length > 0 || locations.length > 0;
+    // Allow saving if extrance places were deleted, so that all places can be removed and saved
+    return pictures.length > 0 || locations.length > 0 || deletedEntrancePlaceBoxes.length > 0;
   };
 
   const validateForm = () => {
