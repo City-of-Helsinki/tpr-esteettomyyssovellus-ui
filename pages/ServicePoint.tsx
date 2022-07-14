@@ -103,7 +103,7 @@ const Servicepoints = ({
   return (
     <Layout>
       <Head>
-        <title>{i18n.t("notification.title")}</title>
+        <title>{i18n.t("common.header.title")}</title>
       </Head>
       <main id="content">
         {changed && changed === "address" && (

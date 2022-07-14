@@ -119,7 +119,7 @@ const Details = ({
   return (
     <Layout>
       <Head>
-        <title>{i18n.t("notification.title")}</title>
+        <title>{i18n.t("common.header.title")}</title>
       </Head>
       {!isUserValid && <h1>{i18n.t("common.notAuthorized")}</h1>}
 
