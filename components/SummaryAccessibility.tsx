@@ -44,35 +44,41 @@ const SummaryAccessibility = ({
 
   const getQuestionsAnswersAccordion = () => {
     if (sentenceGroup && entranceChoiceData[entranceKey]) {
-      const getQuestionAnswerRows = (limit: number, isLessThan: boolean) => {
+      const getQuestionAnswers = () => {
         return entranceChoiceData[entranceKey]
           .filter((qa) => qa.sentence_group_id === Number(sentenceGroupId) && qa.language_id === curLocaleId)
-          .sort((a, b) => (a.question_order_text ?? "").localeCompare(b.question_order_text ?? ""))
-          .map((qa, index) => {
-            if (qa) {
-              const { question_id, question_code, question_text, question_choice_text } = qa;
-
-              return (
-                (isLessThan ? index < limit : index >= limit) && (
-                  <div key={`question_${question_id}`} className={styles.questioncontainer}>
-                    <span>{`${question_code} ${question_text}`}</span>
-                    <span className={styles.answer}>{`${question_choice_text}`}</span>
-                  </div>
-                )
-              );
-            }
-          });
+          .sort((a, b) => (a.question_order_text ?? "").localeCompare(b.question_order_text ?? ""));
       };
 
+      const getQuestionAnswerRows = (limit: number, isLessThan: boolean) => {
+        return getQuestionAnswers().map((qa, index) => {
+          if (qa) {
+            const { question_id, question_code, question_text, question_choice_text } = qa;
+
+            return (
+              (isLessThan ? index < limit : index >= limit) && (
+                <div key={`question_${question_id}`} className={styles.questioncontainer}>
+                  <span>{`${question_code} ${question_text}`}</span>
+                  <span className={styles.answer}>{`${question_choice_text}`}</span>
+                </div>
+              )
+            );
+          }
+        });
+      };
+
+      const rows = getQuestionAnswers().length;
       const rowLimit = 10;
 
       return (
         <Accordion className={styles.accordion} heading={i18n.t("servicepoint.questionsAndAnswers")}>
           {getQuestionAnswerRows(rowLimit, true)}
 
-          <SummaryAccessibilityInnerAccordion>
-            <>{getQuestionAnswerRows(rowLimit, false)}</>
-          </SummaryAccessibilityInnerAccordion>
+          {rows > rowLimit && (
+            <SummaryAccessibilityInnerAccordion>
+              <>{getQuestionAnswerRows(rowLimit, false)}</>
+            </SummaryAccessibilityInnerAccordion>
+          )}
         </Accordion>
       );
     }
