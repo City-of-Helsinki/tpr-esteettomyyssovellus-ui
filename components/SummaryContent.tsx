@@ -1,9 +1,9 @@
 import React from "react";
 import styles from "./SummaryContent.module.scss";
-import { ServicepointLandingSummaryContentProps } from "../types/general";
+import { SummaryContentProps } from "../types/general";
 
 // usage: used in details/landing page for content to ServicepointLandingSummary
-const SummaryContent = ({ contentHeader, children }: ServicepointLandingSummaryContentProps): JSX.Element => {
+const SummaryContent = ({ contentHeader, children }: SummaryContentProps): JSX.Element => {
   return (
     <div className={styles.maincontainer}>
       <h2 className={styles.header}>{contentHeader}</h2>

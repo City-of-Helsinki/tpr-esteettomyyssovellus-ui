@@ -2,13 +2,13 @@ import React from "react";
 import { useI18n } from "next-localization";
 import { useRouter } from "next/router";
 import Button from "./QuestionButton";
-import { ServicepointLandingSummaryModifyButtonProps } from "../types/general";
+import { SummaryModifyButtonProps } from "../types/general";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { setStartDate } from "../state/reducers/formSlice";
 import { getCurrentDate } from "../utils/utilFunctions";
 
 // usage: modify button for ServicepointLandingSummary
-const SummaryModifyButton = ({ entranceData, hasData }: ServicepointLandingSummaryModifyButtonProps): JSX.Element => {
+const SummaryModifyButton = ({ entranceData, hasData }: SummaryModifyButtonProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -16,7 +16,7 @@ const SummaryModifyButton = ({ entranceData, hasData }: ServicepointLandingSumma
   const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
   const { entrance_id: curEntranceId } = entranceData || {};
 
-  const handleEditorAddPointData = () => {
+  const handleEditorModifyPointData = () => {
     const startedAnswering = getCurrentDate();
     dispatch(setStartDate(startedAnswering));
     const url = entranceData ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}` : `/entranceAccessibility/${curServicepointId}`;
@@ -24,7 +24,7 @@ const SummaryModifyButton = ({ entranceData, hasData }: ServicepointLandingSumma
   };
 
   return (
-    <Button variant="primary" onClickHandler={handleEditorAddPointData}>
+    <Button variant="primary" onClickHandler={handleEditorModifyPointData}>
       {!hasData ? i18n.t("servicepoint.buttons.createServicepoint") : i18n.t("servicepoint.buttons.editServicepoint")}
     </Button>
   );

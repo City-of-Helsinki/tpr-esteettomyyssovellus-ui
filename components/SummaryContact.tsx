@@ -3,11 +3,11 @@ import { IconAlertCircle } from "hds-react";
 import { useI18n } from "next-localization";
 import SummaryContent from "./SummaryContent";
 import SummaryModifyButton from "./SummaryModifyButton";
-import { ServicepointLandingSummaryContactProps } from "../types/general";
+import { SummaryContactProps } from "../types/general";
 import styles from "./SummaryContact.module.scss";
 
 // usage: used in details/landing page for main contact information
-const SummaryContact = ({ entranceData, hasData, hasModifyButton }: ServicepointLandingSummaryContactProps): JSX.Element => {
+const SummaryContact = ({ entranceData, hasData, hasModifyButton }: SummaryContactProps): JSX.Element => {
   const i18n = useI18n();
   const curLocale = i18n.locale();
 
