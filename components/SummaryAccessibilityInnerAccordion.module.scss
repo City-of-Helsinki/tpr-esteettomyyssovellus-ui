@@ -4,6 +4,12 @@
 .maincontainer {
   margin-top: $spacing-s;
 
+  button:focus {
+    color: var(--color-hover);
+    background-color: var(--background-color-hover);
+    text-decoration: underline;
+  }
+
   .contentcontainer {
     padding: 0;
   }

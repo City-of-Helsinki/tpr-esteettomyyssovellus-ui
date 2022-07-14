@@ -1,6 +1,7 @@
 import React from "react";
 import { useI18n } from "next-localization";
 import Map from "./common/Map";
+import SkipMapButton from "./common/SkipMapButton";
 import { useAppSelector } from "../state/hooks";
 import { MAP_MAX_ZOOM } from "../types/constants";
 import { SummaryLocationPictureProps } from "../types/general";
@@ -35,9 +36,10 @@ const SummaryLocationPicture = ({ entranceKey, entranceData, servicepointData }:
         <div className={styles.mappicturecontainer}>
           <div className={styles.label}>
             <div>{locationLabel}</div>
+            <SkipMapButton idToSkipTo="#picturecontainer" />
           </div>
 
-          <div className={styles.map}>
+          <div className={styles.map} aria-hidden>
             <Map
               curLocation={isLocationValid(coordinatesEuref) ? coordinatesWGS84 : servicepointCoordinatesWGS84}
               initZoom={MAP_MAX_ZOOM}
@@ -48,7 +50,7 @@ const SummaryLocationPicture = ({ entranceKey, entranceData, servicepointData }:
         </div>
       </div>
 
-      <div className={styles.subcontainer}>
+      <div id="picturecontainer" className={styles.subcontainer}>
         <h4>{entranceKey === "main" ? i18n.t("servicepoint.mainEntrancePicturesLabel") : i18n.t("servicepoint.entrancePicturesLabel")}</h4>
 
         <div className={styles.mappicturecontainer}>

@@ -73,7 +73,7 @@ const EntranceLocation = ({ entranceLocationPhoto }: EntranceLocationProps): JSX
     <div className={styles.maincontainer} aria-hidden>
       {(mapInput || isLocationValid(coordinatesWGS84)) && <div className={styles.mapcontainer}>{memoMap}</div>}
 
-      <div className={styles.inputcontainer}>
+      <div id="locationinputcontainer" className={styles.inputcontainer}>
         <div className={styles.inputbuttons}>
           {!mapInput && !isLocationValid(coordinatesWGS84) && (
             <QuestionButton variant="secondary" iconRight={<IconLocation aria-hidden />} onClickHandler={() => handleAddLocation()}>

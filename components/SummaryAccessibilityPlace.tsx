@@ -1,6 +1,7 @@
 import React from "react";
 import { useI18n } from "next-localization";
 import Map from "./common/Map";
+import SkipMapButton from "./common/SkipMapButton";
 import { MAP_MAX_ZOOM } from "../types/constants";
 import { SummaryAccessibilityPlaceProps } from "../types/general";
 import { convertCoordinates, isLocationValid } from "../utils/utilFunctions";
@@ -66,11 +67,14 @@ const SummaryAccessibilityPlace = ({ entrancePlaceName, entrancePlaceData }: Sum
                         <div>{`FI: ${location_text_fi ?? ""}`}</div>
                         <div>{`SV: ${location_text_sv ?? ""}`}</div>
                         <div>{`EN: ${location_text_en ?? ""}`}</div>
+                        <SkipMapButton idToSkipTo="#afterMap" />
                       </div>
 
-                      <div className={styles.map}>
+                      <div className={styles.map} aria-hidden>
                         <Map curLocation={coordinatesWGS84} initZoom={MAP_MAX_ZOOM} draggableMarker={false} makeStatic />
                       </div>
+
+                      <div id="afterMap" />
                     </div>
                   </div>
                 )}

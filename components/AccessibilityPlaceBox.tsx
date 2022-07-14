@@ -1,6 +1,7 @@
 import React from "react";
 import { useI18n } from "next-localization";
 import { Button, IconArrowDown, IconArrowUp, IconCross } from "hds-react";
+import SkipMapButton from "./common/SkipMapButton";
 import { useAppDispatch } from "../state/hooks";
 import { changeEntrancePlaceBoxOrder, deleteEntrancePlaceBox } from "../state/reducers/additionalInfoSlice";
 import { AccessibilityPlaceBoxProps } from "../types/general";
@@ -67,6 +68,7 @@ const AccessibilityPlaceBox = ({ entrancePlaceBox, entrancePlaceName, canAddLoca
         {canAddLocation && (
           <div>
             <div className={styles.contentheader}>{`${i18n.t("additionalInfo.locationTitle")} ${order_number} - '${entrancePlaceName}'`}</div>
+            <SkipMapButton idToSkipTo={`#placeinputcontainer-${order_number}`} />
             <AccessibilityPlaceLocation entrancePlaceBox={entrancePlaceBox} />
           </div>
         )}

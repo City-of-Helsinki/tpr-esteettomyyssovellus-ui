@@ -27,7 +27,8 @@
       "zoomOut": "Zoom out",
       "osm": "OpenStreetMap contributors",
       "point": "point",
-      "line": "line"
+      "line": "line",
+      "skipMap": "Skip map"
     },
     "inLanguage": {
       "fi": "in Finnish",

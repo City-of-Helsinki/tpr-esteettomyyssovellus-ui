@@ -27,7 +27,8 @@
       "zoomOut": "Zooma ut",
       "osm": "OpenStreetMaps bidragsgivare",
       "point": "punkt",
-      "line": "linje"
+      "line": "linje",
+      "skipMap": "Hoppa över kartan"
     },
     "inLanguage": {
       "fi": "på finska",

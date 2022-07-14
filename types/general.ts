@@ -211,6 +211,10 @@ export interface MapProps {
   makeStatic?: boolean;
 }
 
+export interface SkipMapButtonProps {
+  idToSkipTo: string;
+}
+
 export interface Validation {
   valid: boolean;
   fieldId: string;

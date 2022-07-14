@@ -27,7 +27,8 @@
       "zoomOut": "Loitonna",
       "osm": "OpenStreetMapin tekijät",
       "point": "piste",
-      "line": "viiva"
+      "line": "viiva",
+      "skipMap": "Ohita kartta"
     },
     "inLanguage": {
       "fi": "suomeksi",
