@@ -1,7 +1,7 @@
 import React from "react";
 import { Accordion, IconAlertCircle } from "hds-react";
 import { useI18n } from "next-localization";
-import ServicepointLandingSummaryContent from "./ServicepointLandingSummaryContent";
+import SummaryContent from "./SummaryContent";
 import SummaryAccessibilityInnerAccordion from "./SummaryAccessibilityInnerAccordion";
 import { BackendEntranceSentence } from "../types/backendModels";
 import { LanguageLocales } from "../types/constants";
@@ -90,12 +90,12 @@ const SummaryAccessibility = ({
         </div>
       ) : (
         <div className={styles.nodatacontainer}>
-          <ServicepointLandingSummaryContent>
+          <SummaryContent>
             <span>
               <IconAlertCircle />
               <p>{i18n.t("servicepoint.noDataMainEntrance")}</p>
             </span>
-          </ServicepointLandingSummaryContent>
+          </SummaryContent>
         </div>
       )}
     </div>

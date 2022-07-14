@@ -7,9 +7,9 @@ import Layout from "../../components/common/Layout";
 import LoadSpinner from "../../components/common/LoadSpinner";
 import PageHelp from "../../components/common/PageHelp";
 import SummarySideNavigation from "../../components/SummarySideNavigation";
-import ServicepointLandingSummaryContact from "../../components/ServicepointLandingSummaryContact";
-import ServicepointLandingSummaryNewButton from "../../components/ServicepointLandingSummaryNewButton";
-import ServicepointLandingSummaryModifyButton from "../../components/ServicepointLandingSummaryModifyButton";
+import SummaryContact from "../../components/SummaryContact";
+import SummaryNewButton from "../../components/SummaryNewButton";
+import SummaryModifyButton from "../../components/SummaryModifyButton";
 import { useAppDispatch, useAppSelector, useLoading } from "../../state/hooks";
 import { setServicepointId } from "../../state/reducers/formSlice";
 import { setServicepointLocationEuref, setServicepointLocationWGS84 } from "../../state/reducers/generalSlice";
@@ -155,14 +155,14 @@ const Details = ({
                   entranceKeys.length === 1 ? i18n.t("servicepoint.numberOfEntrances1") : i18n.t("servicepoint.numberOfEntrances2+")
                 })`}</h2>
 
-                {servicepointData.new_entrance_possible === "Y" && <ServicepointLandingSummaryNewButton />}
+                {servicepointData.new_entrance_possible === "Y" && <SummaryNewButton />}
               </div>
               */}
 
               <h2>{i18n.t("common.mainEntrance")}</h2>
             </div>
 
-            <ServicepointLandingSummaryContact entranceData={entranceData.main} hasData={hasMainAccessibilityData} hasModifyButton />
+            <SummaryContact entranceData={entranceData.main} hasData={hasMainAccessibilityData} hasModifyButton />
 
             {entranceKeys.map((key, index) => {
               const hasAccessibilityData = accessibilityData && accessibilityData[key] && accessibilityData[key].length > 0;
@@ -173,7 +173,7 @@ const Details = ({
 
                   <div className={styles.headercontainer}>
                     <h3>{key === "main" ? i18n.t("common.mainEntrance") : `${i18n.t("common.additionalEntrance")} ${index}`}</h3>
-                    {key !== "main" && <ServicepointLandingSummaryModifyButton entranceData={entranceData[key]} hasData={hasAccessibilityData} />}
+                    {key !== "main" && <SummaryModifyButton entranceData={entranceData[key]} hasData={hasAccessibilityData} />}
                   </div>
 
                   <SummarySideNavigation
@@ -190,7 +190,7 @@ const Details = ({
               );
             })}
 
-            <div>{servicepointData.new_entrance_possible === "Y" && <ServicepointLandingSummaryNewButton />}</div>
+            <div>{servicepointData.new_entrance_possible === "Y" && <SummaryNewButton />}</div>
           </div>
         </main>
       )}
