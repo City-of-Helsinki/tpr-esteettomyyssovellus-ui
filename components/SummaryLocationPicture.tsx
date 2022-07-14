@@ -19,7 +19,7 @@ const SummaryLocationPicture = ({ entranceKey, entranceData, servicepointData }:
   const coordinatesEuref = [loc_easting ?? 0, loc_northing ?? 0] as [number, number];
   const coordinatesWGS84 = convertCoordinates("EPSG:3067", "WGS84", coordinatesEuref).reverse() as [number, number];
 
-  const entranceName = entranceData && entranceData ? entranceData[`name_${curLocale}`] : "";
+  const entranceName = entranceData && entranceData[`name_${curLocale}`] ? entranceData[`name_${curLocale}`] : "";
   const locationLabel =
     entranceKey === "main"
       ? formatAddress(servicepointData.address_street_name, servicepointData.address_no, servicepointData.address_city)
