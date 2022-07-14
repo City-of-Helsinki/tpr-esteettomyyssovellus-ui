@@ -120,6 +120,11 @@ export interface QuestionFormGuideProps {
   formGuideData: BackendFormGuide[];
 }
 
+export interface GuideLinkProps {
+  guideTitle?: string;
+  guideUrl?: string;
+}
+
 export interface QuestionsListProps {
   // additionalInfoVisible: boolean;
   questions?: BackendQuestion[];

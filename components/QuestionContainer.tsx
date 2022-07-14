@@ -2,6 +2,7 @@ import React from "react";
 import { IconCrossCircle, IconInfoCircle, IconPenLine, Link as HdsLink } from "hds-react";
 import { useI18n } from "next-localization";
 import { useRouter } from "next/router";
+import GuideLink from "./common/GuideLink";
 import TextWithLinks from "./common/TextWithLinks";
 import { QuestionContainerProps } from "../types/general";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
@@ -25,6 +26,8 @@ const QuestionContainer = ({ question, accessibilityPlaces, children }: Question
     description: questionInfo,
     photo_text: photoText,
     photo_url: photoUrl,
+    guide_title: guideTitle,
+    guide_url: guideUrl,
     place_visible_if_question_choice: placeVisible,
   } = question;
 
@@ -148,6 +151,8 @@ const QuestionContainer = ({ question, accessibilityPlaces, children }: Question
                     const key = `br_${index}`;
                     return <TextWithLinks key={key} text={text} />;
                   })}
+
+                  <GuideLink guideTitle={guideTitle} guideUrl={guideUrl} />
                 </div>
               </QuestionInfo>
             ) : null}
