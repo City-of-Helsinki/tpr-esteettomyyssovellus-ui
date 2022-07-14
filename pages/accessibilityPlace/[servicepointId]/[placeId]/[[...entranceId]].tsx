@@ -166,7 +166,12 @@ const AccessibilityPlace = ({
               {filteredEntrancePlaceBoxes.map((entrancePlaceBox, index) => {
                 const key = `box_${index}`;
                 return (
-                  <AccessibilityPlaceBox key={key} entrancePlaceBox={entrancePlaceBox} canAddLocation={filteredPlaceData.can_add_location === "Y"} />
+                  <AccessibilityPlaceBox
+                    key={key}
+                    entrancePlaceBox={entrancePlaceBox}
+                    entrancePlaceName={filteredPlaceData.name || ""}
+                    canAddLocation={filteredPlaceData.can_add_location === "Y"}
+                  />
                 );
               })}
             </div>

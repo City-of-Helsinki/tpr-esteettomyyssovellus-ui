@@ -438,6 +438,7 @@ export interface AccessibilityPlaceProps {
 
 export interface AccessibilityPlaceBoxProps {
   entrancePlaceBox: EntrancePlaceBox;
+  entrancePlaceName: string;
   canAddLocation: boolean;
 }
 
