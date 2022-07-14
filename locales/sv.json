@@ -50,7 +50,9 @@
       "return": "Returnera",
       "returnNoSave": "Avsluta utan att spara",
       "deleteAdditionalInfo": "Ta bort ytterligare information",
-      "deleteAdditionalInfoSets": "Radera allt"
+      "deleteAdditionalInfoSets": "Radera allt",
+      "yes": "Ja",
+      "no": "Nej"
     },
     "message": {
       "validationFailed": {
@@ -84,8 +86,14 @@
       "createServicepoint": "Fyll i tillgänglighetsinformation",
       "addNewEntrance": "Lägg till en ny entré",
       "editServicepoint": "Redigera",
+      "deleteEntrance": "Ta bort alternativ entré",
+      "deleting": "Tar bort",
+      "deletingFinished": "Raderade",
       "mainCtrlReturn": "Återgå till sökningen",
       "mainCtrlDelete": "Ta bort tillgänglighetsinformation"
+    },
+    "confirmation": {
+      "deleteEntrance": "Är du säker på att du vill ta bort den extra ingången?"
     },
     "contactInfoHeader": "Kontaktinformation",
     "contactFormSummaryHeader": "Tillgänglighetsinformation",

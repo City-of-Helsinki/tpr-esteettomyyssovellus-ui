@@ -14,8 +14,6 @@ interface ModalConfirmationProps {
   confirmCallback: () => void;
 }
 
-// usage: not yet used anywhere, todo: remove if not used
-// notes: imported from marketing project
 const ModalConfirmation = ({
   open,
   closeCallback,
@@ -28,22 +26,19 @@ const ModalConfirmation = ({
   const i18n = useI18n();
 
   return (
-    <>
-      <h2>Modal confirmation dialog</h2>
-      <Dialog open={open} onClose={closeCallback}>
-        <div className={styles.dialog}>
-          <div className={styles.title}>{i18n.t(titleKey as string)}</div>
-          <div>{i18n.t(messageKey)}</div>
-          <div className={styles.buttons}>
-            <Button variant="secondary" onClick={closeCallback}>
-              {i18n.t(cancelKey)}
-            </Button>
-            <div className="flexSpace" />
-            <Button onClick={confirmCallback}>{i18n.t(confirmKey)}</Button>
-          </div>
+    <Dialog open={open} onClose={closeCallback}>
+      <div className={styles.dialog}>
+        <div className={styles.title}>{i18n.t(titleKey as string)}</div>
+        <div>{i18n.t(messageKey)}</div>
+        <div className={styles.buttons}>
+          <Button onClick={confirmCallback}>{i18n.t(confirmKey)}</Button>
+          <div className="flexSpace" />
+          <Button variant="secondary" onClick={closeCallback}>
+            {i18n.t(cancelKey)}
+          </Button>
         </div>
-      </Dialog>
-    </>
+      </div>
+    </Dialog>
   );
 };
 

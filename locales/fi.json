@@ -50,7 +50,9 @@
       "return": "Palaa",
       "returnNoSave": "Poistu tallentamatta",
       "deleteAdditionalInfo": "Poista lisätiedot",
-      "deleteAdditionalInfoSets": "Poista kaikki"
+      "deleteAdditionalInfoSets": "Poista kaikki",
+      "yes": "Kyllä",
+      "no": "Ei"
     },
     "message": {
       "validationFailed": {
@@ -84,8 +86,14 @@
       "createServicepoint": "Täytä esteettömyystiedot",
       "addNewEntrance": "Lisää uusi sisäänkäynti",
       "editServicepoint": "Muokkaa",
+      "deleteEntrance": "Poista lisäsisäänkäynti",
+      "deleting": "Poistetaan",
+      "deletingFinished": "Poistettu",
       "mainCtrlReturn": "Palaa hakuun",
       "mainCtrlDelete": "Poista esteettömyystieto"
+    },
+    "confirmation": {
+      "deleteEntrance": "Oletko varma, että haluat poistaa lisäsisäänkäynnin?"
     },
     "contactInfoHeader": "Yhteystiedot",
     "contactFormSummaryHeader": "Esteettömyystiedot",

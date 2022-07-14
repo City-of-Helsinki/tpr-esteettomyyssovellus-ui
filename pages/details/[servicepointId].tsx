@@ -10,6 +10,7 @@ import SummarySideNavigation from "../../components/SummarySideNavigation";
 import SummaryContact from "../../components/SummaryContact";
 import SummaryNewButton from "../../components/SummaryNewButton";
 import SummaryModifyButton from "../../components/SummaryModifyButton";
+import SummaryRemoveButton from "../../components/SummaryRemoveButton";
 import { useAppDispatch, useAppSelector, useLoading } from "../../state/hooks";
 import { setServicepointId } from "../../state/reducers/formSlice";
 import { setServicepointLocationEuref, setServicepointLocationWGS84 } from "../../state/reducers/generalSlice";
@@ -173,7 +174,9 @@ const Details = ({
 
                   <div className={styles.headercontainer}>
                     <h3>{key === "main" ? i18n.t("common.mainEntrance") : `${i18n.t("common.additionalEntrance")} ${index}`}</h3>
-                    {key !== "main" && <SummaryModifyButton entranceData={entranceData[key]} hasData={hasAccessibilityData} />}
+                    <div className={styles.modifybutton}>
+                      {key !== "main" && <SummaryModifyButton entranceData={entranceData[key]} hasData={hasAccessibilityData} />}
+                    </div>
                   </div>
 
                   <SummarySideNavigation
@@ -186,6 +189,10 @@ const Details = ({
                     accessibilityPlaces={filteredPlaces}
                     entranceChoiceData={entranceChoiceData}
                   />
+
+                  <div className={styles.footercontainer}>
+                    {key !== "main" && hasAccessibilityData && <SummaryRemoveButton entranceData={entranceData[key]} />}
+                  </div>
                 </div>
               );
             })}

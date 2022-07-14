@@ -185,6 +185,10 @@ export interface SummaryModifyButtonProps {
   hasData: boolean;
 }
 
+export interface SummaryRemoveButtonProps {
+  entranceData?: BackendEntrance;
+}
+
 export interface SummaryCtrlButtonsProps {
   hasData: boolean;
 }

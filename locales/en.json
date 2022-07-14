@@ -50,7 +50,9 @@
       "return": "Return",
       "returnNoSave": "Exit without saving",
       "deleteAdditionalInfo": "Delete additional information",
-      "deleteAdditionalInfoSets": "Delete all"
+      "deleteAdditionalInfoSets": "Delete all",
+      "yes": "Yes",
+      "no": "No"
     },
     "message": {
       "validationFailed": {
@@ -84,8 +86,14 @@
       "createServicepoint": "Fill accessibility information",
       "addNewEntrance": "Add a new entrance",
       "editServicepoint": "Edit",
+      "deleteEntrance": "Remove additional entrance",
+      "deleting": "Deleting",
+      "deletingFinished": "Deleted",
       "mainCtrlReturn": "Return to search",
       "mainCtrlDelete": "Delete accessibility data"
+    },
+    "confirmation": {
+      "deleteEntrance": "Are you sure you want to remove the additional entrance?"
     },
     "contactInfoHeader": "Contact information",
     "contactFormSummaryHeader": "Accessibility information",
