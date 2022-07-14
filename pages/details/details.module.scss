@@ -60,5 +60,22 @@
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-between;
+
+    @include media(xs) {
+      flex-direction: column;
+    }
+
+    .modifybutton {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+    }
+  }
+
+  .footercontainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-end;
   }
 }

@@ -1,11 +1,11 @@
 import { IconTrash } from "hds-react";
 import { useI18n } from "next-localization";
 import QuestionButton from "./QuestionButton";
-import { ServicepointLandingSummaryCtrlButtonsProps } from "../types/general";
-import styles from "./ServicepointLandingSummaryCtrlButtons.module.scss";
+import { SummaryCtrlButtonsProps } from "../types/general";
+import styles from "./SummaryCtrlButtons.module.scss";
 
 // usage: control buttons for ServicepointLandingSummary
-const ServicepointLandingSummaryCtrlButtons = ({ hasData }: ServicepointLandingSummaryCtrlButtonsProps): JSX.Element => {
+const SummaryCtrlButtons = ({ hasData }: SummaryCtrlButtonsProps): JSX.Element => {
   const i18n = useI18n();
   return (
     <div className={styles.maincontainer}>
@@ -22,4 +22,4 @@ const ServicepointLandingSummaryCtrlButtons = ({ hasData }: ServicepointLandingS
   );
 };
 
-export default ServicepointLandingSummaryCtrlButtons;
+export default SummaryCtrlButtons;

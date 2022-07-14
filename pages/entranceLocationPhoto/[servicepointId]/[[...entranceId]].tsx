@@ -5,6 +5,7 @@ import Head from "next/head";
 import Layout from "../../../components/common/Layout";
 import LoadSpinner from "../../../components/common/LoadSpinner";
 import PageHelp from "../../../components/common/PageHelp";
+import SkipMapButton from "../../../components/common/SkipMapButton";
 import ValidationSummary from "../../../components/common/ValidationSummary";
 import EntranceLocation from "../../../components/EntranceLocation";
 import EntranceLocationPhotoCtrlButtons from "../../../components/EntranceLocationPhotoCtrlButtons";
@@ -68,7 +69,7 @@ const EntranceBlockLocationPhoto = ({ servicepointData, entranceData, formGuideD
   return (
     <Layout>
       <Head>
-        <title>{i18n.t("notification.title")}</title>
+        <title>{i18n.t("common.header.title")}</title>
       </Head>
       {!isUserValid && <h1>{i18n.t("common.notAuthorized")}</h1>}
 
@@ -106,6 +107,7 @@ const EntranceBlockLocationPhoto = ({ servicepointData, entranceData, formGuideD
               {canAddLocation && (
                 <div>
                   <div className={styles.contentheader}>{i18n.t("additionalInfo.locationTitle")}</div>
+                  <SkipMapButton idToSkipTo="#locationinputcontainer" />
                   <EntranceLocation entranceLocationPhoto={curEntranceLocationPhoto} />
                 </div>
               )}

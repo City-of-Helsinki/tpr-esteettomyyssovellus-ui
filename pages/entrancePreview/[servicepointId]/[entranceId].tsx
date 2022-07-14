@@ -7,9 +7,9 @@ import AddNewEntranceNotice from "../../../components/common/AddNewEntranceNotic
 import Layout from "../../../components/common/Layout";
 import LoadSpinner from "../../../components/common/LoadSpinner";
 import PageHelp from "../../../components/common/PageHelp";
-import ServicepointLandingSummaryContact from "../../../components/ServicepointLandingSummaryContact";
+import SummaryContact from "../../../components/SummaryContact";
 import PreviewControlButtons from "../../../components/PreviewControlButtons";
-import ServicepointLandingSummaryContent from "../../../components/ServicepointLandingSummaryContent";
+import SummaryContent from "../../../components/SummaryContent";
 import SummaryAccessibility from "../../../components/SummaryAccessibility";
 import SummaryAccessibilityPlace from "../../../components/SummaryAccessibilityPlace";
 import SummaryLocationPicture from "../../../components/SummaryLocationPicture";
@@ -329,7 +329,7 @@ const Preview = ({
   return (
     <Layout>
       <Head>
-        <title>{i18n.t("notification.title")}</title>
+        <title>{i18n.t("common.header.title")}</title>
       </Head>
       {!isUserValid && <h1>{i18n.t("common.notAuthorized")}</h1>}
 
@@ -357,17 +357,15 @@ const Preview = ({
               <div className={styles.contentcontainer}>
                 <PreviewControlButtons hasSaveDraftButton={!isMainEntrancePublished} setSendingComplete={setSendingComplete} />
 
-                {entranceKey === "main" && (
-                  <ServicepointLandingSummaryContact entranceData={entranceData[entranceKey]} hasData={hasAccessibilityData} />
-                )}
+                {entranceKey === "main" && <SummaryContact entranceData={entranceData[entranceKey]} hasData={hasAccessibilityData} />}
 
-                <ServicepointLandingSummaryContent
+                <SummaryContent
                   contentHeader={
                     entranceKey === "main" ? i18n.t("servicepoint.mainEntranceLocationLabel") : i18n.t("servicepoint.entranceLocationLabel")
                   }
                 >
                   <SummaryLocationPicture entranceKey={entranceKey} entranceData={entranceData[entranceKey]} servicepointData={servicepointData} />
-                </ServicepointLandingSummaryContent>
+                </SummaryContent>
 
                 {hasAccessibilityData && (
                   <div>

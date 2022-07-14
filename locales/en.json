@@ -27,7 +27,8 @@
       "zoomOut": "Zoom out",
       "osm": "OpenStreetMap contributors",
       "point": "point",
-      "line": "line"
+      "line": "line",
+      "skipMap": "Skip map"
     },
     "inLanguage": {
       "fi": "in Finnish",
@@ -50,7 +51,9 @@
       "return": "Return",
       "returnNoSave": "Exit without saving",
       "deleteAdditionalInfo": "Delete additional information",
-      "deleteAdditionalInfoSets": "Delete all"
+      "deleteAdditionalInfoSets": "Delete all",
+      "yes": "Yes",
+      "no": "No"
     },
     "message": {
       "validationFailed": {
@@ -84,8 +87,14 @@
       "createServicepoint": "Fill accessibility information",
       "addNewEntrance": "Add a new entrance",
       "editServicepoint": "Edit",
+      "deleteEntrance": "Remove additional entrance",
+      "deleting": "Deleting",
+      "deletingFinished": "Deleted",
       "mainCtrlReturn": "Return to search",
       "mainCtrlDelete": "Delete accessibility data"
+    },
+    "confirmation": {
+      "deleteEntrance": "Are you sure you want to remove the additional entrance?"
     },
     "contactInfoHeader": "Contact information",
     "contactFormSummaryHeader": "Accessibility information",
@@ -152,7 +161,7 @@
     "sharePictureLicenseText": "Yes, the image can be used freely",
     "sharePictureLicense": "See license terms",
     "sourceTooltipText": "Insert here instructions for picture source",
-    "sourceTooltipMainLabel": "Picture source",
+    "sourceTooltipMainLabel": "Picture owner",
     "locationLabel": "Location description",
     "locationHelperText": "Describe the location",
     "locationLabelSwe": "Describe the location in swedish",
@@ -193,7 +202,7 @@
     "addAdditionalInfoSet": "Add new",
     "order": "Arrange",
     "pictureTitle": "Picture",
-    "locationTitle": "Location on map"
+    "locationTitle": "Location"
   },
   "accessibilityForm": {
     "generalInfo1": "Answering the questions takes about 5 - 15 minutes of time depending on the place and entrances. Every open question must be answered unless otherwise mentioned. Accessibility sentences are formed based on the answers in Finnish, Swedish and English.",

@@ -9,6 +9,7 @@ import {
   API_DELETE_PLACE_BOX_TEXT_SUFFIX,
   API_DELETE_PLACE_FROM_ANSWER,
   API_FETCH_ANSWER_LOGS,
+  API_FETCH_ENTRANCES,
   API_FETCH_QUESTION_ANSWERS,
   API_FETCH_QUESTION_BLOCK_ANSWER_FIELD,
   API_GENERATE_SENTENCES,
@@ -484,5 +485,17 @@ export const saveFormData = async (
       const generateData = { entrance_id: entranceId, form_submitted: isDraft ? "D" : "Y" };
       await postData(API_GENERATE_SENTENCES, JSON.stringify(generateData), router);
     }
+  }
+};
+
+export const deleteEntrance = async (entranceId: number, router: NextRouter): Promise<void> => {
+  if (entranceId > 0) {
+    const deleteEntranceRequest = {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: getTokenHash() },
+    };
+
+    const deleteEntranceResponse = await fetch(`${getOrigin(router)}/${API_FETCH_ENTRANCES}${entranceId}/delete_entrance/`, deleteEntranceRequest);
+    console.log("delete entrance response", await deleteEntranceResponse.text());
   }
 };

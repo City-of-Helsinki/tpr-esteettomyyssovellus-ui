@@ -1,6 +1,7 @@
 import React from "react";
 import { useI18n } from "next-localization";
 import { Button, IconArrowDown, IconArrowUp, IconCross } from "hds-react";
+import SkipMapButton from "./common/SkipMapButton";
 import { useAppDispatch } from "../state/hooks";
 import { changeEntrancePlaceBoxOrder, deleteEntrancePlaceBox } from "../state/reducers/additionalInfoSlice";
 import { AccessibilityPlaceBoxProps } from "../types/general";
@@ -9,7 +10,7 @@ import AccessibilityPlacePicture from "./AccessibilityPlacePicture";
 import styles from "./AccessibilityPlaceBox.module.scss";
 
 // usage: grouping one set of picture and location in accessibility place form
-const AccessibilityPlaceBox = ({ entrancePlaceBox, canAddLocation }: AccessibilityPlaceBoxProps): JSX.Element => {
+const AccessibilityPlaceBox = ({ entrancePlaceBox, entrancePlaceName, canAddLocation }: AccessibilityPlaceBoxProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
 
@@ -60,13 +61,14 @@ const AccessibilityPlaceBox = ({ entrancePlaceBox, canAddLocation }: Accessibili
 
       <div className={styles.contentcontainer}>
         <div>
-          <div className={styles.contentheader}>{`${i18n.t("additionalInfo.pictureTitle")} ${order_number}`}</div>
+          <div className={styles.contentheader}>{`${i18n.t("additionalInfo.pictureTitle")} ${order_number} - '${entrancePlaceName}'`}</div>
           <AccessibilityPlacePicture entrancePlaceBox={entrancePlaceBox} />
         </div>
 
         {canAddLocation && (
           <div>
-            <div className={styles.contentheader}>{`${i18n.t("additionalInfo.locationTitle")} ${order_number}`}</div>
+            <div className={styles.contentheader}>{`${i18n.t("additionalInfo.locationTitle")} ${order_number} - '${entrancePlaceName}'`}</div>
+            <SkipMapButton idToSkipTo={`#placeinputcontainer-${order_number}`} />
             <AccessibilityPlaceLocation entrancePlaceBox={entrancePlaceBox} />
           </div>
         )}

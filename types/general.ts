@@ -120,6 +120,11 @@ export interface QuestionFormGuideProps {
   formGuideData: BackendFormGuide[];
 }
 
+export interface GuideLinkProps {
+  guideTitle?: string;
+  guideUrl?: string;
+}
+
 export interface QuestionsListProps {
   // additionalInfoVisible: boolean;
   questions?: BackendQuestion[];
@@ -146,17 +151,8 @@ export interface SummarySideNavigationProps {
   entranceChoiceData: EntranceChoiceData;
 }
 
-export interface ServicepointLandingSummaryContactProps {
+export interface SummaryContactProps {
   entranceData?: BackendEntrance;
-  hasData: boolean;
-  hasModifyButton?: boolean;
-}
-
-export interface ServicepointLandingSummaryAccessibilityProps {
-  entranceKey: string;
-  entranceData?: BackendEntrance;
-  servicepointData: BackendServicepoint;
-  accessibilityData: AccessibilityData;
   hasData: boolean;
   hasModifyButton?: boolean;
 }
@@ -173,14 +169,9 @@ export interface PreviewPageLandingSummaryProps {
   data: AccessibilityData;
 }
 
-export interface ServicepointLandingSummaryContentProps {
+export interface SummaryContentProps {
   contentHeader?: string;
   children?: JSX.Element;
-}
-
-export interface ServicepointLandingSummaryLocationPictureProps {
-  entranceKey: string;
-  entranceData?: BackendEntrance;
 }
 
 export interface SummaryLocationPictureProps {
@@ -194,12 +185,16 @@ export interface SummaryAccessibilityPlaceProps {
   entrancePlaceData?: BackendEntrancePlace[];
 }
 
-export interface ServicepointLandingSummaryModifyButtonProps {
+export interface SummaryModifyButtonProps {
   entranceData?: BackendEntrance;
   hasData: boolean;
 }
 
-export interface ServicepointLandingSummaryCtrlButtonsProps {
+export interface SummaryRemoveButtonProps {
+  entranceData?: BackendEntrance;
+}
+
+export interface SummaryCtrlButtonsProps {
   hasData: boolean;
 }
 
@@ -214,6 +209,10 @@ export interface MapProps {
   setLocation?: (location: [number, number]) => void;
   draggableMarker?: boolean;
   makeStatic?: boolean;
+}
+
+export interface SkipMapButtonProps {
+  idToSkipTo: string;
 }
 
 export interface Validation {
@@ -448,6 +447,7 @@ export interface AccessibilityPlaceProps {
 
 export interface AccessibilityPlaceBoxProps {
   entrancePlaceBox: EntrancePlaceBox;
+  entrancePlaceName: string;
   canAddLocation: boolean;
 }
 
@@ -462,6 +462,7 @@ export interface AccessibilityPlacePictureProps {
 export interface AccessibilityPlaceCtrlButtonsProps {
   placeId: number;
   entrancePlaceBoxes: EntrancePlaceBox[];
+  deletedEntrancePlaceBoxes: EntrancePlaceBox[];
 }
 
 export interface AccessibilityPlaceNewButtonProps {

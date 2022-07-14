@@ -1,6 +1,7 @@
 import React from "react";
 import { useI18n } from "next-localization";
 import Map from "./common/Map";
+import SkipMapButton from "./common/SkipMapButton";
 import { useAppSelector } from "../state/hooks";
 import { MAP_MAX_ZOOM } from "../types/constants";
 import { SummaryLocationPictureProps } from "../types/general";
@@ -19,7 +20,7 @@ const SummaryLocationPicture = ({ entranceKey, entranceData, servicepointData }:
   const coordinatesEuref = [loc_easting ?? 0, loc_northing ?? 0] as [number, number];
   const coordinatesWGS84 = convertCoordinates("EPSG:3067", "WGS84", coordinatesEuref).reverse() as [number, number];
 
-  const entranceName = entranceData && entranceData ? entranceData[`name_${curLocale}`] : "";
+  const entranceName = entranceData && entranceData[`name_${curLocale}`] ? entranceData[`name_${curLocale}`] : "";
   const locationLabel =
     entranceKey === "main"
       ? formatAddress(servicepointData.address_street_name, servicepointData.address_no, servicepointData.address_city)
@@ -35,9 +36,10 @@ const SummaryLocationPicture = ({ entranceKey, entranceData, servicepointData }:
         <div className={styles.mappicturecontainer}>
           <div className={styles.label}>
             <div>{locationLabel}</div>
+            <SkipMapButton idToSkipTo="#picturecontainer" />
           </div>
 
-          <div className={styles.map}>
+          <div className={styles.map} aria-hidden>
             <Map
               curLocation={isLocationValid(coordinatesEuref) ? coordinatesWGS84 : servicepointCoordinatesWGS84}
               initZoom={MAP_MAX_ZOOM}
@@ -48,7 +50,7 @@ const SummaryLocationPicture = ({ entranceKey, entranceData, servicepointData }:
         </div>
       </div>
 
-      <div className={styles.subcontainer}>
+      <div id="picturecontainer" className={styles.subcontainer}>
         <h4>{entranceKey === "main" ? i18n.t("servicepoint.mainEntrancePicturesLabel") : i18n.t("servicepoint.entrancePicturesLabel")}</h4>
 
         <div className={styles.mappicturecontainer}>

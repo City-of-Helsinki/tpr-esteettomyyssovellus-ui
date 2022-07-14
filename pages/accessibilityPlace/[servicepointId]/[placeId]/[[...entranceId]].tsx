@@ -93,6 +93,11 @@ const AccessibilityPlace = ({
         .sort((a, b) => (a.order_number ?? 1) - (b.order_number ?? 1))
     : [];
   const filteredEntrancePlaceInvalidValues = filteredEntrancePlaceBoxes.flatMap((box) => box.invalidValues);
+  const filteredDeletedEntrancePlaceBoxes = curEntrancePlaceBoxes
+    ? curEntrancePlaceBoxes.filter((placeBox) => {
+        return placeBox.place_id === filteredPlaceData.place_id && placeBox.isDeleted;
+      })
+    : [];
 
   const initPlaceBoxes = () => {
     // Add a new entrance place box if none have been added yet
@@ -119,7 +124,7 @@ const AccessibilityPlace = ({
   return (
     <Layout>
       <Head>
-        <title>{i18n.t("notification.title")}</title>
+        <title>{i18n.t("common.header.title")}</title>
       </Head>
       {!isUserValid && <h1>{i18n.t("common.notAuthorized")}</h1>}
 
@@ -139,7 +144,11 @@ const AccessibilityPlace = ({
               <div className={styles.subHeader}>{subHeader}</div>
 
               <div className={styles.mainbuttons}>
-                <AccessibilityPlaceCtrlButtons placeId={filteredPlaceData.place_id} entrancePlaceBoxes={filteredEntrancePlaceBoxes} />
+                <AccessibilityPlaceCtrlButtons
+                  placeId={filteredPlaceData.place_id}
+                  entrancePlaceBoxes={filteredEntrancePlaceBoxes}
+                  deletedEntrancePlaceBoxes={filteredDeletedEntrancePlaceBoxes}
+                />
                 {!curEntrancePlaceValid && (
                   <ValidationSummary pageValid={curEntrancePlaceValid} validationSummary={filteredEntrancePlaceInvalidValues} />
                 )}
@@ -157,7 +166,12 @@ const AccessibilityPlace = ({
               {filteredEntrancePlaceBoxes.map((entrancePlaceBox, index) => {
                 const key = `box_${index}`;
                 return (
-                  <AccessibilityPlaceBox key={key} entrancePlaceBox={entrancePlaceBox} canAddLocation={filteredPlaceData.can_add_location === "Y"} />
+                  <AccessibilityPlaceBox
+                    key={key}
+                    entrancePlaceBox={entrancePlaceBox}
+                    entrancePlaceName={filteredPlaceData.name || ""}
+                    canAddLocation={filteredPlaceData.can_add_location === "Y"}
+                  />
                 );
               })}
             </div>
@@ -167,7 +181,11 @@ const AccessibilityPlace = ({
                 <AccessibilityPlaceNewButton accessibilityPlaceData={filteredPlaceData} orderNumber={filteredEntrancePlaceBoxes.length + 1} />
               </div>
               <div className={styles.footerbutton}>
-                <AccessibilityPlaceCtrlButtons placeId={filteredPlaceData.place_id} entrancePlaceBoxes={filteredEntrancePlaceBoxes} />
+                <AccessibilityPlaceCtrlButtons
+                  placeId={filteredPlaceData.place_id}
+                  entrancePlaceBoxes={filteredEntrancePlaceBoxes}
+                  deletedEntrancePlaceBoxes={filteredDeletedEntrancePlaceBoxes}
+                />
               </div>
             </div>
           </div>

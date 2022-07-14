@@ -27,7 +27,8 @@
       "zoomOut": "Loitonna",
       "osm": "OpenStreetMapin tekijät",
       "point": "piste",
-      "line": "viiva"
+      "line": "viiva",
+      "skipMap": "Ohita kartta"
     },
     "inLanguage": {
       "fi": "suomeksi",
@@ -50,7 +51,9 @@
       "return": "Palaa",
       "returnNoSave": "Poistu tallentamatta",
       "deleteAdditionalInfo": "Poista lisätiedot",
-      "deleteAdditionalInfoSets": "Poista kaikki"
+      "deleteAdditionalInfoSets": "Poista kaikki",
+      "yes": "Kyllä",
+      "no": "Ei"
     },
     "message": {
       "validationFailed": {
@@ -84,8 +87,14 @@
       "createServicepoint": "Täytä esteettömyystiedot",
       "addNewEntrance": "Lisää uusi sisäänkäynti",
       "editServicepoint": "Muokkaa",
+      "deleteEntrance": "Poista lisäsisäänkäynti",
+      "deleting": "Poistetaan",
+      "deletingFinished": "Poistettu",
       "mainCtrlReturn": "Palaa hakuun",
       "mainCtrlDelete": "Poista esteettömyystieto"
+    },
+    "confirmation": {
+      "deleteEntrance": "Oletko varma, että haluat poistaa lisäsisäänkäynnin?"
     },
     "contactInfoHeader": "Yhteystiedot",
     "contactFormSummaryHeader": "Esteettömyystiedot",
@@ -152,7 +161,7 @@
     "sharePictureLicenseText": "Kyllä, kuvan saa käyttää vapaasti",
     "sharePictureLicense": "Katso lisenssiehdot",
     "sourceTooltipText": "Täytä tähän ohjeet kuvalähde fin",
-    "sourceTooltipMainLabel": "Kuvalähde",
+    "sourceTooltipMainLabel": "Kuvan omistaja",
     "locationLabel": "Sijainnin kuvaus",
     "locationHelperText": "Kuvaile sijaintia",
     "locationLabelSwe": "Sijainnin kuvaus ruotsiksi",
@@ -193,7 +202,7 @@
     "addAdditionalInfoSet": "Lisää uusi",
     "order": "Järjestä",
     "pictureTitle": "Kuva",
-    "locationTitle": "Sijainti kartalla"
+    "locationTitle": "Sijainti"
   },
   "accessibilityForm": {
     "generalInfo1": "Kysymyksiin vastaaminen vie aikaa toimipisteestä ja sisäänkäynnistä riippuen noin 5 - 15 minuuttia. Jokaiseen avautuvaan kysymykseen täytyy vastata ellei toisin mainita. Vastausten perusteella muodostuu esteettömyyslauseet suomeksi, ruotsiksi ja englanniksi.",

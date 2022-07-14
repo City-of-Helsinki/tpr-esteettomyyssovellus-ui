@@ -266,7 +266,7 @@ export const additionalInfoSlice = createSlice({
                   order_number: box.order_number > 0 ? box.order_number : 1,
                   modifiedBox: box.existingBox,
                   modifiedPhotoBase64: box.existingPhotoBase64,
-                  // isDeleted: false,
+                  isDeleted: false,
                   invalidValues: [],
                 },
               ];

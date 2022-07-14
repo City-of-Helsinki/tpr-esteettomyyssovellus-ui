@@ -1,5 +1,6 @@
 import { useI18n } from "next-localization";
-import { IconClock, IconPenLine, IconPersonWheelchair, Link as HdsLink } from "hds-react";
+import { IconClock, IconPenLine, IconPersonWheelchair } from "hds-react";
+import GuideLink from "./GuideLink";
 import { LanguageLocales } from "../../types/constants";
 import { QuestionFormGuideProps } from "../../types/general";
 import styles from "./QuestionFormGuide.module.scss";
@@ -39,19 +40,7 @@ const QuestionFormGuide = ({ formGuideData }: QuestionFormGuideProps): JSX.Eleme
             {icon}
             <p>{description ?? ""}</p>
 
-            {guide_url && (
-              <HdsLink
-                href={guide_url}
-                size="M"
-                openInNewTab
-                openInNewTabAriaLabel={i18n.t("common.opensInANewTab")}
-                external
-                openInExternalDomainAriaLabel={i18n.t("common.opensExternal")}
-                disableVisitedStyles
-              >
-                {guide_title ?? ""}
-              </HdsLink>
-            )}
+            <GuideLink guideTitle={guide_title} guideUrl={guide_url} />
           </div>
         );
       })}

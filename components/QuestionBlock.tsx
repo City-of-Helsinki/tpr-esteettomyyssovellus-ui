@@ -1,6 +1,7 @@
 import { IconAngleDown, IconAngleUp } from "hds-react";
 import React, { useEffect } from "react";
 import { useI18n } from "next-localization";
+import GuideLink from "./common/GuideLink";
 import TextWithLinks from "./common/TextWithLinks";
 import QuestionBlockComment from "./QuestionBlockComment";
 import QuestionBlockExtraFieldList from "./QuestionBlockExtraFieldList";
@@ -21,7 +22,17 @@ const QuestionBlock = ({ block, questions, answerChoices, extraFields, accessibi
   // const isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
   // const [showContinue, setShowContinue] = useState(!isContinueClicked);
 
-  const { question_block_id, description, photo_url, photo_text, put_fields_before_questions, add_location_possible, add_photo_possible } = block;
+  const {
+    question_block_id,
+    description,
+    photo_url,
+    photo_text,
+    guide_title,
+    guide_url,
+    put_fields_before_questions,
+    add_location_possible,
+    add_photo_possible,
+  } = block;
 
   // todo: what is this onClick? Seems obsolete?
   /*
@@ -94,6 +105,7 @@ const QuestionBlock = ({ block, questions, answerChoices, extraFields, accessibi
               openIcon={<IconAngleDown aria-hidden />}
               closeText={i18n.t("common.hideInfo")}
               closeIcon={<IconAngleUp aria-hidden />}
+              textOnBottom
             >
               <div className={styles.infoContainer}>
                 {photo_url && (
@@ -105,6 +117,10 @@ const QuestionBlock = ({ block, questions, answerChoices, extraFields, accessibi
                   const key = `br_${index}`;
                   return <TextWithLinks key={key} text={text} />;
                 })}
+
+                <div className={styles.guideLink}>
+                  <GuideLink guideTitle={guide_title} guideUrl={guide_url} />
+                </div>
               </div>
             </QuestionInfo>
           )}

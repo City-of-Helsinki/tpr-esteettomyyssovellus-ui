@@ -27,7 +27,8 @@
       "zoomOut": "Zooma ut",
       "osm": "OpenStreetMaps bidragsgivare",
       "point": "punkt",
-      "line": "linje"
+      "line": "linje",
+      "skipMap": "Hoppa över kartan"
     },
     "inLanguage": {
       "fi": "på finska",
@@ -50,7 +51,9 @@
       "return": "Returnera",
       "returnNoSave": "Avsluta utan att spara",
       "deleteAdditionalInfo": "Ta bort ytterligare information",
-      "deleteAdditionalInfoSets": "Radera allt"
+      "deleteAdditionalInfoSets": "Radera allt",
+      "yes": "Ja",
+      "no": "Nej"
     },
     "message": {
       "validationFailed": {
@@ -84,8 +87,14 @@
       "createServicepoint": "Fyll i tillgänglighetsinformation",
       "addNewEntrance": "Lägg till en ny entré",
       "editServicepoint": "Redigera",
+      "deleteEntrance": "Ta bort alternativ entré",
+      "deleting": "Tar bort",
+      "deletingFinished": "Raderade",
       "mainCtrlReturn": "Återgå till sökningen",
       "mainCtrlDelete": "Ta bort tillgänglighetsinformation"
+    },
+    "confirmation": {
+      "deleteEntrance": "Är du säker på att du vill ta bort den extra ingången?"
     },
     "contactInfoHeader": "Kontaktinformation",
     "contactFormSummaryHeader": "Tillgänglighetsinformation",
@@ -152,7 +161,7 @@
     "sharePictureLicenseText": "Ja, bilden kan användas fritt",
     "sharePictureLicense": "Se licensvillkor",
     "sourceTooltipText": "Fyll i instruktionerna för den här bildkällan",
-    "sourceTooltipMainLabel": "BildKälla",
+    "sourceTooltipMainLabel": "Bildägare",
     "locationLabel": "Platsbeskrivning",
     "locationHelperText": "Beskriv platsen",
     "locationLabelSwe": "Platsbeskrivning på svenska",
@@ -193,7 +202,7 @@
     "addAdditionalInfoSet": "Lägg ny",
     "order": "Ordna",
     "pictureTitle": "Bild",
-    "locationTitle": "Plats på kartan"
+    "locationTitle": "Plats"
   },
   "accessibilityForm": {
     "generalInfo1": "(SV) Kysymyksiin vastaaminen vie aikaa toimipisteestä ja sisäänkäynnistä riippuen noin 5 - 15 minuuttia. Jokaiseen avautuvaan kysymykseen täytyy vastata ellei toisin mainita. Vastausten perusteella muodostuu esteettömyyslauseet suomeksi, ruotsiksi ja englanniksi.",

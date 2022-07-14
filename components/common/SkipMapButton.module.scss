@@ -1,0 +1,8 @@
+@import "~hds-design-tokens/lib/all.scss";
+@import "../../styles/mixins.scss";
+
+.skipMapButton {
+  > div {
+    margin-bottom: unset !important;
+  }
+}

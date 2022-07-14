@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { useI18n } from "next-localization";
 import { IconCrossCircle, IconInfoCircle, Link as HdsLink } from "hds-react";
 import Map from "./common/Map";
+import SkipMapButton from "./common/SkipMapButton";
 import TextWithLinks from "./common/TextWithLinks";
 import { setEntranceLocationPhoto } from "../state/reducers/additionalInfoSlice";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
@@ -110,13 +111,17 @@ const QuestionBlockLocationPhoto = ({ block, canAddLocation, canAddPhoto }: Ques
                   {isLocationValid(coordinatesWGS84) ? i18n.t("accessibilityForm.editLocation") : i18n.t("accessibilityForm.addLocation")}
                 </HdsLink>
               </div>
+
+              <SkipMapButton idToSkipTo="#afterMap" />
             </div>
 
             <div className={styles.detailcontainer}>
-              <div className={styles.mapcontainer}>
+              <div className={styles.mapcontainer} aria-hidden>
                 <Map curLocation={coordinatesWGS84} initZoom={MAP_MAX_ZOOM} draggableMarker={false} makeStatic />
               </div>
             </div>
+
+            <div id="afterMap" />
           </div>
         </div>
       )}
