@@ -7,7 +7,7 @@ import { setExtraAnswer } from "../state/reducers/formSlice";
 import style from "./QuestionTextInput.module.scss";
 
 // usage: general custom textinput from HDS
-const QuestionTextInput = ({ id, questionBlockFieldId, placeholder, isTextInvalid }: QuestionTextInputProps): JSX.Element => {
+const QuestionTextInput = ({ id, questionBlockFieldId, placeholder, isTextInvalid, ariaLabelledBy }: QuestionTextInputProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
 
@@ -28,6 +28,7 @@ const QuestionTextInput = ({ id, questionBlockFieldId, placeholder, isTextInvali
       onChange={handleTextChange}
       invalid={isTextInvalid}
       errorText={isTextInvalid ? i18n.t("common.missingTextValue") : ""}
+      aria-labelledby={ariaLabelledBy}
     />
   );
 };

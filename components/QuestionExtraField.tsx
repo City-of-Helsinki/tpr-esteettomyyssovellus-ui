@@ -32,7 +32,7 @@ const QuestionExtraField = ({
     <div className={styles.maincontainer} style={questionStyle} id={`fieldnumber-${fieldNumber}`}>
       <div className={styles.questioncontainer}>
         <div className={styles.maintext}>
-          <p>{`${questionText}${!isMandatory ? ` (${i18n.t("accessibilityForm.optional")})` : ""}`}</p>
+          <p id={`fieldlabel-${fieldNumber}`}>{`${questionText}${!isMandatory ? ` (${i18n.t("accessibilityForm.optional")})` : ""}`}</p>
 
           {questionInfo ? (
             <QuestionInfo

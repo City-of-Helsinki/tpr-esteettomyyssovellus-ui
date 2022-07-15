@@ -5,6 +5,7 @@
   margin-top: $spacing-layout-l;
   color: $color-white !important;
   background-color: $color-white;
+  --footer-focus-outline-color: var(--color-white) !important;
 
   hr {
     width: 97%;

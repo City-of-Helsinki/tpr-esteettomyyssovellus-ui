@@ -29,7 +29,12 @@ const QuestionBlockExtraFieldList = ({ extraFields }: QuestionBlockExtraFieldLis
             isMandatory={isMandatory}
             isTextInvalid={isTextInvalid}
           >
-            <QuestionTextInput id={field_name as string} questionBlockFieldId={question_block_field_id} isTextInvalid={isTextInvalid} />
+            <QuestionTextInput
+              id={field_name as string}
+              questionBlockFieldId={question_block_field_id}
+              isTextInvalid={isTextInvalid}
+              ariaLabelledBy={`fieldlabel-${field_number}`}
+            />
           </QuestionExtraField>
         );
       })}

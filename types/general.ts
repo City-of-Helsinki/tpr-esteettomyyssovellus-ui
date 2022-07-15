@@ -102,6 +102,7 @@ export interface QuestionTextInputProps {
   questionBlockFieldId: number;
   placeholder?: string;
   isTextInvalid: boolean;
+  ariaLabelledBy: string;
 }
 
 export interface QuestionFormCtrlButtonsProps {

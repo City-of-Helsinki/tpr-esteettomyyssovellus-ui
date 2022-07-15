@@ -201,6 +201,11 @@
     "additionalInfoSet": "Lisätietokokonaisuus",
     "addAdditionalInfoSet": "Lisää uusi",
     "order": "Järjestä",
+    "orderButtons": {
+      "moveUp": "Siirrä ylemmäksi",
+      "moveDown": "Siirrä alemmaksi",
+      "remove": "Poista"
+    },
     "pictureTitle": "Kuva",
     "locationTitle": "Sijainti"
   },
