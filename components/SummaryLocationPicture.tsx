@@ -36,7 +36,7 @@ const SummaryLocationPicture = ({ entranceKey, entranceData, servicepointData }:
         <div className={styles.mappicturecontainer}>
           <div className={styles.label}>
             <div>{locationLabel}</div>
-            <SkipMapButton idToSkipTo="#picturecontainer" />
+            <SkipMapButton idToSkipTo={`#picturecontainer_${entranceKey}`} />
           </div>
 
           <div className={styles.map} aria-hidden>
@@ -50,7 +50,7 @@ const SummaryLocationPicture = ({ entranceKey, entranceData, servicepointData }:
         </div>
       </div>
 
-      <div id="picturecontainer" className={styles.subcontainer}>
+      <div id={`picturecontainer_${entranceKey}`} className={styles.subcontainer}>
         <h4>{entranceKey === "main" ? i18n.t("servicepoint.mainEntrancePicturesLabel") : i18n.t("servicepoint.entrancePicturesLabel")}</h4>
 
         <div className={styles.mappicturecontainer}>

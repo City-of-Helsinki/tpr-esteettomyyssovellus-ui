@@ -201,6 +201,11 @@
     "additionalInfoSet": "Ytterligare informationsuppsättning",
     "addAdditionalInfoSet": "Lägg ny",
     "order": "Ordna",
+    "orderButtons": {
+      "moveUp": "Flytta upp",
+      "moveDown": "Flytta ner",
+      "remove": "Radera"
+    },
     "pictureTitle": "Bild",
     "locationTitle": "Plats"
   },

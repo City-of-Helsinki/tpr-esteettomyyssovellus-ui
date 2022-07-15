@@ -111,7 +111,7 @@ const SummarySideNavigation = ({
   return (
     <div className={styles.maincontainer}>
       <div className={styles.sidenavigation}>
-        <SideNavigation id="sideNavigation" toggleButtonLabel={i18n.t("servicepoint.navigateToPage")} defaultOpenMainLevels={[]}>
+        <SideNavigation id={`sideNavigation_${entranceKey}`} toggleButtonLabel={i18n.t("servicepoint.navigateToPage")} defaultOpenMainLevels={[]}>
           <SideNavigation.MainLevel
             id={locationPictureLevelId}
             active={activeLevel === locationPictureLevelId}

@@ -8,6 +8,10 @@
   align-items: center;
   margin-bottom: $spacing-s;
 
+  &:hover {
+    text-decoration: underline;
+  }
+
   svg {
     padding-right: $spacing-2-xs;
   }

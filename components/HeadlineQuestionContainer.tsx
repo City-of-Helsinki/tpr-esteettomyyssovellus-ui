@@ -29,9 +29,9 @@ const HeadlineQuestionContainer = ({ text, number, initOpen = false, children, i
   };
 
   return (
-    <div className={styles.headline} id={id}>
+    <section className={styles.headline} id={id} aria-label={text}>
       <Button
-        id="headlineButton"
+        id={`headlineButton-${number}`}
         {...buttonProps}
         iconRight={icon}
         variant={buttonVariant}
@@ -48,7 +48,7 @@ const HeadlineQuestionContainer = ({ text, number, initOpen = false, children, i
       <Card {...contentProps} className={styles.card}>
         {children}
       </Card>
-    </div>
+    </section>
   );
 };
 

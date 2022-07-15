@@ -47,13 +47,28 @@ const AccessibilityPlaceBox = ({ entrancePlaceBox, entrancePlaceName, canAddLoca
 
         <div className={`${styles.headingsection} ${styles.rightsection}`}>
           <div>{i18n.t("additionalInfo.order")}</div>
-          <Button variant="supplementary" iconLeft={<IconArrowUp />} onClick={() => changeBoxOrder(-1)}>
+          <Button
+            variant="supplementary"
+            iconLeft={<IconArrowUp aria-hidden />}
+            aria-label={i18n.t("additionalInfo.orderButtons.moveUp")}
+            onClick={() => changeBoxOrder(-1)}
+          >
             {""}
           </Button>
-          <Button variant="supplementary" iconLeft={<IconArrowDown />} onClick={() => changeBoxOrder(1)}>
+          <Button
+            variant="supplementary"
+            iconLeft={<IconArrowDown aria-hidden />}
+            aria-label={i18n.t("additionalInfo.orderButtons.moveDown")}
+            onClick={() => changeBoxOrder(1)}
+          >
             {""}
           </Button>
-          <Button variant="supplementary" iconLeft={<IconCross />} onClick={deleteBox}>
+          <Button
+            variant="supplementary"
+            iconLeft={<IconCross aria-hidden />}
+            aria-label={i18n.t("additionalInfo.orderButtons.remove")}
+            onClick={deleteBox}
+          >
             {""}
           </Button>
         </div>

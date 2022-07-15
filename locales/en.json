@@ -201,6 +201,11 @@
     "additionalInfoSet": "Additional information set",
     "addAdditionalInfoSet": "Add new",
     "order": "Arrange",
+    "orderButtons": {
+      "moveUp": "Move up",
+      "moveDown": "Move down",
+      "remove": "Remove"
+    },
     "pictureTitle": "Picture",
     "locationTitle": "Location"
   },
