@@ -4,11 +4,17 @@ import { useI18n } from "next-localization";
 import { Select } from "hds-react";
 import Button from "./QuestionButton";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
-import { addEntrancePlaceBox, deleteEntrancePlace, setEntranceLocationPhoto } from "../state/reducers/additionalInfoSlice";
+import { addEntrancePlaceBox, deleteEntrancePlace, setEntranceLocationPhoto, setQuestionBlockComment } from "../state/reducers/additionalInfoSlice";
 import { setAnswer, setExtraAnswer } from "../state/reducers/formSlice";
-import { BackendEntranceAnswer, BackendEntranceField, BackendEntrancePlace } from "../types/backendModels";
-import { InputOption, QuestionBlockImportProps } from "../types/general";
-import { API_FETCH_BACKEND_ENTRANCE_ANSWERS, API_FETCH_BACKEND_ENTRANCE_FIELD, API_FETCH_BACKEND_ENTRANCE_PLACES } from "../types/constants";
+import { BackendEntranceAnswer, BackendEntranceField, BackendEntrancePlace, QuestionBlockAnswerCmt } from "../types/backendModels";
+import { BlockComment, InputOption, QuestionBlockComment, QuestionBlockImportProps } from "../types/general";
+import {
+  API_FETCH_BACKEND_ENTRANCE_ANSWERS,
+  API_FETCH_BACKEND_ENTRANCE_FIELD,
+  API_FETCH_BACKEND_ENTRANCE_PLACES,
+  API_FETCH_QUESTION_BLOCK_COMMENT,
+  LanguageLocales,
+} from "../types/constants";
 import getOrigin from "../utils/request";
 import { getTokenHash } from "../utils/utilFunctions";
 import styles from "./QuestionBlockImportExistingData.module.scss";
@@ -67,6 +73,17 @@ const QuestionBlockImportExistingData = ({ block, copyableEntrances }: QuestionB
         }
       );
       const entrancePlaceData = await (allEntrancePlaceDataResp.json() as Promise<BackendEntrancePlace[]>);
+
+      // Get the question block comment data
+      const allQuestionBlockCommentDataResp = await fetch(
+        `${getOrigin(
+          router
+        )}/${API_FETCH_QUESTION_BLOCK_COMMENT}?entrance_id=${entranceId}&question_block_id=${question_block_id}&form_submitted=Y&format=json`,
+        {
+          headers: new Headers({ Authorization: getTokenHash() }),
+        }
+      );
+      const questionBlockCommentData = await (allQuestionBlockCommentDataResp.json() as Promise<QuestionBlockAnswerCmt[]>);
 
       if (questionAnswerData && questionAnswerData.length > 0) {
         // Put copied answers into redux state
@@ -132,6 +149,52 @@ const QuestionBlockImportExistingData = ({ block, copyableEntrances }: QuestionB
               invalidValues: [],
             })
           );
+        });
+      }
+
+      if (questionBlockCommentData && questionBlockCommentData.length > 0) {
+        // Convert the copied comments to block comment models
+        const questionBlockComments: QuestionBlockComment[] = [];
+
+        questionBlockCommentData.forEach((answerComment) => {
+          const { language_id, comment } = answerComment;
+          const language = LanguageLocales[language_id];
+
+          const blockComment: BlockComment = {
+            question_block_id: question_block_id,
+            [`comment_text_${language}`]: comment,
+          };
+
+          const questionBlockComment = questionBlockComments.find(
+            (c) => c.entrance_id === curEntranceId && c.question_block_id === question_block_id
+          );
+
+          if (questionBlockComment) {
+            // Add the comment for the different language
+            questionBlockComment.existingComment = {
+              ...questionBlockComment.existingComment,
+              ...blockComment,
+            };
+            questionBlockComment.modifiedComment = {
+              ...questionBlockComment.modifiedComment,
+              ...blockComment,
+            };
+          } else {
+            // Add a new question block comment
+            const newQuestionBlockComment: QuestionBlockComment = {
+              entrance_id: curEntranceId,
+              question_block_id: question_block_id,
+              existingComment: blockComment,
+              modifiedComment: blockComment,
+              invalidValues: [],
+            };
+            questionBlockComments.push(newQuestionBlockComment);
+          }
+        });
+
+        // Put the copied comments into redux state
+        questionBlockComments.forEach((copiedComment) => {
+          dispatch(setQuestionBlockComment(copiedComment));
         });
       }
     }

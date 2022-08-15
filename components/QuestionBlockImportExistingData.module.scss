@@ -20,6 +20,10 @@
 
     .selectDropdown {
       width: 100%;
+
+      button {
+        color: var(--dropdown-color-default);
+      }
     }
 
     .selectDropdown li[aria-selected="true"] {

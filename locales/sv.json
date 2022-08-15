@@ -235,7 +235,7 @@
     "additionalInfo": "Ytterligare information"
   },
   "QuestionFormImportExistingData": {
-    "chooseServicepoint": "Välj ett kontor",
+    "chooseServicepoint": "Välj varifrån du vill kopiera data",
     "bringInformation": "Importera informationen",
     "addAdditionalInfo": "Lägg till en bild, plats eller ytterligare text",
     "hideAddButtons": "Dölj lägg till knappar"

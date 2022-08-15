@@ -235,7 +235,7 @@
     "additionalInfo": "Lisätiedot"
   },
   "QuestionFormImportExistingData": {
-    "chooseServicepoint": "Valitse toimipiste",
+    "chooseServicepoint": "Valitse mistä tiedot kopioidaan",
     "bringInformation": "Tuo tiedot",
     "addAdditionalInfo": "Lisää kuva, sijainti tai lisäteksti",
     "hideAddButtons": "Piilota lisää -painikkeet"

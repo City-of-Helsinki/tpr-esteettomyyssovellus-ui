@@ -26,7 +26,7 @@ const SummaryAccessibility = ({
         <ul className={styles.sentencelist}>
           {sentenceGroup
             .sort((a: BackendEntranceSentence, b: BackendEntranceSentence) => {
-              return a.sentence_order_text.localeCompare(b.sentence_order_text);
+              return (a.sentence_order_text ?? "").localeCompare(b.sentence_order_text ?? "");
             })
             .map((s) => {
               const { sentence_type } = s;
