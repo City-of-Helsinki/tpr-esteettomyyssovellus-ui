@@ -71,9 +71,9 @@ const QuestionBlockComment = ({ block }: QuestionBlockCommentProps): JSX.Element
               <p>{`${i18n.t("accessibilityForm.additionalInfo")}: ${text}`}</p>
 
               <div className={styles.label}>
-                <div>{`FI: ${comment_text_fi ?? ""}`}</div>
-                <div>{`SV: ${comment_text_sv ?? ""}`}</div>
-                <div>{`EN: ${comment_text_en ?? ""}`}</div>
+                {comment_text_fi && <div>{`FI: ${comment_text_fi ?? ""}`}</div>}
+                {comment_text_sv && <div>{`SV: ${comment_text_sv ?? ""}`}</div>}
+                {comment_text_en && <div>{`EN: ${comment_text_en ?? ""}`}</div>}
               </div>
             </div>
           </div>

@@ -50,35 +50,37 @@ const SummaryLocationPicture = ({ entranceKey, entranceData, servicepointData }:
         </div>
       </div>
 
-      <div id={`picturecontainer_${entranceKey}`} className={styles.subcontainer}>
-        <h4>{entranceKey === "main" ? i18n.t("servicepoint.mainEntrancePicturesLabel") : i18n.t("servicepoint.entrancePicturesLabel")}</h4>
+      {(photo_url || isDevelopment) && (
+        <div id={`picturecontainer_${entranceKey}`} className={styles.subcontainer}>
+          <h4>{entranceKey === "main" ? i18n.t("servicepoint.mainEntrancePicturesLabel") : i18n.t("servicepoint.entrancePicturesLabel")}</h4>
 
-        <div className={styles.mappicturecontainer}>
-          <div className={styles.label}>
-            <div>{`FI: ${photo_text_fi ?? ""}`}</div>
-            <div>{`SV: ${photo_text_sv ?? ""}`}</div>
-            <div>{`EN: ${photo_text_en ?? ""}`}</div>
-            <div>{`${i18n.t("servicepoint.photoSource")}: ${photo_source_text ?? ""}`}</div>
-          </div>
+          <div className={styles.mappicturecontainer}>
+            <div className={styles.label}>
+              {photo_text_fi && <div>{`FI: ${photo_text_fi ?? ""}`}</div>}
+              {photo_text_sv && <div>{`SV: ${photo_text_sv ?? ""}`}</div>}
+              {photo_text_en && <div>{`EN: ${photo_text_en ?? ""}`}</div>}
+              {photo_source_text && <div>{`${i18n.t("servicepoint.photoSource")}: ${photo_source_text ?? ""}`}</div>}
+            </div>
 
-          <div className={styles.picture}>
-            {photo_url && (
-              <img
-                alt={entranceKey === "main" ? i18n.t("servicepoint.mainEntrancePicturesLabel") : i18n.t("servicepoint.entrancePicturesLabel")}
-                src={photo_url}
-              />
-            )}
+            <div className={styles.picture}>
+              {photo_url && (
+                <img
+                  alt={entranceKey === "main" ? i18n.t("servicepoint.mainEntrancePicturesLabel") : i18n.t("servicepoint.entrancePicturesLabel")}
+                  src={photo_url}
+                />
+              )}
 
-            {/* Placeholder photo for development */}
-            {!photo_url && isDevelopment && (
-              <img
-                alt={entranceKey === "main" ? i18n.t("servicepoint.mainEntrancePicturesLabel") : i18n.t("servicepoint.entrancePicturesLabel")}
-                src="https://images.unsplash.com/photo-1531989417401-0f85f7e673f8?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80"
-              />
-            )}
+              {/* Placeholder photo for development */}
+              {!photo_url && isDevelopment && (
+                <img
+                  alt={entranceKey === "main" ? i18n.t("servicepoint.mainEntrancePicturesLabel") : i18n.t("servicepoint.entrancePicturesLabel")}
+                  src="https://images.unsplash.com/photo-1531989417401-0f85f7e673f8?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80"
+                />
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
