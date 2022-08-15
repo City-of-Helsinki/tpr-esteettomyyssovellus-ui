@@ -166,6 +166,7 @@ const QuestionContainer = ({ question, accessibilityPlaces, children }: Question
             {visiblePlaces.map((place) => {
               const { place_id, name } = place;
               const key = `place_${place_id}`;
+              const placeText = getAccessibilityPlaceText(place_id);
 
               return (
                 <div key={key} className={styles.placecontainer}>
@@ -177,11 +178,11 @@ const QuestionContainer = ({ question, accessibilityPlaces, children }: Question
                       iconLeft={<IconPenLine aria-hidden />}
                       onClick={() => editAccessibilityPlace(place_id)}
                     >
-                      {`${i18n.t("accessibilityForm.placeLink")} '${name}'?`}
+                      {`${placeText.length > 0 ? i18n.t("accessibilityForm.editPlaceLink") : i18n.t("accessibilityForm.addPlaceLink")} '${name}'?`}
                     </HdsLink>
                   </div>
                   <div className={styles.placeresult}>
-                    <div>{getAccessibilityPlaceText(place_id)}</div>
+                    <div>{placeText}</div>
                   </div>
                 </div>
               );
