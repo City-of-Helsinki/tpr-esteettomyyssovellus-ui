@@ -2,7 +2,7 @@
 
 import React, { ReactElement } from "react";
 import { useI18n } from "next-localization";
-import { IconArrowRight, IconSignin } from "hds-react";
+import { IconSignin } from "hds-react";
 import { useRouter } from "next/router";
 import styles from "./AddNewEntranceNotice.module.scss";
 import QuestionButton from "../QuestionButton";
