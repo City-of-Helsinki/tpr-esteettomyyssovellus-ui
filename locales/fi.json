@@ -215,7 +215,7 @@
     "choose": "--Valitse--",
     "continue": "Jatka",
     "whatDoesThisMean": "Mitä tämä tarkoittaa?",
-    "closeGuidance": "Sulje ohje ",
+    "closeGuidance": "Sulje ohje",
     "additionalInfoPreviewHeader": "Lisätiedot",
     "additionalInfoPreviewAltText": "Kuva: ",
     "additionalInfoPreviewSourceText": "Lähde: ",
@@ -248,11 +248,10 @@
     "previewAccessibilityInformation": "Esikatsele esteettömyystiedot",
     "errorNotice": "Lomakkeen kaikkia pakollisia tietoja ei ole vielä täytetty. Palaa täydentämään tietoja.",
     "mainEntranceLocationHeader": "Pääsisäänkäynnin sijainti",
-    "addNewEntranceLabel": "Täydennä tietoja: Muut sisäänkäynnit",
-    "addNewEntranceBody": "Onko kohteessa pääsisäänkäynnin lisäksi muita sisäänkäyntejä? Täydennä esteettömyystiedot lisäämällä kaikki muut sisäänkäynnit",
-    "addNewEntranceButton": "Lisää sisäänkäynti",
-    "addNewEntranceNoEntrances": "Ei ole muita sisäänkäyntejä",
-    "addNewEntranceContinueLater": "Jatkan myöhemmin"
+    "addNewEntranceLabel": "Haluatko täydentää tietoja nyt vai myöhemmin?",
+    "addNewEntranceBody": "Onko kohteessa pääsisäänkäynnin lisäksi muita sisäänkäyntejä? Täydennä esteettömyystiedot lisäämällä kaikki muut sisäänkäynnit. Voit tehdä täydennyksiä ja korjauksia myöhemmin, valitse Sulje.",
+    "addNewEntranceButton": "Lisää uusi sisäänkäynti",
+    "addNewEntranceContinueLater": "Sulje"
   },
   "AddressChangedPage": {
     "oldAddress": "Vanha osoite",

@@ -248,11 +248,10 @@
     "previewAccessibilityInformation": "Förhandsgranska tillgänglighetsinformation",
     "errorNotice": "All nödvändig information på formuläret har ännu inte fyllts i. Återgå för att slutföra informationen",
     "mainEntranceLocationHeader": "Platsen för huvudentrén",
-    "addNewEntranceLabel": "Komplett information: Övriga ingångar",
-    "addNewEntranceBody": "Finns det andra ingångar till platsen utöver huvudentrén? Fyll i all tillgänglighetsinformation genom att lägga till alla andra ingångar",
-    "addNewEntranceButton": "Lägg till entré",
-    "addNewEntranceNoEntrances": "Det finns inga andra ingångar",
-    "addNewEntranceContinueLater": "Jag fortsätter senare"
+    "addNewEntranceLabel": "Vill du komplettera informationen nu eller senare?",
+    "addNewEntranceBody": "Finns det andra ingångar till platsen utöver huvudentrén? Komplettera tillgänglighetsinformationen genom att lägga till alla andra ingångar. Du kan göra tillägg och korrigeringar senare, välj Stäng.",
+    "addNewEntranceButton": "Lägg till en ny entré",
+    "addNewEntranceContinueLater": "Stäng"
   },
   "AddressChangedPage": {
     "oldAddress": "Gammal adress",
