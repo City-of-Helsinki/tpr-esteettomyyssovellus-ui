@@ -237,6 +237,8 @@
   "QuestionFormImportExistingData": {
     "chooseServicepoint": "Choose where to copy the data from",
     "bringInformation": "Import information",
+    "importSucceededTitle": "Data import succeeded!",
+    "importSucceededMessage": "Check below that all the information is also correct for this location and make corrections if necessary.",
     "addAdditionalInfo": "Add picture, location or additional text",
     "hideAddButtons": "Hide add info -buttons"
   },

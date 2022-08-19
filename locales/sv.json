@@ -237,6 +237,8 @@
   "QuestionFormImportExistingData": {
     "chooseServicepoint": "Välj varifrån du vill kopiera data",
     "bringInformation": "Importera informationen",
+    "importSucceededTitle": "Dataimporten lyckades!",
+    "importSucceededMessage": "Kontrollera nedan att all information också är korrekt för denna plats och gör korrigeringar vid behov.",
     "addAdditionalInfo": "Lägg till en bild, plats eller ytterligare text",
     "hideAddButtons": "Dölj lägg till knappar"
   },

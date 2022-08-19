@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
 import { useI18n } from "next-localization";
-import { Select } from "hds-react";
+import { Notification, Select } from "hds-react";
 import Button from "./QuestionButton";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { addEntrancePlaceBox, deleteEntrancePlace, setEntranceLocationPhoto, setQuestionBlockComment } from "../state/reducers/additionalInfoSlice";
@@ -28,6 +28,7 @@ const QuestionBlockImportExistingData = ({ block, copyableEntrances }: QuestionB
   const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
 
   const [selectedOption, setSelectedOption] = useState<InputOption>();
+  const [importCompleted, setImportCompleted] = useState<boolean>(false);
 
   const copyOptions = copyableEntrances
     .map((copy) => {
@@ -36,7 +37,14 @@ const QuestionBlockImportExistingData = ({ block, copyableEntrances }: QuestionB
     })
     .sort((a, b) => a.label.localeCompare(b.label));
 
+  const handleSelect = (option: InputOption) => {
+    setSelectedOption(option);
+    setImportCompleted(false);
+  };
+
   const handleCopy = async () => {
+    setImportCompleted(false);
+
     if (selectedOption) {
       const { value: entranceId } = selectedOption;
       const { question_block_id } = block;
@@ -197,24 +205,36 @@ const QuestionBlockImportExistingData = ({ block, copyableEntrances }: QuestionB
           dispatch(setQuestionBlockComment(copiedComment));
         });
       }
+
+      // Show a message that the copy completed successfully
+      setImportCompleted(true);
     }
   };
 
   return (
     <div className={styles.mainContainer}>
       <p>{i18n.t("common.copyDataFromSameAddress")}</p>
-      <div className={styles.inputContainer}>
-        <Select
-          className={styles.selectDropdown}
-          label=""
-          placeholder={i18n.t("QuestionFormImportExistingData.chooseServicepoint")}
-          options={copyOptions}
-          onChange={(selected: InputOption) => setSelectedOption(selected)}
-        />
-        <Button variant="secondary" onClickHandler={handleCopy}>
-          {i18n.t("QuestionFormImportExistingData.bringInformation")}
-        </Button>
+      <div className={styles.importWrapper}>
+        <div className={styles.inputContainer}>
+          <Select
+            className={styles.selectDropdown}
+            label=""
+            placeholder={i18n.t("QuestionFormImportExistingData.chooseServicepoint")}
+            options={copyOptions}
+            onChange={(selected: InputOption) => handleSelect(selected)}
+          />
+          <Button variant="secondary" onClickHandler={handleCopy}>
+            {i18n.t("QuestionFormImportExistingData.bringInformation")}
+          </Button>
+        </div>
       </div>
+      {importCompleted && (
+        <div className={styles.noticeContainer}>
+          <Notification label={i18n.t("QuestionFormImportExistingData.importSucceededTitle")} type="success" size="small">
+            {`${i18n.t("QuestionFormImportExistingData.importSucceededTitle")} ${i18n.t("QuestionFormImportExistingData.importSucceededMessage")}`}
+          </Notification>
+        </div>
+      )}
     </div>
   );
 };

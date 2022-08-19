@@ -237,6 +237,8 @@
   "QuestionFormImportExistingData": {
     "chooseServicepoint": "Valitse mistä tiedot kopioidaan",
     "bringInformation": "Tuo tiedot",
+    "importSucceededTitle": "Tietojen tuonti onnistui!",
+    "importSucceededMessage": "Tarkista alla, että kaikki tiedot pitävät paikkansa myös tämän toimipisteen osalta ja tee korjauksia tarvittaessa.",
     "addAdditionalInfo": "Lisää kuva, sijainti tai lisäteksti",
     "hideAddButtons": "Piilota lisää -painikkeet"
   },
