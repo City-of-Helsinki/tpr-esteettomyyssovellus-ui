@@ -4,6 +4,14 @@
 .header {
   border-bottom: 0.15rem solid black;
   line-height: 1.5rem;
+
+  a:hover {
+    border: 0;
+  }
+
+  a > svg {
+    display: none;
+  }
 }
 
 .actions {

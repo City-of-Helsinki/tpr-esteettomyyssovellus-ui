@@ -2,7 +2,7 @@
 
 import React, { ReactElement } from "react";
 import { useI18n } from "next-localization";
-import { IconArrowRight, IconSignin } from "hds-react";
+import { IconSignin } from "hds-react";
 import { useRouter } from "next/router";
 import styles from "./AddNewEntranceNotice.module.scss";
 import QuestionButton from "../QuestionButton";
@@ -40,14 +40,11 @@ const AddNewEntranceNotice = (): ReactElement => {
         <p>{i18n.t("PreviewPage.addNewEntranceBody")}</p>
       </div>
       <div className={styles.flexButtonsContainer}>
-        <QuestionButton variant="primary" onClickHandler={handleAddAdditionalEntrance} iconRight={<IconArrowRight size="l" aria-hidden />}>
-          {i18n.t("PreviewPage.addNewEntranceButton")}
-        </QuestionButton>
-        <QuestionButton variant="secondary" onClickHandler={handleReturnToDetailspage}>
-          {i18n.t("PreviewPage.addNewEntranceNoEntrances")}
-        </QuestionButton>
         <QuestionButton variant="secondary" onClickHandler={handleReturnToDetailspage}>
           {i18n.t("PreviewPage.addNewEntranceContinueLater")}
+        </QuestionButton>
+        <QuestionButton variant="secondary" onClickHandler={handleAddAdditionalEntrance}>
+          {i18n.t("PreviewPage.addNewEntranceButton")}
         </QuestionButton>
       </div>
     </div>

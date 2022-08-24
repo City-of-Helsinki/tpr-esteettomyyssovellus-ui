@@ -98,11 +98,6 @@ const MapWrapper = ({ initialZoom, curLocation, setLocation, setMapReady, dragga
     if (setMapReady) {
       setMapReady(true);
     }
-    /*
-    if (!stateLocation || stateLocation === undefined) {
-      setLocation(curLocation);
-    }
-    */
   };
 
   return (

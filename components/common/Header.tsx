@@ -65,7 +65,7 @@ const Header = ({ children }: HeaderProps): ReactElement => {
       <DynamicNavigation
         // @ts-ignore: The HDS Navigation component comes from a dynamic import, see above for details
         title={i18n.t("common.header.title")}
-        titleAriaLabel={i18n.t("common.header.titleAlt")}
+        titleAriaLabel={i18n.t("common.header.title")}
         // titleUrl={`${router.basePath}/${router.locale}`}
         menuToggleAriaLabel="menu"
         skipTo="#content"

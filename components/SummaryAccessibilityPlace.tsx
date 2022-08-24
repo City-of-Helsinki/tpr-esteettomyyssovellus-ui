@@ -45,14 +45,14 @@ const SummaryAccessibilityPlace = ({ entrancePlaceName, entrancePlaceData }: Sum
 
                     <div className={styles.mappicturecontainer}>
                       <div className={styles.label}>
-                        <div>{`FI: ${photo_text_fi ?? ""}`}</div>
-                        <div>{`SV: ${photo_text_sv ?? ""}`}</div>
-                        <div>{`EN: ${photo_text_en ?? ""}`}</div>
-                        <div>{`${i18n.t("servicepoint.photoSource")}: ${photo_source_text ?? ""}`}</div>
+                        {photo_text_fi && <div>{`FI: ${photo_text_fi ?? ""}`}</div>}
+                        {photo_text_sv && <div>{`SV: ${photo_text_sv ?? ""}`}</div>}
+                        {photo_text_en && <div>{`EN: ${photo_text_en ?? ""}`}</div>}
+                        {photo_source_text && <div>{`${i18n.t("servicepoint.photoSource")}: ${photo_source_text ?? ""}`}</div>}
                       </div>
 
                       <div className={styles.picture}>
-                        <img alt={photo_text_fi} src={photo_url} />
+                        <img alt={photo_text_fi ?? ""} src={photo_url} />
                       </div>
                     </div>
                   </div>
@@ -64,17 +64,17 @@ const SummaryAccessibilityPlace = ({ entrancePlaceName, entrancePlaceData }: Sum
 
                     <div className={styles.mappicturecontainer}>
                       <div className={styles.label}>
-                        <div>{`FI: ${location_text_fi ?? ""}`}</div>
-                        <div>{`SV: ${location_text_sv ?? ""}`}</div>
-                        <div>{`EN: ${location_text_en ?? ""}`}</div>
+                        {location_text_fi && <div>{`FI: ${location_text_fi ?? ""}`}</div>}
+                        {location_text_sv && <div>{`SV: ${location_text_sv ?? ""}`}</div>}
+                        {location_text_en && <div>{`EN: ${location_text_en ?? ""}`}</div>}
                         <SkipMapButton idToSkipTo="#afterMap" />
                       </div>
 
                       <div className={styles.map} aria-hidden>
                         <Map curLocation={coordinatesWGS84} initZoom={MAP_MAX_ZOOM} draggableMarker={false} makeStatic />
-                      </div>
 
-                      <div id="afterMap" />
+                        <div id="afterMap" />
+                      </div>
                     </div>
                   </div>
                 )}

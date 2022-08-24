@@ -5,12 +5,17 @@
   padding: $spacing-s;
   padding-top: 0;
 
+  .importWrapper {
+    display: flex;
+    flex-direction: row;
+  }
+
   .inputContainer {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
 
-    @include media(l, xl) {
+    @include media(m, l, xl) {
       flex-direction: row;
     }
 
@@ -20,6 +25,10 @@
 
     .selectDropdown {
       width: 100%;
+
+      button {
+        color: var(--dropdown-color-default);
+      }
     }
 
     .selectDropdown li[aria-selected="true"] {
@@ -29,12 +38,14 @@
 
     Button {
       margin: auto $spacing-2-xs;
+
       @include media(xs, s) {
-        margin: 0;
-      }
-      @include media(m) {
         margin: $spacing-2-xs 0;
       }
     }
+  }
+
+  .noticeContainer {
+    margin-top: $spacing-s;
   }
 }

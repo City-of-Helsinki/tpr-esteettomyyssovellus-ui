@@ -138,9 +138,9 @@ const AccessibilityPlaceLocation = ({ entrancePlaceBox }: AccessibilityPlaceLoca
               id={`text-fin-${currentId}`}
               label={i18n.t("additionalInfo.locationLabel")}
               helperText={i18n.t("additionalInfo.locationHelperText")}
-              tooltipButtonLabel={i18n.t("additionalInfo.generalTooptipButtonLabel")}
-              tooltipLabel={i18n.t("additionalInfo.generalTooptipLabel")}
-              tooltipText={i18n.t("additionalInfo.altToolTipContent")}
+              tooltipButtonLabel={i18n.t("additionalInfo.generalTooltipButtonLabel")}
+              tooltipLabel={i18n.t("additionalInfo.generalTooltipLabel")}
+              tooltipText={i18n.t("additionalInfo.locationToolTipContent")}
               onChange={(evt: ChangeEvent<HTMLTextAreaElement>) => handleAddLocationText(evt, "fi")}
               value={location_text_fi ?? ""}
             />

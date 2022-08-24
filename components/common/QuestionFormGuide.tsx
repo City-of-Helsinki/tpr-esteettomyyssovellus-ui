@@ -17,7 +17,7 @@ const QuestionFormGuide = ({ formGuideData }: QuestionFormGuideProps): JSX.Eleme
     <div className={styles.maincontainer}>
       {filteredGuide.map((guide) => {
         const { guide_id, guide_icon, guide_title, guide_url, description } = guide;
-        const key = guide_id;
+        const key = `guide_${guide_id}`;
 
         let icon;
         switch (guide_icon) {
@@ -35,10 +35,15 @@ const QuestionFormGuide = ({ formGuideData }: QuestionFormGuideProps): JSX.Eleme
           }
         }
 
+        const desc = description?.split("<BR>");
+
         return (
           <div key={key} className={styles.card}>
             {icon}
-            <p>{description ?? ""}</p>
+            {desc?.map((text, index) => {
+              const key2 = `${key}_br_${index}`;
+              return <p key={key2}>{text}</p>;
+            })}
 
             <GuideLink guideTitle={guide_title} guideUrl={guide_url} />
           </div>

@@ -311,9 +311,9 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
               label={i18n.t("additionalInfo.pictureLabel")}
               helperText={i18n.t("additionalInfo.pictureHelperText")}
               required
-              tooltipButtonLabel={i18n.t("additionalInfo.generalTooptipButtonLabel")}
-              tooltipLabel={i18n.t("additionalInfo.generalTooptipLabel")}
-              tooltipText={i18n.t("additionalInfo.altToolTipContent")}
+              tooltipButtonLabel={i18n.t("additionalInfo.generalTooltipButtonLabel")}
+              tooltipLabel={i18n.t("additionalInfo.generalTooltipLabel")}
+              tooltipText={i18n.t("additionalInfo.pictureToolTipContent")}
               onChange={(evt: ChangeEvent<HTMLTextAreaElement>) => handleAddAltText(evt, "fi", i18n.t("additionalInfo.pictureLabel"))}
               value={photo_text_fi ?? ""}
               invalid={invalidValues.some((v) => v.fieldId === `text-fin-${currentId}`)}
@@ -391,8 +391,8 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
           <div className={styles.picturesourcecontainer}>
             <TextInput
               id={`tooltip-source-${currentId}`}
-              tooltipButtonLabel={i18n.t("additionalInfo.generalTooptipLabel")}
-              tooltipLabel={i18n.t("additionalInfo.generalTooptipLabel")}
+              tooltipButtonLabel={i18n.t("additionalInfo.generalTooltipLabel")}
+              tooltipLabel={i18n.t("additionalInfo.generalTooltipLabel")}
               tooltipText={i18n.t("additionalInfo.sourceTooltipText")}
               label={i18n.t("additionalInfo.sourceTooltipMainLabel")}
               onChange={(evt) => handleSourceChange(evt, i18n.t("additionalInfo.sourceTooltipMainLabel"))}
