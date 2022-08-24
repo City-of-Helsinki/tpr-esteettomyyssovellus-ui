@@ -4,7 +4,7 @@
 .maincontainer {
   display: flex;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-start;
   flex-direction: row;
 
   @include media(xs, s) {
