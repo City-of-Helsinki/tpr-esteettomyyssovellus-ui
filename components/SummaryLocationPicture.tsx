@@ -9,7 +9,7 @@ import { convertCoordinates, formatAddress, isLocationValid } from "../utils/uti
 import styles from "./SummaryLocationPicture.module.scss";
 
 // usage: component for entrance location and picture, used in details page
-const SummaryLocationPicture = ({ entranceKey, entranceData, servicepointData }: SummaryLocationPictureProps): JSX.Element => {
+const SummaryLocationPicture = ({ entranceKey, entranceData, servicepointData, isMainEntrance }: SummaryLocationPictureProps): JSX.Element => {
   const i18n = useI18n();
   const curLocale = i18n.locale();
 
@@ -21,17 +21,16 @@ const SummaryLocationPicture = ({ entranceKey, entranceData, servicepointData }:
   const coordinatesWGS84 = convertCoordinates("EPSG:3067", "WGS84", coordinatesEuref).reverse() as [number, number];
 
   const entranceName = entranceData && entranceData[`name_${curLocale}`] ? entranceData[`name_${curLocale}`] : "";
-  const locationLabel =
-    entranceKey === "main"
-      ? formatAddress(servicepointData.address_street_name, servicepointData.address_no, servicepointData.address_city)
-      : entranceName ?? "";
+  const locationLabel = isMainEntrance
+    ? formatAddress(servicepointData.address_street_name, servicepointData.address_no, servicepointData.address_city)
+    : entranceName ?? "";
 
   const isDevelopment = false;
 
   return (
     <div className={styles.maincontainer}>
       <div className={styles.subcontainer}>
-        <h4>{entranceKey === "main" ? i18n.t("servicepoint.mainEntranceLocationLabel") : i18n.t("servicepoint.entranceLocationLabel")}</h4>
+        <h4>{isMainEntrance ? i18n.t("servicepoint.mainEntranceLocationLabel") : i18n.t("servicepoint.entranceLocationLabel")}</h4>
 
         <div className={styles.mappicturecontainer}>
           <div className={styles.label}>
@@ -52,7 +51,7 @@ const SummaryLocationPicture = ({ entranceKey, entranceData, servicepointData }:
 
       {(photo_url || isDevelopment) && (
         <div id={`picturecontainer_${entranceKey}`} className={styles.subcontainer}>
-          <h4>{entranceKey === "main" ? i18n.t("servicepoint.mainEntrancePicturesLabel") : i18n.t("servicepoint.entrancePicturesLabel")}</h4>
+          <h4>{isMainEntrance ? i18n.t("servicepoint.mainEntrancePicturesLabel") : i18n.t("servicepoint.entrancePicturesLabel")}</h4>
 
           <div className={styles.mappicturecontainer}>
             <div className={styles.label}>
@@ -65,7 +64,7 @@ const SummaryLocationPicture = ({ entranceKey, entranceData, servicepointData }:
             <div className={styles.picture}>
               {photo_url && (
                 <img
-                  alt={entranceKey === "main" ? i18n.t("servicepoint.mainEntrancePicturesLabel") : i18n.t("servicepoint.entrancePicturesLabel")}
+                  alt={isMainEntrance ? i18n.t("servicepoint.mainEntrancePicturesLabel") : i18n.t("servicepoint.entrancePicturesLabel")}
                   src={photo_url}
                 />
               )}
@@ -73,7 +72,7 @@ const SummaryLocationPicture = ({ entranceKey, entranceData, servicepointData }:
               {/* Placeholder photo for development */}
               {!photo_url && isDevelopment && (
                 <img
-                  alt={entranceKey === "main" ? i18n.t("servicepoint.mainEntrancePicturesLabel") : i18n.t("servicepoint.entrancePicturesLabel")}
+                  alt={isMainEntrance ? i18n.t("servicepoint.mainEntrancePicturesLabel") : i18n.t("servicepoint.entrancePicturesLabel")}
                   src="https://images.unsplash.com/photo-1531989417401-0f85f7e673f8?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80"
                 />
               )}

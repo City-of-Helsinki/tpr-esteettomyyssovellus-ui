@@ -106,8 +106,6 @@ const SummarySideNavigation = ({
     }
   };
 
-  const hasAccessibilityData = accessibilityData && accessibilityData[entranceKey] && accessibilityData[entranceKey].length > 0;
-
   return (
     <div className={styles.maincontainer}>
       <div className={styles.sidenavigation}>
@@ -140,16 +138,20 @@ const SummarySideNavigation = ({
 
       <div className={styles.contentcontainer}>
         {activeLevel === locationPictureLevelId && (
-          <SummaryLocationPicture entranceKey={entranceKey} entranceData={entranceData} servicepointData={servicepointData} />
+          <SummaryLocationPicture
+            entranceKey={entranceKey}
+            entranceData={entranceData}
+            servicepointData={servicepointData}
+            isMainEntrance={entranceKey === "main"}
+          />
         )}
 
         {activeLevel.indexOf("sideNavigationAccessibilityInfo") >= 0 && (
           <SummaryAccessibility
             entranceKey={entranceKey}
             sentenceGroupId={selectedGroupId}
-            sentenceGroup={groupedAccessibilityData ? groupedAccessibilityData[selectedGroupId] : undefined}
+            accessibilityData={accessibilityData}
             entranceChoiceData={entranceChoiceData}
-            hasData={hasAccessibilityData}
           />
         )}
 

@@ -9,6 +9,7 @@ import {
   BackendEntranceField,
   BackendEntrancePlace,
   BackendEntranceSentence,
+  BackendEntranceSentenceGroup,
   BackendFormGuide,
   BackendPlace,
   BackendQuestion,
@@ -161,9 +162,8 @@ export interface SummaryContactProps {
 export interface SummaryAccessibilityProps {
   entranceKey: string;
   sentenceGroupId: string;
-  sentenceGroup?: BackendEntranceSentence[];
+  accessibilityData: AccessibilityData;
   entranceChoiceData: EntranceChoiceData;
-  hasData: boolean;
 }
 
 export interface PreviewPageLandingSummaryProps {
@@ -179,6 +179,14 @@ export interface SummaryLocationPictureProps {
   entranceKey: string;
   entranceData?: BackendEntrance;
   servicepointData: BackendServicepoint;
+  isMainEntrance: boolean;
+}
+
+export interface SummaryAccessibilityPlaceGroupProps {
+  entranceKey: string;
+  sentenceGroupKey: string;
+  accessibilityPlaces: BackendPlace[];
+  entrancePlaceData: EntrancePlaceData;
 }
 
 export interface SummaryAccessibilityPlaceProps {
@@ -393,14 +401,24 @@ export interface EntrancePlaceData {
   [key: string]: BackendEntrancePlace[];
 }
 
+export interface GroupedEntrancePlaceData {
+  [key: string]: EntrancePlaceData;
+}
+
 export interface DetailsProps {
   servicepointData: BackendServicepoint;
+  entranceSentenceGroupData: BackendEntranceSentenceGroup[];
   accessibilityData: AccessibilityData;
+  accessibilityData2: AccessibilityData;
   accessibilityPlaceData: BackendPlace[];
   entranceData: EntranceData;
+  entranceData2: EntranceData;
   entrancePlaceData: EntrancePlaceData;
+  entrancePlaceData2: EntrancePlaceData;
   entranceChoiceData: EntranceChoiceData;
+  entranceChoiceData2: EntranceChoiceData;
   formGuideData: BackendFormGuide[];
+  mainEntranceId: number;
   isMainEntrancePublished: boolean;
 }
 

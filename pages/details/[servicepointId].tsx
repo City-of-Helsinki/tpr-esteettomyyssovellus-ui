@@ -8,6 +8,9 @@ import LoadSpinner from "../../components/common/LoadSpinner";
 import PageHelp from "../../components/common/PageHelp";
 import SummarySideNavigation from "../../components/SummarySideNavigation";
 import SummaryContact from "../../components/SummaryContact";
+import SummaryAccessibility from "../../components/SummaryAccessibility";
+import SummaryAccessibilityPlaceGroup from "../../components/SummaryAccessibilityPlaceGroup";
+import SummaryLocationPicture from "../../components/SummaryLocationPicture";
 import SummaryNewButton from "../../components/SummaryNewButton";
 import SummaryModifyButton from "../../components/SummaryModifyButton";
 import SummaryRemoveButton from "../../components/SummaryRemoveButton";
@@ -19,6 +22,7 @@ import {
   API_FETCH_BACKEND_ENTRANCE,
   API_FETCH_BACKEND_ENTRANCE_CHOICES,
   API_FETCH_BACKEND_ENTRANCE_PLACES,
+  API_FETCH_BACKEND_ENTRANCE_SENTENCE_GROUPS,
   API_FETCH_BACKEND_FORM_GUIDE,
   API_FETCH_BACKEND_PLACES,
   API_FETCH_BACKEND_SENTENCES,
@@ -32,6 +36,7 @@ import {
   BackendEntranceChoice,
   BackendEntrancePlace,
   BackendEntranceSentence,
+  BackendEntranceSentenceGroup,
   BackendFormGuide,
   BackendPlace,
   BackendServicepoint,
@@ -45,12 +50,18 @@ import styles from "./details.module.scss";
 // usage: the details / landing page of servicepoint
 const Details = ({
   servicepointData,
+  entranceSentenceGroupData,
   accessibilityData,
+  accessibilityData2,
   accessibilityPlaceData,
   entranceData,
+  entranceData2,
   entrancePlaceData,
+  entrancePlaceData2,
   entranceChoiceData,
+  entranceChoiceData2,
   formGuideData,
+  mainEntranceId,
   isMainEntrancePublished,
 }: DetailsProps): ReactElement => {
   const i18n = useI18n();
@@ -103,6 +114,12 @@ const Details = ({
     return {
       ...acc,
       [key]: filterByLanguage(accessibilityData[key], i18n.locale()),
+    };
+  }, {});
+  const filteredAccessibilityData2: AccessibilityData = Object.keys(accessibilityData2).reduce((acc, key) => {
+    return {
+      ...acc,
+      [key]: filterByLanguage(accessibilityData2[key], i18n.locale()),
     };
   }, {});
   const entranceKeys = Object.keys(filteredAccessibilityData);
@@ -165,6 +182,55 @@ const Details = ({
 
             <SummaryContact entranceData={entranceData.main} hasData={hasMainAccessibilityData} hasModifyButton />
 
+            <div>NEW STUFF BELOW</div>
+
+            <div className={styles.headingcontainer}>
+              <h3>{i18n.t("servicepoint.contactFormSummaryHeader")}</h3>
+            </div>
+
+            <div>
+              {entranceSentenceGroupData
+                .sort((a: BackendEntranceSentenceGroup, b: BackendEntranceSentenceGroup) => {
+                  return (a.order_text ?? "").localeCompare(b.order_text ?? "");
+                })
+                .map((entranceSentenceGroup) => {
+                  const { entrance_id, sentence_group_id } = entranceSentenceGroup;
+                  const entranceKey = String(entrance_id);
+                  const sentenceGroupKey = String(sentence_group_id);
+
+                  return (
+                    <div key={`entrance_sentence_group_${entrance_id}_${sentence_group_id}`}>
+                      {sentence_group_id === 0 ? (
+                        <SummaryLocationPicture
+                          entranceKey={entranceKey}
+                          entranceData={entranceData2[entranceKey]}
+                          servicepointData={servicepointData}
+                          isMainEntrance={entrance_id === mainEntranceId}
+                        />
+                      ) : (
+                        <>
+                          <SummaryAccessibility
+                            entranceKey={entranceKey}
+                            sentenceGroupId={sentenceGroupKey}
+                            accessibilityData={filteredAccessibilityData2}
+                            entranceChoiceData={entranceChoiceData2}
+                          />
+
+                          <SummaryAccessibilityPlaceGroup
+                            entranceKey={entranceKey}
+                            sentenceGroupKey={sentenceGroupKey}
+                            accessibilityPlaces={filteredPlaces}
+                            entrancePlaceData={entrancePlaceData2}
+                          />
+                        </>
+                      )}
+                    </div>
+                  );
+                })}
+            </div>
+
+            <div>OLD STUFF BELOW</div>
+
             {entranceKeys.map((key, index) => {
               const hasAccessibilityData = accessibilityData && accessibilityData[key] && accessibilityData[key].length > 0;
 
@@ -209,13 +275,19 @@ const Details = ({
 export const getServerSideProps: GetServerSideProps = async ({ params, locales }) => {
   const lngDict = await i18nLoader(locales);
 
+  let servicepointData: BackendServicepoint = {} as BackendServicepoint;
+  let entranceSentenceGroupData: BackendEntranceSentenceGroup[] = [];
   let accessibilityData: AccessibilityData = {};
+  let accessibilityData2: AccessibilityData = {};
   let accessibilityPlaceData: BackendPlace[] = [];
   let entranceData: EntranceData = {};
+  let entranceData2: EntranceData = {};
   let entrancePlaceData: EntrancePlaceData = {};
-  let servicepointData: BackendServicepoint = {} as BackendServicepoint;
+  let entrancePlaceData2: EntrancePlaceData = {};
   let entranceChoiceData: EntranceChoiceData = {};
+  let entranceChoiceData2: EntranceChoiceData = {};
   let formGuideData: BackendFormGuide[] = [];
+  let mainEntranceId = -1;
   let isMainEntrancePublished = false;
 
   if (params !== undefined) {
@@ -240,6 +312,15 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         }
       );
       const servicepointEntranceData = await (servicepointEntranceResp.json() as Promise<EntranceResults>);
+
+      // Get all the entrance and sentence group combinations for the service point
+      const entranceSentenceGroupResp = await fetch(
+        `${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE_SENTENCE_GROUPS}?servicepoint_id=${servicepointData.servicepoint_id}&format=json`,
+        {
+          headers: new Headers({ Authorization: getTokenHash() }),
+        }
+      );
+      entranceSentenceGroupData = await (entranceSentenceGroupResp.json() as Promise<BackendEntranceSentenceGroup[]>);
 
       // Use the published entrance
       const entranceResultDetails = await Promise.all(
@@ -274,9 +355,16 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         ...(mainEntranceDetails?.entrance && { main: mainEntranceDetails?.entrance }),
         ...sideEntranceDetails,
       };
+      entranceData2 = entranceResultDetails.reduce((acc, resultDetails) => {
+        return {
+          ...acc,
+          ...(resultDetails.entrance && { [resultDetails.entrance.entrance_id]: resultDetails.entrance }),
+        };
+      }, {});
 
       // Check if the main entrance exists and is published
       isMainEntrancePublished = !!mainEntranceDetails?.entrance && mainEntranceDetails?.entrance.form_submitted === "Y";
+      mainEntranceId = mainEntranceDetails?.entrance?.entrance_id ?? -1;
 
       const entranceResultSentences = await Promise.all(
         servicepointEntranceData.results.map(async (entranceResult) => {
@@ -306,6 +394,12 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         main: mainEntranceSentences?.sentenceData || [],
         ...sideEntranceSentences,
       };
+      accessibilityData2 = entranceResultSentences.reduce((acc, resultSentence) => {
+        return {
+          ...acc,
+          [resultSentence.entranceResult.entrance_id]: resultSentence.sentenceData,
+        };
+      }, {});
 
       // Get the accessibility place data for use in the accessibility summaries for entrance place names
       const accessibilityPlaceResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_PLACES}?format=json`, {
@@ -329,9 +423,28 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
           return { entranceKey, allEntrancePlaceData };
         })
       );
+      const entranceAccessibilityPlaceData2 = await Promise.all(
+        Object.keys(entranceData2).map(async (entranceKey) => {
+          const entrance = entranceData2[entranceKey];
+
+          const allEntrancePlaceDataResp = await fetch(
+            `${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE_PLACES}?entrance_id=${entrance.entrance_id}&format=json`,
+            {
+              headers: new Headers({ Authorization: getTokenHash() }),
+            }
+          );
+          const allEntrancePlaceData = await (allEntrancePlaceDataResp.json() as Promise<BackendEntrancePlace[]>);
+
+          return { entranceKey, allEntrancePlaceData };
+        })
+      );
 
       entrancePlaceData = entranceAccessibilityPlaceData.reduce((acc, placeData) => {
         const entrance = entranceData[placeData.entranceKey];
+        return { ...acc, [placeData.entranceKey]: placeData.allEntrancePlaceData.filter((a) => a.log_id === entrance.log_id) };
+      }, {});
+      entrancePlaceData2 = entranceAccessibilityPlaceData2.reduce((acc, placeData) => {
+        const entrance = entranceData2[placeData.entranceKey];
         return { ...acc, [placeData.entranceKey]: placeData.allEntrancePlaceData.filter((a) => a.log_id === entrance.log_id) };
       }, {});
 
@@ -351,9 +464,28 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
           return { entranceKey, allEntranceChoiceData };
         })
       );
+      const entranceQuestionAnswerData2 = await Promise.all(
+        Object.keys(entranceData2).map(async (entranceKey) => {
+          const entrance = entranceData2[entranceKey];
+
+          const allEntranceChoicesResp = await fetch(
+            `${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE_CHOICES}?entrance_id=${entrance.entrance_id}&format=json`,
+            {
+              headers: new Headers({ Authorization: getTokenHash() }),
+            }
+          );
+          const allEntranceChoiceData = await (allEntranceChoicesResp.json() as Promise<BackendEntranceChoice[]>);
+
+          return { entranceKey, allEntranceChoiceData };
+        })
+      );
 
       entranceChoiceData = entranceQuestionAnswerData.reduce((acc, answerData) => {
         const entrance = entranceData[answerData.entranceKey];
+        return { ...acc, [answerData.entranceKey]: answerData.allEntranceChoiceData.filter((a) => a.log_id === entrance.log_id) };
+      }, {});
+      entranceChoiceData2 = entranceQuestionAnswerData2.reduce((acc, answerData) => {
+        const entrance = entranceData2[answerData.entranceKey];
         return { ...acc, [answerData.entranceKey]: answerData.allEntranceChoiceData.filter((a) => a.log_id === entrance.log_id) };
       }, {});
 
@@ -366,11 +498,16 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       console.error("Error", err);
 
       servicepointData = {} as BackendServicepoint;
+      entranceSentenceGroupData = [];
       accessibilityData = {};
+      accessibilityData2 = {};
       accessibilityPlaceData = [];
       entranceData = {};
+      entranceData2 = {};
       entrancePlaceData = {};
+      entrancePlaceData2 = {};
       entranceChoiceData = {};
+      entranceChoiceData2 = {};
       formGuideData = [];
     }
   }
@@ -379,12 +516,18 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
     props: {
       lngDict,
       servicepointData,
+      entranceSentenceGroupData,
       accessibilityData,
+      accessibilityData2,
       accessibilityPlaceData,
       entranceData,
+      entranceData2,
       entrancePlaceData,
+      entrancePlaceData2,
       entranceChoiceData,
+      entranceChoiceData2,
       formGuideData,
+      mainEntranceId,
       isMainEntrancePublished,
     },
   };

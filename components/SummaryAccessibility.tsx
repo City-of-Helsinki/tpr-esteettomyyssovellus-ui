@@ -5,20 +5,29 @@ import SummaryContent from "./SummaryContent";
 import SummaryAccessibilityInnerAccordion from "./SummaryAccessibilityInnerAccordion";
 import { BackendEntranceSentence } from "../types/backendModels";
 import { LanguageLocales } from "../types/constants";
-import { SummaryAccessibilityProps } from "../types/general";
+import { AccessibilityData, SummaryAccessibilityProps } from "../types/general";
 import styles from "./SummaryAccessibility.module.scss";
 
 // usage: used in details/landing page to create a summary block of sentences etc
 // this component more like a container -> used with SummarySideNavigation
-const SummaryAccessibility = ({
-  entranceKey,
-  sentenceGroupId,
-  sentenceGroup,
-  entranceChoiceData,
-  hasData,
-}: SummaryAccessibilityProps): JSX.Element => {
+const SummaryAccessibility = ({ entranceKey, sentenceGroupId, accessibilityData, entranceChoiceData }: SummaryAccessibilityProps): JSX.Element => {
   const i18n = useI18n();
   const curLocaleId: number = LanguageLocales[i18n.locale() as keyof typeof LanguageLocales];
+
+  const getGroupedAccessibilityData = (sentences?: BackendEntranceSentence[]): AccessibilityData | undefined => {
+    if (sentences) {
+      return sentences.reduce((acc: AccessibilityData, sentence) => {
+        const { sentence_group_id } = sentence;
+        return {
+          ...acc,
+          [sentence_group_id]: acc[sentence_group_id] ? [...acc[sentence_group_id], sentence] : [sentence],
+        };
+      }, {});
+    }
+  };
+
+  const groupedAccessibilityData = getGroupedAccessibilityData(accessibilityData ? accessibilityData[entranceKey] : undefined);
+  const sentenceGroup = groupedAccessibilityData ? groupedAccessibilityData[sentenceGroupId] : undefined;
 
   const getSentencesList = () => {
     if (sentenceGroup) {
@@ -83,6 +92,8 @@ const SummaryAccessibility = ({
       );
     }
   };
+
+  const hasData = accessibilityData && accessibilityData[entranceKey] && accessibilityData[entranceKey].length > 0;
 
   return (
     <div className={styles.maincontainer}>

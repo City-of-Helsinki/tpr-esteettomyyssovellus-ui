@@ -4,6 +4,11 @@
 .maincontainer {
   margin-top: $spacing-l;
 
+  h4 {
+    background-color: $color-bus-light;
+    padding: $spacing-s;
+  }
+
   .headercontainer {
     display: flex;
     flex-direction: row;

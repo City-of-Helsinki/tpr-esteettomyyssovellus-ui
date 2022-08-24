@@ -280,9 +280,8 @@ const Preview = ({
             key={`sentencegroup_${sentenceGroupId}`}
             entranceKey={entranceKey}
             sentenceGroupId={sentenceGroupId}
-            sentenceGroup={groupedAccessibilityData ? groupedAccessibilityData[sentenceGroupId] : undefined}
+            accessibilityData={filteredAccessibilityData}
             entranceChoiceData={{ [entranceKey]: entranceChoiceData }}
-            hasData={hasAccessibilityData}
           />
         );
       });
@@ -364,7 +363,12 @@ const Preview = ({
                     entranceKey === "main" ? i18n.t("servicepoint.mainEntranceLocationLabel") : i18n.t("servicepoint.entranceLocationLabel")
                   }
                 >
-                  <SummaryLocationPicture entranceKey={entranceKey} entranceData={entranceData[entranceKey]} servicepointData={servicepointData} />
+                  <SummaryLocationPicture
+                    entranceKey={entranceKey}
+                    entranceData={entranceData[entranceKey]}
+                    servicepointData={servicepointData}
+                    isMainEntrance={entranceKey === "main"}
+                  />
                 </SummaryContent>
 
                 {hasAccessibilityData && (
