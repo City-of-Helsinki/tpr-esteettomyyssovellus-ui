@@ -65,6 +65,10 @@
       flex-direction: column;
     }
 
+    h3 {
+      color: $color-bus;
+    }
+
     .modifybutton {
       display: flex;
       flex-direction: row;

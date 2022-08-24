@@ -65,6 +65,7 @@ const Details = ({
   isMainEntrancePublished,
 }: DetailsProps): ReactElement => {
   const i18n = useI18n();
+  const curLocale: string = i18n.locale();
   const dispatch = useAppDispatch();
   const isLoading = useLoading();
   const treeItems = [servicepointData.servicepoint_name ?? ""];
@@ -177,15 +178,15 @@ const Details = ({
               </div>
               */}
 
+              {/*
               <h2>{i18n.t("common.mainEntrance")}</h2>
+              */}
             </div>
 
             <SummaryContact entranceData={entranceData.main} hasData={hasMainAccessibilityData} hasModifyButton />
 
-            <div>NEW STUFF BELOW</div>
-
             <div className={styles.headingcontainer}>
-              <h3>{i18n.t("servicepoint.contactFormSummaryHeader")}</h3>
+              <h2>{i18n.t("servicepoint.contactFormSummaryHeader")}</h2>
             </div>
 
             <div>
@@ -197,16 +198,34 @@ const Details = ({
                   const { entrance_id, sentence_group_id } = entranceSentenceGroup;
                   const entranceKey = String(entrance_id);
                   const sentenceGroupKey = String(sentence_group_id);
+                  const entranceName = entranceData2[entranceKey] ? entranceData2[entranceKey][`name_${curLocale}`] : "";
+                  const hasAccessibilityData = accessibilityData2 && accessibilityData2[entranceKey] && accessibilityData2[entranceKey].length > 0;
 
                   return (
                     <div key={`entrance_sentence_group_${entrance_id}_${sentence_group_id}`}>
                       {sentence_group_id === 0 ? (
-                        <SummaryLocationPicture
-                          entranceKey={entranceKey}
-                          entranceData={entranceData2[entranceKey]}
-                          servicepointData={servicepointData}
-                          isMainEntrance={entrance_id === mainEntranceId}
-                        />
+                        <>
+                          <div className={styles.headercontainer}>
+                            <h3>
+                              {entrance_id === mainEntranceId
+                                ? i18n.t("common.mainEntrance")
+                                : `${i18n.t("common.additionalEntrance")}: ${entranceName}`}
+                            </h3>
+                            <div className={styles.modifybutton}>
+                              {entrance_id !== mainEntranceId && hasAccessibilityData && (
+                                <SummaryRemoveButton entranceData={entranceData2[entranceKey]} />
+                              )}
+                              <SummaryModifyButton entranceData={entranceData2[entranceKey]} hasData={hasAccessibilityData} />
+                            </div>
+                          </div>
+
+                          <SummaryLocationPicture
+                            entranceKey={entranceKey}
+                            entranceData={entranceData2[entranceKey]}
+                            servicepointData={servicepointData}
+                            isMainEntrance={entrance_id === mainEntranceId}
+                          />
+                        </>
                       ) : (
                         <>
                           <SummaryAccessibility
@@ -229,7 +248,15 @@ const Details = ({
                 })}
             </div>
 
-            <div>OLD STUFF BELOW</div>
+            <div style={{ color: "red", marginTop: "128px" }}>
+              <h2>OLD STUFF BELOW</h2>
+            </div>
+
+            <div className={styles.headingcontainer}>
+              <h2>{i18n.t("common.mainEntrance")}</h2>
+            </div>
+
+            <SummaryContact entranceData={entranceData.main} hasData={hasMainAccessibilityData} hasModifyButton />
 
             {entranceKeys.map((key, index) => {
               const hasAccessibilityData = accessibilityData && accessibilityData[key] && accessibilityData[key].length > 0;
