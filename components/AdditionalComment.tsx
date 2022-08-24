@@ -89,9 +89,9 @@ const AdditionalComment = ({ questionBlockId, questionBlockComment }: Additional
             label={i18n.t("additionalInfo.commentLabel")}
             helperText={i18n.t("additionalInfo.commentHelperText")}
             // required
-            tooltipButtonLabel={i18n.t("additionalInfo.generalTooptipButtonLabel")}
-            tooltipLabel={i18n.t("additionalInfo.generalTooptipLabel")}
-            tooltipText={i18n.t("additionalInfo.altToolTipContent")}
+            // tooltipButtonLabel={i18n.t("additionalInfo.generalTooltipButtonLabel")}
+            // tooltipLabel={i18n.t("additionalInfo.generalTooltipLabel")}
+            // tooltipText={i18n.t("additionalInfo.altToolTipContent")}
             onChange={(evt: ChangeEvent<HTMLTextAreaElement>) => handleAddComment(evt, "fi", i18n.t("additionalInfo.commentLabel"))}
             value={comment_text_fi ?? ""}
             invalid={invalidValues.some((v) => v.fieldId === "text-fin")}

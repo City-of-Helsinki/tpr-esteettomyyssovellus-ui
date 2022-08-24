@@ -107,6 +107,12 @@ button:hover {
   text-decoration: underline;
 }
 
+a:hover {
+  /* hover style copied from HDS Link focus style */
+  border: 3px solid var(--color-coat-of-arms);
+  outline: none;
+}
+
 .screenReaderOnly,
 .visibleOnFocusOnly:not(:focus) {
   border: 0;

@@ -72,9 +72,9 @@ const SummaryAccessibilityPlace = ({ entrancePlaceName, entrancePlaceData }: Sum
 
                       <div className={styles.map} aria-hidden>
                         <Map curLocation={coordinatesWGS84} initZoom={MAP_MAX_ZOOM} draggableMarker={false} makeStatic />
-                      </div>
 
-                      <div id="afterMap" />
+                        <div id="afterMap" />
+                      </div>
                     </div>
                   </div>
                 )}

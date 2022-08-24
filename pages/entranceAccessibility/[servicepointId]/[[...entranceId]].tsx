@@ -404,11 +404,26 @@ const EntranceAccessibility = ({
             </div>
 
             <div className={styles.mainbuttons}>
+              <QuestionFormCtrlButtons
+                hasCancelButton
+                //hasValidateButton={isContinueClicked}
+                hasValidateButton={false}
+                //hasSaveDraftButton={!formSubmitted}
+                hasSaveDraftButton={hasTopLevelAnswer && !isMainEntrancePublished}
+                hasPreviewButton={hasTopLevelAnswer}
+                hasContinueButton={!hasTopLevelAnswer}
+                visibleBlocks={visibleBlocks}
+                questionsData={questionsData}
+                questionChoicesData={questionChoicesData}
+                formId={formId}
+              />
+
               {isInvalid && <ValidationSummary pageValid={!isInvalid} validationSummary={invalidBlockIds} validationTime={validationTime} />}
             </div>
 
             <div>
               {visibleBlocks}
+
               <QuestionFormCtrlButtons
                 hasCancelButton
                 //hasValidateButton={isContinueClicked}
