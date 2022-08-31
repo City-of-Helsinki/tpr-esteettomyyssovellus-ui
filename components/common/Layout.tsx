@@ -7,11 +7,12 @@ import Header from "./Header";
 import styles from "./Layout.module.scss";
 
 interface LayoutProps {
+  isSummary?: boolean;
   children: ReactNode;
 }
 
 // usage: general layout for including head, footer etc for all pages
-const Layout = ({ children }: LayoutProps): ReactElement => {
+const Layout = ({ isSummary, children }: LayoutProps): ReactElement => {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -29,9 +30,9 @@ const Layout = ({ children }: LayoutProps): ReactElement => {
       </Head>
       <div className={styles.left} />
       <div className={styles.main}>
-        <Header />
+        <Header isSummary={isSummary} />
         {children}
-        <Footer />
+        <Footer isSummary={isSummary} />
       </div>
       <div className={styles.right} />
     </div>

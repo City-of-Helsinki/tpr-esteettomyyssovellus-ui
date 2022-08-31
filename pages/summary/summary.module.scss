@@ -1,0 +1,72 @@
+@import "~hds-design-tokens/lib/all.scss";
+@import "../../styles/mixins.scss";
+
+.maincontainer {
+  margin-top: $spacing-m;
+
+  .headingcontainer {
+    h1 {
+      word-break: break-word;
+      margin-bottom: 0;
+    }
+    h2, h3 {
+      color: $color-bus;
+    }
+
+    .subHeader {
+      color: $color-black;
+      font-size: $fontsize-heading-m !important;
+      font-weight: 700;
+      margin-top: 0;
+      margin-bottom: $spacing-l;
+
+      @include media(xs) {
+        font-size: $fontsize-heading-s !important;
+      }
+    }
+
+    .statuslabel {
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+
+      span {
+        padding: $spacing-2-xs;
+        margin-right: $spacing-s;
+      }
+    }
+
+    .entranceHeader {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+
+  .headercontainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-top: $spacing-4-xl;
+
+    @include media(s, xs) {
+      flex-direction: column;
+    }
+
+    h3 {
+      color: $color-bus;
+      margin-bottom: 0;
+    }
+  }
+
+  .footercontainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    margin-top: $spacing-4-xl;
+  }
+}

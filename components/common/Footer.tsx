@@ -6,7 +6,11 @@ import { setHelpOpen } from "../../state/reducers/generalSlice";
 import { ACCESSIBILITY_URL, TERMS_URL } from "../../types/constants";
 import styles from "./Footer.module.scss";
 
-const Footer = (): ReactElement => {
+interface FooterProps {
+  isSummary?: boolean;
+}
+
+const Footer = ({ isSummary }: FooterProps): ReactElement => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
 
@@ -17,7 +21,9 @@ const Footer = (): ReactElement => {
   return (
     <HdsFooter korosType="storm" className={styles.footer} title={i18n.t("common.footer.title")}>
       <HdsFooter.Navigation variant="minimal">
-        <HdsFooter.Item as="a" href="#help" onClick={openHelp} label={i18n.t("common.footer.instructions")} icon={<IconArrowUp aria-hidden />} />
+        {!isSummary && (
+          <HdsFooter.Item as="a" href="#help" onClick={openHelp} label={i18n.t("common.footer.instructions")} icon={<IconArrowUp aria-hidden />} />
+        )}
         <HdsFooter.Item as="a" href="#content" label={i18n.t("common.footer.backToTop")} icon={<IconArrowUp aria-hidden />} />
       </HdsFooter.Navigation>
       <HdsFooter.Base copyrightHolder={i18n.t("common.footer.copyright")} copyrightText={i18n.t("common.footer.rightsReserved")}>
