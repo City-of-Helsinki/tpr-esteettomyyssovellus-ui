@@ -6,10 +6,9 @@ import { StatusLabel } from "hds-react";
 import Layout from "../../components/common/Layout";
 import LoadSpinner from "../../components/common/LoadSpinner";
 import PageHelp from "../../components/common/PageHelp";
-import SummarySideNavigation from "../../components/SummarySideNavigation";
-import SummaryContact from "../../components/SummaryContact";
 import SummaryAccessibility from "../../components/SummaryAccessibility";
 import SummaryAccessibilityPlaceGroup from "../../components/SummaryAccessibilityPlaceGroup";
+import SummaryContact from "../../components/SummaryContact";
 import SummaryLocationPicture from "../../components/SummaryLocationPicture";
 import SummaryNewButton from "../../components/SummaryNewButton";
 import SummaryModifyButton from "../../components/SummaryModifyButton";
@@ -52,14 +51,10 @@ const Details = ({
   servicepointData,
   entranceSentenceGroupData,
   accessibilityData,
-  accessibilityData2,
   accessibilityPlaceData,
   entranceData,
-  entranceData2,
   entrancePlaceData,
-  entrancePlaceData2,
   entranceChoiceData,
-  entranceChoiceData2,
   formGuideData,
   mainEntranceId,
   isMainEntrancePublished,
@@ -82,7 +77,7 @@ const Details = ({
 
   // const hasData = Object.keys(servicepointData).length > 0 && Object.keys(entranceData).length > 0;
   const hasData = Object.keys(servicepointData).length > 0;
-  const hasMainAccessibilityData = accessibilityData && accessibilityData.main && accessibilityData.main.length > 0;
+  const hasMainAccessibilityData = accessibilityData && accessibilityData[mainEntranceId] && accessibilityData[mainEntranceId].length > 0;
 
   const initReduxData = () => {
     // Update the servicepoint coordinates in redux state, for use as the default location on maps
@@ -117,13 +112,6 @@ const Details = ({
       [key]: filterByLanguage(accessibilityData[key], i18n.locale()),
     };
   }, {});
-  const filteredAccessibilityData2: AccessibilityData = Object.keys(accessibilityData2).reduce((acc, key) => {
-    return {
-      ...acc,
-      [key]: filterByLanguage(accessibilityData2[key], i18n.locale()),
-    };
-  }, {});
-  const entranceKeys = Object.keys(filteredAccessibilityData);
 
   const curLocaleId: number = LanguageLocales[i18n.locale() as keyof typeof LanguageLocales];
   const filteredPlaces = accessibilityPlaceData.filter((place) => place.language_id === curLocaleId);
@@ -167,29 +155,9 @@ const Details = ({
                   {i18n.t("common.updated")} {finnishDate}
                 </p>
               </span>
-
-              {/*
-              <div className={styles.entranceHeader}>
-                <h2>{`${i18n.t("servicepoint.contactFormSummaryHeader")} (${entranceKeys.length} ${
-                  entranceKeys.length === 1 ? i18n.t("servicepoint.numberOfEntrances1") : i18n.t("servicepoint.numberOfEntrances2+")
-                })`}</h2>
-
-                {servicepointData.new_entrance_possible === "Y" && <SummaryNewButton />}
-              </div>
-              */}
-
-              {/*
-              <h2>{i18n.t("common.mainEntrance")}</h2>
-              */}
             </div>
 
-            <SummaryContact entranceData={entranceData.main} hasData={hasMainAccessibilityData} hasModifyButton />
-
-            {/*
-            <div className={styles.headingcontainer}>
-              <h2>{i18n.t("servicepoint.contactFormSummaryHeader")}</h2>
-            </div>
-            */}
+            <SummaryContact entranceData={entranceData[mainEntranceId]} hasData={hasMainAccessibilityData} hasModifyButton />
 
             <div>
               {entranceSentenceGroupData
@@ -200,8 +168,8 @@ const Details = ({
                   const { entrance_id, sentence_group_id } = entranceSentenceGroup;
                   const entranceKey = String(entrance_id);
                   const sentenceGroupKey = String(sentence_group_id);
-                  const entranceName = entranceData2[entranceKey] ? entranceData2[entranceKey][`name_${curLocale}`] : "";
-                  const hasAccessibilityData = accessibilityData2 && accessibilityData2[entranceKey] && accessibilityData2[entranceKey].length > 0;
+                  const entranceName = entranceData[entranceKey] ? entranceData[entranceKey][`name_${curLocale}`] : "";
+                  const hasAccessibilityData = accessibilityData && accessibilityData[entranceKey] && accessibilityData[entranceKey].length > 0;
 
                   return (
                     <div key={`entrance_sentence_group_${entrance_id}_${sentence_group_id}`}>
@@ -215,15 +183,15 @@ const Details = ({
                             </h3>
                             <div className={styles.modifybutton}>
                               {entrance_id !== mainEntranceId && hasAccessibilityData && (
-                                <SummaryRemoveButton entranceData={entranceData2[entranceKey]} />
+                                <SummaryRemoveButton entranceData={entranceData[entranceKey]} />
                               )}
-                              <SummaryModifyButton entranceData={entranceData2[entranceKey]} hasData={hasAccessibilityData} />
+                              <SummaryModifyButton entranceData={entranceData[entranceKey]} hasData={hasAccessibilityData} />
                             </div>
                           </div>
 
                           <SummaryLocationPicture
                             entranceKey={entranceKey}
-                            entranceData={entranceData2[entranceKey]}
+                            entranceData={entranceData[entranceKey]}
                             servicepointData={servicepointData}
                             isMainEntrance={entrance_id === mainEntranceId}
                           />
@@ -233,15 +201,15 @@ const Details = ({
                           <SummaryAccessibility
                             entranceKey={entranceKey}
                             sentenceGroupId={sentenceGroupKey}
-                            accessibilityData={filteredAccessibilityData2}
-                            entranceChoiceData={entranceChoiceData2}
+                            accessibilityData={filteredAccessibilityData}
+                            entranceChoiceData={entranceChoiceData}
                           />
 
                           <SummaryAccessibilityPlaceGroup
                             entranceKey={entranceKey}
                             sentenceGroupKey={sentenceGroupKey}
                             accessibilityPlaces={filteredPlaces}
-                            entrancePlaceData={entrancePlaceData2}
+                            entrancePlaceData={entrancePlaceData}
                           />
                         </>
                       )}
@@ -250,49 +218,7 @@ const Details = ({
                 })}
             </div>
 
-            <div style={{ color: "red", marginTop: "128px" }}>
-              <h2>OLD STUFF BELOW</h2>
-            </div>
-
-            <div className={styles.headingcontainer}>
-              <h2>{i18n.t("common.mainEntrance")}</h2>
-            </div>
-
-            <SummaryContact entranceData={entranceData.main} hasData={hasMainAccessibilityData} hasModifyButton />
-
-            {entranceKeys.map((key, index) => {
-              const hasAccessibilityData = accessibilityData && accessibilityData[key] && accessibilityData[key].length > 0;
-
-              return (
-                <div key={`summary_${key}`} className={styles.summarycontainer}>
-                  {index === 1 && <h2>{i18n.t("common.additionalEntrances")}</h2>}
-
-                  <div className={styles.headercontainer}>
-                    <h3>{key === "main" ? i18n.t("common.mainEntrance") : `${i18n.t("common.additionalEntrance")} ${index}`}</h3>
-                    <div className={styles.modifybutton}>
-                      {key !== "main" && <SummaryModifyButton entranceData={entranceData[key]} hasData={hasAccessibilityData} />}
-                    </div>
-                  </div>
-
-                  <SummarySideNavigation
-                    key={`sidenav_${key}`}
-                    entranceKey={key}
-                    entranceData={entranceData[key]}
-                    entrancePlaceData={entrancePlaceData}
-                    servicepointData={servicepointData}
-                    accessibilityData={filteredAccessibilityData}
-                    accessibilityPlaces={filteredPlaces}
-                    entranceChoiceData={entranceChoiceData}
-                  />
-
-                  <div className={styles.footercontainer}>
-                    {key !== "main" && hasAccessibilityData && <SummaryRemoveButton entranceData={entranceData[key]} />}
-                  </div>
-                </div>
-              );
-            })}
-
-            <div>{servicepointData.new_entrance_possible === "Y" && <SummaryNewButton />}</div>
+            <div className={styles.footercontainer}>{servicepointData.new_entrance_possible === "Y" && <SummaryNewButton />}</div>
           </div>
         </main>
       )}
@@ -307,14 +233,10 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   let servicepointData: BackendServicepoint = {} as BackendServicepoint;
   let entranceSentenceGroupData: BackendEntranceSentenceGroup[] = [];
   let accessibilityData: AccessibilityData = {};
-  let accessibilityData2: AccessibilityData = {};
   let accessibilityPlaceData: BackendPlace[] = [];
   let entranceData: EntranceData = {};
-  let entranceData2: EntranceData = {};
   let entrancePlaceData: EntrancePlaceData = {};
-  let entrancePlaceData2: EntrancePlaceData = {};
   let entranceChoiceData: EntranceChoiceData = {};
-  let entranceChoiceData2: EntranceChoiceData = {};
   let formGuideData: BackendFormGuide[] = [];
   let mainEntranceId = -1;
   let isMainEntrancePublished = false;
@@ -371,20 +293,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
 
       const mainEntranceDetails = entranceResultDetails.find((resultDetails) => resultDetails.entranceResult.is_main_entrance === "Y");
 
-      const sideEntranceDetails = entranceResultDetails
-        .filter((resultDetails) => resultDetails.entranceResult.is_main_entrance !== "Y")
-        .reduce((acc, resultDetails, j) => {
-          return {
-            ...acc,
-            ...(resultDetails.entrance && { [`side${j + 1}`]: resultDetails.entrance }),
-          };
-        }, {});
-
-      entranceData = {
-        ...(mainEntranceDetails?.entrance && { main: mainEntranceDetails?.entrance }),
-        ...sideEntranceDetails,
-      };
-      entranceData2 = entranceResultDetails.reduce((acc, resultDetails) => {
+      entranceData = entranceResultDetails.reduce((acc, resultDetails) => {
         return {
           ...acc,
           ...(resultDetails.entrance && { [resultDetails.entrance.entrance_id]: resultDetails.entrance }),
@@ -408,22 +317,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         })
       );
 
-      const mainEntranceSentences = entranceResultSentences.find((resultSentence) => resultSentence.entranceResult.is_main_entrance === "Y");
-
-      const sideEntranceSentences = entranceResultSentences
-        .filter((resultSentence) => resultSentence.entranceResult.is_main_entrance !== "Y")
-        .reduce((acc, resultSentence, j) => {
-          return {
-            ...acc,
-            [`side${j + 1}`]: resultSentence.sentenceData,
-          };
-        }, {});
-
-      accessibilityData = {
-        main: mainEntranceSentences?.sentenceData || [],
-        ...sideEntranceSentences,
-      };
-      accessibilityData2 = entranceResultSentences.reduce((acc, resultSentence) => {
+      accessibilityData = entranceResultSentences.reduce((acc, resultSentence) => {
         return {
           ...acc,
           [resultSentence.entranceResult.entrance_id]: resultSentence.sentenceData,
@@ -437,7 +331,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       accessibilityPlaceData = await (accessibilityPlaceResp.json() as Promise<BackendPlace[]>);
 
       // Get the entrance place data for all the entrances for use in the accessibility summaries for pictures and maps
-      const entranceAccessibilityPlaceData = await Promise.all(
+      const entranceAccessibilityPlaceData2 = await Promise.all(
         Object.keys(entranceData).map(async (entranceKey) => {
           const entrance = entranceData[entranceKey];
 
@@ -452,33 +346,14 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
           return { entranceKey, allEntrancePlaceData };
         })
       );
-      const entranceAccessibilityPlaceData2 = await Promise.all(
-        Object.keys(entranceData2).map(async (entranceKey) => {
-          const entrance = entranceData2[entranceKey];
 
-          const allEntrancePlaceDataResp = await fetch(
-            `${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE_PLACES}?entrance_id=${entrance.entrance_id}&format=json`,
-            {
-              headers: new Headers({ Authorization: getTokenHash() }),
-            }
-          );
-          const allEntrancePlaceData = await (allEntrancePlaceDataResp.json() as Promise<BackendEntrancePlace[]>);
-
-          return { entranceKey, allEntrancePlaceData };
-        })
-      );
-
-      entrancePlaceData = entranceAccessibilityPlaceData.reduce((acc, placeData) => {
+      entrancePlaceData = entranceAccessibilityPlaceData2.reduce((acc, placeData) => {
         const entrance = entranceData[placeData.entranceKey];
-        return { ...acc, [placeData.entranceKey]: placeData.allEntrancePlaceData.filter((a) => a.log_id === entrance.log_id) };
-      }, {});
-      entrancePlaceData2 = entranceAccessibilityPlaceData2.reduce((acc, placeData) => {
-        const entrance = entranceData2[placeData.entranceKey];
         return { ...acc, [placeData.entranceKey]: placeData.allEntrancePlaceData.filter((a) => a.log_id === entrance.log_id) };
       }, {});
 
       // Get the questions and answers for all the entrances for use in the accessibility summaries
-      const entranceQuestionAnswerData = await Promise.all(
+      const entranceQuestionAnswerData2 = await Promise.all(
         Object.keys(entranceData).map(async (entranceKey) => {
           const entrance = entranceData[entranceKey];
 
@@ -493,28 +368,9 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
           return { entranceKey, allEntranceChoiceData };
         })
       );
-      const entranceQuestionAnswerData2 = await Promise.all(
-        Object.keys(entranceData2).map(async (entranceKey) => {
-          const entrance = entranceData2[entranceKey];
 
-          const allEntranceChoicesResp = await fetch(
-            `${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE_CHOICES}?entrance_id=${entrance.entrance_id}&format=json`,
-            {
-              headers: new Headers({ Authorization: getTokenHash() }),
-            }
-          );
-          const allEntranceChoiceData = await (allEntranceChoicesResp.json() as Promise<BackendEntranceChoice[]>);
-
-          return { entranceKey, allEntranceChoiceData };
-        })
-      );
-
-      entranceChoiceData = entranceQuestionAnswerData.reduce((acc, answerData) => {
+      entranceChoiceData = entranceQuestionAnswerData2.reduce((acc, answerData) => {
         const entrance = entranceData[answerData.entranceKey];
-        return { ...acc, [answerData.entranceKey]: answerData.allEntranceChoiceData.filter((a) => a.log_id === entrance.log_id) };
-      }, {});
-      entranceChoiceData2 = entranceQuestionAnswerData2.reduce((acc, answerData) => {
-        const entrance = entranceData2[answerData.entranceKey];
         return { ...acc, [answerData.entranceKey]: answerData.allEntranceChoiceData.filter((a) => a.log_id === entrance.log_id) };
       }, {});
 
@@ -529,14 +385,10 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       servicepointData = {} as BackendServicepoint;
       entranceSentenceGroupData = [];
       accessibilityData = {};
-      accessibilityData2 = {};
       accessibilityPlaceData = [];
       entranceData = {};
-      entranceData2 = {};
       entrancePlaceData = {};
-      entrancePlaceData2 = {};
       entranceChoiceData = {};
-      entranceChoiceData2 = {};
       formGuideData = [];
     }
   }
@@ -547,14 +399,10 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       servicepointData,
       entranceSentenceGroupData,
       accessibilityData,
-      accessibilityData2,
       accessibilityPlaceData,
       entranceData,
-      entranceData2,
       entrancePlaceData,
-      entrancePlaceData2,
       entranceChoiceData,
-      entranceChoiceData2,
       formGuideData,
       mainEntranceId,
       isMainEntrancePublished,

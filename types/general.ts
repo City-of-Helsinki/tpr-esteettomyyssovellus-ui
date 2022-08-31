@@ -409,14 +409,10 @@ export interface DetailsProps {
   servicepointData: BackendServicepoint;
   entranceSentenceGroupData: BackendEntranceSentenceGroup[];
   accessibilityData: AccessibilityData;
-  accessibilityData2: AccessibilityData;
   accessibilityPlaceData: BackendPlace[];
   entranceData: EntranceData;
-  entranceData2: EntranceData;
   entrancePlaceData: EntrancePlaceData;
-  entrancePlaceData2: EntrancePlaceData;
   entranceChoiceData: EntranceChoiceData;
-  entranceChoiceData2: EntranceChoiceData;
   formGuideData: BackendFormGuide[];
   mainEntranceId: number;
   isMainEntrancePublished: boolean;
