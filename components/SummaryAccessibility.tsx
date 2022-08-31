@@ -1,8 +1,9 @@
 import React from "react";
-import { Accordion, IconAlertCircle } from "hds-react";
+import { IconAlertCircle } from "hds-react";
 import { useI18n } from "next-localization";
 import SummaryContent from "./SummaryContent";
 import SummaryAccessibilityInnerAccordion from "./SummaryAccessibilityInnerAccordion";
+import CustomAccordion from "./common/CustomAccordion";
 import { BackendEntranceSentence } from "../types/backendModels";
 import { LanguageLocales } from "../types/constants";
 import { AccessibilityData, SummaryAccessibilityProps } from "../types/general";
@@ -80,15 +81,17 @@ const SummaryAccessibility = ({ entranceKey, sentenceGroupId, accessibilityData,
       const rowLimit = 10;
 
       return (
-        <Accordion className={styles.accordion} heading={i18n.t("servicepoint.questionsAndAnswers")}>
-          {getQuestionAnswerRows(rowLimit, true)}
+        <CustomAccordion heading={i18n.t("servicepoint.questionsAndAnswers")}>
+          <div className={styles.accordioncontent}>
+            {getQuestionAnswerRows(rowLimit, true)}
 
-          {rows > rowLimit && (
-            <SummaryAccessibilityInnerAccordion>
-              <>{getQuestionAnswerRows(rowLimit, false)}</>
-            </SummaryAccessibilityInnerAccordion>
-          )}
-        </Accordion>
+            {rows > rowLimit && (
+              <SummaryAccessibilityInnerAccordion>
+                <>{getQuestionAnswerRows(rowLimit, false)}</>
+              </SummaryAccessibilityInnerAccordion>
+            )}
+          </div>
+        </CustomAccordion>
       );
     }
   };

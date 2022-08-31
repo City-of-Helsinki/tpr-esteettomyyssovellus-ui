@@ -1,7 +1,7 @@
 import React from "react";
 import { useI18n } from "next-localization";
-import { Accordion } from "hds-react";
 import SummaryAccessibilityPlace from "./SummaryAccessibilityPlace";
+import CustomAccordion from "./common/CustomAccordion";
 import { BackendEntrancePlace } from "../types/backendModels";
 import { GroupedEntrancePlaceData, SummaryAccessibilityPlaceGroupProps } from "../types/general";
 import styles from "./SummaryAccessibilityPlaceGroup.module.scss";
@@ -58,17 +58,19 @@ const SummaryAccessibilityPlaceGroup = ({
   return (
     <div className={styles.maincontainer}>
       {groupedPlaceData && (
-        <Accordion className={styles.accordion} heading={i18n.t("servicepoint.picturesLocations")}>
-          {Object.keys(groupedPlaceData).map((entrancePlaceId) => {
-            return (
-              <SummaryAccessibilityPlace
-                key={`entrance_sentence_group_place_${entranceKey}_${sentenceGroupKey}_${entrancePlaceId}`}
-                entrancePlaceName={getEntrancePlaceName(entrancePlaceId)}
-                entrancePlaceData={groupedPlaceData[entrancePlaceId]}
-              />
-            );
-          })}
-        </Accordion>
+        <CustomAccordion heading={i18n.t("servicepoint.picturesLocations")}>
+          <>
+            {Object.keys(groupedPlaceData).map((entrancePlaceId) => {
+              return (
+                <SummaryAccessibilityPlace
+                  key={`entrance_sentence_group_place_${entranceKey}_${sentenceGroupKey}_${entrancePlaceId}`}
+                  entrancePlaceName={getEntrancePlaceName(entrancePlaceId)}
+                  entrancePlaceData={groupedPlaceData[entrancePlaceId]}
+                />
+              );
+            })}
+          </>
+        </CustomAccordion>
       )}
     </div>
   );

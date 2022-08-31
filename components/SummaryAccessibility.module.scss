@@ -16,23 +16,6 @@
     justify-content: space-between;
   }
 
-  .accordion {
-    border-bottom: 0 !important;
-
-    > div:first-child {
-      font-size: $fontsize-body-m;
-      font-weight: 500;
-      background-color: $color-black-5;
-      padding: $spacing-s;
-
-      /*
-      div[aria-expanded="true"] {
-        font-weight: 700;
-      }
-      */
-    }
-  }
-
   .sentencelist {
     padding: 0 $spacing-s;
 
@@ -43,6 +26,10 @@
         font-weight: 700;
       }
     }
+  }
+
+  .accordioncontent {
+    margin-top: $spacing-m;
   }
 
   .questioncontainer {
