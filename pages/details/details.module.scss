@@ -18,12 +18,14 @@
     }
 
     .subHeader {
-      font-size: $fontsize-heading-m;
+      color: $color-black;
+      font-size: $fontsize-heading-m !important;
       font-weight: 700;
+      margin-top: 0;
       margin-bottom: $spacing-l;
 
       @include media(xs) {
-        font-size: $fontsize-heading-s;
+        font-size: $fontsize-heading-s !important;
       }
     }
 
@@ -44,14 +46,6 @@
       flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
-    }
-  }
-
-  .summarycontainer {
-    margin-bottom: $spacing-xl;
-
-    h2 {
-      color: $color-bus;
     }
   }
 

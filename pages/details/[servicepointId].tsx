@@ -142,7 +142,7 @@ const Details = ({
 
             <div className={styles.headingcontainer}>
               <h1>{servicepointData.servicepoint_name}</h1>
-              <div className={styles.subHeader}>{subHeader}</div>
+              <h2 className={styles.subHeader}>{subHeader}</h2>
 
               <span className={styles.statuslabel}>
                 {isMainEntrancePublished ? (
@@ -316,7 +316,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
           return { entranceResult, sentenceData };
         })
       );
-
       accessibilityData = entranceResultSentences.reduce((acc, resultSentence) => {
         return {
           ...acc,
@@ -331,7 +330,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       accessibilityPlaceData = await (accessibilityPlaceResp.json() as Promise<BackendPlace[]>);
 
       // Get the entrance place data for all the entrances for use in the accessibility summaries for pictures and maps
-      const entranceAccessibilityPlaceData2 = await Promise.all(
+      const entranceAccessibilityPlaceData = await Promise.all(
         Object.keys(entranceData).map(async (entranceKey) => {
           const entrance = entranceData[entranceKey];
 
@@ -346,14 +345,13 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
           return { entranceKey, allEntrancePlaceData };
         })
       );
-
-      entrancePlaceData = entranceAccessibilityPlaceData2.reduce((acc, placeData) => {
+      entrancePlaceData = entranceAccessibilityPlaceData.reduce((acc, placeData) => {
         const entrance = entranceData[placeData.entranceKey];
         return { ...acc, [placeData.entranceKey]: placeData.allEntrancePlaceData.filter((a) => a.log_id === entrance.log_id) };
       }, {});
 
       // Get the questions and answers for all the entrances for use in the accessibility summaries
-      const entranceQuestionAnswerData2 = await Promise.all(
+      const entranceQuestionAnswerData = await Promise.all(
         Object.keys(entranceData).map(async (entranceKey) => {
           const entrance = entranceData[entranceKey];
 
@@ -368,8 +366,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
           return { entranceKey, allEntranceChoiceData };
         })
       );
-
-      entranceChoiceData = entranceQuestionAnswerData2.reduce((acc, answerData) => {
+      entranceChoiceData = entranceQuestionAnswerData.reduce((acc, answerData) => {
         const entrance = entranceData[answerData.entranceKey];
         return { ...acc, [answerData.entranceKey]: answerData.allEntranceChoiceData.filter((a) => a.log_id === entrance.log_id) };
       }, {});
