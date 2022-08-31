@@ -185,9 +185,11 @@ const Details = ({
 
             <SummaryContact entranceData={entranceData.main} hasData={hasMainAccessibilityData} hasModifyButton />
 
+            {/*
             <div className={styles.headingcontainer}>
               <h2>{i18n.t("servicepoint.contactFormSummaryHeader")}</h2>
             </div>
+            */}
 
             <div>
               {entranceSentenceGroupData

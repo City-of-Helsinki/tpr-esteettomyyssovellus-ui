@@ -2,7 +2,7 @@
 @import "../styles/mixins.scss";
 
 .maincontainer {
-  margin-top: $spacing-l;
+  margin-top: $spacing-xs;
 
   .header {
     color: $color-bus;
@@ -11,6 +11,6 @@
 
   .container {
     background-color: $color-bus-light;
-    padding: $spacing-s;
+    padding: 0 $spacing-s;
   }
 }

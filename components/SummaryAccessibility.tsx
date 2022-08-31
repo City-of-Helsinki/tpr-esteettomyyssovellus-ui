@@ -100,10 +100,10 @@ const SummaryAccessibility = ({ entranceKey, sentenceGroupId, accessibilityData,
 
   return (
     <div className={styles.maincontainer}>
+      <h4>{sentenceGroup && sentenceGroup.length > 0 ? sentenceGroup[0].sentence_group_name : ""}</h4>
+
       {hasData ? (
         <div>
-          <h4>{sentenceGroup && sentenceGroup.length > 0 ? sentenceGroup[0].sentence_group_name : ""}</h4>
-
           {getSentencesList()}
 
           {getQuestionsAnswersAccordion()}
