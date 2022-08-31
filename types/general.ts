@@ -420,16 +420,18 @@ export interface DetailsProps {
 
 export interface PreviewProps {
   servicepointData: BackendServicepoint;
+  entranceSentenceGroupData: BackendEntranceSentenceGroup[];
   accessibilityData: AccessibilityData;
   accessibilityPlaceData: BackendPlace[];
   entranceData: EntranceData;
-  entrancePlaceData: BackendEntrancePlace[];
+  entrancePlaceData: EntrancePlaceData;
   questionBlockCommentData: QuestionBlockAnswerCmt[];
-  entranceChoiceData: BackendEntranceChoice[];
+  entranceChoiceData: EntranceChoiceData;
   questionAnswerData: BackendEntranceAnswer[];
   questionExtraAnswerData: BackendEntranceField[];
   formGuideData: BackendFormGuide[];
   formId: number;
+  mainEntranceId: number;
   isMainEntrancePublished: boolean;
 }
 

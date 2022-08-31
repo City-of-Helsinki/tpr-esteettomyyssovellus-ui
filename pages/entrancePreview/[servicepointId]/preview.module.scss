@@ -18,12 +18,14 @@
     }
 
     .subHeader {
-      font-size: $fontsize-heading-m;
+      color: $color-black;
+      font-size: $fontsize-heading-m !important;
       font-weight: 700;
+      margin-top: 0;
       margin-bottom: $spacing-l;
 
       @include media(xs) {
-        font-size: $fontsize-heading-s;
+        font-size: $fontsize-heading-s !important;
       }
     }
 
@@ -33,26 +35,23 @@
       flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
-    }
-  }
 
-  .contentcontainer {
-    .header {
-      color: $color-bus;
-      font-size: $fontsize-heading-m !important;
-      margin-top: $spacing-l;
-      margin-bottom: $spacing-2-xs;
-    }
-
-    .content {
-      h4 {
-        background-color: $color-bus-light;
-        padding: $spacing-s;
+      h2 {
+        margin-bottom: $spacing-xs;
       }
     }
   }
 
+  .headercontainer {
+    margin-top: $spacing-4-xl;
+
+    h3 {
+      color: $color-bus;
+      margin-bottom: 0;
+    }
+  }
+
   .footercontainer {
-    margin-top: $spacing-l;
+    margin-top: $spacing-4-xl;
   }
 }
