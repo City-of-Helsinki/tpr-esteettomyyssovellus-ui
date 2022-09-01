@@ -400,7 +400,7 @@ const EntranceAccessibility = ({
 
             <div className={styles.headingcontainer}>
               <h1>{servicepointData.servicepoint_name}</h1>
-              <h2>{header}</h2>
+              <h2 className={styles.subHeader}>{header}</h2>
             </div>
 
             <div className={styles.mainbuttons}>

@@ -11,6 +11,19 @@
   .headingcontainer {
     h1 {
       word-break: break-word;
+      margin-bottom: 0;
+    }
+
+    .subHeader {
+      color: $color-black;
+      font-size: $fontsize-heading-m !important;
+      font-weight: 700;
+      margin-top: 0;
+      margin-bottom: $spacing-l;
+
+      @include media(xs) {
+        font-size: $fontsize-heading-s !important;
+      }
     }
   }
 

@@ -2,11 +2,20 @@
 @import "../styles/mixins.scss";
 
 .maincontainer {
+  background-color: $color-bus-light;
+  padding: $spacing-s;
+  margin-top: $spacing-xs;
+
+  > div:last-child {
+    margin-bottom: 0;
+  }
+
   .subcontainer {
     width: 100%;
+    margin-bottom: $spacing-m;
 
     h4 {
-      margin: $spacing-m 0;
+      margin-bottom: $spacing-m;
     }
 
     .mappicturecontainer {

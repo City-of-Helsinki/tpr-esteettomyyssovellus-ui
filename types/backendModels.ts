@@ -247,6 +247,15 @@ export interface BackendEntranceSentence {
   sentence?: string;
 }
 
+// BackendEntranceSentenceGroup - use in details and preview pages
+export interface BackendEntranceSentenceGroup {
+  technical_id: string;
+  servicepoint_id: number;
+  entrance_id: number;
+  sentence_group_id: number;
+  order_text: string;
+}
+
 // BackendForm - use in accessibility form page
 export interface BackendForm {
   form_id: number;

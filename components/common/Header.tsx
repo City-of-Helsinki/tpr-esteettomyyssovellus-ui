@@ -11,6 +11,7 @@ import { useAppSelector, useAppDispatch } from "../../state/hooks";
 import { setUser } from "../../state/reducers/generalSlice";
 
 interface HeaderProps {
+  isSummary?: boolean;
   children?: React.ReactNode;
 }
 
@@ -22,7 +23,7 @@ const DynamicNavigation = dynamic(
   { ssr: false }
 );
 
-const Header = ({ children }: HeaderProps): ReactElement => {
+const Header = ({ isSummary, children }: HeaderProps): ReactElement => {
   const i18n = useI18n();
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -105,7 +106,7 @@ const Header = ({ children }: HeaderProps): ReactElement => {
           </div>
           */}
 
-          {
+          {!isSummary && (
             <Navigation.User label={i18n.t("common.header.login")} authenticated userName={user}>
               <Navigation.Item
                 as="a"
@@ -117,7 +118,7 @@ const Header = ({ children }: HeaderProps): ReactElement => {
                 onClick={signOut}
               />
             </Navigation.User>
-          }
+          )}
 
           {includeLanguageSelector && (
             <Navigation.LanguageSelector label={(router.locale || defaultLocale).toUpperCase()}>

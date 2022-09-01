@@ -2,30 +2,18 @@
 @import "../styles/mixins.scss";
 
 .maincontainer {
-  margin-top: $spacing-l;
+  margin-top: $spacing-4-xl;
+
+  h4 {
+    background-color: $color-bus-light;
+    padding: $spacing-s;
+  }
 
   .headercontainer {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-between;
-  }
-
-  .accordion {
-    border-bottom: 0 !important;
-
-    > div:first-child {
-      font-size: $fontsize-body-m;
-      font-weight: 500;
-      background-color: $color-black-5;
-      padding: $spacing-s;
-
-      /*
-      div[aria-expanded="true"] {
-        font-weight: 700;
-      }
-      */
-    }
   }
 
   .sentencelist {
@@ -38,6 +26,10 @@
         font-weight: 700;
       }
     }
+  }
+
+  .accordioncontent {
+    margin-top: $spacing-m;
   }
 
   .questioncontainer {

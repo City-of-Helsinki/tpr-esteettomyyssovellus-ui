@@ -1,19 +1,15 @@
 @import "~hds-design-tokens/lib/all.scss";
-@import "../../../styles/mixins.scss";
+@import "../../styles/mixins.scss";
 
 .maincontainer {
   margin-top: $spacing-m;
-
-  .infocontainer {
-    margin: $spacing-m 0;
-  }
 
   .headingcontainer {
     h1 {
       word-break: break-word;
       margin-bottom: 0;
     }
-    h2 {
+    h2, h3 {
       color: $color-bus;
     }
 
@@ -29,21 +25,36 @@
       }
     }
 
+    .statuslabel {
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+
+      span {
+        padding: $spacing-2-xs;
+        margin-right: $spacing-s;
+      }
+    }
+
     .entranceHeader {
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
-
-      h2 {
-        margin-bottom: $spacing-xs;
-      }
     }
   }
 
   .headercontainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
     margin-top: $spacing-4-xl;
+
+    @include media(s, xs) {
+      flex-direction: column;
+    }
 
     h3 {
       color: $color-bus;
@@ -52,6 +63,10 @@
   }
 
   .footercontainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
     margin-top: $spacing-4-xl;
   }
 }

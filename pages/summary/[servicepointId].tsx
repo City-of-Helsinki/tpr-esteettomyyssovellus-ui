@@ -5,15 +5,11 @@ import { GetServerSideProps } from "next";
 import { StatusLabel } from "hds-react";
 import Layout from "../../components/common/Layout";
 import LoadSpinner from "../../components/common/LoadSpinner";
-import PageHelp from "../../components/common/PageHelp";
 import SummaryAccessibility from "../../components/SummaryAccessibility";
 import SummaryAccessibilityPlaceGroup from "../../components/SummaryAccessibilityPlaceGroup";
 import SummaryContact from "../../components/SummaryContact";
 import SummaryLocationPicture from "../../components/SummaryLocationPicture";
-import SummaryNewButton from "../../components/SummaryNewButton";
-import SummaryModifyButton from "../../components/SummaryModifyButton";
-import SummaryRemoveButton from "../../components/SummaryRemoveButton";
-import { useAppDispatch, useAppSelector, useLoading } from "../../state/hooks";
+import { useAppDispatch, useLoading } from "../../state/hooks";
 import { setServicepointId } from "../../state/reducers/formSlice";
 import { setServicepointLocationEuref, setServicepointLocationWGS84 } from "../../state/reducers/generalSlice";
 import { persistor } from "../../state/store";
@@ -22,7 +18,6 @@ import {
   API_FETCH_BACKEND_ENTRANCE_CHOICES,
   API_FETCH_BACKEND_ENTRANCE_PLACES,
   API_FETCH_BACKEND_ENTRANCE_SENTENCE_GROUPS,
-  API_FETCH_BACKEND_FORM_GUIDE,
   API_FETCH_BACKEND_PLACES,
   API_FETCH_BACKEND_SENTENCES,
   API_FETCH_BACKEND_SERVICEPOINT,
@@ -36,18 +31,17 @@ import {
   BackendEntrancePlace,
   BackendEntranceSentence,
   BackendEntranceSentenceGroup,
-  BackendFormGuide,
   BackendPlace,
   BackendServicepoint,
   EntranceResults,
 } from "../../types/backendModels";
-import { AccessibilityData, DetailsProps, EntranceChoiceData, EntranceData, EntrancePlaceData } from "../../types/general";
+import { AccessibilityData, EntranceChoiceData, EntranceData, EntrancePlaceData, SummaryProps } from "../../types/general";
 import i18nLoader from "../../utils/i18n";
 import { convertCoordinates, filterByLanguage, formatAddress, getFinnishDate, getTokenHash } from "../../utils/utilFunctions";
-import styles from "./details.module.scss";
+import styles from "./summary.module.scss";
 
-// usage: the details / landing page of servicepoint
-const Details = ({
+// usage: the summary / landing page of servicepoint
+const Summary = ({
   servicepointData,
   entranceSentenceGroupData,
   accessibilityData,
@@ -55,20 +49,16 @@ const Details = ({
   entranceData,
   entrancePlaceData,
   entranceChoiceData,
-  formGuideData,
   mainEntranceId,
   isMainEntrancePublished,
-}: DetailsProps): ReactElement => {
+}: SummaryProps): ReactElement => {
   const i18n = useI18n();
   const curLocale: string = i18n.locale();
   const dispatch = useAppDispatch();
   const isLoading = useLoading();
-  const treeItems = [servicepointData.servicepoint_name ?? ""];
   const finnishDate = servicepointData.modified ? getFinnishDate(servicepointData.modified) : "";
 
-  // TODO - improve this by checking user on server-side
-  const user = useAppSelector((state) => state.generalSlice.user);
-  const isUserValid = !!user && user.length > 0;
+  // NOTE: this page works without a user
 
   useEffect(() => {
     // Clear the state on initial load
@@ -89,14 +79,6 @@ const Details = ({
 
     // Update servicepointId in redux state
     dispatch(setServicepointId(servicepointData.servicepoint_id));
-
-    /*
-    if (hasData && accessibilityData.main.length !== 0 && accessibilityData.main[0].form_submitted === "Y") {
-      dispatch(setFormFinished());
-      dispatch(setContinue());
-      dispatch(setFormSubmitted());
-    }
-    */
   };
 
   // Initialise the redux data on first render only, using a workaround utilising useEffect with empty dependency array
@@ -123,23 +105,17 @@ const Details = ({
   )}`;
 
   return (
-    <Layout>
+    <Layout isSummary>
       <Head>
         <title>{i18n.t("common.header.title")}</title>
       </Head>
-      {!isUserValid && <h1>{i18n.t("common.notAuthorized")}</h1>}
+      {isLoading && <LoadSpinner />}
 
-      {isUserValid && isLoading && <LoadSpinner />}
+      {!isLoading && !hasData && <h1>{i18n.t("common.noData")}</h1>}
 
-      {isUserValid && !isLoading && !hasData && <h1>{i18n.t("common.noData")}</h1>}
-
-      {isUserValid && !isLoading && hasData && (
+      {!isLoading && hasData && (
         <main id="content">
           <div className={styles.maincontainer}>
-            <div className={styles.infocontainer}>
-              <PageHelp formGuideData={formGuideData} treeItems={treeItems} />
-            </div>
-
             <div className={styles.headingcontainer}>
               <h1>{servicepointData.servicepoint_name}</h1>
               <h2 className={styles.subHeader}>{subHeader}</h2>
@@ -157,7 +133,7 @@ const Details = ({
               </span>
             </div>
 
-            <SummaryContact entranceData={entranceData[mainEntranceId]} hasData={hasMainAccessibilityData} hasModifyButton />
+            <SummaryContact entranceData={entranceData[mainEntranceId]} hasData={hasMainAccessibilityData} />
 
             <div>
               {entranceSentenceGroupData
@@ -169,7 +145,6 @@ const Details = ({
                   const entranceKey = String(entrance_id);
                   const sentenceGroupKey = String(sentence_group_id);
                   const entranceName = entranceData[entranceKey] ? entranceData[entranceKey][`name_${curLocale}`] : "";
-                  const hasAccessibilityData = accessibilityData && accessibilityData[entranceKey] && accessibilityData[entranceKey].length > 0;
 
                   return (
                     <div key={`entrance_sentence_group_${entrance_id}_${sentence_group_id}`}>
@@ -181,12 +156,6 @@ const Details = ({
                                 ? i18n.t("common.mainEntrance")
                                 : `${i18n.t("common.additionalEntrance")}: ${entranceName}`}
                             </h3>
-                            <div className={styles.modifybutton}>
-                              {entrance_id !== mainEntranceId && hasAccessibilityData && (
-                                <SummaryRemoveButton entranceData={entranceData[entranceKey]} />
-                              )}
-                              <SummaryModifyButton entranceData={entranceData[entranceKey]} hasData={hasAccessibilityData} />
-                            </div>
                           </div>
 
                           <SummaryLocationPicture
@@ -217,8 +186,6 @@ const Details = ({
                   );
                 })}
             </div>
-
-            <div className={styles.footercontainer}>{servicepointData.new_entrance_possible === "Y" && <SummaryNewButton />}</div>
           </div>
         </main>
       )}
@@ -237,7 +204,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   let entranceData: EntranceData = {};
   let entrancePlaceData: EntrancePlaceData = {};
   let entranceChoiceData: EntranceChoiceData = {};
-  let formGuideData: BackendFormGuide[] = [];
   let mainEntranceId = -1;
   let isMainEntrancePublished = false;
 
@@ -370,12 +336,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         const entrance = entranceData[answerData.entranceKey];
         return { ...acc, [answerData.entranceKey]: answerData.allEntranceChoiceData.filter((a) => a.log_id === entrance.log_id) };
       }, {});
-
-      // Get the guide text using the main entrance form id 0 for the details page
-      const formGuideResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_FORM_GUIDE}?form_id=0`, {
-        headers: new Headers({ Authorization: getTokenHash() }),
-      });
-      formGuideData = await (formGuideResp.json() as Promise<BackendFormGuide[]>);
     } catch (err) {
       console.error("Error", err);
 
@@ -386,7 +346,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       entranceData = {};
       entrancePlaceData = {};
       entranceChoiceData = {};
-      formGuideData = [];
     }
   }
 
@@ -400,11 +359,10 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       entranceData,
       entrancePlaceData,
       entranceChoiceData,
-      formGuideData,
       mainEntranceId,
       isMainEntrancePublished,
     },
   };
 };
 
-export default Details;
+export default Summary;

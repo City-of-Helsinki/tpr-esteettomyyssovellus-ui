@@ -9,6 +9,7 @@ import {
   BackendEntranceField,
   BackendEntrancePlace,
   BackendEntranceSentence,
+  BackendEntranceSentenceGroup,
   BackendFormGuide,
   BackendPlace,
   BackendQuestion,
@@ -161,9 +162,8 @@ export interface SummaryContactProps {
 export interface SummaryAccessibilityProps {
   entranceKey: string;
   sentenceGroupId: string;
-  sentenceGroup?: BackendEntranceSentence[];
+  accessibilityData: AccessibilityData;
   entranceChoiceData: EntranceChoiceData;
-  hasData: boolean;
 }
 
 export interface PreviewPageLandingSummaryProps {
@@ -179,6 +179,14 @@ export interface SummaryLocationPictureProps {
   entranceKey: string;
   entranceData?: BackendEntrance;
   servicepointData: BackendServicepoint;
+  isMainEntrance: boolean;
+}
+
+export interface SummaryAccessibilityPlaceGroupProps {
+  entranceKey: string;
+  sentenceGroupKey: string;
+  accessibilityPlaces: BackendPlace[];
+  entrancePlaceData: EntrancePlaceData;
 }
 
 export interface SummaryAccessibilityPlaceProps {
@@ -393,29 +401,49 @@ export interface EntrancePlaceData {
   [key: string]: BackendEntrancePlace[];
 }
 
+export interface GroupedEntrancePlaceData {
+  [key: string]: EntrancePlaceData;
+}
+
 export interface DetailsProps {
   servicepointData: BackendServicepoint;
+  entranceSentenceGroupData: BackendEntranceSentenceGroup[];
   accessibilityData: AccessibilityData;
   accessibilityPlaceData: BackendPlace[];
   entranceData: EntranceData;
   entrancePlaceData: EntrancePlaceData;
   entranceChoiceData: EntranceChoiceData;
   formGuideData: BackendFormGuide[];
+  mainEntranceId: number;
   isMainEntrancePublished: boolean;
 }
 
 export interface PreviewProps {
   servicepointData: BackendServicepoint;
+  entranceSentenceGroupData: BackendEntranceSentenceGroup[];
   accessibilityData: AccessibilityData;
   accessibilityPlaceData: BackendPlace[];
   entranceData: EntranceData;
-  entrancePlaceData: BackendEntrancePlace[];
+  entrancePlaceData: EntrancePlaceData;
   questionBlockCommentData: QuestionBlockAnswerCmt[];
-  entranceChoiceData: BackendEntranceChoice[];
+  entranceChoiceData: EntranceChoiceData;
   questionAnswerData: BackendEntranceAnswer[];
   questionExtraAnswerData: BackendEntranceField[];
   formGuideData: BackendFormGuide[];
   formId: number;
+  mainEntranceId: number;
+  isMainEntrancePublished: boolean;
+}
+
+export interface SummaryProps {
+  servicepointData: BackendServicepoint;
+  entranceSentenceGroupData: BackendEntranceSentenceGroup[];
+  accessibilityData: AccessibilityData;
+  accessibilityPlaceData: BackendPlace[];
+  entranceData: EntranceData;
+  entrancePlaceData: EntrancePlaceData;
+  entranceChoiceData: EntranceChoiceData;
+  mainEntranceId: number;
   isMainEntrancePublished: boolean;
 }
 

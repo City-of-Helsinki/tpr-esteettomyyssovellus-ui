@@ -1,24 +1,34 @@
 import React from "react";
-import { Accordion, IconAlertCircle } from "hds-react";
+import { IconAlertCircle } from "hds-react";
 import { useI18n } from "next-localization";
 import SummaryContent from "./SummaryContent";
 import SummaryAccessibilityInnerAccordion from "./SummaryAccessibilityInnerAccordion";
+import CustomAccordion from "./common/CustomAccordion";
 import { BackendEntranceSentence } from "../types/backendModels";
 import { LanguageLocales } from "../types/constants";
-import { SummaryAccessibilityProps } from "../types/general";
+import { AccessibilityData, SummaryAccessibilityProps } from "../types/general";
 import styles from "./SummaryAccessibility.module.scss";
 
 // usage: used in details/landing page to create a summary block of sentences etc
 // this component more like a container -> used with SummarySideNavigation
-const SummaryAccessibility = ({
-  entranceKey,
-  sentenceGroupId,
-  sentenceGroup,
-  entranceChoiceData,
-  hasData,
-}: SummaryAccessibilityProps): JSX.Element => {
+const SummaryAccessibility = ({ entranceKey, sentenceGroupId, accessibilityData, entranceChoiceData }: SummaryAccessibilityProps): JSX.Element => {
   const i18n = useI18n();
   const curLocaleId: number = LanguageLocales[i18n.locale() as keyof typeof LanguageLocales];
+
+  const getGroupedAccessibilityData = (sentences?: BackendEntranceSentence[]): AccessibilityData | undefined => {
+    if (sentences) {
+      return sentences.reduce((acc: AccessibilityData, sentence) => {
+        const { sentence_group_id } = sentence;
+        return {
+          ...acc,
+          [sentence_group_id]: acc[sentence_group_id] ? [...acc[sentence_group_id], sentence] : [sentence],
+        };
+      }, {});
+    }
+  };
+
+  const groupedAccessibilityData = getGroupedAccessibilityData(accessibilityData ? accessibilityData[entranceKey] : undefined);
+  const sentenceGroup = groupedAccessibilityData ? groupedAccessibilityData[sentenceGroupId] : undefined;
 
   const getSentencesList = () => {
     if (sentenceGroup) {
@@ -71,25 +81,29 @@ const SummaryAccessibility = ({
       const rowLimit = 10;
 
       return (
-        <Accordion className={styles.accordion} heading={i18n.t("servicepoint.questionsAndAnswers")}>
-          {getQuestionAnswerRows(rowLimit, true)}
+        <CustomAccordion heading={i18n.t("servicepoint.questionsAndAnswers")}>
+          <div className={styles.accordioncontent}>
+            {getQuestionAnswerRows(rowLimit, true)}
 
-          {rows > rowLimit && (
-            <SummaryAccessibilityInnerAccordion>
-              <>{getQuestionAnswerRows(rowLimit, false)}</>
-            </SummaryAccessibilityInnerAccordion>
-          )}
-        </Accordion>
+            {rows > rowLimit && (
+              <SummaryAccessibilityInnerAccordion>
+                <>{getQuestionAnswerRows(rowLimit, false)}</>
+              </SummaryAccessibilityInnerAccordion>
+            )}
+          </div>
+        </CustomAccordion>
       );
     }
   };
 
+  const hasData = accessibilityData && accessibilityData[entranceKey] && accessibilityData[entranceKey].length > 0;
+
   return (
     <div className={styles.maincontainer}>
+      <h4>{sentenceGroup && sentenceGroup.length > 0 ? sentenceGroup[0].sentence_group_name : ""}</h4>
+
       {hasData ? (
         <div>
-          <h4>{sentenceGroup && sentenceGroup.length > 0 ? sentenceGroup[0].sentence_group_name : ""}</h4>
-
           {getSentencesList()}
 
           {getQuestionsAnswersAccordion()}
