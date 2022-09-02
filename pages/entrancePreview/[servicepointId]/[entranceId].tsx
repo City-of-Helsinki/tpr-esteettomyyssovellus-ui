@@ -177,22 +177,24 @@ const Preview = ({
     // Put entrance places into redux state
     dispatch(
       setEntrancePlaceBoxes(
-        entrancePlaceData[entranceKey].map((place) => {
-          const { entrance_id, question_block_id, place_id, order_number } = place;
+        entrancePlaceData[entranceKey]
+          ? entrancePlaceData[entranceKey].map((place) => {
+              const { entrance_id, question_block_id, place_id, order_number } = place;
 
-          // Try to make sure the order number is 1 or higher
-          return {
-            entrance_id: entrance_id,
-            question_block_id: question_block_id,
-            place_id: place_id,
-            order_number: order_number && order_number > 0 ? order_number : 1,
-            existingBox: place,
-            modifiedBox: place,
-            isDeleted: false,
-            termsAccepted: true,
-            invalidValues: [],
-          };
-        })
+              // Try to make sure the order number is 1 or higher
+              return {
+                entrance_id: entrance_id,
+                question_block_id: question_block_id,
+                place_id: place_id,
+                order_number: order_number && order_number > 0 ? order_number : 1,
+                existingBox: place,
+                modifiedBox: place,
+                isDeleted: false,
+                termsAccepted: true,
+                invalidValues: [],
+              };
+            })
+          : []
       )
     );
 
