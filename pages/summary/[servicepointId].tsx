@@ -144,18 +144,14 @@ const Summary = ({
                   const { entrance_id, sentence_group_id } = entranceSentenceGroup;
                   const entranceKey = String(entrance_id);
                   const sentenceGroupKey = String(sentence_group_id);
-                  const entranceName = entranceData[entranceKey] ? entranceData[entranceKey][`name_${curLocale}`] : "";
+                  const subHeading = entranceSentenceGroup[`subheading_${curLocale}`] || "";
 
                   return (
                     <div key={`entrance_sentence_group_${entrance_id}_${sentence_group_id}`}>
                       {sentence_group_id === 0 ? (
                         <>
                           <div className={styles.headercontainer}>
-                            <h3>
-                              {entrance_id === mainEntranceId
-                                ? i18n.t("common.mainEntrance")
-                                : `${i18n.t("common.additionalEntrance")}: ${entranceName}`}
-                            </h3>
+                            <h3>{subHeading}</h3>
                           </div>
 
                           <SummaryLocationPicture
@@ -167,6 +163,10 @@ const Summary = ({
                         </>
                       ) : (
                         <>
+                          <div className={styles.headercontainer}>
+                            <h3>{subHeading}</h3>
+                          </div>
+
                           <SummaryAccessibility
                             entranceKey={entranceKey}
                             sentenceGroupId={sentenceGroupKey}

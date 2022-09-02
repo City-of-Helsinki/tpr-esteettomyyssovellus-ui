@@ -254,6 +254,10 @@ export interface BackendEntranceSentenceGroup {
   entrance_id: number;
   sentence_group_id: number;
   order_text: string;
+  subheading_fi?: string;
+  subheading_sv?: string;
+  subheading_en?: string;
+  [key: string]: number | string | undefined;
 }
 
 // BackendForm - use in accessibility form page

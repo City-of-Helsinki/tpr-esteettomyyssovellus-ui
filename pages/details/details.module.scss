@@ -55,6 +55,7 @@
     flex-wrap: wrap;
     justify-content: space-between;
     margin-top: $spacing-4-xl;
+    margin-bottom: $spacing-xs;
 
     @include media(s, xs) {
       flex-direction: column;

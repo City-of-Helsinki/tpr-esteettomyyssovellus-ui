@@ -302,17 +302,14 @@ const Preview = ({
                     .map((entranceSentenceGroup) => {
                       const { entrance_id, sentence_group_id } = entranceSentenceGroup;
                       const sentenceGroupKey = String(sentence_group_id);
+                      const subHeading = entranceSentenceGroup[`subheading_${curLocale}`] || "";
 
                       return (
                         <div key={`entrance_sentence_group_${entrance_id}_${sentence_group_id}`}>
                           {sentence_group_id === 0 ? (
                             <>
                               <div className={styles.headercontainer}>
-                                <h3>
-                                  {entrance_id === mainEntranceId
-                                    ? i18n.t("common.mainEntrance")
-                                    : `${i18n.t("common.additionalEntrance")}: ${entranceName}`}
-                                </h3>
+                                <h3>{subHeading}</h3>
                               </div>
 
                               <SummaryLocationPicture
@@ -324,6 +321,10 @@ const Preview = ({
                             </>
                           ) : (
                             <>
+                              <div className={styles.headercontainer}>
+                                <h3>{subHeading}</h3>
+                              </div>
+
                               <SummaryAccessibility
                                 entranceKey={entranceKey}
                                 sentenceGroupId={sentenceGroupKey}

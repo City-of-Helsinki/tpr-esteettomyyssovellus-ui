@@ -168,7 +168,7 @@ const Details = ({
                   const { entrance_id, sentence_group_id } = entranceSentenceGroup;
                   const entranceKey = String(entrance_id);
                   const sentenceGroupKey = String(sentence_group_id);
-                  const entranceName = entranceData[entranceKey] ? entranceData[entranceKey][`name_${curLocale}`] : "";
+                  const subHeading = entranceSentenceGroup[`subheading_${curLocale}`] || "";
                   const hasAccessibilityData = accessibilityData && accessibilityData[entranceKey] && accessibilityData[entranceKey].length > 0;
 
                   return (
@@ -176,11 +176,7 @@ const Details = ({
                       {sentence_group_id === 0 ? (
                         <>
                           <div className={styles.headercontainer}>
-                            <h3>
-                              {entrance_id === mainEntranceId
-                                ? i18n.t("common.mainEntrance")
-                                : `${i18n.t("common.additionalEntrance")}: ${entranceName}`}
-                            </h3>
+                            <h3>{subHeading}</h3>
                             <div className={styles.modifybutton}>
                               {entrance_id !== mainEntranceId && hasAccessibilityData && (
                                 <SummaryRemoveButton entranceData={entranceData[entranceKey]} />
@@ -198,6 +194,10 @@ const Details = ({
                         </>
                       ) : (
                         <>
+                          <div className={styles.headercontainer}>
+                            <h3>{subHeading}</h3>
+                          </div>
+
                           <SummaryAccessibility
                             entranceKey={entranceKey}
                             sentenceGroupId={sentenceGroupKey}
