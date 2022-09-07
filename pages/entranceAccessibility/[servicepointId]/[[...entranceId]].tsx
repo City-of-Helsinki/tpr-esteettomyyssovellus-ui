@@ -1,8 +1,9 @@
-import React, { ReactElement, useEffect } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import { useI18n } from "next-localization";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { GetServerSideProps } from "next";
+import { Notification } from "hds-react";
 import Layout from "../../../components/common/Layout";
 import LoadSpinner from "../../../components/common/LoadSpinner";
 import PageHelp from "../../../components/common/PageHelp";
@@ -79,6 +80,8 @@ const EntranceAccessibility = ({
   const router = useRouter();
   const curLocaleId: number = LanguageLocales[curLocale as keyof typeof LanguageLocales];
   const isLoading = useLoading();
+
+  const [isMeetingRoomSaveComplete, setMeetingRoomSaveComplete] = useState(false);
 
   // TODO - improve this by checking user on server-side
   const user = useAppSelector((state) => state.generalSlice.user);
@@ -363,6 +366,7 @@ const EntranceAccessibility = ({
 
   // const formSubmitted = useAppSelector((state) => state.formReducer.formSubmitted);
 
+  // Note: There is no sub-header for meeting rooms (form id 2)
   const entranceName = entranceData ? entranceData[`name_${curLocale}`] : "";
   const entranceHeader =
     formId === 0
@@ -373,7 +377,8 @@ const EntranceAccessibility = ({
         )}`
       : `${i18n.t("common.entrance")}: ${entranceName}`;
   const newEntranceHeader = formId === 0 ? i18n.t("common.mainEntrance") : i18n.t("common.newEntrance");
-  const header = isExistingEntrance ? entranceHeader : newEntranceHeader;
+  const servicePointHeader = isExistingEntrance ? entranceHeader : newEntranceHeader;
+  const subHeader = formId >= 2 ? "" : servicePointHeader;
 
   // Show the continue button if the main entrance does not exist and the top-level question has not been answered yet
   // Show the save/preview buttons if the main entrance exists, or this is an additional entrance,
@@ -400,8 +405,16 @@ const EntranceAccessibility = ({
 
             <div className={styles.headingcontainer}>
               <h1>{servicepointData.servicepoint_name}</h1>
-              <h2 className={styles.subHeader}>{header}</h2>
+              <h2 className={styles.subHeader}>{subHeader}</h2>
             </div>
+
+            {isMeetingRoomSaveComplete && (
+              <div className={styles.previewButtonHeader}>
+                <Notification label={i18n.t("common.formSaved")} type="success">
+                  {i18n.t("common.formSentAndSaved")}
+                </Notification>
+              </div>
+            )}
 
             <div className={styles.mainbuttons}>
               <QuestionFormCtrlButtons
@@ -412,6 +425,8 @@ const EntranceAccessibility = ({
                 hasSaveDraftButton={hasTopLevelAnswer && !isMainEntrancePublished}
                 hasPreviewButton={hasTopLevelAnswer}
                 hasContinueButton={!hasTopLevelAnswer}
+                hasSaveMeetingRoomButton={formId >= 2}
+                setMeetingRoomSaveComplete={setMeetingRoomSaveComplete}
                 visibleBlocks={visibleBlocks}
                 questionsData={questionsData}
                 questionChoicesData={questionChoicesData}
@@ -432,6 +447,8 @@ const EntranceAccessibility = ({
                 hasSaveDraftButton={hasTopLevelAnswer && !isMainEntrancePublished}
                 hasPreviewButton={hasTopLevelAnswer}
                 hasContinueButton={!hasTopLevelAnswer}
+                hasSaveMeetingRoomButton={formId >= 2}
+                setMeetingRoomSaveComplete={setMeetingRoomSaveComplete}
                 visibleBlocks={visibleBlocks}
                 questionsData={questionsData}
                 questionChoicesData={questionChoicesData}

@@ -127,7 +127,8 @@
     "saveAsIncomplete": "Save as incomplete",
     "saving": "Saving",
     "savingFinished": "Saved",
-    "preview": "Preview"
+    "preview": "Preview",
+    "saveMeetingRoom": "Save meeting room"
   },
   "additionalInfo": {
     "elementsCtrlButtonsHeader": "Add information",

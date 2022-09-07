@@ -112,6 +112,8 @@ export interface QuestionFormCtrlButtonsProps {
   hasSaveDraftButton?: boolean;
   hasPreviewButton?: boolean;
   hasContinueButton?: boolean;
+  hasSaveMeetingRoomButton?: boolean;
+  setMeetingRoomSaveComplete: Dispatch<SetStateAction<boolean>>;
   visibleBlocks?: (JSX.Element | null)[] | null;
   questionsData: BackendQuestion[];
   questionChoicesData: BackendQuestionChoice[];
