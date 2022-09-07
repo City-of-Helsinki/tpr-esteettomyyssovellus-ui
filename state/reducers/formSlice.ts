@@ -14,6 +14,12 @@ interface formState {
   startedAnswering: string;
   validationTime: number;
   invalidBlocks: number[];
+  isSaving: {
+    draft: boolean;
+    preview: boolean;
+    meetingRoom: boolean;
+    final: boolean;
+  };
   // formFinished: boolean;
   // formSubmitted: boolean;
 }
@@ -29,6 +35,12 @@ const initialState: formState = {
   startedAnswering: "",
   validationTime: 0,
   invalidBlocks: [],
+  isSaving: {
+    draft: false,
+    preview: false,
+    meetingRoom: false,
+    final: false,
+  },
   // formFinished: false,
   // formSubmitted: false,
 };
@@ -147,6 +159,12 @@ export const formSlice = createSlice({
         invalidBlocks: [...(state.invalidBlocks?.filter((elem) => elem !== action.payload) ?? [])],
       };
     },
+    setSaving: (state, action: PayloadAction<{ [key: string]: boolean }>) => {
+      return {
+        ...state,
+        isSaving: { ...state.isSaving, ...action.payload },
+      };
+    },
     /*
     setFormFinished: (state) => {
       return {
@@ -193,6 +211,7 @@ export const {
   setValidationTime,
   setInvalid,
   unsetInvalid,
+  setSaving,
   // setFormFinished,
   // unsetFormFinished,
   // setFormSubmitted,

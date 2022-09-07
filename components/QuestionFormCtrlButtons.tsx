@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { IconArrowRight, IconArrowLeft } from "hds-react";
 import { useRouter } from "next/router";
 import { useI18n } from "next-localization";
@@ -9,7 +9,7 @@ import { API_FETCH_ENTRANCES, LanguageLocales } from "../types/constants";
 import { QuestionFormCtrlButtonsProps } from "../types/general";
 import styles from "./QuestionFormCtrlButtons.module.scss";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
-import { setContinue, setEntranceId, setInvalid, setValidationTime, unsetInvalid } from "../state/reducers/formSlice";
+import { setContinue, setEntranceId, setInvalid, setSaving, setValidationTime, unsetInvalid } from "../state/reducers/formSlice";
 import getOrigin from "../utils/request";
 import { getTokenHash, saveFormData } from "../utils/utilFunctions";
 
@@ -33,9 +33,9 @@ const QuestionFormCtrlButtons = ({
   const curLocale: string = i18n.locale();
   const curLocaleId: number = LanguageLocales[curLocale as keyof typeof LanguageLocales];
 
-  const [isSavingDraft, setSavingDraft] = useState(false);
-  const [isSavingPreview, setSavingPreview] = useState(false);
-  const [isSavingMeetingRoom, setSavingMeetingRoom] = useState(false);
+  const isSavingDraft = useAppSelector((state) => state.formReducer.isSaving.draft);
+  const isSavingPreview = useAppSelector((state) => state.formReducer.isSaving.preview);
+  const isSavingMeetingRoom = useAppSelector((state) => state.formReducer.isSaving.meetingRoom);
 
   // const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
   const curAnswers = useAppSelector((state) => state.formReducer.answers);
@@ -140,9 +140,9 @@ const QuestionFormCtrlButtons = ({
   };
 
   const handleSaveDraftClick = async () => {
-    setSavingDraft(true);
+    dispatch(setSaving({ draft: true }));
     await saveData(true);
-    setSavingDraft(false);
+    dispatch(setSaving({ draft: false }));
   };
 
   const validateForm = () => {
@@ -183,9 +183,9 @@ const QuestionFormCtrlButtons = ({
 
   const handlePreviewClick = async () => {
     if (validateForm()) {
-      setSavingPreview(true);
+      dispatch(setSaving({ preview: true }));
       const entranceId = await saveData(true);
-      setSavingPreview(false);
+      dispatch(setSaving({ preview: false }));
 
       if (entranceId > 0) {
         router.push(`/entrancePreview/${curServicepointId}/${entranceId}`);
@@ -203,9 +203,9 @@ const QuestionFormCtrlButtons = ({
     setMeetingRoomSaveComplete(false);
 
     if (validateForm()) {
-      setSavingMeetingRoom(true);
+      dispatch(setSaving({ meetingRoom: true }));
       const entranceId = await saveData(false);
-      setSavingMeetingRoom(false);
+      dispatch(setSaving({ meetingRoom: false }));
 
       if (entranceId > 0) {
         // Show the saved successfully message
