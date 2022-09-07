@@ -22,7 +22,7 @@ import {
   API_FETCH_BACKEND_ENTRANCE_CHOICES,
   API_FETCH_BACKEND_ENTRANCE_FIELD,
   API_FETCH_BACKEND_ENTRANCE_PLACES,
-  API_FETCH_BACKEND_ENTRANCE_SENTENCE_GROUPS,
+  // API_FETCH_BACKEND_ENTRANCE_SENTENCE_GROUPS,
   API_FETCH_BACKEND_FORM_GUIDE,
   API_FETCH_BACKEND_PLACES,
   API_FETCH_BACKEND_SENTENCES,
@@ -66,7 +66,7 @@ import styles from "./preview.module.scss";
 // usage: the preview page of an entrance, displayed before saving the completed form
 const Preview = ({
   servicepointData,
-  entranceSentenceGroupData,
+  // entranceSentenceGroupData,
   accessibilityData,
   accessibilityPlaceData,
   entranceData,
@@ -99,6 +99,7 @@ const Preview = ({
   const startedAnswering = useAppSelector((state) => state.formReducer.startedAnswering);
 
   const entranceKey = accessibilityData && Object.keys(accessibilityData).length > 0 ? Object.keys(accessibilityData)[0] : "";
+  const entranceId = entranceData && entranceData[entranceKey] ? entranceData[entranceKey].entrance_id : -1;
   const entranceName = entranceData && entranceData[entranceKey] ? entranceData[entranceKey][`name_${curLocale}`] : "";
   const subHeader =
     entranceKey === String(mainEntranceId)
@@ -259,6 +260,10 @@ const Preview = ({
         [entranceKey]: filterByLanguage(accessibilityData[entranceKey], i18n.locale()),
       }
     : {};
+  const sentenceGroups = filteredAccessibilityData[entranceKey].reduce((acc: KeyValueString, sentence) => {
+    const existing = Object.keys(acc).find((s) => Number(s) === sentence.sentence_group_id);
+    return !existing ? { ...acc, [sentence.sentence_group_id]: sentence.sentence_order_text } : acc;
+  }, {});
 
   const curLocaleId: number = LanguageLocales[i18n.locale() as keyof typeof LanguageLocales];
   const filteredPlaces = accessibilityPlaceData.filter((place) => place.language_id === curLocaleId);
@@ -297,55 +302,47 @@ const Preview = ({
                 {entranceKey === String(mainEntranceId) && <SummaryContact entranceData={entranceData[entranceKey]} hasData={hasAccessibilityData} />}
 
                 <div>
-                  {entranceSentenceGroupData
-                    .sort((a: BackendEntranceSentenceGroup, b: BackendEntranceSentenceGroup) => {
-                      return (a.order_text ?? "").localeCompare(b.order_text ?? "");
-                    })
-                    .map((entranceSentenceGroup) => {
-                      const { entrance_id, sentence_group_id } = entranceSentenceGroup;
-                      const sentenceGroupKey = String(sentence_group_id);
-                      const subHeading = entranceSentenceGroup[`subheading_${curLocale}`] || "";
+                  <div className={styles.headercontainer}>
+                    <h3>
+                      {entranceId === mainEntranceId ? i18n.t("common.mainEntrance") : `${i18n.t("common.additionalEntrance")}: ${entranceName}`}
+                    </h3>
+                  </div>
 
-                      return (
-                        <div key={`entrance_sentence_group_${entrance_id}_${sentence_group_id}`}>
-                          {sentence_group_id === 0 ? (
-                            <>
-                              <div className={styles.headercontainer}>
-                                <h3>{subHeading}</h3>
-                              </div>
-
-                              <SummaryLocationPicture
-                                entranceKey={entranceKey}
-                                entranceData={entranceData[entranceKey]}
-                                servicepointData={servicepointData}
-                                isMainEntrance={entrance_id === mainEntranceId}
-                              />
-                            </>
-                          ) : (
-                            <>
-                              <div className={styles.headercontainer}>
-                                <h3>{subHeading}</h3>
-                              </div>
-
-                              <SummaryAccessibility
-                                entranceKey={entranceKey}
-                                sentenceGroupId={sentenceGroupKey}
-                                accessibilityData={filteredAccessibilityData}
-                                entranceChoiceData={entranceChoiceData}
-                              />
-
-                              <SummaryAccessibilityPlaceGroup
-                                entranceKey={entranceKey}
-                                sentenceGroupKey={sentenceGroupKey}
-                                accessibilityPlaces={filteredPlaces}
-                                entrancePlaceData={entrancePlaceData}
-                              />
-                            </>
-                          )}
-                        </div>
-                      );
-                    })}
+                  <SummaryLocationPicture
+                    entranceKey={entranceKey}
+                    entranceData={entranceData[entranceKey]}
+                    servicepointData={servicepointData}
+                    isMainEntrance={entranceId === mainEntranceId}
+                  />
                 </div>
+
+                {Object.keys(sentenceGroups)
+                  .sort((a, b) => {
+                    const orderA = sentenceGroups[Number(a)];
+                    const orderB = sentenceGroups[Number(b)];
+                    return orderA.localeCompare(orderB);
+                  })
+                  .map((sentenceGroupKey) => {
+                    return (
+                      <div key={`entrance_sentence_group_${entranceId}_${sentenceGroupKey}`}>
+                        <div className={styles.headercontainer}></div>
+
+                        <SummaryAccessibility
+                          entranceKey={entranceKey}
+                          sentenceGroupId={sentenceGroupKey}
+                          accessibilityData={filteredAccessibilityData}
+                          entranceChoiceData={entranceChoiceData}
+                        />
+
+                        <SummaryAccessibilityPlaceGroup
+                          entranceKey={entranceKey}
+                          sentenceGroupKey={sentenceGroupKey}
+                          accessibilityPlaces={filteredPlaces}
+                          entrancePlaceData={entrancePlaceData}
+                        />
+                      </div>
+                    );
+                  })}
 
                 <div className={styles.footercontainer}>
                   <PreviewControlButtons hasSaveDraftButton={!isMainEntrancePublished} setSendingComplete={setSendingComplete} />
@@ -409,6 +406,8 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       const servicepointEntranceData = await (servicepointEntranceResp.json() as Promise<EntranceResults>);
 
       // Get all the sentence groups for the service point and entrance
+      // NOTE: commented out since it currently only get data for form_submitted 'Y'
+      /*
       const entranceSentenceGroupResp = await fetch(
         `${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE_SENTENCE_GROUPS}?servicepoint_id=${servicepointData.servicepoint_id}&entrance_id=${params.entranceId}&format=json`,
         {
@@ -416,6 +415,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         }
       );
       entranceSentenceGroupData = await (entranceSentenceGroupResp.json() as Promise<BackendEntranceSentenceGroup[]>);
+      */
 
       const mainEntrance = servicepointEntranceData?.results?.find((result) => result.is_main_entrance === "Y");
       if (!!mainEntrance) {
