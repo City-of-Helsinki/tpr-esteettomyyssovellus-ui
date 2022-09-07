@@ -127,7 +127,8 @@
     "saveAsIncomplete": "Tallenna keskeneräisenä",
     "saving": "Tallennetaan",
     "savingFinished": "Tallennettu",
-    "preview": "Esikatsele"
+    "preview": "Esikatsele",
+    "saveMeetingRoom": "Tallenna kokoustila"
   },
   "additionalInfo": {
     "elementsCtrlButtonsHeader": "Lisää tietoja",

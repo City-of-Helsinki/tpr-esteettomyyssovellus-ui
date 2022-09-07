@@ -56,6 +56,7 @@ const EntranceQuestionBlockComment = ({
   const hasData = Object.keys(servicepointData).length > 0 && curServicepointId === servicepointData.servicepoint_id;
   const isExistingEntrance = hasData && Object.keys(entranceData).length > 0;
 
+  // Note: There is no sub-header for meeting rooms (form id 2)
   const entranceName = entranceData ? entranceData[`name_${curLocale}`] : "";
   const entranceHeader =
     formId === 0
@@ -66,7 +67,8 @@ const EntranceQuestionBlockComment = ({
         )}`
       : `${i18n.t("common.entrance")}: ${entranceName}`;
   const newEntranceHeader = formId === 0 ? i18n.t("common.mainEntrance") : i18n.t("common.newEntrance");
-  const subHeader = isExistingEntrance ? entranceHeader : newEntranceHeader;
+  const servicePointHeader = isExistingEntrance ? entranceHeader : newEntranceHeader;
+  const subHeader = formId >= 2 ? "" : servicePointHeader;
 
   // Show the comments for this question block
   const filteredQuestionBlockComment = curQuestionBlockComments.find((blockComment) => {

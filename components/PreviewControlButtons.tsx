@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import { IconArrowLeft } from "hds-react";
 import { useRouter } from "next/router";
 import { useI18n } from "next-localization";
 import SaveSpinner from "./common/SaveSpinner";
 import Button from "./QuestionButton";
 import styles from "./PreviewControlButtons.module.scss";
-import { useAppSelector } from "../state/hooks";
+import { useAppDispatch, useAppSelector } from "../state/hooks";
+import { setSaving } from "../state/reducers/formSlice";
 // import { setContinue } from "../state/reducers/formSlice";
 import { saveFormData } from "../utils/utilFunctions";
 import { PreviewControlButtonsProps } from "../types/general";
@@ -13,11 +14,11 @@ import { PreviewControlButtonsProps } from "../types/general";
 // usage: controls for preview page
 const PreviewControlButtons = ({ hasSaveDraftButton, setSendingComplete }: PreviewControlButtonsProps): JSX.Element => {
   const i18n = useI18n();
-  // const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const [isSavingDraft, setSavingDraft] = useState(false);
-  const [isSavingFinal, setSavingFinal] = useState(false);
+  const isSavingDraft = useAppSelector((state) => state.formReducer.isSaving.draft);
+  const isSavingFinal = useAppSelector((state) => state.formReducer.isSaving.final);
 
   // const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
   const curAnswers = useAppSelector((state) => state.formReducer.answers);
@@ -63,15 +64,15 @@ const PreviewControlButtons = ({ hasSaveDraftButton, setSendingComplete }: Previ
   };
 
   const handleSaveDraftClick = async () => {
-    setSavingDraft(true);
+    dispatch(setSaving({ draft: true }));
     await saveData(true);
-    setSavingDraft(false);
+    dispatch(setSaving({ draft: false }));
   };
 
   const handleSaveAndSend = async () => {
-    setSavingFinal(true);
+    dispatch(setSaving({ final: true }));
     await saveData(false);
-    setSavingFinal(false);
+    dispatch(setSaving({ final: false }));
 
     // Show the sent successfully message
     setSendingComplete(true);

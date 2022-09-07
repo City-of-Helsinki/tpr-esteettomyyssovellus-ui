@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { IconArrowRight, IconArrowLeft } from "hds-react";
 import { useRouter } from "next/router";
 import { useI18n } from "next-localization";
@@ -9,7 +9,7 @@ import { API_FETCH_ENTRANCES, LanguageLocales } from "../types/constants";
 import { QuestionFormCtrlButtonsProps } from "../types/general";
 import styles from "./QuestionFormCtrlButtons.module.scss";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
-import { setContinue, setEntranceId, setInvalid, setValidationTime, unsetInvalid } from "../state/reducers/formSlice";
+import { setContinue, setEntranceId, setInvalid, setSaving, setValidationTime, unsetInvalid } from "../state/reducers/formSlice";
 import getOrigin from "../utils/request";
 import { getTokenHash, saveFormData } from "../utils/utilFunctions";
 
@@ -20,6 +20,8 @@ const QuestionFormCtrlButtons = ({
   hasSaveDraftButton,
   hasPreviewButton,
   hasContinueButton,
+  hasSaveMeetingRoomButton,
+  setMeetingRoomSaveComplete,
   visibleBlocks,
   questionsData,
   questionChoicesData,
@@ -31,8 +33,9 @@ const QuestionFormCtrlButtons = ({
   const curLocale: string = i18n.locale();
   const curLocaleId: number = LanguageLocales[curLocale as keyof typeof LanguageLocales];
 
-  const [isSavingDraft, setSavingDraft] = useState(false);
-  const [isSavingPreview, setSavingPreview] = useState(false);
+  const isSavingDraft = useAppSelector((state) => state.formReducer.isSaving.draft);
+  const isSavingPreview = useAppSelector((state) => state.formReducer.isSaving.preview);
+  const isSavingMeetingRoom = useAppSelector((state) => state.formReducer.isSaving.meetingRoom);
 
   // const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
   const curAnswers = useAppSelector((state) => state.formReducer.answers);
@@ -82,7 +85,7 @@ const QuestionFormCtrlButtons = ({
     }
   };
 
-  const saveDraft = async (): Promise<number> => {
+  const saveData = async (isDraft: boolean): Promise<number> => {
     const entranceId = await checkEntranceExists(curEntranceId);
     dispatch(setEntranceId(entranceId));
 
@@ -128,7 +131,7 @@ const QuestionFormCtrlButtons = ({
         curQuestionBlockComments,
         startedAnswering,
         user,
-        true,
+        isDraft,
         router
       );
     }
@@ -137,9 +140,9 @@ const QuestionFormCtrlButtons = ({
   };
 
   const handleSaveDraftClick = async () => {
-    setSavingDraft(true);
-    await saveDraft();
-    setSavingDraft(false);
+    dispatch(setSaving({ draft: true }));
+    await saveData(true);
+    dispatch(setSaving({ draft: false }));
   };
 
   const validateForm = () => {
@@ -180,9 +183,9 @@ const QuestionFormCtrlButtons = ({
 
   const handlePreviewClick = async () => {
     if (validateForm()) {
-      setSavingPreview(true);
-      const entranceId = await saveDraft();
-      setSavingPreview(false);
+      dispatch(setSaving({ preview: true }));
+      const entranceId = await saveData(true);
+      dispatch(setSaving({ preview: false }));
 
       if (entranceId > 0) {
         router.push(`/entrancePreview/${curServicepointId}/${entranceId}`);
@@ -196,10 +199,25 @@ const QuestionFormCtrlButtons = ({
     }
   };
 
+  const handleSaveMeetingRoomClick = async () => {
+    setMeetingRoomSaveComplete(false);
+
+    if (validateForm()) {
+      dispatch(setSaving({ meetingRoom: true }));
+      const entranceId = await saveData(false);
+      dispatch(setSaving({ meetingRoom: false }));
+
+      if (entranceId > 0) {
+        // Show the saved successfully message
+        setMeetingRoomSaveComplete(true);
+      }
+    }
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.left}>
-        {hasCancelButton ? (
+        {hasCancelButton && (formId === 0 || formId === 1) ? (
           <Button variant="secondary" iconLeft={<IconArrowLeft />} onClickHandler={handleCancel} disabled={isSavingDraft || isSavingPreview}>
             {i18n.t("questionFormControlButtons.quit")}
           </Button>
@@ -254,6 +272,24 @@ const QuestionFormCtrlButtons = ({
         {hasContinueButton ? (
           <Button variant="primary" iconRight={<IconArrowRight />} onClickHandler={handleContinueClick}>
             {i18n.t("accessibilityForm.continue")}
+          </Button>
+        ) : null}
+
+        {hasSaveMeetingRoomButton && formId >= 2 ? (
+          <Button
+            variant="primary"
+            onClickHandler={handleSaveMeetingRoomClick}
+            disabled={isSavingDraft || isSavingPreview || isSavingMeetingRoom}
+            iconRight={
+              isSavingMeetingRoom ? (
+                <SaveSpinner
+                  savingText={i18n.t("questionFormControlButtons.saving")}
+                  savingFinishedText={i18n.t("questionFormControlButtons.savingFinished")}
+                />
+              ) : undefined
+            }
+          >
+            {i18n.t("questionFormControlButtons.saveMeetingRoom")}
           </Button>
         ) : null}
       </div>

@@ -127,7 +127,8 @@
     "saveAsIncomplete": "Spara som oavslutad",
     "saving": "Sparande",
     "savingFinished": "Sparad",
-    "preview": "Förhandsvisning"
+    "preview": "Förhandsvisning",
+    "saveMeetingRoom": "Spara mötesrum"
   },
   "additionalInfo": {
     "elementsCtrlButtonsHeader": "Lägg information",

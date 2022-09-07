@@ -69,6 +69,7 @@ const AccessibilityPlace = ({
   const hasData = Object.keys(servicepointData).length > 0 && curServicepointId === servicepointData.servicepoint_id;
   const isExistingEntrance = hasData && Object.keys(entranceData).length > 0;
 
+  // Note: There is no sub-header for meeting rooms (form id 2)
   const entranceName = entranceData ? entranceData[`name_${curLocale}`] : "";
   const entranceHeader =
     formId === 0
@@ -79,7 +80,8 @@ const AccessibilityPlace = ({
         )}`
       : `${i18n.t("common.entrance")}: ${entranceName}`;
   const newEntranceHeader = formId === 0 ? i18n.t("common.mainEntrance") : i18n.t("common.newEntrance");
-  const subHeader = isExistingEntrance ? entranceHeader : newEntranceHeader;
+  const servicePointHeader = isExistingEntrance ? entranceHeader : newEntranceHeader;
+  const subHeader = formId >= 2 ? "" : servicePointHeader;
 
   const localeId: number = LanguageLocales[i18n.locale() as keyof typeof LanguageLocales];
   const filteredPlaceData = accessibilityPlaceData?.find((place) => place.language_id === localeId) ?? ({} as BackendPlace);
