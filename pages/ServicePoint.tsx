@@ -175,16 +175,16 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
 
   if (query !== undefined) {
     if (
-      query?.systemId === undefined ||
-      query?.servicePointId === undefined ||
-      query?.user === undefined ||
-      query?.validUntil === undefined ||
-      query?.name === undefined ||
-      query?.streetAddress === undefined ||
-      query?.postOffice === undefined ||
-      query?.northing === undefined ||
-      query?.easting === undefined ||
-      query?.checksum === undefined
+      query.systemId === undefined ||
+      query.servicePointId === undefined ||
+      query.user === undefined ||
+      query.validUntil === undefined ||
+      query.name === undefined ||
+      query.streetAddress === undefined ||
+      query.postOffice === undefined ||
+      query.northing === undefined ||
+      query.easting === undefined ||
+      query.checksum === undefined
     ) {
       return {
         props: {
@@ -192,9 +192,10 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
         },
       };
     }
+
     try {
       let servicepointId = 0;
-      const systemResp = await fetch(`${API_URL_BASE}${API_FETCH_SYSTEMS}${query.systemId}`, {
+      const systemResp = await fetch(`${API_URL_BASE}${API_FETCH_SYSTEMS}?format=json&system_id=${query.systemId}`, {
         headers: new Headers({ Authorization: getTokenHash() }),
       });
       const servicepointResp = await fetch(`${API_URL_BASE}${API_FETCH_SERVICEPOINTS}?format=json&ext_servicepoint_id=${query.servicePointId}`, {

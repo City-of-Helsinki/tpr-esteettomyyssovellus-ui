@@ -39,6 +39,7 @@ import { AccessibilityData, EntranceChoiceData, EntranceData, EntrancePlaceData,
 import i18nLoader from "../../utils/i18n";
 import { convertCoordinates, filterByLanguage, formatAddress, getFinnishDate, getTokenHash } from "../../utils/utilFunctions";
 import styles from "./summary.module.scss";
+import { getServicepointIdFromTargetId } from "../../utils/serverside";
 
 // usage: the summary / landing page of servicepoint
 const Summary = ({
@@ -207,10 +208,12 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   let mainEntranceId = -1;
   let isMainEntrancePublished = false;
 
-  if (params !== undefined) {
+  const servicepointId = await getServicepointIdFromTargetId(params?.targetId);
+
+  if (servicepointId > 0) {
     try {
       const servicepointBackendDetailResp = await fetch(
-        `${API_URL_BASE}${API_FETCH_BACKEND_SERVICEPOINT}?servicepoint_id=${params.servicepointId}&format=json`,
+        `${API_URL_BASE}${API_FETCH_BACKEND_SERVICEPOINT}?servicepoint_id=${servicepointId}&format=json`,
         {
           headers: new Headers({ Authorization: getTokenHash() }),
         }
