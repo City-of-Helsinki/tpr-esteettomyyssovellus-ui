@@ -7,7 +7,7 @@ import { SummaryContactProps } from "../types/general";
 import styles from "./SummaryContact.module.scss";
 
 // usage: used in details/landing page for main contact information
-const SummaryContact = ({ entranceData, hasData, hasModifyButton }: SummaryContactProps): JSX.Element => {
+const SummaryContact = ({ entranceData, entranceIdToModify, hasData, hasModifyButton }: SummaryContactProps): JSX.Element => {
   const i18n = useI18n();
   const curLocale = i18n.locale();
 
@@ -15,7 +15,7 @@ const SummaryContact = ({ entranceData, hasData, hasModifyButton }: SummaryConta
     <div className={styles.maincontainer}>
       <div className={styles.headercontainer}>
         <h3>{i18n.t("servicepoint.contactInfoHeader")}</h3>
-        {hasModifyButton && <SummaryModifyButton entranceData={entranceData} hasData={hasData} />}
+        {hasModifyButton && <SummaryModifyButton entranceData={entranceData} entranceIdToModify={entranceIdToModify ?? -1} hasData={hasData} />}
       </div>
 
       <div>
