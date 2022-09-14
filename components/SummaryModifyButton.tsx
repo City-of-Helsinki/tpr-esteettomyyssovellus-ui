@@ -8,18 +8,18 @@ import { setStartDate } from "../state/reducers/formSlice";
 import { getCurrentDate } from "../utils/utilFunctions";
 
 // usage: modify button for ServicepointLandingSummary
-const SummaryModifyButton = ({ entranceData, hasData }: SummaryModifyButtonProps): JSX.Element => {
+const SummaryModifyButton = ({ entranceData, entranceIdToModify, hasData }: SummaryModifyButtonProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
   const router = useRouter();
 
   const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
-  const { entrance_id: curEntranceId } = entranceData || {};
+  // const { entrance_id: curEntranceId } = entranceData || {};
 
   const handleEditorModifyPointData = () => {
     const startedAnswering = getCurrentDate();
     dispatch(setStartDate(startedAnswering));
-    const url = entranceData ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}` : `/entranceAccessibility/${curServicepointId}`;
+    const url = entranceData ? `/entranceAccessibility/${curServicepointId}/${entranceIdToModify}` : `/entranceAccessibility/${curServicepointId}`;
     router.push(url);
   };
 

@@ -57,6 +57,7 @@ const Details = ({
   entranceChoiceData,
   formGuideData,
   mainEntranceId,
+  draftMainEntranceId,
   isMainEntrancePublished,
 }: DetailsProps): ReactElement => {
   const i18n = useI18n();
@@ -122,6 +123,9 @@ const Details = ({
     servicepointData.address_city
   )}`;
 
+  // Special case where the saved draft main entrance has a different id
+  const mainEntranceIdToModify = draftMainEntranceId > 0 && mainEntranceId !== draftMainEntranceId ? draftMainEntranceId : mainEntranceId;
+
   return (
     <Layout>
       <Head>
@@ -157,7 +161,12 @@ const Details = ({
               </span>
             </div>
 
-            <SummaryContact entranceData={entranceData[mainEntranceId]} hasData={hasMainAccessibilityData} hasModifyButton />
+            <SummaryContact
+              entranceData={entranceData[mainEntranceId]}
+              entranceIdToModify={mainEntranceIdToModify}
+              hasData={hasMainAccessibilityData}
+              hasModifyButton
+            />
 
             <div>
               {entranceSentenceGroupData
@@ -170,6 +179,7 @@ const Details = ({
                   const sentenceGroupKey = String(sentence_group_id);
                   const subHeading = entranceSentenceGroup[`subheading_${curLocale}`] || "";
                   const hasAccessibilityData = accessibilityData && accessibilityData[entranceKey] && accessibilityData[entranceKey].length > 0;
+                  const entranceIdToModify = entrance_id === mainEntranceId ? mainEntranceIdToModify : entrance_id;
 
                   return (
                     <div key={`entrance_sentence_group_${entrance_id}_${sentence_group_id}`}>
@@ -181,7 +191,11 @@ const Details = ({
                               {entrance_id !== mainEntranceId && hasAccessibilityData && (
                                 <SummaryRemoveButton entranceData={entranceData[entranceKey]} />
                               )}
-                              <SummaryModifyButton entranceData={entranceData[entranceKey]} hasData={hasAccessibilityData} />
+                              <SummaryModifyButton
+                                entranceData={entranceData[entranceKey]}
+                                entranceIdToModify={entranceIdToModify}
+                                hasData={hasAccessibilityData}
+                              />
                             </div>
                           </div>
 
@@ -239,6 +253,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   let entranceChoiceData: EntranceChoiceData = {};
   let formGuideData: BackendFormGuide[] = [];
   let mainEntranceId = -1;
+  let draftMainEntranceId = -1;
   let isMainEntrancePublished = false;
 
   if (params !== undefined) {
@@ -287,11 +302,18 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
           // In some cases there is no published entrance, so form_submitted is null
           const entranceY = entranceDetail.find((e) => e.form_submitted === "Y");
           const entranceNull = entranceDetail.find((e) => e.form_submitted === null);
-          return { entranceResult, entrance: entranceY ?? entranceNull };
+          const entranceD = entranceDetail.find((e) => e.form_submitted === "D");
+          return { entranceResult, entrance: entranceY ?? entranceNull, draftEntrance: entranceD };
         })
       );
 
-      const mainEntranceDetails = entranceResultDetails.find((resultDetails) => resultDetails.entranceResult.is_main_entrance === "Y");
+      // const mainEntranceDetails = entranceResultDetails.find((resultDetails) => resultDetails.entranceResult.is_main_entrance === "Y");
+      const mainEntranceDetailsPublished = entranceResultDetails.find(
+        (resultDetails) => resultDetails.entranceResult.is_main_entrance === "Y" && resultDetails.entrance
+      );
+      const mainEntranceDetailsDraft = entranceResultDetails.find(
+        (resultDetails) => resultDetails.entranceResult.is_main_entrance === "Y" && resultDetails.draftEntrance
+      );
 
       entranceData = entranceResultDetails.reduce((acc, resultDetails) => {
         return {
@@ -301,8 +323,14 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       }, {});
 
       // Check if the main entrance exists and is published
-      isMainEntrancePublished = !!mainEntranceDetails?.entrance && mainEntranceDetails?.entrance.form_submitted === "Y";
-      mainEntranceId = mainEntranceDetails?.entrance?.entrance_id ?? -1;
+      // isMainEntrancePublished = !!mainEntranceDetails?.entrance && mainEntranceDetails?.entrance.form_submitted === "Y";
+      isMainEntrancePublished = !!mainEntranceDetailsPublished;
+
+      // In some special cases there is a draft main entrance with a different id to the published one, so return both ids
+      // It's also possible for a new main entrance to be saved as draft but not published yet
+      // mainEntranceId = mainEntranceDetails?.entrance?.entrance_id ?? -1;
+      mainEntranceId = mainEntranceDetailsPublished?.entrance?.entrance_id ?? -1;
+      draftMainEntranceId = mainEntranceDetailsDraft?.draftEntrance?.entrance_id ?? -1;
 
       const entranceResultSentences = await Promise.all(
         servicepointEntranceData.results.map(async (entranceResult) => {
@@ -402,6 +430,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       entranceChoiceData,
       formGuideData,
       mainEntranceId,
+      draftMainEntranceId,
       isMainEntrancePublished,
     },
   };

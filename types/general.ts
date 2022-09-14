@@ -157,6 +157,7 @@ export interface SummarySideNavigationProps {
 
 export interface SummaryContactProps {
   entranceData?: BackendEntrance;
+  entranceIdToModify?: number;
   hasData: boolean;
   hasModifyButton?: boolean;
 }
@@ -198,6 +199,7 @@ export interface SummaryAccessibilityPlaceProps {
 
 export interface SummaryModifyButtonProps {
   entranceData?: BackendEntrance;
+  entranceIdToModify: number;
   hasData: boolean;
 }
 
@@ -417,6 +419,7 @@ export interface DetailsProps {
   entranceChoiceData: EntranceChoiceData;
   formGuideData: BackendFormGuide[];
   mainEntranceId: number;
+  draftMainEntranceId: number;
   isMainEntrancePublished: boolean;
 }
 
