@@ -46,6 +46,11 @@ export interface ExternalServicepoint {
   created_by: string;
 }
 
+export interface ExternalBackendServicepoint {
+  servicepoint_id: number;
+  external_servicepoint_id: string;
+}
+
 export interface Entrance {
   entrance_id: number;
   name_fi?: string;

@@ -37,9 +37,9 @@ import {
 } from "../../types/backendModels";
 import { AccessibilityData, EntranceChoiceData, EntranceData, EntrancePlaceData, SummaryProps } from "../../types/general";
 import i18nLoader from "../../utils/i18n";
+import { getServicepointIdFromTargetId } from "../../utils/serverside";
 import { convertCoordinates, filterByLanguage, formatAddress, getFinnishDate, getTokenHash } from "../../utils/utilFunctions";
 import styles from "./summary.module.scss";
-import { getServicepointIdFromTargetId } from "../../utils/serverside";
 
 // usage: the summary / landing page of servicepoint
 const Summary = ({

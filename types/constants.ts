@@ -40,6 +40,7 @@ export const API_FETCH_BACKEND_ENTRANCE_CHOICES = "api/ArBackendEntranceChoice/"
 export const API_FETCH_BACKEND_SENTENCES = "api/ArBackendEntranceSentence/";
 export const API_FETCH_SYSTEM_FORMS = "api/ArSystemForms/";
 export const API_FETCH_EXTERNAL_SERVICEPOINTS = "api/ArExternalServicepoint/";
+export const API_FETCH_BACKEND_EXTERNAL_SERVICEPOINTS = "api/ArBackendExternalServicepoint/";
 export const API_FETCH_BACKEND_PLACES = "api/ArBackendPlace/";
 export const API_FETCH_BACKEND_ENTRANCE_PLACES = "api/ArBackendEntrancePlace/";
 export const API_FETCH_BACKEND_FORM_GUIDE = "api/ArBackendFormGuide/";
