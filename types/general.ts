@@ -365,6 +365,14 @@ export interface ChangeProps {
   skip?: boolean;
 }
 
+export interface TargetProps {
+  servicepointId?: number;
+  servicepointName?: string;
+  entranceId?: number;
+  user?: string;
+  skip?: boolean;
+}
+
 export interface NoticeProps {
   icon: JSX.Element;
   title: string;
