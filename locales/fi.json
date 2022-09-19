@@ -259,7 +259,8 @@
   "AddressChangedPage": {
     "oldAddress": "Vanha osoite",
     "newAddress": "Uusi osoite",
-    "locationHasChanged": "Lokaatio on vaihtunut",
+    "locationHasChanged1": "Sijainti on muuttunut",
+    "locationHasChanged2": "metriä viime kerrasta",
     "errorHasOccured": "Sovelluksessa tapahtui virhe",
     "hasServicepointMoved": "Onko toimipiste muuttanut uusiin tiloihin?",
     "headerSentence1": "Toimipisteen ",

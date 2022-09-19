@@ -259,7 +259,8 @@
   "AddressChangedPage": {
     "oldAddress": "Gammal adress",
     "newAddress": "Ny adress",
-    "locationHasChanged": "Platsen har ändrats",
+    "locationHasChanged1": "Platsen har flyttats",
+    "locationHasChanged2": "meter från förra gången",
     "errorHasOccured": "Ett fel har uppstått i programvaran",
     "hasServicepointMoved": "Har kontoret flyttat till nya lokaler?",
     "headerSentence1": "Platsen för ",

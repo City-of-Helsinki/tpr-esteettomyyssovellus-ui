@@ -3,10 +3,11 @@ import { useI18n } from "next-localization";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
-// import { getPreciseDistance } from "geolib";
 import { Button, RadioButton, SelectionGroup } from "hds-react";
 import Layout from "../components/common/Layout";
-import i18nLoader from "../utils/i18n";
+import { useAppDispatch } from "../state/hooks";
+import { setUser } from "../state/reducers/generalSlice";
+import { ExternalServicepoint, Servicepoint, System, SystemForm } from "../types/backendModels";
 import {
   API_CHOP_ADDRESS,
   API_FETCH_ENTRANCES,
@@ -17,13 +18,11 @@ import {
   API_URL_BASE,
 } from "../types/constants";
 import { ChangeProps } from "../types/general";
-import { useAppDispatch } from "../state/hooks";
-import styles from "./ServicePoint.module.scss";
+import { checksumSecretTPRTesti } from "../utils/checksumSecret";
+import i18nLoader from "../utils/i18n";
 import getOrigin from "../utils/request";
 import { formatAddress, getCurrentDate, getTokenHash, validateChecksum } from "../utils/utilFunctions";
-import { checksumSecretTPRTesti } from "../utils/checksumSecret";
-import { Servicepoint, System, SystemForm } from "../types/backendModels";
-import { setUser } from "../state/reducers/generalSlice";
+import styles from "./ServicePoint.module.scss";
 
 const Servicepoints = ({
   changed,
@@ -35,6 +34,9 @@ const Servicepoints = ({
   oldAddressNumber,
   newAddressCity,
   oldAddressCity,
+  newEasting,
+  newNorthing,
+  distance,
   user,
   skip,
 }: ChangeProps): ReactElement => {
@@ -44,7 +46,7 @@ const Servicepoints = ({
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  if (user != undefined) {
+  if (user !== undefined) {
     dispatch(setUser(user));
   }
 
@@ -57,14 +59,14 @@ const Servicepoints = ({
       },
     };
     const updateAddressUrl = `${getOrigin(router)}/${API_FETCH_SERVICEPOINTS}${servicepointId}/set_searchable/`;
-    //const updateAddressUrl = `${API_URL_BASE}${API_FETCH_SERVICEPOINTS}${servicepointId}/update_address/`;
     await fetch(updateAddressUrl, setSearchableOptions);
   };
   setSearchable();
 
   if (skip) {
-    router.push("/details/" + servicepointId);
+    router.push(`/details/${servicepointId}`);
   }
+
   const handleRadioClick = (e: ChangeEvent<HTMLInputElement>) => {
     setSelectedRadioItem(e.target.value);
   };
@@ -86,17 +88,17 @@ const Servicepoints = ({
           address_street_name: newAddress,
           address_no: newAddressNumber,
           address_city: newAddressCity,
+          loc_easting: newEasting,
+          loc_northing: newNorthing,
           modified: getCurrentDate(),
           modified_by: user,
         }),
       };
       const updateAddressUrl = `${getOrigin(router)}/${API_FETCH_SERVICEPOINTS}${servicepointId}/update_address/`;
-      //const updateAddressUrl = `${API_URL_BASE}${API_FETCH_SERVICEPOINTS}${servicepointId}/update_address/`;
 
       await fetch(updateAddressUrl, updateAddressOptions);
       const url = `/details/${servicepointId}`;
       router.push(url);
-      // TODO: Update entry in ArServicePoint and redirect to /details/x page.
     }
   };
 
@@ -106,21 +108,35 @@ const Servicepoints = ({
         <title>{i18n.t("common.header.title")}</title>
       </Head>
       <main id="content">
-        {changed && changed === "address" && (
+        {changed && (
           <div>
             <h1>
               {i18n.t("AddressChangedPage.headerSentence1")}
               {servicepointName}
               {i18n.t("AddressChangedPage.headerSentence2")}
             </h1>
-            <div className={styles.addressBlock}>
-              <p>{i18n.t("AddressChangedPage.oldAddress")}:</p>
-              <h4 className={styles.address}>{formatAddress(oldAddress, oldAddressNumber, oldAddressCity)}</h4>
-            </div>
-            <div className={styles.addressBlock}>
-              <p>{i18n.t("AddressChangedPage.newAddress")}:</p>
-              <h4 className={styles.address}>{formatAddress(newAddress, newAddressNumber, newAddressCity)}</h4>
-            </div>
+
+            {changed === "address" && (
+              <>
+                <div className={styles.addressBlock}>
+                  <p>{i18n.t("AddressChangedPage.oldAddress")}:</p>
+                  <p className={styles.address}>{formatAddress(oldAddress, oldAddressNumber, oldAddressCity)}</p>
+                </div>
+                <div className={styles.addressBlock}>
+                  <p>{i18n.t("AddressChangedPage.newAddress")}:</p>
+                  <p className={styles.address}>{formatAddress(newAddress, newAddressNumber, newAddressCity)}</p>
+                </div>
+              </>
+            )}
+
+            {changed === "location" && (
+              <div className={styles.addressBlock}>
+                <p>{i18n.t("AddressChangedPage.locationHasChanged1")}</p>
+                <p className={styles.address}>{Math.round(distance ?? 0)}</p>
+                <p>{i18n.t("AddressChangedPage.locationHasChanged2")}</p>
+              </div>
+            )}
+
             <div className={styles.radioButtonDiv}>
               <SelectionGroup label={i18n.t("AddressChangedPage.hasServicepointMoved")}>
                 <RadioButton
@@ -149,8 +165,6 @@ const Servicepoints = ({
             }
           </div>
         )}
-
-        {changed && changed !== "address" && <h1>{i18n.t("AddressChangedPage.locationHasChanged")}</h1>}
 
         {!changed && <h1>{i18n.t("AddressChangedPage.errorHasOccured")}</h1>}
       </main>
@@ -194,33 +208,40 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
     }
 
     try {
-      let servicepointId = 0;
-      const systemResp = await fetch(`${API_URL_BASE}${API_FETCH_SYSTEMS}?format=json&system_id=${query.systemId}`, {
-        headers: new Headers({ Authorization: getTokenHash() }),
-      });
-      const servicepointResp = await fetch(`${API_URL_BASE}${API_FETCH_SERVICEPOINTS}?format=json&ext_servicepoint_id=${query.servicePointId}`, {
+      const queryParams = {
+        systemId: query.systemId,
+        servicePointId: query.servicePointId,
+        user: query.user,
+        validUntil: query.validUntil,
+        name: query.name,
+        streetAddress: query.streetAddress,
+        postOffice: query.postOffice,
+        northing: query.northing,
+        easting: query.easting,
+        checksum: query.checksum,
+      };
+
+      const systemResp = await fetch(`${API_URL_BASE}${API_FETCH_SYSTEMS}?format=json&system_id=${queryParams.systemId}`, {
         headers: new Headers({ Authorization: getTokenHash() }),
       });
       const systemData = await (systemResp.json() as Promise<System[]>);
-      const servicepointData = await (servicepointResp.json() as Promise<Servicepoint[]>);
 
       const checksumSecret = systemData && systemData.length > 0 ? systemData[0].checksum_secret : undefined;
       const checksum = process.env.NODE_ENV === "production" ? checksumSecret ?? "" : checksumSecretTPRTesti;
       const checksumString =
         checksum +
-        query.systemId +
-        query.servicePointId +
-        query.user +
-        query.validUntil +
-        query.streetAddress +
-        query.postOffice +
-        query.name +
-        query.northing +
-        query.easting;
+        queryParams.systemId +
+        queryParams.servicePointId +
+        queryParams.user +
+        queryParams.validUntil +
+        queryParams.streetAddress +
+        queryParams.postOffice +
+        queryParams.name +
+        queryParams.northing +
+        queryParams.easting;
 
-      const checksumIsValid = validateChecksum(checksumString, query.checksum);
+      const checksumIsValid = validateChecksum(checksumString, queryParams.checksum);
 
-      // TODO: UNCOMMENT WHEN MOVING TO PRODUCTION / TESTING
       if (!checksumIsValid) {
         console.log("Checksums did not match.");
         return {
@@ -236,7 +257,9 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
       });
       const systemFormData = await (systemFormResp.json() as Promise<SystemForm[]>);
 
-      const canUseForm = systemFormData.some((system: SystemForm) => system.system === query.systemId && (system.form === 0 || system.form === 1));
+      const canUseForm = systemFormData.some(
+        (system: SystemForm) => system.system === queryParams.systemId && (system.form === 0 || system.form === 1)
+      );
 
       if (!canUseForm) {
         throw new Error("A servicepoint with this systemId cannot use form 0 or 1");
@@ -247,18 +270,35 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: getTokenHash() },
         body: JSON.stringify({
-          address: query.streetAddress,
-          postOffice: query.postOffice,
+          address: queryParams.streetAddress,
+          postOffice: queryParams.postOffice,
         }),
       };
       const addressResponse = await fetch(`${API_URL_BASE}${API_CHOP_ADDRESS}`, addressRequestOptions);
       const addressData = await (addressResponse.json() as Promise<string[]>);
       const [choppedAddress = "", choppedAddressNumber = "", choppedPostOffice = ""] = addressData || [];
 
+      const externalServicepointResp = await fetch(
+        `${API_URL_BASE}${API_FETCH_EXTERNAL_SERVICEPOINTS}?format=json&external_servicepoint_id=${queryParams.servicePointId}`,
+        {
+          headers: new Headers({ Authorization: getTokenHash() }),
+        }
+      );
+      const externalServicepointData = await (externalServicepointResp.json() as Promise<ExternalServicepoint[]>);
+
+      let servicepointId = 0;
+      if (externalServicepointData && externalServicepointData.length > 0) {
+        servicepointId = externalServicepointData[0].servicepoint;
+      }
+
+      const servicepointResp = await fetch(`${API_URL_BASE}${API_FETCH_SERVICEPOINTS}?format=json&servicepoint_id=${servicepointId}`, {
+        headers: new Headers({ Authorization: getTokenHash() }),
+      });
+      const servicepointData = await (servicepointResp.json() as Promise<Servicepoint[]>);
+
       const isNewServicepoint = servicepointData.length === 0;
 
       if (isNewServicepoint) {
-        // TODO: ADD NEW ENTRY TO ARSERVICEPOINTS
         const date = getCurrentDate();
         const servicepointRequestOptions = {
           method: "POST",
@@ -278,12 +318,12 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
             business_id: null,
             organisation_code: null,
             system_id_old: null,
-            servicepoint_name: query.name,
-            ext_servicepoint_id: query.servicePointId,
+            servicepoint_name: queryParams.name,
+            ext_servicepoint_id: queryParams.servicePointId,
             created: date,
-            created_by: query.user,
+            created_by: queryParams.user,
             modified: date,
-            modified_by: query.user,
+            modified_by: queryParams.user,
             address_street_name: choppedAddress,
             address_no: choppedAddressNumber,
             address_city: choppedPostOffice,
@@ -291,11 +331,11 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
             // accessibility_email: null, // Set in accessibilityEdit
             // accessibility_www: null, // Set in accessibilityEdit
             is_searchable: "Y",
-            organisation_id: query.systemId,
-            loc_easting: query.easting,
-            loc_northing: query.northing,
+            organisation_id: queryParams.systemId,
+            loc_easting: queryParams.easting,
+            loc_northing: queryParams.northing,
             location_id: null, // NULL according to mail
-            system: query.systemId,
+            system: queryParams.systemId,
           }),
         };
 
@@ -309,10 +349,10 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
           method: "POST",
           headers: { "Content-Type": "application/json", Authorization: getTokenHash() },
           body: JSON.stringify({
-            external_servicepoint_id: query.servicePointId,
+            external_servicepoint_id: queryParams.servicePointId,
             created: date,
-            created_by: query.user,
-            system: query.systemId,
+            created_by: queryParams.user,
+            system: queryParams.systemId,
             servicepoint: servicepointId,
           }),
         };
@@ -327,63 +367,53 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
             name_fi: "",
             name_sv: null,
             name_en: null,
-            loc_easting: query.easting,
-            loc_northing: query.northing,
+            loc_easting: queryParams.easting,
+            loc_northing: queryParams.northing,
             photo_url: null,
             streetview_url: null,
             created: date,
-            created_by: query.user,
+            created_by: queryParams.user,
             modified: date,
-            modified_by: query.user,
+            modified_by: queryParams.user,
             is_main_entrance: "Y",
             servicepoint: servicepointId,
-            // TODO: HOW IS THIS DETERMINED? POSSIBLY 0 DUE TO THE FACT THAT THIS IS
-            // THE MAIN ENTRANCE?
-            form: 0,
+            form: 0, // Main entrance
           }),
         };
 
         await fetch(`${API_URL_BASE}${API_FETCH_ENTRANCES}`, entranceRequestOptions);
-        console.log("Create new entrance");
+        console.log("Created new entrance");
 
         console.log("New servicepoint and entrance inserted to the database");
       } else {
-        // TODO: COMPARE EXISTING VALUES
         console.log("Compare old data");
         servicepointId = servicepointData[0].servicepoint_id;
-        const oldAddress = servicepointData[0].address_street_name;
-        const oldAddressNumber = servicepointData[0].address_no;
-        const oldAddressCity = servicepointData[0].address_city;
-        // const oldEasting = servicepointData[0].loc_easting;
-        // const oldNorthing = servicepointData[0].loc_northing;
+        const oldAddress = servicepointData[0].address_street_name ?? "";
+        const oldAddressNumber = servicepointData[0].address_no ?? "";
+        const oldAddressCity = servicepointData[0].address_city ?? "";
+        const oldEasting = servicepointData[0].loc_easting ?? 0;
+        const oldNorthing = servicepointData[0].loc_northing ?? 0;
         const newAddress = choppedAddress;
         const newAddressNumber = choppedAddressNumber;
         const newAddressCity = choppedPostOffice;
-        const servicepointName = query.name;
+        const newEasting = Number(queryParams.easting);
+        const newNorthing = Number(queryParams.northing);
+        const servicepointName = queryParams.name;
 
-        const addressHasChanged = oldAddress !== choppedAddress || oldAddressNumber !== choppedAddressNumber || oldAddressCity !== choppedPostOffice;
+        // The chop address function does not necessarily return uppercase values
+        const addressHasChanged =
+          oldAddress.toUpperCase() !== choppedAddress.toUpperCase() ||
+          oldAddressNumber.toUpperCase() !== choppedAddressNumber.toUpperCase() ||
+          oldAddressCity.toUpperCase() !== choppedPostOffice.toUpperCase();
 
-        /*
-        const preciseDistance = getPreciseDistance(
-          { latitude: oldNorthing, longitude: oldEasting },
-          {
-            latitude: Number(query.northing),
-            longitude: Number(query.easting),
-          }
-        );
-        */
-
-        // console.log(oldNorthing, oldEasting);
-        // console.log(Number(query.northing), Number(query.easting));
-        // console.log(preciseDistance);
-        // const locationHasChanged = preciseDistance > 15;
+        const distance = Math.sqrt(Math.pow(oldNorthing - newNorthing, 2) + Math.pow(oldEasting - newEasting, 2));
+        const locationHasChanged = distance > 15;
 
         if (addressHasChanged) {
-          const changed = "address";
           return {
             props: {
               lngDict,
-              changed,
+              changed: "address",
               servicepointId,
               servicepointName,
               oldAddress,
@@ -392,21 +422,31 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
               newAddress,
               newAddressNumber,
               newAddressCity,
-              user: query.user,
+              newEasting,
+              newNorthing,
+              user: queryParams.user,
               skip: false,
             },
           };
         }
-        // if (locationHasChanged) {
-        //   let changed = "location";
-        //   return {
-        //     props: {
-        //       lngDict,
-        //       changed,
-        //       servicepointId
-        //     }
-        //   };
-        // }
+        if (locationHasChanged) {
+          return {
+            props: {
+              lngDict,
+              changed: "location",
+              servicepointId,
+              servicepointName,
+              newAddress,
+              newAddressNumber,
+              newAddressCity,
+              newEasting,
+              newNorthing,
+              distance,
+              user: queryParams.user,
+              skip: false,
+            },
+          };
+        }
       }
 
       // Variables from database
@@ -435,7 +475,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
       return {
         props: {
           servicepointId,
-          user: query.user,
+          user: queryParams.user,
           skip: true,
         },
       };

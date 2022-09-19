@@ -358,6 +358,9 @@ export interface ChangeProps {
   oldAddressNumber?: string;
   newAddressCity?: string;
   oldAddressCity?: string;
+  newEasting?: number;
+  newNorthing?: number;
+  distance?: number;
   user?: string;
   skip?: boolean;
 }

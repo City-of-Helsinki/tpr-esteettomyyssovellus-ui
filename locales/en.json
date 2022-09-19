@@ -259,7 +259,8 @@
   "AddressChangedPage": {
     "oldAddress": "Old address",
     "newAddress": "New address",
-    "locationHasChanged": "Location has changed",
+    "locationHasChanged1": "The location has moved",
+    "locationHasChanged2": "meters from last time",
     "errorHasOccured": "An error has occured in the software",
     "hasServicepointMoved": "Has the servicepoint moved to new premises?",
     "headerSentence1": "The location of ",
