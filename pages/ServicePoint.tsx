@@ -95,10 +95,9 @@ const Servicepoints = ({
         }),
       };
       const updateAddressUrl = `${getOrigin(router)}/${API_FETCH_SERVICEPOINTS}${servicepointId}/update_address/`;
-
       await fetch(updateAddressUrl, updateAddressOptions);
-      const url = `/details/${servicepointId}`;
-      router.push(url);
+
+      router.push(`/details/${servicepointId}`);
     }
   };
 
@@ -297,9 +296,9 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
       const servicepointData = await (servicepointResp.json() as Promise<Servicepoint[]>);
 
       const isNewServicepoint = servicepointData.length === 0;
+      const date = getCurrentDate();
 
       if (isNewServicepoint) {
-        const date = getCurrentDate();
         const servicepointRequestOptions = {
           method: "POST",
           headers: { "Content-Type": "application/json", Authorization: getTokenHash() },
@@ -386,6 +385,27 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
 
         console.log("New servicepoint and entrance inserted to the database");
       } else {
+        // There could be multiple external servicepoint ids for each servicepoint, so update the
+        // servicepoint table with this request's id as a way to record which one was last accessed
+        const servicepointRequestOptions = {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: getTokenHash() },
+          body: JSON.stringify({
+            servicepoint_name: queryParams.name,
+            ext_servicepoint_id: queryParams.servicePointId,
+            modified: date,
+            modified_by: queryParams.user,
+            // is_searchable: "Y",
+          }),
+        };
+
+        console.log("Update existing servicepoint");
+        const existingServicepointResp = await fetch(
+          `${API_URL_BASE}${API_FETCH_SERVICEPOINTS}${servicepointId}/update_external/`,
+          servicepointRequestOptions
+        );
+        await (existingServicepointResp.json() as Promise<Servicepoint>);
+
         console.log("Compare old data");
         servicepointId = servicepointData[0].servicepoint_id;
         const oldAddress = servicepointData[0].address_street_name ?? "";

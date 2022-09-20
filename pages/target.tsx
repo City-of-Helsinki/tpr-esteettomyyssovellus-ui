@@ -19,7 +19,7 @@ import { TargetProps } from "../types/general";
 import i18nLoader from "../utils/i18n";
 import { getCurrentDate, getTokenHash, validateChecksum } from "../utils/utilFunctions";
 
-const Target = ({ servicepointId, servicepointName, entranceId, user, skip }: TargetProps): ReactElement => {
+const Target = ({ servicepointId, entranceId, user, skip }: TargetProps): ReactElement => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -30,9 +30,6 @@ const Target = ({ servicepointId, servicepointName, entranceId, user, skip }: Ta
 
   // IS THE LANGUAGECODE A NUMBER OR A STRING???
   // console.log(languageCode);
-
-  // TODO - update servicepoint name
-  console.log("servicepointName", servicepointName);
 
   if (skip) {
     router.push(`/entranceAccessibility/${servicepointId}/${entranceId}`);
@@ -153,9 +150,9 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
       const servicepointData = await (servicepointResp.json() as Promise<Servicepoint[]>);
 
       const isNewServicepoint = servicepointData.length === 0;
+      const date = getCurrentDate();
 
       if (isNewServicepoint) {
-        const date = getCurrentDate();
         const servicepointRequestOptions = {
           method: "POST",
           headers: { "Content-Type": "application/json", Authorization: getTokenHash() },
@@ -247,6 +244,27 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
         // Existing servicepoint
         servicepointId = servicepointData[0].servicepoint_id;
 
+        // There could be multiple external servicepoint ids for each servicepoint, so update the
+        // servicepoint table with this request's id as a way to record which one was last accessed
+        const servicepointRequestOptions = {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: getTokenHash() },
+          body: JSON.stringify({
+            servicepoint_name: queryParams.name,
+            ext_servicepoint_id: queryParams.targetId,
+            modified: date,
+            modified_by: queryParams.user,
+            // is_searchable: "Y",
+          }),
+        };
+
+        console.log("Update existing servicepoint");
+        const existingServicepointResp = await fetch(
+          `${API_URL_BASE}${API_FETCH_SERVICEPOINTS}${servicepointId}/update_external/`,
+          servicepointRequestOptions
+        );
+        await (existingServicepointResp.json() as Promise<Servicepoint>);
+
         const entranceResp = await fetch(`${API_URL_BASE}${API_FETCH_ENTRANCES}?servicepoint=${servicepointId}&format=json`, {
           headers: new Headers({ Authorization: getTokenHash() }),
         });
@@ -261,8 +279,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
         props: {
           lngDict,
           servicepointId,
-          servicepointName: queryParams.name,
-          entranceId: entranceId,
+          entranceId,
           user: queryParams.user,
           skip: true,
         },

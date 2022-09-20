@@ -367,7 +367,6 @@ export interface ChangeProps {
 
 export interface TargetProps {
   servicepointId?: number;
-  servicepointName?: string;
   entranceId?: number;
   user?: string;
   skip?: boolean;
