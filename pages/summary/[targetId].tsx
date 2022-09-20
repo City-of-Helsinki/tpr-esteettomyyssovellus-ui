@@ -122,7 +122,7 @@ const Summary = ({
               <h2 className={styles.subHeader}>{subHeader}</h2>
 
               <span className={styles.statuslabel}>
-                {isMainEntrancePublished ? (
+                {isMainEntrancePublished && hasMainAccessibilityData ? (
                   <StatusLabel type="success"> {i18n.t("common.statusReady")} </StatusLabel>
                 ) : (
                   <StatusLabel type="neutral"> {i18n.t("common.statusNotReady")} </StatusLabel>
