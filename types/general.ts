@@ -352,6 +352,7 @@ export interface ChangeProps {
   changed?: string;
   servicepointId?: number;
   servicepointName?: string;
+  entranceId?: number;
   newAddress?: string;
   oldAddress?: string;
   newAddressNumber?: string;

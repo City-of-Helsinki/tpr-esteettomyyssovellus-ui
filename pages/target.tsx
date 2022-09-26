@@ -4,9 +4,10 @@ import Head from "next/head";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import Layout from "../components/common/Layout";
+import LoadSpinner from "../components/common/LoadSpinner";
 import { useAppDispatch } from "../state/hooks";
 import { setUser } from "../state/reducers/generalSlice";
-import { Entrance, EntranceResults, ExternalServicepoint, Servicepoint, System, SystemForm } from "../types/backendModels";
+import { EntranceResults, ExternalServicepoint, Servicepoint, System, SystemForm } from "../types/backendModels";
 import {
   API_FETCH_ENTRANCES,
   API_FETCH_EXTERNAL_SERVICEPOINTS,
@@ -17,7 +18,7 @@ import {
 } from "../types/constants";
 import { TargetProps } from "../types/general";
 import i18nLoader from "../utils/i18n";
-import { getCurrentDate, getTokenHash, validateChecksum } from "../utils/utilFunctions";
+import { createEntrance, createServicePoint, getCurrentDate, getTokenHash, validateChecksum } from "../utils/utilFunctions";
 
 const Target = ({ servicepointId, entranceId, user, skip }: TargetProps): ReactElement => {
   const i18n = useI18n();
@@ -40,7 +41,11 @@ const Target = ({ servicepointId, entranceId, user, skip }: TargetProps): ReactE
       <Head>
         <title>{i18n.t("common.header.title")}</title>
       </Head>
-      <main id="content">{!skip && <h1>{i18n.t("AddressChangedPage.errorHasOccured")}</h1>}</main>
+      <main id="content">
+        {!skip && <h1>{i18n.t("AddressChangedPage.errorHasOccured")}</h1>}
+
+        {skip && <LoadSpinner />}
+      </main>
     </Layout>
   );
 };
@@ -85,14 +90,14 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
     // CHECK PARAMS AND REDIRECT
     try {
       const queryParams = {
-        systemId: query.systemId,
-        targetId: query.targetId,
-        locationId: query.locationId,
-        user: query.user,
-        validUntil: query.validUntil,
-        name: query.name,
-        formId: query.formId,
-        checksum: query.checksum,
+        systemId: query.systemId as string,
+        targetId: query.targetId as string,
+        locationId: query.locationId as string,
+        user: query.user as string,
+        validUntil: query.validUntil as string,
+        name: query.name as string,
+        formId: query.formId as string,
+        checksum: query.checksum as string,
       };
 
       const systemResp = await fetch(`${API_URL_BASE}${API_FETCH_SYSTEMS}?format=json&system_id=${queryParams.systemId}`, {
@@ -153,91 +158,19 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
       const date = getCurrentDate();
 
       if (isNewServicepoint) {
-        const servicepointRequestOptions = {
-          method: "POST",
-          headers: { "Content-Type": "application/json", Authorization: getTokenHash() },
-          body: JSON.stringify({
-            // TODO: figure out
-            // - business_id
-            // - organisation_code
-            // - system_id_old
-            // - ext_servicepoint_id
-            // - created
-            // - modified
-            // - modified_by
-            // - address_street_name (THESE CAN BE GENERATED USING DATABASE FUNCTION)
-            // - address_no (THESE CAN BE GENERATED USING DATABASE FUNCTION)
-            // - address_city (THESE CAN BE GENERATED USING DATABASE FUNCTION)
-            business_id: null,
-            organisation_code: null,
-            system_id_old: null,
-            servicepoint_name: queryParams.name,
-            ext_servicepoint_id: queryParams.targetId,
-            created: date,
-            created_by: queryParams.user,
-            modified: date,
-            modified_by: queryParams.user,
-            // address_street_name: choppedAddress,
-            // address_no: choppedAddressNumber,
-            // address_city: choppedPostOffice,
-            // accessibility_phone: null, // Set in accessibilityEdit
-            // accessibility_email: null, // Set in accessibilityEdit
-            // accessibility_www: null, // Set in accessibilityEdit
-            is_searchable: "Y",
-            organisation_id: queryParams.systemId,
-            // loc_easting: queryParams.easting,
-            // loc_northing: queryParams.northing,
-            location_id: queryParams.locationId || null,
-            system: queryParams.systemId,
-          }),
-        };
+        // Create a new servicepoint
+        servicepointId = await createServicePoint(
+          queryParams.systemId,
+          queryParams.name,
+          queryParams.targetId,
+          queryParams.user,
+          API_URL_BASE,
+          queryParams.locationId
+        );
 
-        // POST TO ARSERVICEPOINT. RETURNS NEW SERVICEPOINTID USED FOR OTHER POST REQUESTS
-        console.log("Create new servicepoint");
-        const newServicepointResp = await fetch(`${API_URL_BASE}${API_FETCH_SERVICEPOINTS}`, servicepointRequestOptions);
-        const newServicepointData = await (newServicepointResp.json() as Promise<Servicepoint>);
-        servicepointId = newServicepointData.servicepoint_id;
-
-        const externalServicepointOptions = {
-          method: "POST",
-          headers: { "Content-Type": "application/json", Authorization: getTokenHash() },
-          body: JSON.stringify({
-            external_servicepoint_id: queryParams.targetId,
-            created: date,
-            created_by: queryParams.user,
-            system: queryParams.systemId,
-            servicepoint: servicepointId,
-          }),
-        };
-
-        await fetch(`${API_URL_BASE}${API_FETCH_EXTERNAL_SERVICEPOINTS}`, externalServicepointOptions);
-        console.log("Created new external servicepoint");
-
-        const entranceRequestOptions = {
-          method: "POST",
-          headers: { "Content-Type": "application/json", Authorization: getTokenHash() },
-          body: JSON.stringify({
-            name_fi: "",
-            name_sv: null,
-            name_en: null,
-            loc_easting: null,
-            loc_northing: null,
-            photo_url: null,
-            streetview_url: null,
-            created: date,
-            created_by: queryParams.user,
-            modified: date,
-            modified_by: queryParams.user,
-            is_main_entrance: "Y",
-            servicepoint: servicepointId,
-            form: queryParams.formId,
-          }),
-        };
-
-        const newEntranceResp = await fetch(`${API_URL_BASE}${API_FETCH_ENTRANCES}`, entranceRequestOptions);
-        const newEntranceData = await (newEntranceResp.json() as Promise<Entrance>);
-        entranceId = newEntranceData.entrance_id;
-        console.log("Created new entrance");
+        // Create a new empty entrance
+        // Form id is usually 2 here, meaning meeting room
+        entranceId = await createEntrance(servicepointId, Number(queryParams.formId), queryParams.user, API_URL_BASE);
 
         console.log("New servicepoint and entrance inserted to the database");
       } else {
@@ -271,7 +204,10 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
         const entranceResults = await (entranceResp.json() as Promise<EntranceResults>);
 
         if (entranceResults && entranceResults.results && entranceResults.results.length > 0) {
-          entranceId = entranceResults.results[0].entrance_id;
+          const mainEntrance = entranceResults.results.find((entrance) => entrance.is_main_entrance === "Y");
+          if (mainEntrance) {
+            entranceId = mainEntrance.entrance_id;
+          }
         }
       }
 

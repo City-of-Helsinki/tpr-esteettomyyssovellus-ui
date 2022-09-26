@@ -5,9 +5,10 @@ import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import { Button, RadioButton, SelectionGroup } from "hds-react";
 import Layout from "../components/common/Layout";
+import LoadSpinner from "../components/common/LoadSpinner";
 import { useAppDispatch } from "../state/hooks";
 import { setUser } from "../state/reducers/generalSlice";
-import { ExternalServicepoint, Servicepoint, System, SystemForm } from "../types/backendModels";
+import { EntranceResults, ExternalServicepoint, Servicepoint, System, SystemForm } from "../types/backendModels";
 import {
   API_CHOP_ADDRESS,
   API_FETCH_ENTRANCES,
@@ -21,13 +22,22 @@ import { ChangeProps } from "../types/general";
 import { checksumSecretTPRTesti } from "../utils/checksumSecret";
 import i18nLoader from "../utils/i18n";
 import getOrigin from "../utils/request";
-import { formatAddress, getCurrentDate, getTokenHash, validateChecksum } from "../utils/utilFunctions";
+import {
+  createEntrance,
+  createServicePoint,
+  deleteEntrance,
+  formatAddress,
+  getCurrentDate,
+  getTokenHash,
+  validateChecksum,
+} from "../utils/utilFunctions";
 import styles from "./ServicePoint.module.scss";
 
 const Servicepoints = ({
   changed,
   servicepointId,
   servicepointName,
+  entranceId,
   newAddress,
   oldAddress,
   newAddressNumber,
@@ -72,33 +82,34 @@ const Servicepoints = ({
   };
 
   const handleContinueClick = async () => {
-    if (selectedRadioItem === "1") {
-      console.log("Yes selected");
-
-      // TODO: (Remove entry from ArServicePoint)? and create a new entry.
-    } else if (selectedRadioItem === "2") {
-      console.log("No selected");
-      const updateAddressOptions = {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: getTokenHash(),
-        },
-        body: JSON.stringify({
-          address_street_name: newAddress,
-          address_no: newAddressNumber,
-          address_city: newAddressCity,
-          loc_easting: newEasting,
-          loc_northing: newNorthing,
-          modified: getCurrentDate(),
-          modified_by: user,
-        }),
-      };
-      const updateAddressUrl = `${getOrigin(router)}/${API_FETCH_SERVICEPOINTS}${servicepointId}/update_address/`;
-      await fetch(updateAddressUrl, updateAddressOptions);
-
-      router.push(`/details/${servicepointId}`);
+    if (selectedRadioItem === "1" && entranceId !== undefined) {
+      // Delete the main entrance data and create a new empty one
+      // Form id 0 means main entrance
+      await deleteEntrance(entranceId, router);
+      await createEntrance(servicepointId as number, 0, user as string, `${getOrigin(router)}/`, newEasting as number, newNorthing as number);
     }
+
+    // Update the address and coordinates for both options
+    const updateAddressOptions = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: getTokenHash(),
+      },
+      body: JSON.stringify({
+        address_street_name: newAddress,
+        address_no: newAddressNumber,
+        address_city: newAddressCity,
+        loc_easting: newEasting,
+        loc_northing: newNorthing,
+        modified: getCurrentDate(),
+        modified_by: user,
+      }),
+    };
+    const updateAddressUrl = `${getOrigin(router)}/${API_FETCH_SERVICEPOINTS}${servicepointId}/update_address/`;
+    await fetch(updateAddressUrl, updateAddressOptions);
+
+    router.push(`/details/${servicepointId}`);
   };
 
   return (
@@ -159,13 +170,12 @@ const Servicepoints = ({
             <Button id="continueButton" variant="primary" disabled={selectedRadioItem === startState} onClick={handleContinueClick}>
               {i18n.t("accessibilityForm.continue")}
             </Button>
-            {
-              // TODO: Sulje välilehti
-            }
           </div>
         )}
 
-        {!changed && <h1>{i18n.t("AddressChangedPage.errorHasOccured")}</h1>}
+        {!skip && !changed && <h1>{i18n.t("AddressChangedPage.errorHasOccured")}</h1>}
+
+        {skip && !changed && <LoadSpinner />}
       </main>
     </Layout>
   );
@@ -208,16 +218,16 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
 
     try {
       const queryParams = {
-        systemId: query.systemId,
-        servicePointId: query.servicePointId,
-        user: query.user,
-        validUntil: query.validUntil,
-        name: query.name,
-        streetAddress: query.streetAddress,
-        postOffice: query.postOffice,
-        northing: query.northing,
-        easting: query.easting,
-        checksum: query.checksum,
+        systemId: query.systemId as string,
+        servicePointId: query.servicePointId as string,
+        user: query.user as string,
+        validUntil: query.validUntil as string,
+        name: query.name as string,
+        streetAddress: query.streetAddress as string,
+        postOffice: query.postOffice as string,
+        northing: query.northing as string,
+        easting: query.easting as string,
+        checksum: query.checksum as string,
       };
 
       const systemResp = await fetch(`${API_URL_BASE}${API_FETCH_SYSTEMS}?format=json&system_id=${queryParams.systemId}`, {
@@ -286,6 +296,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
       const externalServicepointData = await (externalServicepointResp.json() as Promise<ExternalServicepoint[]>);
 
       let servicepointId = 0;
+      let entranceId = 0;
       if (externalServicepointData && externalServicepointData.length > 0) {
         servicepointId = externalServicepointData[0].servicepoint;
       }
@@ -299,89 +310,31 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
       const date = getCurrentDate();
 
       if (isNewServicepoint) {
-        const servicepointRequestOptions = {
-          method: "POST",
-          headers: { "Content-Type": "application/json", Authorization: getTokenHash() },
-          body: JSON.stringify({
-            // TODO: figure out
-            // - business_id
-            // - organisation_code
-            // - system_id_old
-            // - ext_servicepoint_id
-            // - created
-            // - modified
-            // - modified_by
-            // - address_street_name (THESE CAN BE GENERATED USING DATABASE FUNCTION)
-            // - address_no (THESE CAN BE GENERATED USING DATABASE FUNCTION)
-            // - address_city (THESE CAN BE GENERATED USING DATABASE FUNCTION)
-            business_id: null,
-            organisation_code: null,
-            system_id_old: null,
-            servicepoint_name: queryParams.name,
-            ext_servicepoint_id: queryParams.servicePointId,
-            created: date,
-            created_by: queryParams.user,
-            modified: date,
-            modified_by: queryParams.user,
-            address_street_name: choppedAddress,
-            address_no: choppedAddressNumber,
-            address_city: choppedPostOffice,
-            // accessibility_phone: null, // Set in accessibilityEdit
-            // accessibility_email: null, // Set in accessibilityEdit
-            // accessibility_www: null, // Set in accessibilityEdit
-            is_searchable: "Y",
-            organisation_id: queryParams.systemId,
-            loc_easting: queryParams.easting,
-            loc_northing: queryParams.northing,
-            location_id: null, // NULL according to mail
-            system: queryParams.systemId,
-          }),
-        };
+        // Create a new servicepoint
+        servicepointId = await createServicePoint(
+          queryParams.systemId,
+          queryParams.name,
+          queryParams.servicePointId,
+          queryParams.user,
+          API_URL_BASE,
+          undefined, // Location id
+          choppedAddress,
+          choppedAddressNumber,
+          choppedPostOffice,
+          Number(queryParams.easting),
+          Number(queryParams.northing)
+        );
 
-        // POST TO ARSERVICEPOINT. RETURNS NEW SERVICEPOINTID USED FOR OTHER POST REQUESTS
-        console.log("Create new servicepoint");
-        const newServicepointResp = await fetch(`${API_URL_BASE}${API_FETCH_SERVICEPOINTS}`, servicepointRequestOptions);
-        const newServicepointData = await (newServicepointResp.json() as Promise<Servicepoint>);
-        servicepointId = newServicepointData.servicepoint_id;
-
-        const externalServicepointOptions = {
-          method: "POST",
-          headers: { "Content-Type": "application/json", Authorization: getTokenHash() },
-          body: JSON.stringify({
-            external_servicepoint_id: queryParams.servicePointId,
-            created: date,
-            created_by: queryParams.user,
-            system: queryParams.systemId,
-            servicepoint: servicepointId,
-          }),
-        };
-
-        await fetch(`${API_URL_BASE}${API_FETCH_EXTERNAL_SERVICEPOINTS}`, externalServicepointOptions);
-        console.log("Created new external servicepoint");
-
-        const entranceRequestOptions = {
-          method: "POST",
-          headers: { "Content-Type": "application/json", Authorization: getTokenHash() },
-          body: JSON.stringify({
-            name_fi: "",
-            name_sv: null,
-            name_en: null,
-            loc_easting: queryParams.easting,
-            loc_northing: queryParams.northing,
-            photo_url: null,
-            streetview_url: null,
-            created: date,
-            created_by: queryParams.user,
-            modified: date,
-            modified_by: queryParams.user,
-            is_main_entrance: "Y",
-            servicepoint: servicepointId,
-            form: 0, // Main entrance
-          }),
-        };
-
-        await fetch(`${API_URL_BASE}${API_FETCH_ENTRANCES}`, entranceRequestOptions);
-        console.log("Created new entrance");
+        // Create a new empty entrance
+        // Form id 0 means main entrance
+        entranceId = await createEntrance(
+          servicepointId,
+          0,
+          queryParams.user,
+          API_URL_BASE,
+          Number(queryParams.easting),
+          Number(queryParams.northing)
+        );
 
         console.log("New servicepoint and entrance inserted to the database");
       } else {
@@ -405,6 +358,18 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
           servicepointRequestOptions
         );
         await (existingServicepointResp.json() as Promise<Servicepoint>);
+
+        const entranceResp = await fetch(`${API_URL_BASE}${API_FETCH_ENTRANCES}?servicepoint=${servicepointId}&format=json`, {
+          headers: new Headers({ Authorization: getTokenHash() }),
+        });
+        const entranceResults = await (entranceResp.json() as Promise<EntranceResults>);
+
+        if (entranceResults && entranceResults.results && entranceResults.results.length > 0) {
+          const mainEntrance = entranceResults.results.find((entrance) => entrance.is_main_entrance === "Y");
+          if (mainEntrance) {
+            entranceId = mainEntrance.entrance_id;
+          }
+        }
 
         console.log("Compare old data");
         servicepointId = servicepointData[0].servicepoint_id;
@@ -436,6 +401,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
               changed: "address",
               servicepointId,
               servicepointName,
+              entranceId,
               oldAddress,
               oldAddressNumber,
               oldAddressCity,
@@ -456,6 +422,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
               changed: "location",
               servicepointId,
               servicepointName,
+              entranceId,
               newAddress,
               newAddressNumber,
               newAddressCity,
@@ -469,29 +436,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
         }
       }
 
-      // Variables from database
-
-      // TODO: Check the servicepointdata response whether there is an entry in the database,
-      // for the servicepointId. If not create a new entry to the table based on the URL info.
-      // If there is an old entry modify the data.
-
-      // •    Jos (esteettömyyssovelluksen kannalta) uusi toimipiste =>
-      // sovellus luo tietueen ar_servicepoint-tauluun (saatujen parametrien perusteella) ja
-      //  pääsisäänkäynnin ar_entrance-tauluun (sijainniksi parametrina saadut northing ja easting).
-      // o	Jos vanha toimipiste => päivitetään ar_servicepoint-taulun
-      // tietuetta saatujen parametrien mukaan (esim. toimipisteen nimen päivitys).
-
-      // TODO: Osoite- ja sijaintitarkistus: Myös on tarkistettava parametreissa saatu osoitetieto
-      // (streetAddress, postOffice) ja koordinaatit (northing, easting).
-      // Jos käyntiosoite on muuttunut tai sijainti on yli 15 metriä siitä,
-      // mitä lähetettiin edellisellä kerralla (=verrataan taulun ar_servicepoint vastaaviin sarakkeisiin),
-      // niin esitetään jompikumpi kysymys (ja voisi siinä olla myös painike ”Sulje välilehti”):
-      // jolloin käyttäjä voi a) sulkea välilehden ja mikään ei muutu, b)
-      // valita Kyllä + Jatka, jolloin vanhat tiedot menetetään ja
-      // lähdetään nollatilanteesta, c) valita Ei + Jatka, jolloin
-      // vanhat vastaukset säilyvät, mutta toimipisteen nimi,
-      // osoite ja sijainti taulussa ar_servicepoint kuitenkin päivitetään.
-
+      // No changes
       return {
         props: {
           servicepointId,
@@ -503,6 +448,8 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
       console.log(err);
     }
   }
+
+  // An error occurred
   return {
     props: {
       lngDict,
