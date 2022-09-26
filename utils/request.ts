@@ -1,5 +1,3 @@
-// this files code from marketing project: if not used / edited -> delete
-
 import { NextRouter } from "next/router";
 import absoluteUrl from "next-absolute-url";
 

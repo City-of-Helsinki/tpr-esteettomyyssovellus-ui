@@ -5,7 +5,9 @@
   align-items: center;
 
   .address {
-    padding-left: $spacing-2-xs;
+    font-size: $fontsize-heading-s;
+    font-weight: 700;
+    padding: 0 $spacing-2-xs;
   }
 }
 

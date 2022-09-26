@@ -37,6 +37,7 @@ import {
 } from "../../types/backendModels";
 import { AccessibilityData, EntranceChoiceData, EntranceData, EntrancePlaceData, SummaryProps } from "../../types/general";
 import i18nLoader from "../../utils/i18n";
+import { getServicepointIdFromTargetId } from "../../utils/serverside";
 import { convertCoordinates, filterByLanguage, formatAddress, getFinnishDate, getTokenHash } from "../../utils/utilFunctions";
 import styles from "./summary.module.scss";
 
@@ -121,7 +122,7 @@ const Summary = ({
               <h2 className={styles.subHeader}>{subHeader}</h2>
 
               <span className={styles.statuslabel}>
-                {isMainEntrancePublished ? (
+                {isMainEntrancePublished && hasMainAccessibilityData ? (
                   <StatusLabel type="success"> {i18n.t("common.statusReady")} </StatusLabel>
                 ) : (
                   <StatusLabel type="neutral"> {i18n.t("common.statusNotReady")} </StatusLabel>
@@ -207,10 +208,12 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   let mainEntranceId = -1;
   let isMainEntrancePublished = false;
 
-  if (params !== undefined) {
+  const servicepointId = await getServicepointIdFromTargetId(params?.targetId);
+
+  if (servicepointId > 0) {
     try {
       const servicepointBackendDetailResp = await fetch(
-        `${API_URL_BASE}${API_FETCH_BACKEND_SERVICEPOINT}?servicepoint_id=${params.servicepointId}&format=json`,
+        `${API_URL_BASE}${API_FETCH_BACKEND_SERVICEPOINT}?servicepoint_id=${servicepointId}&format=json`,
         {
           headers: new Headers({ Authorization: getTokenHash() }),
         }

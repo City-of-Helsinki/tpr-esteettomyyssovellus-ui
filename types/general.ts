@@ -352,12 +352,23 @@ export interface ChangeProps {
   changed?: string;
   servicepointId?: number;
   servicepointName?: string;
+  entranceId?: number;
   newAddress?: string;
   oldAddress?: string;
   newAddressNumber?: string;
   oldAddressNumber?: string;
   newAddressCity?: string;
   oldAddressCity?: string;
+  newEasting?: number;
+  newNorthing?: number;
+  distance?: number;
+  user?: string;
+  skip?: boolean;
+}
+
+export interface TargetProps {
+  servicepointId?: number;
+  entranceId?: number;
   user?: string;
   skip?: boolean;
 }
