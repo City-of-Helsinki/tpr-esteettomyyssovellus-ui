@@ -288,6 +288,11 @@ const EntranceAccessibility = ({
 
   const filteredPlaces = accessibilityPlaceData.filter((place) => place.language_id === curLocaleId);
 
+  // Show the continue button if the main entrance does not exist and the top-level question has not been answered yet
+  // Show the save/preview buttons if the main entrance exists, or this is an additional entrance,
+  // or the top-level question has been answered and the continue button has been clicked
+  const hasTopLevelAnswer = isMainEntrancePublished || formId >= 1 || (curAnsweredChoices.length > 0 && isContinueClicked);
+
   // map visible blocks & questions & answers
   const visibleBlocks =
     questionBlocksData && questionsData && questionChoicesData
@@ -301,7 +306,7 @@ const EntranceAccessibility = ({
 
           const isVisible =
             (block.visible_if_question_choice === null && block.language_id === curLocaleId) ||
-            (answersIncludeAllVisibleQuestions && block.language_id === curLocaleId && (isMainEntrancePublished || isContinueClicked));
+            (answersIncludeAllVisibleQuestions && block.language_id === curLocaleId && hasTopLevelAnswer);
 
           const blockQuestions = isVisible
             ? questionsData.filter((question) => question.question_block_id === block.question_block_id && question.language_id === curLocaleId)
@@ -379,11 +384,6 @@ const EntranceAccessibility = ({
   const newEntranceHeader = formId === 0 ? i18n.t("common.mainEntrance") : i18n.t("common.newEntrance");
   const servicePointHeader = isExistingEntrance ? entranceHeader : newEntranceHeader;
   const subHeader = formId >= 2 ? "" : servicePointHeader;
-
-  // Show the continue button if the main entrance does not exist and the top-level question has not been answered yet
-  // Show the save/preview buttons if the main entrance exists, or this is an additional entrance,
-  // or the top-level question has been answered and the continue button has been clicked
-  const hasTopLevelAnswer = isMainEntrancePublished || formId >= 1 || (curAnsweredChoices.length > 0 && isContinueClicked);
 
   return (
     <Layout>
