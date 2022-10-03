@@ -1,11 +1,11 @@
-import React, { ChangeEvent, useRef, useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import {
   Checkbox,
+  FileInput,
   IconCross,
   IconLink,
   IconMinus,
   IconPlus,
-  IconUpload,
   Link as HdsLink,
   SelectionGroup,
   TextArea,
@@ -23,12 +23,14 @@ import {
 import { useAppDispatch } from "../state/hooks";
 import { EntranceLocationPhoto, EntrancePhotoProps } from "../types/general";
 import { BackendEntranceAnswer } from "../types/backendModels";
+import { MAX_PHOTO_BYTES, PHOTO_FILE_TYPES } from "../types/constants";
 import styles from "./EntrancePhoto.module.scss";
 
 // usage: entrance location photo page picture components
 // notes: this component has both "upload" and "link/url" image components for they are such similar
 const EntrancePhoto = ({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Element => {
   const i18n = useI18n();
+  const curLocale: string = i18n.locale();
   const dispatch = useAppDispatch();
 
   const [onlyLink, setOnlyLink] = useState(false);
@@ -37,8 +39,6 @@ const EntrancePhoto = ({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
 
   const { entrance_id, modifiedAnswer, modifiedPhotoBase64, termsAccepted, invalidValues = [] } = entranceLocationPhoto;
   const { photo_url, photo_text_fi, photo_text_sv, photo_text_en, photo_source_text } = modifiedAnswer || {};
-
-  const hiddenFileInput = useRef<HTMLInputElement>(null);
 
   const updateLocationPhoto = (updatedLocationPhoto: EntranceLocationPhoto) => {
     dispatch(
@@ -76,14 +76,6 @@ const EntrancePhoto = ({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
     });
   };
 
-  const handleAddImageFromDevice = (): void => {
-    setOnlyLink(false);
-
-    if (hiddenFileInput && hiddenFileInput.current) {
-      hiddenFileInput.current.click();
-    }
-  };
-
   const handleAddImageLink = (): void => {
     setOnlyLink(true);
     setLinkInput(true);
@@ -101,9 +93,28 @@ const EntrancePhoto = ({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
   };
   */
 
-  const handleImageAdded = async (e?: ChangeEvent<HTMLInputElement>) => {
-    if (e && e.target.files && e.target.files.length > 0) {
-      const img = e.target.files[0];
+  const handleOnDelete = () => {
+    updateLocationPhoto({
+      ...entranceLocationPhoto,
+      modifiedAnswer: {
+        ...((modifiedAnswer || {}) as BackendEntranceAnswer),
+        photo_url: undefined,
+        photo_text_fi: undefined,
+        photo_text_sv: undefined,
+        photo_text_en: undefined,
+        photo_source_text: undefined,
+      },
+      modifiedPhotoBase64: undefined,
+    });
+    setLinkInput(false);
+  };
+
+  const handleImageAdded = async (files: File[]) => {
+    if (files && files.length > 0) {
+      // Image selected
+      setOnlyLink(false);
+
+      const img = files[0];
 
       // Read the image file and store it as a base64 string
       const reader = new FileReader();
@@ -123,6 +134,9 @@ const EntrancePhoto = ({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
         console.log("ERROR", reader.error);
       };
       reader.readAsDataURL(img);
+    } else {
+      // Image removed
+      handleOnDelete();
     }
   };
 
@@ -143,22 +157,6 @@ const EntrancePhoto = ({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
     } else {
       handleAddInvalidValue(fieldId, fieldLabel);
     }
-  };
-
-  const handleOnDelete = () => {
-    updateLocationPhoto({
-      ...entranceLocationPhoto,
-      modifiedAnswer: {
-        ...((modifiedAnswer || {}) as BackendEntranceAnswer),
-        photo_url: undefined,
-        photo_text_fi: undefined,
-        photo_text_sv: undefined,
-        photo_text_en: undefined,
-        photo_source_text: undefined,
-      },
-      modifiedPhotoBase64: undefined,
-    });
-    setLinkInput(false);
   };
 
   // only update state after X (0.5) sec from prev KeyDown, set Alt text with correct lang
@@ -265,14 +263,23 @@ const EntrancePhoto = ({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
 
           {!modifiedPhotoBase64 && !photo_url && !linkInput && (
             <>
-              <QuestionButton variant="secondary" iconRight={<IconUpload aria-hidden />} onClickHandler={handleAddImageFromDevice}>
-                {i18n.t("additionalInfo.chooseFromDevice")}
-              </QuestionButton>
-              <QuestionButton variant="secondary" iconRight={<IconLink aria-hidden />} onClickHandler={() => handleAddImageLink()}>
-                {i18n.t("additionalInfo.addPictureLink")}
-              </QuestionButton>
+              <div className={styles.fileinput}>
+                <FileInput
+                  id={`fileinput`}
+                  language={curLocale as "fi" | "sv" | "en"}
+                  label=""
+                  buttonLabel={i18n.t("additionalInfo.chooseFromDevice")}
+                  accept={PHOTO_FILE_TYPES}
+                  maxSize={MAX_PHOTO_BYTES}
+                  onChange={handleImageAdded}
+                />
+              </div>
 
-              <input type="file" className={styles.hidden} ref={hiddenFileInput} onChange={handleImageAdded} />
+              <div className={styles.linkinput}>
+                <QuestionButton variant="secondary" iconRight={<IconLink aria-hidden />} onClickHandler={() => handleAddImageLink()}>
+                  {i18n.t("additionalInfo.addPictureLink")}
+                </QuestionButton>
+              </div>
             </>
           )}
 

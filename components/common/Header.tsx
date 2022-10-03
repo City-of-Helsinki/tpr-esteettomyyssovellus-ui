@@ -1,6 +1,6 @@
 // this files code from marketing project: needs editing or deleting
 
-import React, { KeyboardEvent, ReactElement, useEffect, useState } from "react";
+import React, { KeyboardEvent, ReactElement } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useI18n } from "next-localization";
