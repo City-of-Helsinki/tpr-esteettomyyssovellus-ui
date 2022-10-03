@@ -47,6 +47,7 @@ const QuestionDropdown = ({ options, placeholder = "--Valitse--", label = "", qu
 
   return options ? (
     <Select
+      // aria-labelledby={`question_${questionId}`}
       className={style.selectDropdown}
       label={label}
       placeholder={placeholder === "--Valitse--" ? i18n.t("accessibilityForm.choose") : placeholder}

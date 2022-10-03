@@ -126,7 +126,7 @@ const QuestionContainer = ({ question, accessibilityPlaces, children }: Question
       <div className={styles.questionwrapper}>
         <div className={styles.questioncontainer}>
           <div className={styles.maintext}>
-            <p>
+            <p id={`question_${questionNumber}`}>
               {questionNumber} {questionText}
             </p>
             {questionInfo || photoUrl || photoTexts ? (
