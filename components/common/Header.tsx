@@ -68,6 +68,7 @@ const Header = ({ isSummary, children }: HeaderProps): ReactElement => {
         title={i18n.t("common.header.title")}
         titleAriaLabel={i18n.t("common.header.title")}
         // titleUrl={`${router.basePath}/${router.locale}`}
+        titleUrl={`${router.asPath}`}
         menuToggleAriaLabel="menu"
         skipTo="#content"
         skipToContentLabel={i18n.t("common.header.skipToContent")}
