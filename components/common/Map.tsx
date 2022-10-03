@@ -8,8 +8,9 @@ import styles from "./Map.module.scss";
 const Map = ({ initZoom, curLocation, setLocation, draggableMarker, makeStatic = false }: MapProps): JSX.Element => {
   const MapWrapper = dynamic(() => import("./MapWrapper"), { ssr: false });
 
+  // The map should not be visible to screen readers, so use aria-hidden here
   return (
-    <div className={!makeStatic ? styles.mapcontainer : styles.mapstaticpreview}>
+    <div className={!makeStatic ? styles.mapcontainer : styles.mapstaticpreview} aria-hidden>
       <MapWrapper
         initialZoom={initZoom}
         curLocation={curLocation}

@@ -110,9 +110,8 @@ const AccessibilityPlaceLocation = ({ entrancePlaceBox }: AccessibilityPlaceLoca
     return <Map curLocation={coordinatesWGS84} setLocation={setLocation} initZoom={MAP_MAX_ZOOM} draggableMarker />;
   }, [coordinatesWGS84, setLocation]);
 
-  // The map should not be visible to screen readers, so use aria-hidden here
   return (
-    <div className={styles.maincontainer} aria-hidden>
+    <div className={styles.maincontainer}>
       {(mapInput || isLocationValid(coordinatesWGS84)) && <div className={styles.mapcontainer}>{memoMap}</div>}
 
       <div id={`placeinputcontainer-${currentId}`} className={styles.inputcontainer}>
