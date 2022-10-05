@@ -34,8 +34,6 @@ const EntranceQuestionBlockComment = ({
   const curLocale: string = i18n.locale();
   const isLoading = useLoading();
 
-  const treeItems = [servicepointData.servicepoint_name ?? ""];
-
   // TODO - improve this by checking user on server-side
   const user = useAppSelector((state) => state.generalSlice.user);
   const isUserValid = !!user && user.length > 0;
@@ -49,7 +47,7 @@ const EntranceQuestionBlockComment = ({
   */
 
   const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
-  // const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
+  const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
   const curQuestionBlockComments = useAppSelector((state) => state.additionalInfoReducer.questionBlockComments);
   const curQuestionBlockCommentValid = useAppSelector((state) => state.additionalInfoReducer.questionBlockCommentValid);
 
@@ -75,6 +73,16 @@ const EntranceQuestionBlockComment = ({
     return blockComment.question_block_id === questionBlockId;
   });
   const { invalidValues = [] } = filteredQuestionBlockComment || {};
+
+  const treeItems = {
+    [servicepointData.servicepoint_name ?? ""]: hasData ? `/details/${servicepointData.servicepoint_id}` : "",
+    [i18n.t("servicepoint.contactFormSummaryHeader")]:
+      curEntranceId > 0 ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}` : `/entranceAccessibility/${curServicepointId}`,
+    [i18n.t("additionalInfo.additionalInfo")]:
+      curEntranceId > 0
+        ? `/blockComment/${curServicepointId}/${questionBlockId}/${curEntranceId}`
+        : `/blockComment/${curServicepointId}/${questionBlockId}`,
+  };
 
   return (
     <Layout>

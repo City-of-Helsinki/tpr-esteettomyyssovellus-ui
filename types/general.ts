@@ -28,6 +28,10 @@ export interface KeyValueString {
   [key: number]: string;
 }
 
+export interface PathTreeItem {
+  [text: string]: string;
+}
+
 export interface QuestionContainerProps {
   question: BackendQuestion;
   accessibilityPlaces: BackendPlace[];
@@ -76,7 +80,7 @@ export interface QuestionInfoProps {
 
 export interface PageHelpProps {
   formGuideData: BackendFormGuide[];
-  treeItems: string[];
+  treeItems: PathTreeItem;
 }
 
 export interface QuestionButtonProps {
@@ -331,7 +335,7 @@ export interface QuestionBlockProps {
 }
 
 export interface PathTreeProps {
-  treeItems: string[];
+  treeItems: PathTreeItem;
 }
 
 export interface QuestionAdditionalInfoProps {
@@ -486,6 +490,7 @@ export interface AccessibilityPlaceProps {
   servicepointData: BackendServicepoint;
   entranceData: BackendEntrance;
   accessibilityPlaceData: BackendPlace[];
+  placeId: number;
   formGuideData: BackendFormGuide[];
   formId: number;
 }

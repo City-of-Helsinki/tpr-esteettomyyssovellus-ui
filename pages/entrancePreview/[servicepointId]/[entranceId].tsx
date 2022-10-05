@@ -83,7 +83,6 @@ const Preview = ({
   const curLocale = i18n.locale();
   const dispatch = useAppDispatch();
   const isLoading = useLoading();
-  const treeItems = [servicepointData.servicepoint_name ?? ""];
 
   const [isSendingComplete, setSendingComplete] = useState(false);
 
@@ -267,6 +266,12 @@ const Preview = ({
 
   const curLocaleId: number = LanguageLocales[i18n.locale() as keyof typeof LanguageLocales];
   const filteredPlaces = accessibilityPlaceData.filter((place) => place.language_id === curLocaleId);
+
+  const treeItems = {
+    [servicepointData.servicepoint_name ?? ""]: hasData ? `/details/${servicepointData.servicepoint_id}` : "",
+    [i18n.t("servicepoint.contactFormSummaryHeader")]: `/entranceAccessibility/${servicepointData.servicepoint_id}/${entranceId}`,
+    [i18n.t("servicepoint.contactFormPreviewHeader")]: `/entrancePreview/${servicepointData.servicepoint_id}/${entranceId}`,
+  };
 
   return (
     <Layout>

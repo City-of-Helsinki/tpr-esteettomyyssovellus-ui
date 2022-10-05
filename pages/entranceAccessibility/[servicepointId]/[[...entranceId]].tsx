@@ -95,7 +95,7 @@ const EntranceAccessibility = ({
   }, []);
   */
 
-  // const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
+  const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
   const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
   // const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
   const curAnswers = useAppSelector((state) => state.formReducer.answers);
@@ -104,8 +104,6 @@ const EntranceAccessibility = ({
   const curInvalidBlocks = useAppSelector((state) => state.formReducer.invalidBlocks);
   const isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
   const startedAnswering = useAppSelector((state) => state.formReducer.startedAnswering);
-
-  const treeItems = [servicepointData.servicepoint_name ?? "", i18n.t("servicepoint.contactFormSummaryHeader")];
 
   const hasData = Object.keys(servicepointData).length > 0;
   const isExistingEntrance = hasData && Object.keys(entranceData).length > 0;
@@ -392,6 +390,12 @@ const EntranceAccessibility = ({
   const newEntranceHeader = formId === 0 ? i18n.t("common.mainEntrance") : i18n.t("common.newEntrance");
   const servicePointHeader = isExistingEntrance ? entranceHeader : newEntranceHeader;
   const subHeader = formId >= 2 ? "" : servicePointHeader;
+
+  const treeItems = {
+    [servicepointData.servicepoint_name ?? ""]: hasData ? `/details/${servicepointData.servicepoint_id}` : "",
+    [i18n.t("servicepoint.contactFormSummaryHeader")]:
+      curEntranceId > 0 ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}` : `/entranceAccessibility/${curServicepointId}`,
+  };
 
   return (
     <Layout>

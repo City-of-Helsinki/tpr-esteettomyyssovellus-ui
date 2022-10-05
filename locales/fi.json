@@ -46,6 +46,7 @@
     "generalMainInfoIsClose": "Ohje",
     "generalChoose": "Valitse",
     "generalExplanation": "Selite",
+    "breadcrumb": "Leipämuru",
     "buttons": {
       "saveAndReturn": "Tallenna ja palaa",
       "return": "Palaa",

@@ -46,6 +46,7 @@
     "generalMainInfoIsClose": "Help",
     "generalChoose": "Choose",
     "generalExplanation": "Explanation",
+    "breadcrumb": "Breadcrumb",
     "buttons": {
       "saveAndReturn": "Save and return",
       "return": "Return",

@@ -39,6 +39,7 @@ const AccessibilityPlace = ({
   servicepointData,
   entranceData,
   accessibilityPlaceData,
+  placeId,
   formGuideData,
   formId,
 }: AccessibilityPlaceProps): ReactElement => {
@@ -46,8 +47,6 @@ const AccessibilityPlace = ({
   const curLocale: string = i18n.locale();
   const isLoading = useLoading();
   const dispatch = useAppDispatch();
-
-  const treeItems = [servicepointData.servicepoint_name ?? ""];
 
   // TODO - improve this by checking user on server-side
   const user = useAppSelector((state) => state.generalSlice.user);
@@ -122,6 +121,16 @@ const AccessibilityPlace = ({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const useMountEffect = (fun: () => void) => useEffect(fun, []);
   useMountEffect(initPlaceBoxes);
+
+  const treeItems = {
+    [servicepointData.servicepoint_name ?? ""]: hasData ? `/details/${servicepointData.servicepoint_id}` : "",
+    [i18n.t("servicepoint.contactFormSummaryHeader")]:
+      curEntranceId > 0 ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}` : `/entranceAccessibility/${curServicepointId}`,
+    [`${i18n.t("additionalInfo.additionalInfo")} > ${filteredPlaceData.name}`]:
+      curEntranceId > 0
+        ? `/accessibilityPlace/${curServicepointId}/${placeId}/${curEntranceId}`
+        : `/accessibilityPlace/${curServicepointId}/${placeId}`,
+  };
 
   return (
     <Layout>
@@ -204,11 +213,14 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   let entranceData: BackendEntrance = {} as BackendEntrance;
   let servicepointData: BackendServicepoint = {} as BackendServicepoint;
   let accessibilityPlaceData: BackendPlace[] = [];
+  let placeId = -1;
   let formGuideData: BackendFormGuide[] = [];
   let formId = -1;
 
   if (params !== undefined) {
     try {
+      placeId = Number(params.placeId);
+
       const servicepointBackendDetailResp = await fetch(
         `${API_URL_BASE}${API_FETCH_BACKEND_SERVICEPOINT}?servicepoint_id=${params.servicepointId}&format=json`,
         {
@@ -304,6 +316,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       servicepointData,
       entranceData,
       accessibilityPlaceData,
+      placeId,
       formGuideData,
       formId,
     },
