@@ -391,12 +391,14 @@ const EntranceAccessibility = ({
   const servicePointHeader = isExistingEntrance ? entranceHeader : newEntranceHeader;
   const subHeader = formId >= 2 ? "" : servicePointHeader;
 
-  const treeItems = {
-    [servicepointData.servicepoint_name ?? ""]: hasData ? `/details/${servicepointData.servicepoint_id}` : "",
-    [i18n.t("servicepoint.contactFormSummaryHeader")]:
-      curEntranceId > 0 ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}` : `/entranceAccessibility/${curServicepointId}`,
-  };
-
+  const treeItems =
+    formId >= 2
+      ? {}
+      : {
+          [servicepointData.servicepoint_name ?? ""]: hasData ? `/details/${servicepointData.servicepoint_id}` : "",
+          [i18n.t("servicepoint.contactFormSummaryHeader")]:
+            curEntranceId > 0 ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}` : `/entranceAccessibility/${curServicepointId}`,
+        };
   return (
     <Layout>
       <Head>

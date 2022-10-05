@@ -28,8 +28,8 @@ const Footer = ({ isSummary }: FooterProps): ReactElement => {
       </HdsFooter.Navigation>
       <HdsFooter.Base copyrightHolder={i18n.t("common.footer.copyright")} copyrightText={i18n.t("common.footer.rightsReserved")}>
         <HdsFooter.Item as="div" className={styles.helsinkiLogoItem}>
-          <div className={styles.helsinkiLogoContainer} aria-hidden>
-            <Logo size="medium" />
+          <div className={styles.helsinkiLogoContainer}>
+            <Logo size="medium" aria-hidden />
             <span className={styles.helsinkiLogoText}>{i18n.t("common.footer.logotext")}</span>
           </div>
         </HdsFooter.Item>
