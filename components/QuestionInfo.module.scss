@@ -1,18 +1,22 @@
 @import "~hds-design-tokens/lib/all.scss";
 @import "../styles/mixins.scss";
 
-.infobutton {
-  color: $color-bus;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  margin-bottom: $spacing-s;
-
-  &:hover {
-    text-decoration: underline;
+.infocontainer {
+  @include media(xs) {
+    margin-bottom: $spacing-s;
   }
 
-  svg {
-    padding-right: $spacing-2-xs;
+  button {
+    color: $color-bus !important;
+    font-weight: 400;
+
+    &:hover {
+      background-color: unset;
+    }
+  }
+
+  .contentcontainer {
+    background-color: unset;
+    padding: 0;
   }
 }

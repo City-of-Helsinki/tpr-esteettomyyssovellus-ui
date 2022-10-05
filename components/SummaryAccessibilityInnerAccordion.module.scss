@@ -4,10 +4,16 @@
 .maincontainer {
   margin-top: $spacing-s;
 
-  button:focus {
-    color: var(--color-hover);
-    background-color: var(--background-color-hover);
-    text-decoration: underline;
+  button {
+    > div:first-child {
+      display: none;
+    }
+
+    &:focus {
+      color: var(--color-hover);
+      background-color: var(--background-color-hover);
+      text-decoration: underline;
+    }
   }
 
   .contentcontainer {
