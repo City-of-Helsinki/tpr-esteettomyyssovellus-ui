@@ -293,6 +293,14 @@ const EntranceAccessibility = ({
   // or the top-level question has been answered and the continue button has been clicked
   const hasTopLevelAnswer = isMainEntrancePublished || formId >= 1 || (curAnsweredChoices.length > 0 && isContinueClicked);
 
+  useEffect(() => {
+    // Focus on the first question block after the continue button is clicked
+    if (isContinueClicked) {
+      // document.getElementById("questionblockid-1")?.focus();
+      window.location.href = "#questionblockid-1";
+    }
+  }, [isContinueClicked]);
+
   // map visible blocks & questions & answers
   const visibleBlocks =
     questionBlocksData && questionsData && questionChoicesData
