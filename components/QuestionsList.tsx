@@ -35,6 +35,7 @@ const QuestionsList = ({ questions, answerChoices, accessibilityPlaces }: Questi
               <QuestionDropdown
                 key={question.question_id}
                 options={answerOptions}
+                label={`${question.question_code} ${question.text}`}
                 questionId={question.question_id}
                 blockId={question.question_block_id}
               />
