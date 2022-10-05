@@ -57,6 +57,8 @@
       "no": "Nej"
     },
     "message": {
+      "valid": "Giltig",
+      "invalid": "Ogiltig",
       "validationFailed": {
         "title": "Det finns fel i blanketten",
         "message": "Kontrollera uppgifterna, de felaktiga punkterna är markerade här under"

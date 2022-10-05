@@ -57,6 +57,8 @@
       "no": "Ei"
     },
     "message": {
+      "valid": "Pätevä",
+      "invalid": "Virheellinen",
       "validationFailed": {
         "title": "Lomakkeella on virheitä",
         "message": "Tarkista tiedot, virheellisiä kohtia on korostettu alla"

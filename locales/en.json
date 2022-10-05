@@ -57,6 +57,8 @@
       "no": "No"
     },
     "message": {
+      "valid": "Valid",
+      "invalid": "Invalid",
       "validationFailed": {
         "title": "Errors in the form",
         "message": "Please check the information, incorrect fields are highlighted below"
