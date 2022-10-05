@@ -199,6 +199,7 @@ export interface SummaryAccessibilityPlaceGroupProps {
 export interface SummaryAccessibilityPlaceProps {
   entrancePlaceName: string;
   entrancePlaceData?: BackendEntrancePlace[];
+  uniqueId: string;
 }
 
 export interface SummaryModifyButtonProps {

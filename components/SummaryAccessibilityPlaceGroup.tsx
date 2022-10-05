@@ -61,11 +61,14 @@ const SummaryAccessibilityPlaceGroup = ({
         <CustomAccordion heading={i18n.t("servicepoint.picturesLocations")}>
           <>
             {Object.keys(groupedPlaceData).map((entrancePlaceId) => {
+              const uniqueId = `${entranceKey}_${sentenceGroupKey}_${entrancePlaceId}`;
+
               return (
                 <SummaryAccessibilityPlace
-                  key={`entrance_sentence_group_place_${entranceKey}_${sentenceGroupKey}_${entrancePlaceId}`}
+                  key={`entrance_sentence_group_place_${uniqueId}`}
                   entrancePlaceName={getEntrancePlaceName(entrancePlaceId)}
                   entrancePlaceData={groupedPlaceData[entrancePlaceId]}
+                  uniqueId={uniqueId}
                 />
               );
             })}
