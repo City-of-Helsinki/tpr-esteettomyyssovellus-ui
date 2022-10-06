@@ -237,9 +237,26 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
   return (
     <div className={styles.maincontainer}>
       {(modifiedPhotoBase64 || photo_url) && (
-        <div className={styles.picture}>
-          <img src={modifiedPhotoBase64 ?? photo_url} alt="" />
-        </div>
+        <>
+          <div className={styles.picture}>
+            <img src={modifiedPhotoBase64 ?? photo_url} alt="" />
+          </div>
+          {photo_url && (
+            <div className={styles.pictureurl}>
+              <HdsLink
+                href={photo_url}
+                size="M"
+                openInNewTab
+                openInNewTabAriaLabel={i18n.t("common.opensInANewTab")}
+                external
+                openInExternalDomainAriaLabel={i18n.t("common.opensExternal")}
+                disableVisitedStyles
+              >
+                {i18n.t("additionalInfo.pictureInputLink")}
+              </HdsLink>
+            </div>
+          )}
+        </>
       )}
 
       <div className={styles.inputcontainer}>
