@@ -58,9 +58,9 @@
     },
     "message": {
       "valid": "Giltig",
-      "invalid": "Ogiltig",
+      "invalid": "Information saknas",
       "validationFailed": {
-        "title": "Det finns fel i blanketten",
+        "title": "Blanketten saknar information",
         "message": "Kontrollera uppgifterna, de felaktiga punkterna är markerade här under"
       }
     },

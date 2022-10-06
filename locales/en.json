@@ -58,9 +58,9 @@
     },
     "message": {
       "valid": "Valid",
-      "invalid": "Invalid",
+      "invalid": "Information missing",
       "validationFailed": {
-        "title": "Errors in the form",
+        "title": "The form is missing information",
         "message": "Please check the information, incorrect fields are highlighted below"
       }
     },

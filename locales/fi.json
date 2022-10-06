@@ -58,9 +58,9 @@
     },
     "message": {
       "valid": "Pätevä",
-      "invalid": "Virheellinen",
+      "invalid": "Tietoja puuttuu",
       "validationFailed": {
-        "title": "Lomakkeella on virheitä",
+        "title": "Lomakkeelta puuttuu tietoja",
         "message": "Tarkista tiedot, virheellisiä kohtia on korostettu alla"
       }
     },
