@@ -159,6 +159,7 @@ const SummarySideNavigation = ({
           <SummaryAccessibilityPlace
             entrancePlaceName={getEntrancePlaceName(selectedGroupId)}
             entrancePlaceData={groupedEntrancePlaceData ? groupedEntrancePlaceData[selectedGroupId] : undefined}
+            uniqueId={`${entranceKey}_${selectedGroupId}`}
           />
         )}
       </div>
