@@ -2,7 +2,26 @@
 @import "../../styles/mixins.scss";
 
 .pathTree {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  .pathTreeList {
+    margin: 0;
+    padding-left: 0;
+    list-style: none;
+  }
+
+  .pathTreeItem {
+    display: inline;
+
+    a[aria-current="page"] {
+      font-weight: 700;
+    }
+  }
+
+  .pathTreeItem + .pathTreeItem::before {
+    display: inline-block;
+    margin: 0 $spacing-3-xs;
+    transform: rotate(15deg);
+    border-right: 0.1em solid currentcolor;
+    height: $spacing-xs;
+    content: "";
+  }
 }

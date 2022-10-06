@@ -46,6 +46,7 @@
     "generalMainInfoIsClose": "Help",
     "generalChoose": "Choose",
     "generalExplanation": "Explanation",
+    "breadcrumb": "Breadcrumb",
     "buttons": {
       "saveAndReturn": "Save and return",
       "return": "Return",
@@ -56,8 +57,10 @@
       "no": "No"
     },
     "message": {
+      "valid": "Valid",
+      "invalid": "Information missing",
       "validationFailed": {
-        "title": "Errors in the form",
+        "title": "The form is missing information",
         "message": "Please check the information, incorrect fields are highlighted below"
       }
     },
@@ -146,7 +149,7 @@
     "locationInstructions": "Instructions for creating LOCATION",
     "picturesInstructions": "Instructions for adding PICTURES",
     "commentInstructions": "Instructions for adding COMMENT",
-    "pictureLabel": "Picture caption",
+    "pictureLabel": "Picture caption in Finnish",
     "pictureHelperText": "The text is used as alt-text and the caption in Finnish",
     "generalTooltipButtonLabel": "Help",
     "generalTooltipLabel": "Help",
@@ -201,7 +204,7 @@
     "fillPlaceData2": "information with images and/or location information.",
     "orderPlaceData": "Arrange the information with most important at the top and least important at the bottom.",
     "mandatoryPlaceData": "Information marked with an asterisk (*) is mandatory.",
-    "additionalInfoSet": "Additional information set",
+    "additionalInfoSet": "Picture/location",
     "addAdditionalInfoSet": "Add new",
     "order": "Arrange",
     "orderButtons": {

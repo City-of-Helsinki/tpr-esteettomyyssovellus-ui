@@ -30,8 +30,6 @@ const EntranceBlockLocationPhoto = ({ servicepointData, entranceData, formGuideD
   const curLocale: string = i18n.locale();
   const isLoading = useLoading();
 
-  const treeItems = [servicepointData.servicepoint_name ?? ""];
-
   // TODO - improve this by checking user on server-side
   const user = useAppSelector((state) => state.generalSlice.user);
   const isUserValid = !!user && user.length > 0;
@@ -45,7 +43,7 @@ const EntranceBlockLocationPhoto = ({ servicepointData, entranceData, formGuideD
   */
 
   const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
-  // const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
+  const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
   const curEntranceLocationPhoto = useAppSelector((state) => state.additionalInfoReducer.entranceLocationPhoto);
   const curEntranceLocationPhotoValid = useAppSelector((state) => state.additionalInfoReducer.entranceLocationPhotoValid);
 
@@ -67,6 +65,14 @@ const EntranceBlockLocationPhoto = ({ servicepointData, entranceData, formGuideD
   const newEntranceHeader = formId === 0 ? i18n.t("common.mainEntrance") : i18n.t("common.newEntrance");
   const servicePointHeader = isExistingEntrance ? entranceHeader : newEntranceHeader;
   const subHeader = formId >= 2 ? "" : servicePointHeader;
+
+  const treeItems = {
+    [servicepointData.servicepoint_name ?? ""]: hasData ? `/details/${servicepointData.servicepoint_id}` : "",
+    [i18n.t("servicepoint.contactFormSummaryHeader")]:
+      curEntranceId > 0 ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}` : `/entranceAccessibility/${curServicepointId}`,
+    [i18n.t("additionalInfo.additionalInfo")]:
+      curEntranceId > 0 ? `/entranceLocationPhoto/${curServicepointId}/${curEntranceId}` : `/entranceLocationPhoto/${curServicepointId}`,
+  };
 
   return (
     <Layout>

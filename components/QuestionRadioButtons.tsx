@@ -52,7 +52,12 @@ const QuestionRadioButtons = ({
   const secondId = `v-radio${secondValue}`;
 
   return (
-    <SelectionGroup direction="horizontal" label={mainLabel} errorText={isInvalid ? i18n.t("common.missingAnswerValue") : ""}>
+    <SelectionGroup
+      aria-labelledby={`question_${questionId}`}
+      direction="horizontal"
+      label={mainLabel}
+      errorText={isInvalid ? i18n.t("common.missingAnswerValue") : ""}
+    >
       <RadioButton
         id={firstId}
         name={firstValue}

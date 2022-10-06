@@ -46,6 +46,7 @@
     "generalMainInfoIsClose": "Ohje",
     "generalChoose": "Valitse",
     "generalExplanation": "Selite",
+    "breadcrumb": "Leipämuru",
     "buttons": {
       "saveAndReturn": "Tallenna ja palaa",
       "return": "Palaa",
@@ -56,8 +57,10 @@
       "no": "Ei"
     },
     "message": {
+      "valid": "Pätevä",
+      "invalid": "Tietoja puuttuu",
       "validationFailed": {
-        "title": "Lomakkeella on virheitä",
+        "title": "Lomakkeelta puuttuu tietoja",
         "message": "Tarkista tiedot, virheellisiä kohtia on korostettu alla"
       }
     },
@@ -146,7 +149,7 @@
     "locationInstructions": "Lisää tähän ohjeita LOKAATION lisäämiseen",
     "picturesInstructions": "Lisää tähän ohjeita KUVIEN lisäämiseen",
     "commentInstructions": "Lisää tähän 'ohjeita' KOMMENTIN lisäämiseen",
-    "pictureLabel": "Kuvateksti",
+    "pictureLabel": "Kuvateksti suomeksi",
     "pictureHelperText": "Tekstiä käytetään alt-tekstinä ja kuvatekstinä suomeksi",
     "generalTooltipButtonLabel": "Apua",
     "generalTooltipLabel": "Apua",
@@ -201,7 +204,7 @@
     "fillPlaceData2": "tietoja kuvilla ja/tai sijaintitiedolla.",
     "orderPlaceData": "Järjestä tiedoista tärkein ylimmäksi ja vähimmän tärkein alimmaksi.",
     "mandatoryPlaceData": "Tähdellä (*) merkityt tiedot on pakollisia.",
-    "additionalInfoSet": "Lisätietokokonaisuus",
+    "additionalInfoSet": "Kuva/sijainti",
     "addAdditionalInfoSet": "Lisää uusi",
     "order": "Järjestä",
     "orderButtons": {

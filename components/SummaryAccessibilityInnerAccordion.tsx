@@ -10,7 +10,7 @@ const SummaryAccessibilityInnerAccordion = ({ children }: { children: JSX.Elemen
 
   return (
     <div className={styles.maincontainer}>
-      <Button variant="supplementary" size="small" iconRight {...buttonProps}>
+      <Button variant="supplementary" size="small" iconLeft {...buttonProps}>
         {isOpen ? i18n.t("servicepoint.showLess") : i18n.t("servicepoint.showMore")}
       </Button>
       <Card className={styles.contentcontainer} {...contentProps}>

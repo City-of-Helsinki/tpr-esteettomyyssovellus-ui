@@ -95,7 +95,7 @@ const EntranceAccessibility = ({
   }, []);
   */
 
-  // const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
+  const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
   const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
   // const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
   const curAnswers = useAppSelector((state) => state.formReducer.answers);
@@ -104,8 +104,6 @@ const EntranceAccessibility = ({
   const curInvalidBlocks = useAppSelector((state) => state.formReducer.invalidBlocks);
   const isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
   const startedAnswering = useAppSelector((state) => state.formReducer.startedAnswering);
-
-  const treeItems = [servicepointData.servicepoint_name ?? "", i18n.t("servicepoint.contactFormSummaryHeader")];
 
   const hasData = Object.keys(servicepointData).length > 0;
   const isExistingEntrance = hasData && Object.keys(entranceData).length > 0;
@@ -293,6 +291,14 @@ const EntranceAccessibility = ({
   // or the top-level question has been answered and the continue button has been clicked
   const hasTopLevelAnswer = isMainEntrancePublished || formId >= 1 || (curAnsweredChoices.length > 0 && isContinueClicked);
 
+  useEffect(() => {
+    // Focus on the first question block after the continue button is clicked
+    if (isContinueClicked) {
+      // document.getElementById("questionblockid-1")?.focus();
+      window.location.href = "#questionblockid-1";
+    }
+  }, [isContinueClicked]);
+
   // map visible blocks & questions & answers
   const visibleBlocks =
     questionBlocksData && questionsData && questionChoicesData
@@ -385,6 +391,14 @@ const EntranceAccessibility = ({
   const servicePointHeader = isExistingEntrance ? entranceHeader : newEntranceHeader;
   const subHeader = formId >= 2 ? "" : servicePointHeader;
 
+  const treeItems =
+    formId >= 2
+      ? {}
+      : {
+          [servicepointData.servicepoint_name ?? ""]: hasData ? `/details/${servicepointData.servicepoint_id}` : "",
+          [i18n.t("servicepoint.contactFormSummaryHeader")]:
+            curEntranceId > 0 ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}` : `/entranceAccessibility/${curServicepointId}`,
+        };
   return (
     <Layout>
       <Head>

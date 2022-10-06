@@ -16,6 +16,10 @@
     }
   }
 
+  .pictureurl {
+    margin-top: $spacing-s;
+  }
+
   .inputcontainer {
     display: flex;
     flex-direction: row;
@@ -36,6 +40,23 @@
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
+
+      .fileinput {
+        width: 50%;
+
+        @include media(xs) {
+          width: 100%;
+        }
+
+        button {
+          margin-left: $spacing-2-xs;
+        }
+      }
+
+      .linkinput {
+        margin-top: $spacing-3-xs;
+        margin-bottom: $spacing-m;
+      }
     }
 
     .hidden {

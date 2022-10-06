@@ -1,6 +1,6 @@
 // this files code from marketing project: needs editing or deleting
 
-import React, { KeyboardEvent, ReactElement, useEffect, useState } from "react";
+import React, { KeyboardEvent, ReactElement } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useI18n } from "next-localization";
@@ -47,6 +47,7 @@ const Header = ({ isSummary, children }: HeaderProps): ReactElement => {
   };
 
   // This checks whether the view has become so thin, i.e. mobile view, that the languageselector component should change place.
+  /*
   const [width, setWidth] = useState(window.innerWidth);
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -60,6 +61,8 @@ const Header = ({ isSummary, children }: HeaderProps): ReactElement => {
   }, []);
   const isMobile = width < 768;
   const includeLanguageSelector = !isMobile;
+  */
+  const includeLanguageSelector = true;
 
   return (
     <>
@@ -68,6 +71,7 @@ const Header = ({ isSummary, children }: HeaderProps): ReactElement => {
         title={i18n.t("common.header.title")}
         titleAriaLabel={i18n.t("common.header.title")}
         // titleUrl={`${router.basePath}/${router.locale}`}
+        titleUrl={`${router.asPath}`}
         menuToggleAriaLabel="menu"
         skipTo="#content"
         skipToContentLabel={i18n.t("common.header.skipToContent")}
@@ -153,7 +157,7 @@ const Header = ({ isSummary, children }: HeaderProps): ReactElement => {
           )}
           {/* Hide header language selector when view is mobile.
           Instead show a language selector in the dropdown menu of the mobile header */}
-          {!includeLanguageSelector && (
+          {/*!includeLanguageSelector && (
             <div className={styles.mobileLanguages} role="region">
               <Navigation.Item
                 role="button"
@@ -186,7 +190,7 @@ const Header = ({ isSummary, children }: HeaderProps): ReactElement => {
                 onClick={() => changeLanguage("en")}
               />
             </div>
-          )}
+          )*/}
         </Navigation.Actions>
       </DynamicNavigation>
     </>

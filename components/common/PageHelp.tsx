@@ -1,7 +1,6 @@
 import { useI18n } from "next-localization";
-import { IconCrossCircle, IconQuestionCircle } from "hds-react";
+import { Button, Card, IconCrossCircle, IconQuestionCircle, useAccordion } from "hds-react";
 import PathTreeComponent from "./PathTreeComponent";
-import Button from "../QuestionButton";
 import QuestionFormGuide from "./QuestionFormGuide";
 import { useAppDispatch, useAppSelector } from "../../state/hooks";
 import { setHelpOpen } from "../../state/reducers/generalSlice";
@@ -14,38 +13,34 @@ const PageHelp = ({ formGuideData, treeItems }: PageHelpProps): JSX.Element => {
   const dispatch = useAppDispatch();
 
   const isHelpOpen = useAppSelector((state) => state.generalSlice.isHelpOpen);
+  const { isOpen, buttonProps, contentProps } = useAccordion({ initiallyOpen: isHelpOpen });
 
   const handleToggleContent = () => {
-    dispatch(setHelpOpen(!isHelpOpen));
+    dispatch(setHelpOpen(!isOpen));
+    buttonProps.onClick();
   };
 
-  return !isHelpOpen ? (
-    <div id="help" className={styles.pageHelp}>
-      <div>
-        <PathTreeComponent treeItems={treeItems} />
-      </div>
-      <div className={styles.helpbutton}>
-        <Button variant="primary" iconLeft={<IconQuestionCircle aria-hidden />} onClickHandler={handleToggleContent}>
-          {i18n.t("common.generalMainInfoIsClose")}
-        </Button>
-      </div>
-    </div>
-  ) : (
-    <>
-      <div id="help" className={styles.pageHelp}>
+  return (
+    <div className={styles.helpcontainer}>
+      <div id="help" className={styles.pagehelp}>
         <div>
           <PathTreeComponent treeItems={treeItems} />
         </div>
         <div className={styles.helpbutton}>
-          <Button variant="secondary" iconLeft={<IconCrossCircle aria-hidden />} onClickHandler={handleToggleContent}>
-            {i18n.t("common.generalMainInfoIsOpen")}
+          <Button
+            variant={isOpen ? "secondary" : "primary"}
+            iconLeft={isOpen ? <IconCrossCircle aria-hidden /> : <IconQuestionCircle aria-hidden />}
+            {...buttonProps}
+            onClick={handleToggleContent}
+          >
+            {i18n.t("common.generalMainInfoIsClose")}
           </Button>
         </div>
       </div>
-      <div>
+      <Card className={styles.contentcontainer} {...contentProps}>
         <QuestionFormGuide formGuideData={formGuideData} />
-      </div>
-    </>
+      </Card>
+    </div>
   );
 };
 

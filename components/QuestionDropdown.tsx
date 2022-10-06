@@ -47,8 +47,9 @@ const QuestionDropdown = ({ options, placeholder = "--Valitse--", label = "", qu
 
   return options ? (
     <Select
+      aria-labelledby={`question_${questionId}`} // doesn't work for Select
       className={style.selectDropdown}
-      label={label}
+      label={label} // hidden label used by screen readers only
       placeholder={placeholder === "--Valitse--" ? i18n.t("accessibilityForm.choose") : placeholder}
       options={options}
       onChange={handleChange}

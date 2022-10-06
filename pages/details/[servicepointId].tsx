@@ -64,7 +64,6 @@ const Details = ({
   const curLocale: string = i18n.locale();
   const dispatch = useAppDispatch();
   const isLoading = useLoading();
-  const treeItems = [servicepointData.servicepoint_name ?? ""];
   const finnishDate = servicepointData.modified ? getFinnishDate(servicepointData.modified) : "";
 
   // TODO - improve this by checking user on server-side
@@ -122,6 +121,8 @@ const Details = ({
     servicepointData.address_no,
     servicepointData.address_city
   )}`;
+
+  const treeItems = { [servicepointData.servicepoint_name ?? ""]: `/details/${servicepointData.servicepoint_id}` };
 
   // Special case where the saved draft main entrance has a different id
   const mainEntranceIdToModify = draftMainEntranceId > 0 && mainEntranceId !== draftMainEntranceId ? draftMainEntranceId : mainEntranceId;

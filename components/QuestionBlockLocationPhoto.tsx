@@ -112,14 +112,14 @@ const QuestionBlockLocationPhoto = ({ block, canAddLocation, canAddPhoto }: Ques
                 </HdsLink>
               </div>
 
-              <SkipMapButton idToSkipTo="#afterMap" />
+              <SkipMapButton idToSkipTo={`#afterblockmap_${question_block_id}`} />
             </div>
 
             <div className={styles.detailcontainer}>
               <div className={styles.mapcontainer} aria-hidden>
                 <Map curLocation={coordinatesWGS84} initZoom={MAP_MAX_ZOOM} draggableMarker={false} makeStatic />
 
-                <div id="afterMap" />
+                <div id={`afterblockmap_${question_block_id}`} />
               </div>
             </div>
           </div>

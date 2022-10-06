@@ -8,7 +8,7 @@ import { convertCoordinates, isLocationValid } from "../utils/utilFunctions";
 import styles from "./SummaryAccessibilityPlace.module.scss";
 
 // usage: component for accessibility place location and picture, used in details page
-const SummaryAccessibilityPlace = ({ entrancePlaceName, entrancePlaceData }: SummaryAccessibilityPlaceProps): JSX.Element => {
+const SummaryAccessibilityPlace = ({ entrancePlaceName, entrancePlaceData, uniqueId }: SummaryAccessibilityPlaceProps): JSX.Element => {
   const i18n = useI18n();
 
   return (
@@ -67,13 +67,13 @@ const SummaryAccessibilityPlace = ({ entrancePlaceName, entrancePlaceData }: Sum
                         {location_text_fi && <div>{`FI: ${location_text_fi ?? ""}`}</div>}
                         {location_text_sv && <div>{`SV: ${location_text_sv ?? ""}`}</div>}
                         {location_text_en && <div>{`EN: ${location_text_en ?? ""}`}</div>}
-                        <SkipMapButton idToSkipTo="#afterMap" />
+                        <SkipMapButton idToSkipTo={`#afterplacemap_${uniqueId}_${index}`} />
                       </div>
 
                       <div className={styles.map} aria-hidden>
                         <Map curLocation={coordinatesWGS84} initZoom={MAP_MAX_ZOOM} draggableMarker={false} makeStatic />
 
-                        <div id="afterMap" />
+                        <div id={`afterplacemap_${uniqueId}_${index}`} />
                       </div>
                     </div>
                   </div>

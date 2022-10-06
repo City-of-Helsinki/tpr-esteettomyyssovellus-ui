@@ -41,7 +41,7 @@ const AccessibilityPlaceBox = ({ entrancePlaceBox, entrancePlaceName, canAddLoca
     <div className={styles.maincontainer}>
       <div id={`placebox-${order_number}`} className={styles.headingcontainer}>
         <div className={styles.headingsection}>
-          <div className={`${styles.headertext} ${styles.ordernumber}`}>{order_number}</div>
+          <div className={`${styles.headertext} ${styles.ordernumber}`}>{`${order_number}. ${i18n.t("additionalInfo.additionalInfoSet")}`}</div>
           {/*<div className={styles.headertext}>{`${i18n.t("additionalInfo.additionalInfoSet")} ${order_number}`}</div>*/}
         </div>
 
@@ -75,13 +75,13 @@ const AccessibilityPlaceBox = ({ entrancePlaceBox, entrancePlaceName, canAddLoca
       </div>
 
       <div className={styles.contentcontainer}>
-        <div>
+        <div role="group" aria-label={`${i18n.t("additionalInfo.pictureTitle")} ${order_number} - '${entrancePlaceName}'`}>
           <div className={styles.contentheader}>{`${i18n.t("additionalInfo.pictureTitle")} ${order_number} - '${entrancePlaceName}'`}</div>
           <AccessibilityPlacePicture entrancePlaceBox={entrancePlaceBox} />
         </div>
 
         {canAddLocation && (
-          <div>
+          <div role="group" aria-label={`${i18n.t("additionalInfo.locationTitle")} ${order_number} - '${entrancePlaceName}'`}>
             <div className={styles.contentheader}>{`${i18n.t("additionalInfo.locationTitle")} ${order_number} - '${entrancePlaceName}'`}</div>
             <SkipMapButton idToSkipTo={`#placeinputcontainer-${order_number}`} />
             <AccessibilityPlaceLocation entrancePlaceBox={entrancePlaceBox} />

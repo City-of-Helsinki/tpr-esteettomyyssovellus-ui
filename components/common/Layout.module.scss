@@ -15,24 +15,9 @@
     flex-direction: column;
     flex-grow: 0;
 
-    @include media(xs) {
-      width: $container-width-xs;
-    }
-
-    @include media(s) {
-      width: $container-width-s;
-    }
-
-    @include media(m) {
-      width: $container-width-m;
-    }
-
-    @include media(l) {
-      width: $container-width-l;
-    }
-
-    @include media(xl) {
-      width: $container-width-xl;
-    }
+    // HDS 2.0 only has container-width-xl
+    max-width: $container-width-xl;
+    width: 100%;
+    padding: 0 $spacing-s;
   }
 }
