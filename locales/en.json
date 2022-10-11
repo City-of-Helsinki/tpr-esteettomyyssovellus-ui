@@ -59,6 +59,7 @@
     "message": {
       "valid": "Valid",
       "invalid": "Information missing",
+      "pictureLocationMissing": "Picture or location is missing",
       "validationFailed": {
         "title": "The form is missing information",
         "message": "Please check the information, incorrect fields are highlighted below"

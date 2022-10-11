@@ -64,6 +64,7 @@ const AccessibilityPlace = ({
   const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
   const curEntrancePlaceBoxes = useAppSelector((state) => state.additionalInfoReducer.entrancePlaceBoxes);
   const curEntrancePlaceValid = useAppSelector((state) => state.additionalInfoReducer.entrancePlaceValid);
+  const entrancePlaceValidationTime = useAppSelector((state) => state.additionalInfoReducer.entrancePlaceValidationTime);
 
   const hasData = Object.keys(servicepointData).length > 0 && curServicepointId === servicepointData.servicepoint_id;
   const isExistingEntrance = hasData && Object.keys(entranceData).length > 0;
@@ -161,7 +162,11 @@ const AccessibilityPlace = ({
                   deletedEntrancePlaceBoxes={filteredDeletedEntrancePlaceBoxes}
                 />
                 {!curEntrancePlaceValid && (
-                  <ValidationSummary pageValid={curEntrancePlaceValid} validationSummary={filteredEntrancePlaceInvalidValues} />
+                  <ValidationSummary
+                    pageValid={curEntrancePlaceValid}
+                    validationSummary={filteredEntrancePlaceInvalidValues}
+                    validationTime={entrancePlaceValidationTime}
+                  />
                 )}
               </div>
 

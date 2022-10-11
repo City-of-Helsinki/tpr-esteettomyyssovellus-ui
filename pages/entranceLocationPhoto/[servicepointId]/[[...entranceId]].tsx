@@ -46,6 +46,7 @@ const EntranceBlockLocationPhoto = ({ servicepointData, entranceData, formGuideD
   const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
   const curEntranceLocationPhoto = useAppSelector((state) => state.additionalInfoReducer.entranceLocationPhoto);
   const curEntranceLocationPhotoValid = useAppSelector((state) => state.additionalInfoReducer.entranceLocationPhotoValid);
+  const entranceLocationPhotoValidationTime = useAppSelector((state) => state.additionalInfoReducer.entranceLocationPhotoValidationTime);
 
   const { invalidValues, canAddLocation, canAddPhoto } = curEntranceLocationPhoto;
 
@@ -98,7 +99,13 @@ const EntranceBlockLocationPhoto = ({ servicepointData, entranceData, formGuideD
 
               <div className={styles.mainbuttons}>
                 <EntranceLocationPhotoCtrlButtons entranceLocationPhoto={curEntranceLocationPhoto} />
-                {!curEntranceLocationPhotoValid && <ValidationSummary pageValid={curEntranceLocationPhotoValid} validationSummary={invalidValues} />}
+                {!curEntranceLocationPhotoValid && (
+                  <ValidationSummary
+                    pageValid={curEntranceLocationPhotoValid}
+                    validationSummary={invalidValues}
+                    validationTime={entranceLocationPhotoValidationTime}
+                  />
+                )}
               </div>
 
               <div className={styles.infoHeader}>{i18n.t("additionalInfo.additionalInfo")}</div>

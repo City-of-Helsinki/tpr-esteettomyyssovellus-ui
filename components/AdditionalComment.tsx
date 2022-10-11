@@ -33,13 +33,14 @@ const AdditionalComment = ({ questionBlockId, questionBlockComment }: Additional
   };
 
   /*
-  const handleAddInvalidValue = (invalidFieldId: string, invalidFieldLabel: string) => {
+  const handleAddInvalidValue = (invalidFieldId: string, invalidFieldLabel: string, invalidMessage: string) => {
     dispatch(
       addInvalidQuestionBlockCommentValue({
         entrance_id: curEntranceId,
         question_block_id: questionBlockId,
         invalidFieldId,
         invalidFieldLabel,
+        invalidMessage,
       })
     );
   };
@@ -74,7 +75,7 @@ const AdditionalComment = ({ questionBlockId, questionBlockComment }: Additional
       if (commentText && commentText !== "") {
         // handleRemoveInvalidValue(fieldId);
       } else if (commentText === "") {
-        // handleAddInvalidValue(fieldId, fieldLabel);
+        // handleAddInvalidValue(fieldId, fieldLabel, i18n.t("common.message.invalid"));
       }
       console.log(fieldId, fieldLabel);
     }

@@ -50,6 +50,7 @@ const EntranceQuestionBlockComment = ({
   const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
   const curQuestionBlockComments = useAppSelector((state) => state.additionalInfoReducer.questionBlockComments);
   const curQuestionBlockCommentValid = useAppSelector((state) => state.additionalInfoReducer.questionBlockCommentValid);
+  const questionBlockCommentValidationTime = useAppSelector((state) => state.additionalInfoReducer.questionBlockCommentValidationTime);
 
   const hasData = Object.keys(servicepointData).length > 0 && curServicepointId === servicepointData.servicepoint_id;
   const isExistingEntrance = hasData && Object.keys(entranceData).length > 0;
@@ -108,7 +109,13 @@ const EntranceQuestionBlockComment = ({
 
               <div className={styles.mainbuttons}>
                 <AdditionalCommentCtrlButtons questionBlockId={questionBlockId} questionBlockComment={filteredQuestionBlockComment} />
-                {!curQuestionBlockCommentValid && <ValidationSummary pageValid={curQuestionBlockCommentValid} validationSummary={invalidValues} />}
+                {!curQuestionBlockCommentValid && (
+                  <ValidationSummary
+                    pageValid={curQuestionBlockCommentValid}
+                    validationSummary={invalidValues}
+                    validationTime={questionBlockCommentValidationTime}
+                  />
+                )}
               </div>
 
               <div className={styles.infoHeader}>{i18n.t("additionalInfo.additionalInfo")}</div>

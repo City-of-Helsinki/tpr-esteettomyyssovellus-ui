@@ -237,6 +237,7 @@ export interface Validation {
   valid: boolean;
   fieldId: string;
   fieldLabel: string;
+  message: string;
 }
 
 /*
@@ -291,10 +292,13 @@ export interface QuestionBlockComment {
 export interface AdditionalInfoStateProps {
   entranceLocationPhoto: EntranceLocationPhoto;
   entranceLocationPhotoValid: boolean;
+  entranceLocationPhotoValidationTime: number;
   entrancePlaceBoxes: EntrancePlaceBox[];
   entrancePlaceValid: boolean;
+  entrancePlaceValidationTime: number;
   questionBlockComments: QuestionBlockComment[];
   questionBlockCommentValid: boolean;
+  questionBlockCommentValidationTime: number;
 }
 
 // Common interfaces

@@ -7,8 +7,10 @@ import { useAppDispatch, useAppSelector } from "../state/hooks";
 import {
   addInvalidEntrancePlaceBoxValue,
   deleteEntrancePlace,
+  removeInvalidEntrancePlaceBoxValue,
   revertEntrancePlace,
   setEntrancePlaceValid,
+  setEntrancePlaceValidationTime,
 } from "../state/reducers/additionalInfoSlice";
 import { AccessibilityPlaceCtrlButtonsProps, EntrancePlaceBox } from "../types/general";
 import { isLocationValid } from "../utils/utilFunctions";
@@ -30,7 +32,7 @@ const AccessibilityPlaceCtrlButtons = ({
   const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
   const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
 
-  const handleAddInvalidValue = (entrancePlaceBox: EntrancePlaceBox, invalidFieldId: string, invalidFieldLabel: string) => {
+  const handleAddInvalidValue = (entrancePlaceBox: EntrancePlaceBox, invalidFieldId: string, invalidFieldLabel: string, invalidMessage: string) => {
     const { entrance_id, place_id, order_number } = entrancePlaceBox;
 
     dispatch(
@@ -40,6 +42,20 @@ const AccessibilityPlaceCtrlButtons = ({
         order_number,
         invalidFieldId,
         invalidFieldLabel,
+        invalidMessage,
+      })
+    );
+  };
+
+  const handleRemoveInvalidValue = (entrancePlaceBox: EntrancePlaceBox, invalidFieldIdToRemove: string) => {
+    const { entrance_id, place_id, order_number } = entrancePlaceBox;
+
+    dispatch(
+      removeInvalidEntrancePlaceBoxValue({
+        entrance_id,
+        place_id,
+        order_number,
+        invalidFieldIdToRemove,
       })
     );
   };
@@ -70,16 +86,37 @@ const AccessibilityPlaceCtrlButtons = ({
         if (modifiedPhotoBase64 || photo_url) {
           // Photo added, so validate the mandatory fields
           if (!photo_text_fi || photo_text_fi.length === 0) {
-            handleAddInvalidValue(box, `text-fin-${order_number}`, `${order_number}. ${i18n.t("additionalInfo.pictureLabel")}`);
+            handleAddInvalidValue(
+              box,
+              `text-fin-${order_number}`,
+              `${order_number}. ${i18n.t("additionalInfo.pictureLabel")}`,
+              i18n.t("common.message.invalid")
+            );
             isValid = false;
+          } else {
+            handleRemoveInvalidValue(box, `text-fin-${order_number}`);
           }
           if (!termsAccepted) {
-            handleAddInvalidValue(box, `picture-license-${order_number}`, `${order_number}. ${i18n.t("additionalInfo.sharePictureLicenseLabel")}`);
+            handleAddInvalidValue(
+              box,
+              `picture-license-${order_number}`,
+              `${order_number}. ${i18n.t("additionalInfo.sharePictureLicenseLabel")}`,
+              i18n.t("common.message.invalid")
+            );
             isValid = false;
+          } else {
+            handleRemoveInvalidValue(box, `picture-license-${order_number}`);
           }
           if (!photo_source_text || photo_source_text.length === 0) {
-            handleAddInvalidValue(box, `tooltip-source-${order_number}`, `${order_number}. ${i18n.t("additionalInfo.sourceTooltipMainLabel")}`);
+            handleAddInvalidValue(
+              box,
+              `tooltip-source-${order_number}`,
+              `${order_number}. ${i18n.t("additionalInfo.sourceTooltipMainLabel")}`,
+              i18n.t("common.message.invalid")
+            );
             isValid = false;
+          } else {
+            handleRemoveInvalidValue(box, `tooltip-source-${order_number}`);
           }
         }
 
@@ -88,14 +125,20 @@ const AccessibilityPlaceCtrlButtons = ({
           handleAddInvalidValue(
             box,
             `placebox-${order_number}`,
-            `${order_number}. ${i18n.t("additionalInfo.pictureTitle")} / ${i18n.t("additionalInfo.locationTitle")}`
+            `${order_number}. ${i18n.t("additionalInfo.pictureTitle")} / ${i18n.t("additionalInfo.locationTitle")}`,
+            i18n.t("common.message.pictureLocationMissing")
           );
           isValid = false;
+        } else {
+          handleRemoveInvalidValue(box, `placebox-${order_number}`);
         }
       }
 
       return isValid;
     });
+
+    // Store the time when the validation occurred to force the validation summary to be scrolled into view again if needed
+    dispatch(setEntrancePlaceValidationTime(new Date().getTime()));
 
     const isFormValid = formValidation.every((valid) => valid);
     dispatch(setEntrancePlaceValid(isFormValid));

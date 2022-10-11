@@ -6,8 +6,10 @@ import QuestionButton from "./QuestionButton";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import {
   addInvalidEntranceLocationPhotoValue,
+  removeInvalidEntranceLocationPhotoValue,
   revertEntranceLocationPhoto,
   setEntranceLocationPhotoValid,
+  setEntranceLocationPhotoValidationTime,
 } from "../state/reducers/additionalInfoSlice";
 import { EntranceLocationPhotoCtrlButtonsProps } from "../types/general";
 import styles from "./EntranceLocationPhotoCtrlButtons.module.scss";
@@ -24,12 +26,22 @@ const EntranceLocationPhotoCtrlButtons = ({ entranceLocationPhoto }: EntranceLoc
   const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
   const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
 
-  const handleAddInvalidValue = (invalidFieldId: string, invalidFieldLabel: string) => {
+  const handleAddInvalidValue = (invalidFieldId: string, invalidFieldLabel: string, invalidMessage: string) => {
     dispatch(
       addInvalidEntranceLocationPhotoValue({
         entrance_id: curEntranceId,
         invalidFieldId,
         invalidFieldLabel,
+        invalidMessage,
+      })
+    );
+  };
+
+  const handleRemoveInvalidValue = (invalidFieldIdToRemove: string) => {
+    dispatch(
+      removeInvalidEntranceLocationPhotoValue({
+        entrance_id: curEntranceId,
+        invalidFieldIdToRemove,
       })
     );
   };
@@ -44,18 +56,27 @@ const EntranceLocationPhotoCtrlButtons = ({ entranceLocationPhoto }: EntranceLoc
     if (modifiedPhotoBase64 || photo_url) {
       // Photo added, so validate the mandatory fields
       if (!photo_text_fi || photo_text_fi.length === 0) {
-        handleAddInvalidValue("text-fin", i18n.t("additionalInfo.pictureLabel"));
+        handleAddInvalidValue("text-fin", i18n.t("additionalInfo.pictureLabel"), i18n.t("common.message.invalid"));
         isFormValid = false;
+      } else {
+        handleRemoveInvalidValue("text-fin");
       }
       if (!termsAccepted) {
-        handleAddInvalidValue("picture-license", i18n.t("additionalInfo.sharePictureLicenseLabel"));
+        handleAddInvalidValue("picture-license", i18n.t("additionalInfo.sharePictureLicenseLabel"), i18n.t("common.message.invalid"));
         isFormValid = false;
+      } else {
+        handleRemoveInvalidValue("picture-license");
       }
       if (!photo_source_text || photo_source_text.length === 0) {
-        handleAddInvalidValue("tooltip-source", i18n.t("additionalInfo.sourceTooltipMainLabel"));
+        handleAddInvalidValue("tooltip-source", i18n.t("additionalInfo.sourceTooltipMainLabel"), i18n.t("common.message.invalid"));
         isFormValid = false;
+      } else {
+        handleRemoveInvalidValue("tooltip-source");
       }
     }
+
+    // Store the time when the validation occurred to force the validation summary to be scrolled into view again if needed
+    dispatch(setEntranceLocationPhotoValidationTime(new Date().getTime()));
 
     dispatch(setEntranceLocationPhotoValid(isFormValid));
 

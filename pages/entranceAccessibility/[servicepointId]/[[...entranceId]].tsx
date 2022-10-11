@@ -368,6 +368,7 @@ const EntranceAccessibility = ({
                 valid: false,
                 fieldId: blockFieldId,
                 fieldLabel: blockText,
+                message: i18n.t("common.missingAnswerValue"),
               },
             ]
           : acc;
