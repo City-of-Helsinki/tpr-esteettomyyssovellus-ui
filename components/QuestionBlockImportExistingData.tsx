@@ -223,17 +223,22 @@ const QuestionBlockImportExistingData = ({ block, copyableEntrances }: QuestionB
             options={copyOptions}
             onChange={(selected: InputOption) => handleSelect(selected)}
           />
-          <Button variant="secondary" onClickHandler={handleCopy}>
+          <Button variant="secondary" disabled={!selectedOption} onClickHandler={handleCopy}>
             {i18n.t("QuestionFormImportExistingData.bringInformation")}
           </Button>
         </div>
       </div>
       {importCompleted && (
-        <div className={styles.noticeContainer}>
-          <Notification label={i18n.t("QuestionFormImportExistingData.importSucceededTitle")} type="success" size="small">
-            {`${i18n.t("QuestionFormImportExistingData.importSucceededTitle")} ${i18n.t("QuestionFormImportExistingData.importSucceededMessage")}`}
-          </Notification>
-        </div>
+        <Notification
+          position="top-right"
+          type="success"
+          label={i18n.t("QuestionFormImportExistingData.importSucceededTitle")}
+          closeButtonLabelText="Close toast"
+          onClose={() => setImportCompleted(false)}
+          dismissible
+        >
+          {i18n.t("QuestionFormImportExistingData.importSucceededMessage")}
+        </Notification>
       )}
     </div>
   );

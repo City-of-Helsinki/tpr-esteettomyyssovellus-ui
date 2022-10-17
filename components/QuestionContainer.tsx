@@ -126,7 +126,7 @@ const QuestionContainer = ({ question, accessibilityPlaces, children }: Question
       <div className={styles.questionwrapper}>
         <div className={styles.questioncontainer}>
           <div className={styles.maintext}>
-            <p id={`question_${questionNumber}`}>
+            <p id={`question_${questionId}`}>
               {questionNumber} {questionText}
             </p>
             {questionInfo || photoUrl || photoTexts ? (
@@ -144,7 +144,7 @@ const QuestionContainer = ({ question, accessibilityPlaces, children }: Question
                   })}
                   {photoUrl && (
                     <div>
-                      <img src={photoUrl} alt="" className={styles.infoPicture} />
+                      <img src={photoUrl} alt={photoText || questionText} className={styles.infoPicture} />
                     </div>
                   )}
                   {photoTexts?.map((text, index) => {

@@ -32,12 +32,13 @@ const ValidationSummary = ({ pageValid, validationSummary, validationTime }: Val
           {validationSummary
             .filter((validation) => !validation.valid)
             .map((validation) => {
-              const { fieldId, fieldLabel } = validation;
+              const { fieldId, fieldLabel, message } = validation;
               return (
                 <div key={fieldId}>
                   <HdsLink href={`#${fieldId}`} size="M" disableVisitedStyles>
                     {fieldLabel}
                   </HdsLink>
+                  <span>{` - ${message}`}</span>
                 </div>
               );
             })}

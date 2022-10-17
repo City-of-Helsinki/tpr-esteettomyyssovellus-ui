@@ -16,10 +16,10 @@ export const MAP_MAX_ZOOM = 18;
 // Note: the client-side calls use the full path, which is handled by getOrigin in request.ts
 export const API_URL_BASE = "http://localhost:8000/";
 
-export const API_FETCH_QUESTIONBLOCK_URL = "api/ArBackendQuestionBlocks/?format=json&form_id=";
-export const API_FETCH_QUESTION_URL = "api/ArBackendQuestions/?format=json&form_id=";
-export const API_FETCH_QUESTIONCHOICES = "api/ArBackendQuestionChoice/?format=json&form_id=";
-export const API_FETCH_BACKEND_QUESTIONBLOCK_FIELD = "api/ArBackendQuestionBlockField/?format=json&form_id=";
+export const API_FETCH_QUESTIONBLOCK_URL = "api/ArBackendQuestionBlocks/";
+export const API_FETCH_QUESTION_URL = "api/ArBackendQuestions/";
+export const API_FETCH_QUESTIONCHOICES = "api/ArBackendQuestionChoice/";
+export const API_FETCH_BACKEND_QUESTIONBLOCK_FIELD = "api/ArBackendQuestionBlockField/";
 export const API_FETCH_SYSTEMS = "api/ArSystems/";
 export const API_FETCH_SERVICEPOINTS = "api/ArServicepoints/";
 export const API_FETCH_BACKEND_SERVICEPOINT = "api/ArBackendServicepoint/";

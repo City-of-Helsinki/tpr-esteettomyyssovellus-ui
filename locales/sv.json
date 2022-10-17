@@ -59,6 +59,7 @@
     "message": {
       "valid": "Giltig",
       "invalid": "Information saknas",
+      "pictureLocationMissing": "Bild eller plats saknas",
       "validationFailed": {
         "title": "Blanketten saknar information",
         "message": "Kontrollera uppgifterna, de felaktiga punkterna är markerade här under"

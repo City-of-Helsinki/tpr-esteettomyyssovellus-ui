@@ -49,7 +49,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
     );
   };
 
-  const handleAddInvalidValue = (invalidFieldId: string, invalidFieldLabel: string) => {
+  const handleAddInvalidValue = (invalidFieldId: string, invalidFieldLabel: string, invalidMessage: string) => {
     dispatch(
       addInvalidEntrancePlaceBoxValue({
         entrance_id,
@@ -57,6 +57,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
         order_number,
         invalidFieldId,
         invalidFieldLabel,
+        invalidMessage,
       })
     );
   };
@@ -159,7 +160,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
       handleRemoveInvalidValue(fieldId);
       setLinkInput(false);
     } else {
-      handleAddInvalidValue(fieldId, fieldLabel);
+      handleAddInvalidValue(fieldId, fieldLabel, i18n.t("common.message.invalid"));
     }
   };
 
@@ -184,7 +185,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
       if (altText && altText !== "") {
         handleRemoveInvalidValue(fieldId);
       } else if (altText === "") {
-        handleAddInvalidValue(fieldId, fieldLabel);
+        handleAddInvalidValue(fieldId, fieldLabel, i18n.t("common.message.invalid"));
       }
     }
   };
@@ -201,7 +202,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
     if (termsChecked) {
       handleRemoveInvalidValue(fieldId);
     } else {
-      handleAddInvalidValue(fieldId, fieldLabel);
+      handleAddInvalidValue(fieldId, fieldLabel, i18n.t("common.message.invalid"));
     }
   };
 
@@ -218,7 +219,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
     if (source && source !== "") {
       handleRemoveInvalidValue(fieldId);
     } else if (source === "") {
-      handleAddInvalidValue(fieldId, fieldLabel);
+      handleAddInvalidValue(fieldId, fieldLabel, i18n.t("common.message.invalid"));
     }
   };
 
@@ -230,7 +231,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
     if (text && text !== "") {
       handleRemoveInvalidValue(fieldId);
     } else if (text === "") {
-      handleAddInvalidValue(fieldId, fieldLabel);
+      handleAddInvalidValue(fieldId, fieldLabel, i18n.t("common.message.invalid"));
     }
   };
 
@@ -239,7 +240,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
       {(modifiedPhotoBase64 || photo_url) && (
         <>
           <div className={styles.picture}>
-            <img src={modifiedPhotoBase64 ?? photo_url} alt="" />
+            <img src={modifiedPhotoBase64 ?? photo_url} alt={`${i18n.t("additionalInfo.pictureTitle")} ${order_number}`} />
           </div>
           {photo_url && (
             <div className={styles.pictureurl}>

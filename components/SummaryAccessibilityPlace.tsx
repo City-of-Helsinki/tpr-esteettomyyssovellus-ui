@@ -10,6 +10,7 @@ import styles from "./SummaryAccessibilityPlace.module.scss";
 // usage: component for accessibility place location and picture, used in details page
 const SummaryAccessibilityPlace = ({ entrancePlaceName, entrancePlaceData, uniqueId }: SummaryAccessibilityPlaceProps): JSX.Element => {
   const i18n = useI18n();
+  const curLocale = i18n.locale();
 
   return (
     <div className={styles.maincontainer}>
@@ -37,11 +38,14 @@ const SummaryAccessibilityPlace = ({ entrancePlaceName, entrancePlaceData, uniqu
             const coordinatesEuref = [loc_easting ?? 0, loc_northing ?? 0] as [number, number];
             const coordinatesWGS84 = convertCoordinates("EPSG:3067", "WGS84", coordinatesEuref).reverse() as [number, number];
 
+            const photoTitle = `${i18n.t("additionalInfo.pictureTitle")} ${order_number}`;
+            const altText = entrancePlaceBox[`photo_text_${curLocale}`] as string | undefined;
+
             return (
               <div key={key} className={styles.boxcontainer}>
                 {photo_url && (
                   <div className={styles.subcontainer}>
-                    <h5>{`${i18n.t("additionalInfo.pictureTitle")} ${order_number}`}</h5>
+                    <h5>{photoTitle}</h5>
 
                     <div className={styles.mappicturecontainer}>
                       <div className={styles.label}>
@@ -52,7 +56,7 @@ const SummaryAccessibilityPlace = ({ entrancePlaceName, entrancePlaceData, uniqu
                       </div>
 
                       <div className={styles.picture}>
-                        <img alt={photo_text_fi ?? ""} src={photo_url} />
+                        <img alt={altText ?? photoTitle} src={photo_url} />
                       </div>
                     </div>
                   </div>

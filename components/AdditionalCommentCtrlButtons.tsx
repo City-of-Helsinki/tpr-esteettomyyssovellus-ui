@@ -9,6 +9,7 @@ import {
   removeQuestionBlockComment,
   revertQuestionBlockComment,
   setQuestionBlockCommentValid,
+  setQuestionBlockCommentValidationTime,
 } from "../state/reducers/additionalInfoSlice";
 import { AdditionalCommentCtrlButtonsProps } from "../types/general";
 import styles from "./AdditionalCommentCtrlButtons.module.scss";
@@ -26,13 +27,24 @@ const AdditionalCommentCtrlButtons = ({ questionBlockId, questionBlockComment }:
   const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
 
   /*
-  const handleAddInvalidValue = (invalidFieldId: string, invalidFieldLabel: string) => {
+  const handleAddInvalidValue = (invalidFieldId: string, invalidFieldLabel: string, invalidMessage: string) => {
     dispatch(
       addInvalidQuestionBlockCommentValue({
         entrance_id: curEntranceId,
         question_block_id: questionBlockId,
         invalidFieldId,
         invalidFieldLabel,
+        invalidMessage,
+      })
+    );
+  };
+
+  const handleRemoveInvalidValue = (invalidFieldIdToRemove: string) => {
+    dispatch(
+      removeInvalidQuestionBlockCommentValue({
+        entrance_id: curEntranceId,
+        question_block_id: questionBlockId,
+        invalidFieldIdToRemove,
       })
     );
   };
@@ -48,11 +60,16 @@ const AdditionalCommentCtrlButtons = ({ questionBlockId, questionBlockComment }:
     // TODO - check if any validation is needed for text comments
     if (!comment_text_fi || comment_text_fi.length === 0) {
       /*
-      handleAddInvalidValue("text-fin", i18n.t("additionalInfo.pictureLabel"));
+      handleAddInvalidValue("text-fin", i18n.t("additionalInfo.pictureLabel"), i18n.t("common.message.invalid"));
       isFormValid = false;
       */
       console.log(comment_text_fi);
+    } else {
+      // handleRemoveInvalidValue("text-fin");
     }
+
+    // Store the time when the validation occurred to force the validation summary to be scrolled into view again if needed
+    dispatch(setQuestionBlockCommentValidationTime(new Date().getTime()));
 
     dispatch(setQuestionBlockCommentValid(isFormValid));
 

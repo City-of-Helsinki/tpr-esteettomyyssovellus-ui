@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { PURGE } from "redux-persist";
-import { AdditionalInfoStateProps, EntranceLocationPhoto, EntrancePlaceBox, QuestionBlockComment } from "../../types/general";
+import { AdditionalInfoStateProps, EntranceLocationPhoto, EntrancePlaceBox, QuestionBlockComment, Validation } from "../../types/general";
 import { BackendEntranceAnswer } from "../../types/backendModels";
 
 // TODO: maybe delete this before prod
@@ -10,10 +10,13 @@ import { BackendEntranceAnswer } from "../../types/backendModels";
 const initialState: AdditionalInfoStateProps = {
   entranceLocationPhoto: {} as EntranceLocationPhoto,
   entranceLocationPhotoValid: true,
+  entranceLocationPhotoValidationTime: 0,
   entrancePlaceBoxes: [],
   entrancePlaceValid: true,
+  entrancePlaceValidationTime: 0,
   questionBlockComments: [],
   questionBlockCommentValid: true,
+  questionBlockCommentValidationTime: 0,
 };
 
 export const additionalInfoSlice = createSlice({
@@ -25,6 +28,12 @@ export const additionalInfoSlice = createSlice({
     },
     setEntranceLocationPhotoValid: (state, action: PayloadAction<boolean>) => {
       return { ...state, entranceLocationPhotoValid: action.payload };
+    },
+    setEntranceLocationPhotoValidationTime: (state, action: PayloadAction<number>) => {
+      return {
+        ...state,
+        entranceLocationPhotoValidationTime: action.payload,
+      };
     },
     editEntranceLocationPhoto: (state, action: PayloadAction<{ entrance_id: number; updatedLocationPhoto: EntranceLocationPhoto }>) => {
       return {
@@ -63,9 +72,15 @@ export const additionalInfoSlice = createSlice({
         entrance_id: number;
         invalidFieldId: string;
         invalidFieldLabel: string;
+        invalidMessage: string;
       }>
     ) => {
-      const validationToAdd = { valid: false, fieldId: action.payload.invalidFieldId, fieldLabel: action.payload.invalidFieldLabel };
+      const validationToAdd: Validation = {
+        valid: false,
+        fieldId: action.payload.invalidFieldId,
+        fieldLabel: action.payload.invalidFieldLabel,
+        message: action.payload.invalidMessage,
+      };
 
       return {
         ...state,
@@ -93,6 +108,12 @@ export const additionalInfoSlice = createSlice({
     },
     setEntrancePlaceValid: (state, action: PayloadAction<boolean>) => {
       return { ...state, entrancePlaceValid: action.payload };
+    },
+    setEntrancePlaceValidationTime: (state, action: PayloadAction<number>) => {
+      return {
+        ...state,
+        entrancePlaceValidationTime: action.payload,
+      };
     },
     addEntrancePlaceBox: (state, action: PayloadAction<EntrancePlaceBox>) => {
       return { ...state, entrancePlaceBoxes: [...(state.entrancePlaceBoxes ?? []), action.payload] };
@@ -288,9 +309,15 @@ export const additionalInfoSlice = createSlice({
         order_number: number;
         invalidFieldId: string;
         invalidFieldLabel: string;
+        invalidMessage: string;
       }>
     ) => {
-      const validationToAdd = { valid: false, fieldId: action.payload.invalidFieldId, fieldLabel: action.payload.invalidFieldLabel };
+      const validationToAdd: Validation = {
+        valid: false,
+        fieldId: action.payload.invalidFieldId,
+        fieldLabel: action.payload.invalidFieldLabel,
+        message: action.payload.invalidMessage,
+      };
 
       return {
         ...state,
@@ -351,6 +378,12 @@ export const additionalInfoSlice = createSlice({
     },
     setQuestionBlockCommentValid: (state, action: PayloadAction<boolean>) => {
       return { ...state, questionBlockCommentValid: action.payload };
+    },
+    setQuestionBlockCommentValidationTime: (state, action: PayloadAction<number>) => {
+      return {
+        ...state,
+        questionBlockCommentValidationTime: action.payload,
+      };
     },
     editQuestionBlockComment: (
       state,
@@ -430,9 +463,15 @@ export const additionalInfoSlice = createSlice({
         question_block_id: number;
         invalidFieldId: string;
         invalidFieldLabel: string;
+        invalidMessage: string;
       }>
     ) => {
-      const validationToAdd = { valid: false, fieldId: action.payload.invalidFieldId, fieldLabel: action.payload.invalidFieldLabel };
+      const validationToAdd: Validation = {
+        valid: false,
+        fieldId: action.payload.invalidFieldId,
+        fieldLabel: action.payload.invalidFieldLabel,
+        message: action.payload.invalidMessage,
+      };
 
       return {
         ...state,
@@ -485,6 +524,7 @@ export const additionalInfoSlice = createSlice({
 export const {
   setEntranceLocationPhoto,
   setEntranceLocationPhotoValid,
+  setEntranceLocationPhotoValidationTime,
   editEntranceLocationPhoto,
   editEntranceLocation,
   revertEntranceLocationPhoto,
@@ -492,6 +532,7 @@ export const {
   removeInvalidEntranceLocationPhotoValue,
   setEntrancePlaceBoxes,
   setEntrancePlaceValid,
+  setEntrancePlaceValidationTime,
   addEntrancePlaceBox,
   editEntrancePlaceBox,
   editEntrancePlaceBoxLocation,
@@ -505,6 +546,7 @@ export const {
   setQuestionBlockComments,
   setQuestionBlockComment,
   setQuestionBlockCommentValid,
+  setQuestionBlockCommentValidationTime,
   editQuestionBlockComment,
   removeQuestionBlockComment,
   revertQuestionBlockComment,

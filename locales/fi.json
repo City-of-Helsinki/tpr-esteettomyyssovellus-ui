@@ -59,6 +59,7 @@
     "message": {
       "valid": "Pätevä",
       "invalid": "Tietoja puuttuu",
+      "pictureLocationMissing": "Kuva tai sijainti puuttuu",
       "validationFailed": {
         "title": "Lomakkeelta puuttuu tietoja",
         "message": "Tarkista tiedot, virheellisiä kohtia on korostettu alla"

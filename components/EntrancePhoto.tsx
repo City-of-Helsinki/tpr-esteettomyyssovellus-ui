@@ -49,12 +49,13 @@ const EntrancePhoto = ({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
     );
   };
 
-  const handleAddInvalidValue = (invalidFieldId: string, invalidFieldLabel: string) => {
+  const handleAddInvalidValue = (invalidFieldId: string, invalidFieldLabel: string, invalidMessage: string) => {
     dispatch(
       addInvalidEntranceLocationPhotoValue({
         entrance_id,
         invalidFieldId,
         invalidFieldLabel,
+        invalidMessage,
       })
     );
   };
@@ -155,7 +156,7 @@ const EntrancePhoto = ({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
       handleRemoveInvalidValue(fieldId);
       setLinkInput(false);
     } else {
-      handleAddInvalidValue(fieldId, fieldLabel);
+      handleAddInvalidValue(fieldId, fieldLabel, i18n.t("common.message.invalid"));
     }
   };
 
@@ -180,7 +181,7 @@ const EntrancePhoto = ({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
       if (altText && altText !== "") {
         handleRemoveInvalidValue(fieldId);
       } else if (altText === "") {
-        handleAddInvalidValue(fieldId, fieldLabel);
+        handleAddInvalidValue(fieldId, fieldLabel, i18n.t("common.message.invalid"));
       }
     }
   };
@@ -197,7 +198,7 @@ const EntrancePhoto = ({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
     if (termsChecked) {
       handleRemoveInvalidValue(fieldId);
     } else {
-      handleAddInvalidValue(fieldId, fieldLabel);
+      handleAddInvalidValue(fieldId, fieldLabel, i18n.t("common.message.invalid"));
     }
   };
 
@@ -214,7 +215,7 @@ const EntrancePhoto = ({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
     if (source && source !== "") {
       handleRemoveInvalidValue(fieldId);
     } else if (source === "") {
-      handleAddInvalidValue(fieldId, fieldLabel);
+      handleAddInvalidValue(fieldId, fieldLabel, i18n.t("common.message.invalid"));
     }
   };
 
@@ -226,7 +227,7 @@ const EntrancePhoto = ({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
     if (text && text !== "") {
       handleRemoveInvalidValue(fieldId);
     } else if (text === "") {
-      handleAddInvalidValue(fieldId, fieldLabel);
+      handleAddInvalidValue(fieldId, fieldLabel, i18n.t("common.message.invalid"));
     }
   };
 
@@ -235,7 +236,7 @@ const EntrancePhoto = ({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
       {(modifiedPhotoBase64 || photo_url) && (
         <>
           <div className={styles.picture}>
-            <img src={modifiedPhotoBase64 ?? photo_url} alt="" />
+            <img src={modifiedPhotoBase64 ?? photo_url} alt={i18n.t("additionalInfo.pictureTitle")} />
           </div>
           {photo_url && (
             <div className={styles.pictureurl}>
