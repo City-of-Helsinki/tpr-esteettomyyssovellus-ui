@@ -565,16 +565,16 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       }
 
       if (formId >= 0) {
-        const questionsResp = await fetch(`${API_URL_BASE}${API_FETCH_QUESTION_URL}${formId}`, {
+        const questionsResp = await fetch(`${API_URL_BASE}${API_FETCH_QUESTION_URL}?format=json&form_id=${formId}`, {
           headers: new Headers({ Authorization: getTokenHash() }),
         });
-        const questionChoicesResp = await fetch(`${API_URL_BASE}${API_FETCH_QUESTIONCHOICES}${formId}`, {
+        const questionChoicesResp = await fetch(`${API_URL_BASE}${API_FETCH_QUESTIONCHOICES}?format=json&form_id=${formId}`, {
           headers: new Headers({ Authorization: getTokenHash() }),
         });
         const questionBlocksResp = await fetch(`${API_URL_BASE}${API_FETCH_QUESTIONBLOCK_URL}?format=json&form_id=${formId}`, {
           headers: new Headers({ Authorization: getTokenHash() }),
         });
-        const questionBlockFieldResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_QUESTIONBLOCK_FIELD}${formId}`, {
+        const questionBlockFieldResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_QUESTIONBLOCK_FIELD}?format=json&form_id=${formId}`, {
           headers: new Headers({ Authorization: getTokenHash() }),
         });
         const accessibilityPlaceResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_PLACES}?format=json`, {
