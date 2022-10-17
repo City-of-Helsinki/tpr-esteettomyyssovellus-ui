@@ -25,6 +25,9 @@ const SummaryLocationPicture = ({ entranceKey, entranceData, servicepointData, i
     ? formatAddress(servicepointData.address_street_name, servicepointData.address_no, servicepointData.address_city)
     : entranceName ?? "";
 
+  const photoTitle = isMainEntrance ? i18n.t("servicepoint.mainEntrancePicturesLabel") : i18n.t("servicepoint.entrancePicturesLabel");
+  const altText = entranceData ? (entranceData[`photo_text_${curLocale}`] as string | undefined) : undefined;
+
   const isDevelopment = false;
 
   return (
@@ -51,7 +54,7 @@ const SummaryLocationPicture = ({ entranceKey, entranceData, servicepointData, i
 
       {(photo_url || isDevelopment) && (
         <div id={`picturecontainer_${entranceKey}`} className={styles.subcontainer}>
-          <h4>{isMainEntrance ? i18n.t("servicepoint.mainEntrancePicturesLabel") : i18n.t("servicepoint.entrancePicturesLabel")}</h4>
+          <h4>{photoTitle}</h4>
 
           <div className={styles.mappicturecontainer}>
             <div className={styles.label}>
@@ -62,17 +65,12 @@ const SummaryLocationPicture = ({ entranceKey, entranceData, servicepointData, i
             </div>
 
             <div className={styles.picture}>
-              {photo_url && (
-                <img
-                  alt={isMainEntrance ? i18n.t("servicepoint.mainEntrancePicturesLabel") : i18n.t("servicepoint.entrancePicturesLabel")}
-                  src={photo_url}
-                />
-              )}
+              {photo_url && <img alt={altText || photoTitle} src={photo_url} />}
 
               {/* Placeholder photo for development */}
               {!photo_url && isDevelopment && (
                 <img
-                  alt={isMainEntrance ? i18n.t("servicepoint.mainEntrancePicturesLabel") : i18n.t("servicepoint.entrancePicturesLabel")}
+                  alt={photoTitle}
                   src="https://images.unsplash.com/photo-1531989417401-0f85f7e673f8?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80"
                 />
               )}

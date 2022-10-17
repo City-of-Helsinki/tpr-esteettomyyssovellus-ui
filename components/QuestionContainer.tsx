@@ -144,7 +144,7 @@ const QuestionContainer = ({ question, accessibilityPlaces, children }: Question
                   })}
                   {photoUrl && (
                     <div>
-                      <img src={photoUrl} alt="" className={styles.infoPicture} />
+                      <img src={photoUrl} alt={photoText || questionText} className={styles.infoPicture} />
                     </div>
                   )}
                   {photoTexts?.map((text, index) => {

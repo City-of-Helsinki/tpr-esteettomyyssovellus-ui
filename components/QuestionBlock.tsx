@@ -110,7 +110,7 @@ const QuestionBlock = ({ block, questions, answerChoices, extraFields, accessibi
               <div className={styles.infoContainer}>
                 {photo_url && (
                   <div>
-                    <img alt={photo_text ?? ""} src={photo_url} className={styles.infoPicture} />
+                    <img alt={photo_text ?? block.text} src={photo_url} className={styles.infoPicture} />
                   </div>
                 )}
                 {photoText?.map((text, index) => {

@@ -240,7 +240,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
       {(modifiedPhotoBase64 || photo_url) && (
         <>
           <div className={styles.picture}>
-            <img src={modifiedPhotoBase64 ?? photo_url} alt="" />
+            <img src={modifiedPhotoBase64 ?? photo_url} alt={`${i18n.t("additionalInfo.pictureTitle")} ${order_number}`} />
           </div>
           {photo_url && (
             <div className={styles.pictureurl}>

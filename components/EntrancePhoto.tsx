@@ -236,7 +236,7 @@ const EntrancePhoto = ({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
       {(modifiedPhotoBase64 || photo_url) && (
         <>
           <div className={styles.picture}>
-            <img src={modifiedPhotoBase64 ?? photo_url} alt="" />
+            <img src={modifiedPhotoBase64 ?? photo_url} alt={i18n.t("additionalInfo.pictureTitle")} />
           </div>
           {photo_url && (
             <div className={styles.pictureurl}>

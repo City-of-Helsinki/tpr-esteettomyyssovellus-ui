@@ -15,6 +15,7 @@ import styles from "./QuestionBlockLocationPhoto.module.scss";
 
 const QuestionBlockLocationPhoto = ({ block, canAddLocation, canAddPhoto }: QuestionBlockLocationPhotoProps): JSX.Element => {
   const i18n = useI18n();
+  const curLocale = i18n.locale();
   const router = useRouter();
   const dispatch = useAppDispatch();
 
@@ -33,6 +34,8 @@ const QuestionBlockLocationPhoto = ({ block, canAddLocation, canAddPhoto }: Ques
 
   const coordinatesEuref = [loc_easting ?? 0, loc_northing ?? 0] as [number, number];
   const coordinatesWGS84 = convertCoordinates("EPSG:3067", "WGS84", coordinatesEuref).reverse() as [number, number];
+
+  const altText = modifiedAnswer ? (modifiedAnswer[`photo_text_${curLocale}`] as string | undefined) : undefined;
 
   const initLocationPhotoData = () => {
     // Update the block id and add permissions
@@ -166,7 +169,7 @@ const QuestionBlockLocationPhoto = ({ block, canAddLocation, canAddPhoto }: Ques
             <div className={styles.detailcontainer}>
               {(modifiedPhotoBase64 || photo_url) && (
                 <div className={styles.photocontainer}>
-                  <img src={modifiedPhotoBase64 ?? photo_url} alt="" />
+                  <img src={modifiedPhotoBase64 ?? photo_url} alt={altText || add_photo_title} />
                 </div>
               )}
             </div>
