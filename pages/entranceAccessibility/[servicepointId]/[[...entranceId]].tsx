@@ -571,7 +571,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         const questionChoicesResp = await fetch(`${API_URL_BASE}${API_FETCH_QUESTIONCHOICES}${formId}`, {
           headers: new Headers({ Authorization: getTokenHash() }),
         });
-        const questionBlocksResp = await fetch(`${API_URL_BASE}${API_FETCH_QUESTIONBLOCK_URL}${formId}`, {
+        const questionBlocksResp = await fetch(`${API_URL_BASE}${API_FETCH_QUESTIONBLOCK_URL}?format=json&form_id=${formId}`, {
           headers: new Headers({ Authorization: getTokenHash() }),
         });
         const questionBlockFieldResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_QUESTIONBLOCK_FIELD}${formId}`, {

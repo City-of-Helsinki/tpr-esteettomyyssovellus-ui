@@ -15,9 +15,17 @@ import {
   API_FETCH_BACKEND_FORM_GUIDE,
   API_FETCH_BACKEND_SERVICEPOINT,
   API_FETCH_ENTRANCES,
+  API_FETCH_QUESTIONBLOCK_URL,
   API_URL_BASE,
 } from "../../../../types/constants";
-import { BackendEntrance, BackendFormGuide, BackendServicepoint, Entrance, EntranceResults } from "../../../../types/backendModels";
+import {
+  BackendEntrance,
+  BackendFormGuide,
+  BackendQuestionBlock,
+  BackendServicepoint,
+  Entrance,
+  EntranceResults,
+} from "../../../../types/backendModels";
 import { EntranceQuestionBlockCommentProps } from "../../../../types/general";
 import i18nLoader from "../../../../utils/i18n";
 import styles from "./blockComment.module.scss";
@@ -27,6 +35,7 @@ const EntranceQuestionBlockComment = ({
   servicepointData,
   entranceData,
   questionBlockId,
+  block,
   formGuideData,
   formId,
 }: EntranceQuestionBlockCommentProps): ReactElement => {
@@ -69,6 +78,8 @@ const EntranceQuestionBlockComment = ({
   const servicePointHeader = isExistingEntrance ? entranceHeader : newEntranceHeader;
   const subHeader = formId >= 2 ? "" : servicePointHeader;
 
+  const { text } = block;
+
   // Show the comments for this question block
   const filteredQuestionBlockComment = curQuestionBlockComments.find((blockComment) => {
     return blockComment.question_block_id === questionBlockId;
@@ -79,7 +90,7 @@ const EntranceQuestionBlockComment = ({
     [servicepointData.servicepoint_name ?? ""]: hasData ? `/details/${servicepointData.servicepoint_id}` : "",
     [i18n.t("servicepoint.contactFormSummaryHeader")]:
       curEntranceId > 0 ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}` : `/entranceAccessibility/${curServicepointId}`,
-    [i18n.t("additionalInfo.additionalInfo")]:
+    [`${i18n.t("additionalInfo.additionalInfo")} > ${text}`]:
       curEntranceId > 0
         ? `/blockComment/${curServicepointId}/${questionBlockId}/${curEntranceId}`
         : `/blockComment/${curServicepointId}/${questionBlockId}`,
@@ -118,7 +129,7 @@ const EntranceQuestionBlockComment = ({
                 )}
               </div>
 
-              <div className={styles.infoHeader}>{i18n.t("additionalInfo.additionalInfo")}</div>
+              <div className={styles.infoHeader}>{`${i18n.t("additionalInfo.additionalInfo")} > ${text}`}</div>
               <div className={styles.infoText}>
                 <div>{i18n.t("additionalInfo.fillComment")}</div>
               </div>
@@ -147,6 +158,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   let servicepointData: BackendServicepoint = {} as BackendServicepoint;
   let entranceData: BackendEntrance = {} as BackendEntrance;
   let questionBlockId = -1;
+  let block: BackendQuestionBlock = {} as BackendQuestionBlock;
   let formGuideData: BackendFormGuide[] = [];
   let formId = -1;
 
@@ -220,6 +232,19 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
         }
       }
 
+      // Get the question block related to this comment
+      const questionBlocksResp = await fetch(
+        `${API_URL_BASE}${API_FETCH_QUESTIONBLOCK_URL}?format=json&form_id=${formId}&question_block_id=${questionBlockId}`,
+        {
+          headers: new Headers({ Authorization: getTokenHash() }),
+        }
+      );
+      const questionBlocksData = await (questionBlocksResp.json() as Promise<BackendQuestionBlock[]>);
+
+      if (questionBlocksData?.length > 0) {
+        block = questionBlocksData[0];
+      }
+
       // Get the guide text using the form id for this entrance
       if (formId >= 0) {
         const formGuideResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_FORM_GUIDE}?form_id=${formId}`, {
@@ -232,6 +257,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
 
       servicepointData = {} as BackendServicepoint;
       entranceData = {} as BackendEntrance;
+      block = {} as BackendQuestionBlock;
       formGuideData = [];
     }
   }
@@ -242,6 +268,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       servicepointData,
       entranceData,
       questionBlockId,
+      block,
       formGuideData,
       formId,
     },

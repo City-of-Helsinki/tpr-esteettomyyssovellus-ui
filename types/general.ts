@@ -531,6 +531,7 @@ export interface EntranceQuestionBlockCommentProps {
   servicepointData: BackendServicepoint;
   entranceData: BackendEntrance;
   questionBlockId: number;
+  block: BackendQuestionBlock;
   formGuideData: BackendFormGuide[];
   formId: number;
 }
