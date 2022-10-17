@@ -187,6 +187,8 @@ const AccessibilityPlace = ({
                     entrancePlaceBox={entrancePlaceBox}
                     entrancePlaceName={filteredPlaceData.name || ""}
                     canAddLocation={filteredPlaceData.can_add_location === "Y"}
+                    isFirst={entrancePlaceBox.order_number === 1}
+                    isLast={entrancePlaceBox.order_number === filteredEntrancePlaceBoxes.length}
                   />
                 );
               })}

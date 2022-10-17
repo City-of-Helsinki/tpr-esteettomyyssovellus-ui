@@ -504,6 +504,8 @@ export interface AccessibilityPlaceBoxProps {
   entrancePlaceBox: EntrancePlaceBox;
   entrancePlaceName: string;
   canAddLocation: boolean;
+  isFirst: boolean;
+  isLast: boolean;
 }
 
 export interface AccessibilityPlaceLocationProps {
