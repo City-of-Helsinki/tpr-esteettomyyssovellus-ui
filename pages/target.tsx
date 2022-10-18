@@ -18,7 +18,7 @@ import {
 } from "../types/constants";
 import { TargetProps } from "../types/general";
 import i18nLoader from "../utils/i18n";
-import { createEntrance, createServicePoint, getCurrentDate, getTokenHash, validateChecksum } from "../utils/utilFunctions";
+import { createEntrance, createServicePoint, getCurrentDate, getTokenHash, validateChecksum, validateDate } from "../utils/utilFunctions";
 
 const Target = ({ servicepointId, entranceId, user, skip }: TargetProps): ReactElement => {
   const i18n = useI18n();
@@ -111,16 +111,17 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
         checksum + queryParams.systemId + queryParams.targetId + queryParams.user + queryParams.name + queryParams.formId + queryParams.validUntil;
 
       const checksumIsValid = validateChecksum(checksumString, queryParams.checksum);
+      const validUntilDateIsValid = validateDate(queryParams.validUntil);
 
-      if (!checksumIsValid) {
-        console.log("Checksums did not match.");
+      if (!checksumIsValid || !validUntilDateIsValid) {
+        console.log(!validUntilDateIsValid ? "Date not valid" : "Checksums did not match.");
         return {
           props: {
             lngDict,
           },
         };
       }
-      console.log("Checksums matched.");
+      console.log("Checksums matched, validUntil date is valid.");
 
       const systemFormResp = await fetch(`${API_URL_BASE}${API_FETCH_SYSTEM_FORMS}`, {
         headers: new Headers({ Authorization: getTokenHash() }),
@@ -132,7 +133,12 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
       );
 
       if (!canUseForm) {
-        throw new Error(`A servicepoint with this systemId cannot use form ${queryParams.formId}`);
+        console.log(`Error: A servicepoint with this systemId cannot use form ${queryParams.formId}`);
+        return {
+          props: {
+            lngDict,
+          },
+        };
       }
 
       const externalServicepointResp = await fetch(

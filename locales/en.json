@@ -267,7 +267,7 @@
     "newAddress": "New address",
     "locationHasChanged1": "The location has moved",
     "locationHasChanged2": "meters from last time",
-    "errorHasOccured": "An error has occured in the software",
+    "errorHasOccured": "Invalid parameters",
     "hasServicepointMoved": "The location or address of the servicepoint has changed:",
     "headerSentence1": "The location of ",
     "headerSentence2": " servicepoint has changed.",

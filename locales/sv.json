@@ -267,7 +267,7 @@
     "newAddress": "Ny adress",
     "locationHasChanged1": "Platsen har flyttats",
     "locationHasChanged2": "meter från förra gången",
-    "errorHasOccured": "Ett fel har uppstått i programvaran",
+    "errorHasOccured": "Ogiltiga parametrar",
     "hasServicepointMoved": "Kontorets plats eller adress har ändrats:",
     "headerSentence1": "Platsen för ",
     "headerSentence2": " har ändrats.",

@@ -20,7 +20,7 @@ import {
   API_URL_BASE,
 } from "../types/constants";
 import { ChangeProps } from "../types/general";
-import { checksumSecretTPRTesti } from "../utils/checksumSecret";
+// import { checksumSecretTPRTesti } from "../utils/checksumSecret";
 import i18nLoader from "../utils/i18n";
 import getOrigin from "../utils/request";
 import {
@@ -31,6 +31,7 @@ import {
   getCurrentDate,
   getTokenHash,
   validateChecksum,
+  validateDate,
 } from "../utils/utilFunctions";
 import styles from "./ServicePoint.module.scss";
 
@@ -74,7 +75,9 @@ const Servicepoints = ({
     const updateAddressUrl = `${getOrigin(router)}/${API_FETCH_SERVICEPOINTS}${servicepointId}/set_searchable/`;
     await fetch(updateAddressUrl, setSearchableOptions);
   };
-  setSearchable();
+  if (skip || changed) {
+    setSearchable();
+  }
 
   if (skip) {
     router.push(`/details/${servicepointId}`);
@@ -263,7 +266,8 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
       const systemData = await (systemResp.json() as Promise<System[]>);
 
       const checksumSecret = systemData && systemData.length > 0 ? systemData[0].checksum_secret : undefined;
-      const checksum = process.env.NODE_ENV === "production" ? checksumSecret ?? "" : checksumSecretTPRTesti;
+      // const checksum = process.env.NODE_ENV === "production" ? checksumSecret ?? "" : checksumSecretTPRTesti;
+      const checksum = checksumSecret ?? "";
       const checksumString =
         checksum +
         queryParams.systemId +
@@ -277,16 +281,17 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
         queryParams.easting;
 
       const checksumIsValid = validateChecksum(checksumString, queryParams.checksum);
+      const validUntilDateIsValid = validateDate(queryParams.validUntil);
 
-      if (!checksumIsValid) {
-        console.log("Checksums did not match.");
+      if (!checksumIsValid || !validUntilDateIsValid) {
+        console.log(!validUntilDateIsValid ? "Date not valid" : "Checksums did not match.");
         return {
           props: {
             lngDict,
           },
         };
       }
-      console.log("Checksums matched.");
+      console.log("Checksums matched, validUntil date is valid.");
 
       const systemFormResp = await fetch(`${API_URL_BASE}${API_FETCH_SYSTEM_FORMS}`, {
         headers: new Headers({ Authorization: getTokenHash() }),
@@ -298,7 +303,12 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
       );
 
       if (!canUseForm) {
-        throw new Error("A servicepoint with this systemId cannot use form 0 or 1");
+        console.log("Error: A servicepoint with this systemId cannot use form 0 or 1");
+        return {
+          props: {
+            lngDict,
+          },
+        };
       }
 
       // CHOP THE ADDRESS

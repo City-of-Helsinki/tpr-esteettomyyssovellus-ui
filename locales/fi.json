@@ -267,7 +267,7 @@
     "newAddress": "Uusi osoite",
     "locationHasChanged1": "Sijainti on muuttunut",
     "locationHasChanged2": "metriä viime kerrasta",
-    "errorHasOccured": "Sovelluksessa tapahtui virhe",
+    "errorHasOccured": "Virheelliset parametrit",
     "hasServicepointMoved": "Toimipisteen sijainti tai osoite on muuttunut:",
     "headerSentence1": "Toimipisteen ",
     "headerSentence2": " sijainti on muuttunut.",
