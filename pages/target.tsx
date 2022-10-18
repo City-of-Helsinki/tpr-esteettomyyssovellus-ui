@@ -18,7 +18,8 @@ import {
 } from "../types/constants";
 import { TargetProps } from "../types/general";
 import i18nLoader from "../utils/i18n";
-import { createEntrance, createServicePoint, getCurrentDate, getTokenHash, validateChecksum, validateDate } from "../utils/utilFunctions";
+import { createEntrance, createServicePoint } from "../utils/serverside";
+import { getCurrentDate, getTokenHash, validateChecksum, validateDate } from "../utils/utilFunctions";
 
 const Target = ({ servicepointId, entranceId, user, skip }: TargetProps): ReactElement => {
   const i18n = useI18n();

@@ -23,16 +23,8 @@ import { ChangeProps } from "../types/general";
 // import { checksumSecretTPRTesti } from "../utils/checksumSecret";
 import i18nLoader from "../utils/i18n";
 import getOrigin from "../utils/request";
-import {
-  createEntrance,
-  createServicePoint,
-  deleteEntrance,
-  formatAddress,
-  getCurrentDate,
-  getTokenHash,
-  validateChecksum,
-  validateDate,
-} from "../utils/utilFunctions";
+import { createEntrance, createServicePoint } from "../utils/serverside";
+import { deleteEntrance, formatAddress, getCurrentDate, getTokenHash, validateChecksum, validateDate } from "../utils/utilFunctions";
 import styles from "./ServicePoint.module.scss";
 
 const Servicepoints = ({
