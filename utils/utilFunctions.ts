@@ -26,9 +26,15 @@ import {
 import { API_TOKEN } from "./checksumSecret";
 import { EntranceLocationPhoto, EntrancePlaceBox, KeyValueString, QuestionBlockComment } from "../types/general";
 
-export const validateChecksum = (string: string, checksum: string | string[]): boolean => {
-  const hash = crypto.createHash("sha256").update(string).digest("hex").toUpperCase();
+export const validateChecksum = (inputString: string, checksum: string | string[]): boolean => {
+  const hash = crypto.createHash("sha256").update(inputString).digest("hex").toUpperCase();
   return hash === checksum;
+};
+
+export const validateDate = (validUntil: string) => {
+  const validUntilDate = new Date(validUntil);
+  const now = new Date();
+  return now < validUntilDate;
 };
 
 export const getTokenHash = () => {
