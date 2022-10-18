@@ -92,13 +92,15 @@
       "addNewEntrance": "Lisää uusi sisäänkäynti",
       "editServicepoint": "Muokkaa",
       "deleteEntrance": "Poista sisäänkäynti",
+      "deleteAccessibilityInfo": "HUOM! Tämä valinta tyhjentää esteettömyystiedot",
       "deleting": "Poistetaan",
       "deletingFinished": "Poistettu",
       "mainCtrlReturn": "Palaa hakuun",
       "mainCtrlDelete": "Poista esteettömyystieto"
     },
     "confirmation": {
-      "deleteEntrance": "Oletko varma, että haluat poistaa sisäänkäynnin?"
+      "deleteEntrance": "Oletko varma, että haluat poistaa sisäänkäynnin?",
+      "deleteAccessibilityInfo": "Oletko varma, että haluat tyhjentää esteettömyystiedot?"
     },
     "contactInfoHeader": "Yhteystiedot",
     "contactFormSummaryHeader": "Esteettömyystiedot",
@@ -266,10 +268,10 @@
     "locationHasChanged1": "Sijainti on muuttunut",
     "locationHasChanged2": "metriä viime kerrasta",
     "errorHasOccured": "Sovelluksessa tapahtui virhe",
-    "hasServicepointMoved": "Onko toimipiste muuttanut uusiin tiloihin?",
+    "hasServicepointMoved": "Toimipisteen sijainti tai osoite on muuttunut:",
     "headerSentence1": "Toimipisteen ",
     "headerSentence2": " sijainti on muuttunut.",
-    "radioButtonYes": "Kyllä, on muuttanut (jos valitset tämän, vanhat esteettömyystiedot poistetaan ja uusille tiloille täytyy syöttää uudet tiedot)",
-    "radioButtonNo": "Ei ole muuttanut (jos valitset tämän, voit muokata aiemmin tallennettuja esteettömyystietoja)"
+    "radioButtonYes": "Esteettömyystiedot tulee syöttää uudelleen. (Toimipiste on muuttanut toisiin tiloihin)",
+    "radioButtonNo": "Esteettömyystiedot eivät muutu."
   }
 }

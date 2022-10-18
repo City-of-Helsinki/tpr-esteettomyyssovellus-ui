@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import { Button, RadioButton, SelectionGroup } from "hds-react";
 import Layout from "../components/common/Layout";
 import LoadSpinner from "../components/common/LoadSpinner";
+import ModalConfirmation from "../components/common/ModalConfirmation";
 import { useAppDispatch } from "../state/hooks";
 import { setUser } from "../state/reducers/generalSlice";
 import { EntranceResults, ExternalServicepoint, Servicepoint, System, SystemForm } from "../types/backendModels";
@@ -52,9 +53,11 @@ const Servicepoints = ({
 }: ChangeProps): ReactElement => {
   const i18n = useI18n();
   const startState = "0";
-  const [selectedRadioItem, setSelectedRadioItem] = useState(startState);
   const dispatch = useAppDispatch();
   const router = useRouter();
+
+  const [selectedRadioItem, setSelectedRadioItem] = useState(startState);
+  const [confirmDeletion, setConfirmDeletion] = useState(false);
 
   if (user !== undefined) {
     dispatch(setUser(user));
@@ -112,6 +115,18 @@ const Servicepoints = ({
     router.push(`/details/${servicepointId}`);
   };
 
+  const openDeletionConfirmation = () => {
+    if (selectedRadioItem === "1") {
+      setConfirmDeletion(true);
+    } else {
+      handleContinueClick();
+    }
+  };
+
+  const closeDeletionConfirmation = () => {
+    setConfirmDeletion(false);
+  };
+
   return (
     <Layout>
       <Head>
@@ -150,14 +165,6 @@ const Servicepoints = ({
             <div className={styles.radioButtonDiv}>
               <SelectionGroup label={i18n.t("AddressChangedPage.hasServicepointMoved")}>
                 <RadioButton
-                  id="v-radio1"
-                  name="v-radio"
-                  label={i18n.t("AddressChangedPage.radioButtonYes")}
-                  value="1"
-                  checked={selectedRadioItem === "1"}
-                  onChange={handleRadioClick}
-                />
-                <RadioButton
                   id="v-radio2"
                   name="v-radio"
                   label={i18n.t("AddressChangedPage.radioButtonNo")}
@@ -165,11 +172,31 @@ const Servicepoints = ({
                   checked={selectedRadioItem === "2"}
                   onChange={handleRadioClick}
                 />
+                <RadioButton
+                  id="v-radio1"
+                  name="v-radio"
+                  label={i18n.t("AddressChangedPage.radioButtonYes")}
+                  value="1"
+                  checked={selectedRadioItem === "1"}
+                  onChange={handleRadioClick}
+                />
               </SelectionGroup>
             </div>
-            <Button id="continueButton" variant="primary" disabled={selectedRadioItem === startState} onClick={handleContinueClick}>
+            <Button id="continueButton" variant="primary" disabled={selectedRadioItem === startState} onClick={openDeletionConfirmation}>
               {i18n.t("accessibilityForm.continue")}
             </Button>
+
+            {confirmDeletion && (
+              <ModalConfirmation
+                open={confirmDeletion}
+                titleKey="servicepoint.buttons.deleteAccessibilityInfo"
+                messageKey="servicepoint.confirmation.deleteAccessibilityInfo"
+                cancelKey="common.buttons.no"
+                confirmKey="common.buttons.yes"
+                closeCallback={closeDeletionConfirmation}
+                confirmCallback={handleContinueClick}
+              />
+            )}
           </div>
         )}
 
