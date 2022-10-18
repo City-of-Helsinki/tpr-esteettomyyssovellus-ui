@@ -29,13 +29,13 @@ export const validateChecksum = (inputString: string, checksum: string | string[
   return hash === checksum;
 };
 
-export const validateDate = (validUntil: string) => {
+export const validateDate = (validUntil: string): boolean => {
   const validUntilDate = new Date(validUntil);
   const now = new Date();
   return now < validUntilDate;
 };
 
-export const getTokenHash = () => {
+export const getTokenHash = (): string => {
   const hash = crypto.createHash("sha256").update(API_TOKEN).digest("hex").toUpperCase();
   return hash.toLocaleLowerCase();
 };

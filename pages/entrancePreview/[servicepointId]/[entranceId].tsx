@@ -40,7 +40,7 @@ import {
   BackendEntranceField,
   BackendEntrancePlace,
   BackendEntranceSentence,
-  BackendEntranceSentenceGroup,
+  // BackendEntranceSentenceGroup,
   BackendFormGuide,
   BackendPlace,
   BackendServicepoint,
@@ -60,6 +60,7 @@ import {
   QuestionBlockComment,
 } from "../../../types/general";
 import i18nLoader from "../../../utils/i18n";
+import { validateServicepointHash } from "../../../utils/serverside";
 import { filterByLanguage, formatAddress, getCurrentDate, getTokenHash, isLocationValid } from "../../../utils/utilFunctions";
 import styles from "./preview.module.scss";
 
@@ -78,6 +79,7 @@ const Preview = ({
   formGuideData,
   mainEntranceId,
   isMainEntrancePublished,
+  isChecksumValid,
 }: PreviewProps): ReactElement => {
   const i18n = useI18n();
   const curLocale = i18n.locale();
@@ -86,8 +88,8 @@ const Preview = ({
 
   const [isSendingComplete, setSendingComplete] = useState(false);
 
-  // TODO - improve this by checking user on server-side
   const user = useAppSelector((state) => state.generalSlice.user);
+  const checksum = useAppSelector((state) => state.generalSlice.checksum);
   const isUserValid = !!user && user.length > 0;
 
   useEffect(() => {
@@ -268,9 +270,11 @@ const Preview = ({
   const filteredPlaces = accessibilityPlaceData.filter((place) => place.language_id === curLocaleId);
 
   const treeItems = {
-    [servicepointData.servicepoint_name ?? ""]: hasData ? `/details/${servicepointData.servicepoint_id}` : "",
-    [i18n.t("servicepoint.contactFormSummaryHeader")]: `/entranceAccessibility/${servicepointData.servicepoint_id}/${entranceId}`,
-    [i18n.t("servicepoint.contactFormPreviewHeader")]: `/entrancePreview/${servicepointData.servicepoint_id}/${entranceId}`,
+    [servicepointData.servicepoint_name ?? ""]: hasData ? `/details/${servicepointData.servicepoint_id}?checksum=${checksum}` : "",
+    [i18n.t(
+      "servicepoint.contactFormSummaryHeader"
+    )]: `/entranceAccessibility/${servicepointData.servicepoint_id}/${entranceId}?checksum=${checksum}`,
+    [i18n.t("servicepoint.contactFormPreviewHeader")]: `/entrancePreview/${servicepointData.servicepoint_id}/${entranceId}?checksum=${checksum}`,
   };
 
   return (
@@ -278,13 +282,15 @@ const Preview = ({
       <Head>
         <title>{i18n.t("common.header.title")}</title>
       </Head>
-      {!isUserValid && <h1>{i18n.t("common.notAuthorized")}</h1>}
+      {!isChecksumValid && <h1>{i18n.t("common.invalidParams")}</h1>}
 
-      {isUserValid && isLoading && <LoadSpinner />}
+      {isChecksumValid && !isUserValid && <h1>{i18n.t("common.notAuthorized")}</h1>}
 
-      {isUserValid && !isLoading && !hasData && <h1>{i18n.t("common.noData")}</h1>}
+      {isChecksumValid && isUserValid && isLoading && <LoadSpinner />}
 
-      {isUserValid && !isLoading && hasData && (
+      {isChecksumValid && isUserValid && !isLoading && !hasData && <h1>{i18n.t("common.noData")}</h1>}
+
+      {isChecksumValid && isUserValid && !isLoading && hasData && (
         <main id="content">
           <div className={styles.maincontainer}>
             <div className={styles.infocontainer}>
@@ -372,11 +378,11 @@ const Preview = ({
 };
 
 // Server-side rendering
-export const getServerSideProps: GetServerSideProps = async ({ params, locales }) => {
+export const getServerSideProps: GetServerSideProps = async ({ params, query, locales }) => {
   const lngDict = await i18nLoader(locales);
 
   let servicepointData: BackendServicepoint = {} as BackendServicepoint;
-  let entranceSentenceGroupData: BackendEntranceSentenceGroup[] = [];
+  // let entranceSentenceGroupData: BackendEntranceSentenceGroup[] = [];
   let accessibilityData: AccessibilityData = {};
   let accessibilityPlaceData: BackendPlace[] = [];
   let entranceData: EntranceData = {};
@@ -390,7 +396,9 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   let mainEntranceId = -1;
   let isMainEntrancePublished = false;
 
-  if (params !== undefined) {
+  const isChecksumValid = params !== undefined && query !== undefined && validateServicepointHash(Number(params.servicepointId), query.checksum);
+
+  if (isChecksumValid && params !== undefined) {
     try {
       const servicepointBackendDetailResp = await fetch(
         `${API_URL_BASE}${API_FETCH_BACKEND_SERVICEPOINT}?servicepoint_id=${params.servicepointId}&format=json`,
@@ -554,18 +562,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       }
     } catch (err) {
       console.error("Error", err);
-
-      servicepointData = {} as BackendServicepoint;
-      entranceSentenceGroupData = [];
-      accessibilityData = {};
-      accessibilityPlaceData = [];
-      entranceData = {};
-      entrancePlaceData = {};
-      questionBlockCommentData = [];
-      entranceChoiceData = {};
-      questionAnswerData = [];
-      questionExtraAnswerData = [];
-      formGuideData = [];
     }
   }
 
@@ -573,7 +569,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
     props: {
       lngDict,
       servicepointData,
-      entranceSentenceGroupData,
+      // entranceSentenceGroupData,
       accessibilityData,
       accessibilityPlaceData,
       entranceData,
@@ -586,6 +582,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       formId,
       mainEntranceId,
       isMainEntrancePublished,
+      isChecksumValid,
     },
   };
 };

@@ -8,7 +8,7 @@ import Layout from "../components/common/Layout";
 import LoadSpinner from "../components/common/LoadSpinner";
 import ModalConfirmation from "../components/common/ModalConfirmation";
 import { useAppDispatch } from "../state/hooks";
-import { setUser } from "../state/reducers/generalSlice";
+import { setChecksum, setUser } from "../state/reducers/generalSlice";
 import { EntranceResults, ExternalServicepoint, Servicepoint, System, SystemForm } from "../types/backendModels";
 import {
   API_CHOP_ADDRESS,
@@ -23,7 +23,7 @@ import { ChangeProps } from "../types/general";
 // import { checksumSecretTPRTesti } from "../utils/checksumSecret";
 import i18nLoader from "../utils/i18n";
 import getOrigin from "../utils/request";
-import { createEntrance, createServicePoint } from "../utils/serverside";
+import { createEntrance, createServicePoint, getServicepointHash } from "../utils/serverside";
 import { deleteEntrance, formatAddress, getCurrentDate, getTokenHash, validateChecksum, validateDate } from "../utils/utilFunctions";
 import styles from "./ServicePoint.module.scss";
 
@@ -42,6 +42,7 @@ const Servicepoints = ({
   newNorthing,
   distance,
   user,
+  checksum,
   skip,
 }: ChangeProps): ReactElement => {
   const i18n = useI18n();
@@ -54,6 +55,9 @@ const Servicepoints = ({
 
   if (user !== undefined) {
     dispatch(setUser(user));
+  }
+  if (checksum !== undefined) {
+    dispatch(setChecksum(checksum));
   }
 
   const setSearchable = async () => {
@@ -72,7 +76,7 @@ const Servicepoints = ({
   }
 
   if (skip) {
-    router.push(`/details/${servicepointId}`);
+    router.push(`/details/${servicepointId}?checksum=${checksum}`);
   }
 
   const handleRadioClick = (e: ChangeEvent<HTMLInputElement>) => {
@@ -107,7 +111,7 @@ const Servicepoints = ({
     const updateAddressUrl = `${getOrigin(router)}/${API_FETCH_SERVICEPOINTS}${servicepointId}/update_address/`;
     await fetch(updateAddressUrl, updateAddressOptions);
 
-    router.push(`/details/${servicepointId}`);
+    router.push(`/details/${servicepointId}?checksum=${checksum}`);
   };
 
   const openDeletionConfirmation = () => {
@@ -326,6 +330,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
 
       let servicepointId = 0;
       let entranceId = 0;
+      let servicepointChecksum = "";
       if (externalServicepointData && externalServicepointData.length > 0) {
         servicepointId = externalServicepointData[0].servicepoint;
       }
@@ -364,6 +369,8 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
           Number(queryParams.easting),
           Number(queryParams.northing)
         );
+
+        servicepointChecksum = getServicepointHash(servicepointId);
 
         console.log("New servicepoint and entrance inserted to the database");
       } else {
@@ -423,6 +430,8 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
         const distance = Math.sqrt(Math.pow(oldNorthing - newNorthing, 2) + Math.pow(oldEasting - newEasting, 2));
         const locationHasChanged = distance > 15;
 
+        servicepointChecksum = getServicepointHash(servicepointId);
+
         if (addressHasChanged) {
           return {
             props: {
@@ -440,6 +449,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
               newEasting,
               newNorthing,
               user: queryParams.user,
+              checksum: servicepointChecksum,
               skip: false,
             },
           };
@@ -459,6 +469,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
               newNorthing,
               distance,
               user: queryParams.user,
+              checksum: servicepointChecksum,
               skip: false,
             },
           };
@@ -470,6 +481,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
         props: {
           servicepointId,
           user: queryParams.user,
+          checksum: servicepointChecksum,
           skip: true,
         },
       };

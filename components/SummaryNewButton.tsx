@@ -14,11 +14,12 @@ const SummaryNewButton = (): JSX.Element => {
   const router = useRouter();
 
   const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
+  const checksum = useAppSelector((state) => state.generalSlice.checksum);
 
   const handleEditorAddPointData = () => {
     const startedAnswering = getCurrentDate();
     dispatch(setStartDate(startedAnswering));
-    const url = `/entranceAccessibility/${curServicepointId}`;
+    const url = `/entranceAccessibility/${curServicepointId}?checksum=${checksum}`;
     router.push(url);
   };
 

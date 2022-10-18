@@ -38,6 +38,7 @@
     "opensInANewTab": "Avautuu uudessa välilehdessä.",
     "opensExternal": "Siirtyy toiseen sivustoon.",
     "notAuthorized": "Sinulla ei ole lupaa tarkastella pyydettyä sivua",
+    "invalidParams": "Virheelliset parametrit",
     "noData": "Tietoja ei ole saatavilla",
     "landing": {
       "title": "Tervetuloa päivittämään esteettömyystietoja"

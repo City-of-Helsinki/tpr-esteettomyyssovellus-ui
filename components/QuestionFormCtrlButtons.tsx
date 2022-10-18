@@ -50,10 +50,11 @@ const QuestionFormCtrlButtons = ({
   const finishedBlocks = useAppSelector((state) => state.formReducer.finishedBlocks);
   // const isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
   const user = useAppSelector((state) => state.generalSlice.user);
+  const checksum = useAppSelector((state) => state.generalSlice.checksum);
 
   const handleCancel = (): void => {
     // TODO: Add errorpage
-    const url = curServicepointId === -1 ? "/" : `/details/${curServicepointId}/`;
+    const url = curServicepointId === -1 ? "/" : `/details/${curServicepointId}?checksum=${checksum}`;
     router.push(url);
   };
 
@@ -188,7 +189,7 @@ const QuestionFormCtrlButtons = ({
       dispatch(setSaving({ preview: false }));
 
       if (entranceId > 0) {
-        router.push(`/entrancePreview/${curServicepointId}/${entranceId}`);
+        router.push(`/entrancePreview/${curServicepointId}/${entranceId}?checksum=${checksum}`);
       }
     }
   };

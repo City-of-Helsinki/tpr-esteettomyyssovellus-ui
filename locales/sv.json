@@ -38,6 +38,7 @@
     "opensInANewTab": "Öppnar i ny flik.",
     "opensExternal": "Flyttar till en annan webbplats.",
     "notAuthorized": "Du har inte behörighet att visa den begärda sidan",
+    "invalidParams": "Ogiltiga parametrar",
     "noData": "Information är inte tillgänglig",
     "landing": {
       "title": "Välkommen till uppdatering av tillgänglighetsinformation"

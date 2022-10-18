@@ -23,6 +23,7 @@ const QuestionBlockLocationPhoto = ({ block, canAddLocation, canAddPhoto }: Ques
   const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
   const curEntranceLocationPhoto = useAppSelector((state) => state.additionalInfoReducer.entranceLocationPhoto);
   const servicepointCoordinatesEuref = useAppSelector((state) => state.generalSlice.coordinatesEuref);
+  const checksum = useAppSelector((state) => state.generalSlice.checksum);
 
   const { question_block_id, add_location_title, add_location_description, add_photo_title, add_photo_description } = block;
   const locationTexts = add_location_description?.split("<BR>");
@@ -82,7 +83,10 @@ const QuestionBlockLocationPhoto = ({ block, canAddLocation, canAddPhoto }: Ques
       })
     );
 
-    const url = curEntranceId > 0 ? `/entranceLocationPhoto/${curServicepointId}/${curEntranceId}` : `/entranceLocationPhoto/${curServicepointId}`;
+    const url =
+      curEntranceId > 0
+        ? `/entranceLocationPhoto/${curServicepointId}/${curEntranceId}?checksum=${checksum}`
+        : `/entranceLocationPhoto/${curServicepointId}?checksum=${checksum}`;
     router.push(url);
   };
 

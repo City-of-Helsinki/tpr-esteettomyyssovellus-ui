@@ -15,6 +15,7 @@ const QuestionBlockComment = ({ block }: QuestionBlockCommentProps): JSX.Element
   const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
   const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
   const curQuestionBlockComments = useAppSelector((state) => state.additionalInfoReducer.questionBlockComments);
+  const checksum = useAppSelector((state) => state.generalSlice.checksum);
 
   const { question_block_id, text } = block;
 
@@ -40,8 +41,8 @@ const QuestionBlockComment = ({ block }: QuestionBlockCommentProps): JSX.Element
 
     const url =
       curEntranceId > 0
-        ? `/blockComment/${curServicepointId}/${question_block_id}/${curEntranceId}`
-        : `/blockComment/${curServicepointId}/${question_block_id}`;
+        ? `/blockComment/${curServicepointId}/${question_block_id}/${curEntranceId}?checksum=${checksum}`
+        : `/blockComment/${curServicepointId}/${question_block_id}?checksum=${checksum}`;
     router.push(url);
   };
 

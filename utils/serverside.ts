@@ -1,3 +1,4 @@
+import crypto from "crypto";
 import { Entrance, ExternalBackendServicepoint, Servicepoint } from "../types/backendModels";
 import {
   API_FETCH_BACKEND_EXTERNAL_SERVICEPOINTS,
@@ -6,7 +7,8 @@ import {
   API_FETCH_SERVICEPOINTS,
   API_URL_BASE,
 } from "../types/constants";
-import { getCurrentDate, getTokenHash } from "./utilFunctions";
+import { API_TOKEN } from "./checksumSecret";
+import { getCurrentDate, getTokenHash, validateChecksum } from "./utilFunctions";
 
 export const getServicepointIdFromTargetId = async (targetId?: string | string[]): Promise<number> => {
   // Target id examples:
@@ -30,6 +32,23 @@ export const getServicepointIdFromTargetId = async (targetId?: string | string[]
   }
 
   return servicepointId;
+};
+
+export const getServicepointHash = (servicepointId: number): string => {
+  return crypto
+    .createHash("sha256")
+    .update(API_TOKEN + servicepointId)
+    .digest("hex")
+    .toUpperCase();
+};
+
+export const validateServicepointHash = (servicepointId: number, checksum?: string | string[]): boolean => {
+  if (servicepointId > 0 && !!checksum) {
+    const checksumString = API_TOKEN + servicepointId;
+    return validateChecksum(checksumString, checksum);
+  } else {
+    return false;
+  }
 };
 
 export const createServicePoint = async (

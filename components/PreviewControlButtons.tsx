@@ -33,11 +33,15 @@ const PreviewControlButtons = ({ hasSaveDraftButton, setSendingComplete }: Previ
   // const formFinished = useAppSelector((state) => state.formReducer.formFinished);
   // const formSubmitted = useAppSelector((state) => state.formReducer.formSubmitted);
   const user = useAppSelector((state) => state.generalSlice.user);
+  const checksum = useAppSelector((state) => state.generalSlice.checksum);
 
   const handleContinueEditing = (): void => {
     // dispatch(setContinue());
     // TODO: Add errorpage
-    const url = curEntranceId > 0 ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}` : `/entranceAccessibility/${curServicepointId}`;
+    const url =
+      curEntranceId > 0
+        ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}?checksum=${checksum}`
+        : `/entranceAccessibility/${curServicepointId}?checksum=${checksum}`;
     const pageUrl = curServicepointId === -1 ? "/" : url;
     router.push(pageUrl);
   };

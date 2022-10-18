@@ -38,6 +38,7 @@
     "opensInANewTab": "Opens in a new tab.",
     "opensExternal": "Moves to another site.",
     "notAuthorized": "You are not authorized to view the requested page",
+    "invalidParams": "Invalid parameters",
     "noData": "Information is not available",
     "landing": {
       "title": "Welcome to updating accessibity information"

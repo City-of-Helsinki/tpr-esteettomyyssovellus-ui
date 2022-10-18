@@ -328,6 +328,7 @@ export interface EntranceFormProps {
   formGuideData: BackendFormGuide[];
   formId: number;
   isMainEntrancePublished: boolean;
+  isChecksumValid: boolean;
 }
 
 export interface QuestionBlockProps {
@@ -372,6 +373,7 @@ export interface ChangeProps {
   newNorthing?: number;
   distance?: number;
   user?: string;
+  checksum?: string;
   skip?: boolean;
 }
 
@@ -379,6 +381,7 @@ export interface TargetProps {
   servicepointId?: number;
   entranceId?: number;
   user?: string;
+  checksum?: string;
   skip?: boolean;
 }
 
@@ -441,11 +444,12 @@ export interface DetailsProps {
   mainEntranceId: number;
   draftMainEntranceId: number;
   isMainEntrancePublished: boolean;
+  isChecksumValid: boolean;
 }
 
 export interface PreviewProps {
   servicepointData: BackendServicepoint;
-  entranceSentenceGroupData: BackendEntranceSentenceGroup[];
+  // entranceSentenceGroupData: BackendEntranceSentenceGroup[];
   accessibilityData: AccessibilityData;
   accessibilityPlaceData: BackendPlace[];
   entranceData: EntranceData;
@@ -458,6 +462,7 @@ export interface PreviewProps {
   formId: number;
   mainEntranceId: number;
   isMainEntrancePublished: boolean;
+  isChecksumValid: boolean;
 }
 
 export interface SummaryProps {
@@ -477,6 +482,7 @@ export interface EntranceLocationPhotoProps {
   entranceData: BackendEntrance;
   formGuideData: BackendFormGuide[];
   formId: number;
+  isChecksumValid: boolean;
 }
 
 export interface EntranceLocationProps {
@@ -498,6 +504,7 @@ export interface AccessibilityPlaceProps {
   placeId: number;
   formGuideData: BackendFormGuide[];
   formId: number;
+  isChecksumValid: boolean;
 }
 
 export interface AccessibilityPlaceBoxProps {
@@ -534,6 +541,7 @@ export interface EntranceQuestionBlockCommentProps {
   block: BackendQuestionBlock;
   formGuideData: BackendFormGuide[];
   formId: number;
+  isChecksumValid: boolean;
 }
 
 export interface AdditionalCommentProps {

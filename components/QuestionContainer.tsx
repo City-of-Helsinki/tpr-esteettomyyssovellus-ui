@@ -42,6 +42,7 @@ const QuestionContainer = ({ question, accessibilityPlaces, children }: Question
   const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
   const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
   const curEntrancePlaceBoxes = useAppSelector((state) => state.additionalInfoReducer.entrancePlaceBoxes);
+  const checksum = useAppSelector((state) => state.generalSlice.checksum);
   const isInvalid = invalidBlocks.includes(questionBlockId);
 
   // Accessibility place string examples:
@@ -97,8 +98,8 @@ const QuestionContainer = ({ question, accessibilityPlaces, children }: Question
 
     const url =
       curEntranceId > 0
-        ? `/accessibilityPlace/${curServicepointId}/${placeId}/${curEntranceId}`
-        : `/accessibilityPlace/${curServicepointId}/${placeId}`;
+        ? `/accessibilityPlace/${curServicepointId}/${placeId}/${curEntranceId}?checksum=${checksum}`
+        : `/accessibilityPlace/${curServicepointId}/${placeId}?checksum=${checksum}`;
     router.push(url);
   };
 

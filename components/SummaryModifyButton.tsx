@@ -14,6 +14,7 @@ const SummaryModifyButton = ({ entranceIdToModify, hasData }: SummaryModifyButto
   const router = useRouter();
 
   const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
+  const checksum = useAppSelector((state) => state.generalSlice.checksum);
   // const { entrance_id: curEntranceId } = entranceData || {};
 
   const handleEditorModifyPointData = () => {
@@ -21,7 +22,9 @@ const SummaryModifyButton = ({ entranceIdToModify, hasData }: SummaryModifyButto
     dispatch(setStartDate(startedAnswering));
     // const url = entranceData ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}` : `/entranceAccessibility/${curServicepointId}`;
     const url =
-      entranceIdToModify > 0 ? `/entranceAccessibility/${curServicepointId}/${entranceIdToModify}` : `/entranceAccessibility/${curServicepointId}`;
+      entranceIdToModify > 0
+        ? `/entranceAccessibility/${curServicepointId}/${entranceIdToModify}?checksum=${checksum}`
+        : `/entranceAccessibility/${curServicepointId}?checksum=${checksum}`;
     router.push(url);
   };
 

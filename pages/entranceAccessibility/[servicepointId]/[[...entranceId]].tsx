@@ -53,6 +53,7 @@ import {
 } from "../../../types/constants";
 import { BlockComment, EntranceFormProps, KeyValueNumber, KeyValueString, QuestionBlockComment, Validation } from "../../../types/general";
 import i18nLoader from "../../../utils/i18n";
+import { validateServicepointHash } from "../../../utils/serverside";
 import { getTokenHash, getCurrentDate, formatAddress, convertCoordinates, isLocationValid } from "../../../utils/utilFunctions";
 import styles from "./entranceAccessibility.module.scss";
 
@@ -73,6 +74,7 @@ const EntranceAccessibility = ({
   formGuideData,
   formId,
   isMainEntrancePublished,
+  isChecksumValid,
 }: EntranceFormProps): ReactElement => {
   const i18n = useI18n();
   const curLocale: string = i18n.locale();
@@ -83,8 +85,8 @@ const EntranceAccessibility = ({
 
   const [isMeetingRoomSaveComplete, setMeetingRoomSaveComplete] = useState(false);
 
-  // TODO - improve this by checking user on server-side
   const user = useAppSelector((state) => state.generalSlice.user);
+  const checksum = useAppSelector((state) => state.generalSlice.checksum);
   const isUserValid = !!user && user.length > 0;
 
   // Note: To preserve any edits, entrance data is not cleared with purge, so population is handled in the useEffect below instead
@@ -396,22 +398,26 @@ const EntranceAccessibility = ({
     formId >= 2
       ? {}
       : {
-          [servicepointData.servicepoint_name ?? ""]: hasData ? `/details/${servicepointData.servicepoint_id}` : "",
+          [servicepointData.servicepoint_name ?? ""]: hasData ? `/details/${servicepointData.servicepoint_id}?checksum=${checksum}` : "",
           [i18n.t("servicepoint.contactFormSummaryHeader")]:
-            curEntranceId > 0 ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}` : `/entranceAccessibility/${curServicepointId}`,
+            curEntranceId > 0
+              ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}?checksum=${checksum}`
+              : `/entranceAccessibility/${curServicepointId}?checksum=${checksum}`,
         };
   return (
     <Layout>
       <Head>
         <title>{i18n.t("common.header.title")}</title>
       </Head>
-      {!isUserValid && <h1>{i18n.t("common.notAuthorized")}</h1>}
+      {!isChecksumValid && <h1>{i18n.t("common.invalidParams")}</h1>}
 
-      {isUserValid && isLoading && <LoadSpinner />}
+      {isChecksumValid && !isUserValid && <h1>{i18n.t("common.notAuthorized")}</h1>}
 
-      {isUserValid && !isLoading && !hasData && <h1>{i18n.t("common.noData")}</h1>}
+      {isChecksumValid && isUserValid && isLoading && <LoadSpinner />}
 
-      {isUserValid && !isLoading && hasData && (
+      {isChecksumValid && isUserValid && !isLoading && !hasData && <h1>{i18n.t("common.noData")}</h1>}
+
+      {isChecksumValid && isUserValid && !isLoading && hasData && (
         <main id="content">
           <div className={styles.maincontainer}>
             <div className={styles.infocontainer}>
@@ -478,7 +484,7 @@ const EntranceAccessibility = ({
 };
 
 // NextJs Server-Side Rendering, HDS best practices (SSR)
-export const getServerSideProps: GetServerSideProps = async ({ params, locales }) => {
+export const getServerSideProps: GetServerSideProps = async ({ params, query, locales }) => {
   const lngDict = await i18nLoader(locales);
 
   let questionsData: BackendQuestion[] = [];
@@ -497,7 +503,9 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   let formId = -1;
   let isMainEntrancePublished = false;
 
-  if (params !== undefined) {
+  const isChecksumValid = params !== undefined && query !== undefined && validateServicepointHash(Number(params.servicepointId), query.checksum);
+
+  if (isChecksumValid && params !== undefined) {
     try {
       const servicepointBackendDetailResp = await fetch(
         `${API_URL_BASE}${API_FETCH_BACKEND_SERVICEPOINT}?servicepoint_id=${params.servicepointId}&format=json`,
@@ -680,20 +688,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       }
     } catch (e) {
       console.error("Error", e);
-
-      questionsData = [];
-      questionChoicesData = [];
-      questionBlocksData = [];
-      questionBlockFieldData = [];
-      accessibilityPlaceData = [];
-      questionAnswerData = [];
-      questionExtraAnswerData = [];
-      entranceData = {} as BackendEntrance;
-      entrancePlaceData = [];
-      questionBlockCommentData = [];
-      copyableEntranceData = [];
-      servicepointData = {} as BackendServicepoint;
-      formGuideData = [];
     }
   }
   return {
@@ -714,6 +708,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       formGuideData,
       formId,
       isMainEntrancePublished,
+      isChecksumValid,
     },
   };
 };

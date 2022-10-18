@@ -43,6 +43,7 @@ import {
 } from "../../types/backendModels";
 import { AccessibilityData, DetailsProps, EntranceChoiceData, EntranceData, EntrancePlaceData } from "../../types/general";
 import i18nLoader from "../../utils/i18n";
+import { validateServicepointHash } from "../../utils/serverside";
 import { convertCoordinates, filterByLanguage, formatAddress, getFinnishDate, getTokenHash } from "../../utils/utilFunctions";
 import styles from "./details.module.scss";
 
@@ -59,6 +60,7 @@ const Details = ({
   mainEntranceId,
   draftMainEntranceId,
   isMainEntrancePublished,
+  isChecksumValid,
 }: DetailsProps): ReactElement => {
   const i18n = useI18n();
   const curLocale: string = i18n.locale();
@@ -66,8 +68,8 @@ const Details = ({
   const isLoading = useLoading();
   const finnishDate = servicepointData.modified ? getFinnishDate(servicepointData.modified) : "";
 
-  // TODO - improve this by checking user on server-side
   const user = useAppSelector((state) => state.generalSlice.user);
+  const checksum = useAppSelector((state) => state.generalSlice.checksum);
   const isUserValid = !!user && user.length > 0;
 
   useEffect(() => {
@@ -122,7 +124,7 @@ const Details = ({
     servicepointData.address_city
   )}`;
 
-  const treeItems = { [servicepointData.servicepoint_name ?? ""]: `/details/${servicepointData.servicepoint_id}` };
+  const treeItems = { [servicepointData.servicepoint_name ?? ""]: `/details/${servicepointData.servicepoint_id}?checksum=${checksum}` };
 
   // Special case where the saved draft main entrance has a different id
   const mainEntranceIdToModify = draftMainEntranceId > 0 && mainEntranceId !== draftMainEntranceId ? draftMainEntranceId : mainEntranceId;
@@ -132,13 +134,15 @@ const Details = ({
       <Head>
         <title>{i18n.t("common.header.title")}</title>
       </Head>
-      {!isUserValid && <h1>{i18n.t("common.notAuthorized")}</h1>}
+      {!isChecksumValid && <h1>{i18n.t("common.invalidParams")}</h1>}
 
-      {isUserValid && isLoading && <LoadSpinner />}
+      {isChecksumValid && !isUserValid && <h1>{i18n.t("common.notAuthorized")}</h1>}
 
-      {isUserValid && !isLoading && !hasData && <h1>{i18n.t("common.noData")}</h1>}
+      {isChecksumValid && isUserValid && isLoading && <LoadSpinner />}
 
-      {isUserValid && !isLoading && hasData && (
+      {isChecksumValid && isUserValid && !isLoading && !hasData && <h1>{i18n.t("common.noData")}</h1>}
+
+      {isChecksumValid && isUserValid && !isLoading && hasData && (
         <main id="content">
           <div className={styles.maincontainer}>
             <div className={styles.infocontainer}>
@@ -242,7 +246,7 @@ const Details = ({
 };
 
 // Server-side rendering
-export const getServerSideProps: GetServerSideProps = async ({ params, locales }) => {
+export const getServerSideProps: GetServerSideProps = async ({ params, query, locales }) => {
   const lngDict = await i18nLoader(locales);
 
   let servicepointData: BackendServicepoint = {} as BackendServicepoint;
@@ -257,7 +261,9 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   let draftMainEntranceId = -1;
   let isMainEntrancePublished = false;
 
-  if (params !== undefined) {
+  const isChecksumValid = params !== undefined && query !== undefined && validateServicepointHash(Number(params.servicepointId), query.checksum);
+
+  if (isChecksumValid && params !== undefined) {
     try {
       const servicepointBackendDetailResp = await fetch(
         `${API_URL_BASE}${API_FETCH_BACKEND_SERVICEPOINT}?servicepoint_id=${params.servicepointId}&format=json`,
@@ -407,15 +413,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       formGuideData = await (formGuideResp.json() as Promise<BackendFormGuide[]>);
     } catch (err) {
       console.error("Error", err);
-
-      servicepointData = {} as BackendServicepoint;
-      entranceSentenceGroupData = [];
-      accessibilityData = {};
-      accessibilityPlaceData = [];
-      entranceData = {};
-      entrancePlaceData = {};
-      entranceChoiceData = {};
-      formGuideData = [];
     }
   }
 
@@ -433,6 +430,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       mainEntranceId,
       draftMainEntranceId,
       isMainEntrancePublished,
+      isChecksumValid,
     },
   };
 };

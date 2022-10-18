@@ -1,5 +1,3 @@
-// this files code from marketing project: needs editing or deleting
-
 import React, { ReactNode, ReactElement, useEffect, useRef } from "react";
 import Head from "next/head";
 import Footer from "./Footer";

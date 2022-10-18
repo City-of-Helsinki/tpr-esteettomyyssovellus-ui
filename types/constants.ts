@@ -61,7 +61,6 @@ export enum LanguageLocales {
   en = 3,
 }
 
-// from marketing, all values might not be used/needed, also if Toast not used -> delete
 export enum Toast {
   NotAuthenticated = "notAuthenticated",
   ValidationFailed = "validationFailed",

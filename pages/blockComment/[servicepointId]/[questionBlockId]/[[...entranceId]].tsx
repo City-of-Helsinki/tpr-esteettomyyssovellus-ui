@@ -28,6 +28,7 @@ import {
 } from "../../../../types/backendModels";
 import { EntranceQuestionBlockCommentProps } from "../../../../types/general";
 import i18nLoader from "../../../../utils/i18n";
+import { validateServicepointHash } from "../../../../utils/serverside";
 import styles from "./blockComment.module.scss";
 
 // usage: the comments of a question block for an entrance
@@ -38,13 +39,14 @@ const EntranceQuestionBlockComment = ({
   block,
   formGuideData,
   formId,
+  isChecksumValid,
 }: EntranceQuestionBlockCommentProps): ReactElement => {
   const i18n = useI18n();
   const curLocale: string = i18n.locale();
   const isLoading = useLoading();
 
-  // TODO - improve this by checking user on server-side
   const user = useAppSelector((state) => state.generalSlice.user);
+  const checksum = useAppSelector((state) => state.generalSlice.checksum);
   const isUserValid = !!user && user.length > 0;
 
   // NOTE: don't clear the state in this page, since any new data should be used after returning to the question form
@@ -87,13 +89,15 @@ const EntranceQuestionBlockComment = ({
   const { invalidValues = [] } = filteredQuestionBlockComment || {};
 
   const treeItems = {
-    [servicepointData.servicepoint_name ?? ""]: hasData ? `/details/${servicepointData.servicepoint_id}` : "",
+    [servicepointData.servicepoint_name ?? ""]: hasData ? `/details/${servicepointData.servicepoint_id}?checksum=${checksum}` : "",
     [i18n.t("servicepoint.contactFormSummaryHeader")]:
-      curEntranceId > 0 ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}` : `/entranceAccessibility/${curServicepointId}`,
+      curEntranceId > 0
+        ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}?checksum=${checksum}`
+        : `/entranceAccessibility/${curServicepointId}?checksum=${checksum}`,
     [`${i18n.t("additionalInfo.additionalInfo")} > ${text}`]:
       curEntranceId > 0
-        ? `/blockComment/${curServicepointId}/${questionBlockId}/${curEntranceId}`
-        : `/blockComment/${curServicepointId}/${questionBlockId}`,
+        ? `/blockComment/${curServicepointId}/${questionBlockId}/${curEntranceId}?checksum=${checksum}`
+        : `/blockComment/${curServicepointId}/${questionBlockId}?checksum=${checksum}`,
   };
 
   return (
@@ -101,13 +105,15 @@ const EntranceQuestionBlockComment = ({
       <Head>
         <title>{i18n.t("common.header.title")}</title>
       </Head>
-      {!isUserValid && <h1>{i18n.t("common.notAuthorized")}</h1>}
+      {!isChecksumValid && <h1>{i18n.t("common.invalidParams")}</h1>}
 
-      {isUserValid && isLoading && <LoadSpinner />}
+      {isChecksumValid && !isUserValid && <h1>{i18n.t("common.notAuthorized")}</h1>}
 
-      {isUserValid && !isLoading && !hasData && <h1>{i18n.t("common.noData")}</h1>}
+      {isChecksumValid && isUserValid && isLoading && <LoadSpinner />}
 
-      {isUserValid && !isLoading && hasData && (
+      {isChecksumValid && isUserValid && !isLoading && !hasData && <h1>{i18n.t("common.noData")}</h1>}
+
+      {isChecksumValid && isUserValid && !isLoading && hasData && (
         <main id="content">
           <div className={styles.maincontainer}>
             <div className={styles.infocontainer}>
@@ -152,7 +158,7 @@ const EntranceQuestionBlockComment = ({
 };
 
 // Server-side rendering
-export const getServerSideProps: GetServerSideProps = async ({ params, locales }) => {
+export const getServerSideProps: GetServerSideProps = async ({ params, query, locales }) => {
   const lngDict = await i18nLoader(locales);
 
   let servicepointData: BackendServicepoint = {} as BackendServicepoint;
@@ -162,7 +168,9 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   let formGuideData: BackendFormGuide[] = [];
   let formId = -1;
 
-  if (params !== undefined) {
+  const isChecksumValid = params !== undefined && query !== undefined && validateServicepointHash(Number(params.servicepointId), query.checksum);
+
+  if (isChecksumValid && params !== undefined) {
     try {
       questionBlockId = Number(params.questionBlockId);
 
@@ -254,11 +262,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       }
     } catch (err) {
       console.error("Error", err);
-
-      servicepointData = {} as BackendServicepoint;
-      entranceData = {} as BackendEntrance;
-      block = {} as BackendQuestionBlock;
-      formGuideData = [];
     }
   }
 
@@ -271,6 +274,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       block,
       formGuideData,
       formId,
+      isChecksumValid,
     },
   };
 };

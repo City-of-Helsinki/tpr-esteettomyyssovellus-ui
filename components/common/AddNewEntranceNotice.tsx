@@ -1,5 +1,3 @@
-// this files code from marketing project: needs editing or deleting
-
 import React, { ReactElement } from "react";
 import { useI18n } from "next-localization";
 import { IconSignin } from "hds-react";
@@ -9,21 +7,19 @@ import QuestionButton from "../QuestionButton";
 import { useAppSelector } from "../../state/hooks";
 
 // usage: in preview page, add new entrances component
-// notice: derived from Notice (marketing), removed props due to single use only
-// if needed in multiple places maybe add them back or create new component from Notice or this
-// if the functionality changes enough
 const AddNewEntranceNotice = (): ReactElement => {
   const i18n = useI18n();
   const router = useRouter();
 
   const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
+  const checksum = useAppSelector((state) => state.generalSlice.checksum);
 
   const handleAddAdditionalEntrance = async () => {
-    router.push(`/entranceAccessibility/${curServicepointId}`);
+    router.push(`/entranceAccessibility/${curServicepointId}?checksum=${checksum}`);
   };
 
   const handleReturnToDetailspage = async () => {
-    router.push(`/details/${curServicepointId}`);
+    router.push(`/details/${curServicepointId}?checksum=${checksum}`);
   };
 
   return (

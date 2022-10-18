@@ -7,6 +7,7 @@ interface generalSliceProps {
   coordinatesWGS84: [number, number];
   isHelpOpen: boolean;
   user: string;
+  checksum: string;
 }
 
 // todo: get the initial location to here
@@ -15,6 +16,7 @@ const initialState: generalSliceProps = {
   coordinatesWGS84: [0, 0],
   isHelpOpen: false,
   user: "",
+  checksum: "",
 };
 
 export const generalSlice = createSlice({
@@ -35,15 +37,19 @@ export const generalSlice = createSlice({
     setUser: (state, action: PayloadAction<string>) => {
       return { ...state, user: action.payload };
     },
+    setChecksum: (state, action: PayloadAction<string>) => {
+      return { ...state, checksum: action.payload };
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(PURGE, (state) => ({
       ...initialState,
       user: state.user,
+      checksum: state.checksum,
     }));
   },
 });
 
-export const { setServicepointLocationEuref, setServicepointLocationWGS84, setHelpOpen, setUser } = generalSlice.actions;
+export const { setServicepointLocationEuref, setServicepointLocationWGS84, setHelpOpen, setUser, setChecksum } = generalSlice.actions;
 
 export default generalSlice.reducer;
