@@ -25,6 +25,7 @@ const AdditionalCommentCtrlButtons = ({ questionBlockId, questionBlockComment }:
 
   const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
   const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
+  const checksum = useAppSelector((state) => state.generalSlice.checksum);
 
   /*
   const handleAddInvalidValue = (invalidFieldId: string, invalidFieldLabel: string, invalidMessage: string) => {
@@ -115,8 +116,8 @@ const AdditionalCommentCtrlButtons = ({ questionBlockId, questionBlockComment }:
 
       const url =
         curEntranceId > 0
-          ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}${getPathHash()}`
-          : `/entranceAccessibility/${curServicepointId}${getPathHash()}`;
+          ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}?checksum=${checksum}${getPathHash()}`
+          : `/entranceAccessibility/${curServicepointId}?checksum=${checksum}${getPathHash()}`;
       router.push(url);
     }
   };
@@ -127,8 +128,8 @@ const AdditionalCommentCtrlButtons = ({ questionBlockId, questionBlockComment }:
 
     const url =
       curEntranceId > 0
-        ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}${getPathHash()}`
-        : `/entranceAccessibility/${curServicepointId}${getPathHash()}`;
+        ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}?checksum=${checksum}${getPathHash()}`
+        : `/entranceAccessibility/${curServicepointId}?checksum=${checksum}${getPathHash()}`;
     router.push(url);
   };
 

@@ -38,6 +38,7 @@
     "opensInANewTab": "Öppnar i ny flik.",
     "opensExternal": "Flyttar till en annan webbplats.",
     "notAuthorized": "Du har inte behörighet att visa den begärda sidan",
+    "invalidParams": "Ogiltiga parametrar",
     "noData": "Information är inte tillgänglig",
     "landing": {
       "title": "Välkommen till uppdatering av tillgänglighetsinformation"
@@ -92,13 +93,15 @@
       "addNewEntrance": "Lägg till en ny entré",
       "editServicepoint": "Redigera",
       "deleteEntrance": "Ta bort ingången",
+      "deleteAccessibilityInfo": "NOTERA! Detta val rensar tillgänglighetsdata",
       "deleting": "Tar bort",
       "deletingFinished": "Raderade",
       "mainCtrlReturn": "Återgå till sökningen",
       "mainCtrlDelete": "Ta bort tillgänglighetsinformation"
     },
     "confirmation": {
-      "deleteEntrance": "Är du säker på att du vill ta bort ingången?"
+      "deleteEntrance": "Är du säker på att du vill ta bort ingången?",
+      "deleteAccessibilityInfo": "Är du säker på att du vill rensa tillgänglighetsdata?"
     },
     "contactInfoHeader": "Kontaktinformation",
     "contactFormSummaryHeader": "Tillgänglighetsinformation",
@@ -265,11 +268,11 @@
     "newAddress": "Ny adress",
     "locationHasChanged1": "Platsen har flyttats",
     "locationHasChanged2": "meter från förra gången",
-    "errorHasOccured": "Ett fel har uppstått i programvaran",
-    "hasServicepointMoved": "Har kontoret flyttat till nya lokaler?",
+    "errorHasOccured": "Ogiltiga parametrar",
+    "hasServicepointMoved": "Kontorets plats eller adress har ändrats:",
     "headerSentence1": "Platsen för ",
     "headerSentence2": " har ändrats.",
-    "radioButtonYes": "Ja, har ändrats (om du väljer detta kommer den gamla tillgänglighetsinformationen att raderas och ny information måste anges för de nya faciliteterna)",
-    "radioButtonNo": "Ej ändrad (om du väljer detta kan du redigera tidigare sparad tillgänglighetsinformation)"
+    "radioButtonYes": "Tillgänglighetsinformationen måste anges igen. (Kontoret har flyttat till andra lokaler)",
+    "radioButtonNo": "Tillgänglighetsinformationen kommer inte att ändras."
   }
 }

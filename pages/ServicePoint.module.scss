@@ -4,6 +4,10 @@
   display: flex;
   align-items: center;
 
+  p {
+    margin-top: 0;
+  }
+
   .address {
     font-size: $fontsize-heading-s;
     font-weight: 700;

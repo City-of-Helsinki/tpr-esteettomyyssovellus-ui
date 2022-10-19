@@ -1,5 +1,3 @@
-// this files code from marketing project: if not used / edited -> delete
-
 export const defaultLocale = "fi";
 
 const i18nLoader = async (locale: string): Promise<{ [locale: string]: { [key: string]: unknown } }> => {

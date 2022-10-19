@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 import Layout from "../components/common/Layout";
 import LoadSpinner from "../components/common/LoadSpinner";
 import { useAppDispatch } from "../state/hooks";
-import { setUser } from "../state/reducers/generalSlice";
+import { setChecksum, setUser } from "../state/reducers/generalSlice";
 import { EntranceResults, ExternalServicepoint, Servicepoint, System, SystemForm } from "../types/backendModels";
 import {
   API_FETCH_ENTRANCES,
@@ -18,9 +18,10 @@ import {
 } from "../types/constants";
 import { TargetProps } from "../types/general";
 import i18nLoader from "../utils/i18n";
-import { createEntrance, createServicePoint, getCurrentDate, getTokenHash, validateChecksum } from "../utils/utilFunctions";
+import { createEntrance, createServicePoint, getServicepointHash } from "../utils/serverside";
+import { getCurrentDate, getTokenHash, validateChecksum, validateDate } from "../utils/utilFunctions";
 
-const Target = ({ servicepointId, entranceId, user, skip }: TargetProps): ReactElement => {
+const Target = ({ servicepointId, entranceId, user, checksum, skip }: TargetProps): ReactElement => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -28,12 +29,15 @@ const Target = ({ servicepointId, entranceId, user, skip }: TargetProps): ReactE
   if (user !== undefined) {
     dispatch(setUser(user));
   }
+  if (checksum !== undefined) {
+    dispatch(setChecksum(checksum));
+  }
 
   // IS THE LANGUAGECODE A NUMBER OR A STRING???
   // console.log(languageCode);
 
   if (skip) {
-    router.push(`/entranceAccessibility/${servicepointId}/${entranceId}`);
+    router.push(`/entranceAccessibility/${servicepointId}/${entranceId}?checksum=${checksum}`);
   }
 
   return (
@@ -111,16 +115,17 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
         checksum + queryParams.systemId + queryParams.targetId + queryParams.user + queryParams.name + queryParams.formId + queryParams.validUntil;
 
       const checksumIsValid = validateChecksum(checksumString, queryParams.checksum);
+      const validUntilDateIsValid = validateDate(queryParams.validUntil);
 
-      if (!checksumIsValid) {
-        console.log("Checksums did not match.");
+      if (!checksumIsValid || !validUntilDateIsValid) {
+        console.log(!validUntilDateIsValid ? "Date not valid" : "Checksums did not match.");
         return {
           props: {
             lngDict,
           },
         };
       }
-      console.log("Checksums matched.");
+      console.log("Checksums matched, validUntil date is valid.");
 
       const systemFormResp = await fetch(`${API_URL_BASE}${API_FETCH_SYSTEM_FORMS}`, {
         headers: new Headers({ Authorization: getTokenHash() }),
@@ -132,7 +137,12 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
       );
 
       if (!canUseForm) {
-        throw new Error(`A servicepoint with this systemId cannot use form ${queryParams.formId}`);
+        console.log(`Error: A servicepoint with this systemId cannot use form ${queryParams.formId}`);
+        return {
+          props: {
+            lngDict,
+          },
+        };
       }
 
       const externalServicepointResp = await fetch(
@@ -145,6 +155,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
 
       let servicepointId = 0;
       let entranceId = 0;
+      let servicepointChecksum = "";
       if (externalServicepointData && externalServicepointData.length > 0) {
         servicepointId = externalServicepointData[0].servicepoint;
       }
@@ -171,6 +182,8 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
         // Create a new empty entrance
         // Form id is usually 2 here, meaning meeting room
         entranceId = await createEntrance(servicepointId, Number(queryParams.formId), queryParams.user, API_URL_BASE);
+
+        servicepointChecksum = getServicepointHash(servicepointId);
 
         console.log("New servicepoint and entrance inserted to the database");
       } else {
@@ -209,6 +222,8 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
             entranceId = mainEntrance.entrance_id;
           }
         }
+
+        servicepointChecksum = getServicepointHash(servicepointId);
       }
 
       return {
@@ -217,6 +232,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
           servicepointId,
           entranceId,
           user: queryParams.user,
+          checksum: servicepointChecksum,
           skip: true,
         },
       };
@@ -224,6 +240,8 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
       console.log(err);
     }
   }
+
+  // An error occurred
   return {
     props: {
       lngDict,

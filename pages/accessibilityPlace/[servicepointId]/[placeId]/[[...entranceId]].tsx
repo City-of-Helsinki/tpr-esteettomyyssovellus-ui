@@ -32,6 +32,7 @@ import {
 } from "../../../../types/backendModels";
 import { AccessibilityPlaceProps, EntrancePlaceBox } from "../../../../types/general";
 import i18nLoader from "../../../../utils/i18n";
+import { validateServicepointHash } from "../../../../utils/serverside";
 import styles from "./accessibilityPlace.module.scss";
 
 // usage: the accessibility place of a question
@@ -42,14 +43,15 @@ const AccessibilityPlace = ({
   placeId,
   formGuideData,
   formId,
+  isChecksumValid,
 }: AccessibilityPlaceProps): ReactElement => {
   const i18n = useI18n();
   const curLocale: string = i18n.locale();
   const isLoading = useLoading();
   const dispatch = useAppDispatch();
 
-  // TODO - improve this by checking user on server-side
   const user = useAppSelector((state) => state.generalSlice.user);
+  const checksum = useAppSelector((state) => state.generalSlice.checksum);
   const isUserValid = !!user && user.length > 0;
 
   // NOTE: don't clear the state in this page, since any new data should be used after returning to the question form
@@ -124,13 +126,15 @@ const AccessibilityPlace = ({
   useMountEffect(initPlaceBoxes);
 
   const treeItems = {
-    [servicepointData.servicepoint_name ?? ""]: hasData ? `/details/${servicepointData.servicepoint_id}` : "",
+    [servicepointData.servicepoint_name ?? ""]: hasData ? `/details/${servicepointData.servicepoint_id}?checksum=${checksum}` : "",
     [i18n.t("servicepoint.contactFormSummaryHeader")]:
-      curEntranceId > 0 ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}` : `/entranceAccessibility/${curServicepointId}`,
+      curEntranceId > 0
+        ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}?checksum=${checksum}`
+        : `/entranceAccessibility/${curServicepointId}?checksum=${checksum}`,
     [`${i18n.t("additionalInfo.additionalInfo")} > ${filteredPlaceData.name}`]:
       curEntranceId > 0
-        ? `/accessibilityPlace/${curServicepointId}/${placeId}/${curEntranceId}`
-        : `/accessibilityPlace/${curServicepointId}/${placeId}`,
+        ? `/accessibilityPlace/${curServicepointId}/${placeId}/${curEntranceId}?checksum=${checksum}`
+        : `/accessibilityPlace/${curServicepointId}/${placeId}?checksum=${checksum}`,
   };
 
   return (
@@ -138,13 +142,15 @@ const AccessibilityPlace = ({
       <Head>
         <title>{i18n.t("common.header.title")}</title>
       </Head>
-      {!isUserValid && <h1>{i18n.t("common.notAuthorized")}</h1>}
+      {!isChecksumValid && <h1>{i18n.t("common.invalidParams")}</h1>}
 
-      {isUserValid && isLoading && <LoadSpinner />}
+      {isChecksumValid && !isUserValid && <h1>{i18n.t("common.notAuthorized")}</h1>}
 
-      {isUserValid && !isLoading && !hasData && <h1>{i18n.t("common.noData")}</h1>}
+      {isChecksumValid && isUserValid && isLoading && <LoadSpinner />}
 
-      {isUserValid && !isLoading && hasData && (
+      {isChecksumValid && isUserValid && !isLoading && !hasData && <h1>{i18n.t("common.noData")}</h1>}
+
+      {isChecksumValid && isUserValid && !isLoading && hasData && (
         <main id="content">
           <div className={styles.maincontainer}>
             <div className={styles.infocontainer}>
@@ -214,7 +220,7 @@ const AccessibilityPlace = ({
 };
 
 // Server-side rendering
-export const getServerSideProps: GetServerSideProps = async ({ params, locales }) => {
+export const getServerSideProps: GetServerSideProps = async ({ params, query, locales }) => {
   const lngDict = await i18nLoader(locales);
 
   let entranceData: BackendEntrance = {} as BackendEntrance;
@@ -224,7 +230,9 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   let formGuideData: BackendFormGuide[] = [];
   let formId = -1;
 
-  if (params !== undefined) {
+  const isChecksumValid = params !== undefined && query !== undefined && validateServicepointHash(Number(params.servicepointId), query.checksum);
+
+  if (isChecksumValid && params !== undefined) {
     try {
       placeId = Number(params.placeId);
 
@@ -309,11 +317,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       }
     } catch (err) {
       console.error("Error", err);
-
-      servicepointData = {} as BackendServicepoint;
-      entranceData = {} as BackendEntrance;
-      accessibilityPlaceData = [];
-      formGuideData = [];
     }
   }
 
@@ -326,6 +329,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       placeId,
       formGuideData,
       formId,
+      isChecksumValid,
     },
   };
 };

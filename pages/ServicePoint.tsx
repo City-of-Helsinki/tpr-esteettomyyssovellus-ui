@@ -6,8 +6,9 @@ import { useRouter } from "next/router";
 import { Button, RadioButton, SelectionGroup } from "hds-react";
 import Layout from "../components/common/Layout";
 import LoadSpinner from "../components/common/LoadSpinner";
+import ModalConfirmation from "../components/common/ModalConfirmation";
 import { useAppDispatch } from "../state/hooks";
-import { setUser } from "../state/reducers/generalSlice";
+import { setChecksum, setUser } from "../state/reducers/generalSlice";
 import { EntranceResults, ExternalServicepoint, Servicepoint, System, SystemForm } from "../types/backendModels";
 import {
   API_CHOP_ADDRESS,
@@ -19,18 +20,11 @@ import {
   API_URL_BASE,
 } from "../types/constants";
 import { ChangeProps } from "../types/general";
-import { checksumSecretTPRTesti } from "../utils/checksumSecret";
+// import { checksumSecretTPRTesti } from "../utils/checksumSecret";
 import i18nLoader from "../utils/i18n";
 import getOrigin from "../utils/request";
-import {
-  createEntrance,
-  createServicePoint,
-  deleteEntrance,
-  formatAddress,
-  getCurrentDate,
-  getTokenHash,
-  validateChecksum,
-} from "../utils/utilFunctions";
+import { createEntrance, createServicePoint, getServicepointHash } from "../utils/serverside";
+import { deleteEntrance, formatAddress, getCurrentDate, getTokenHash, validateChecksum, validateDate } from "../utils/utilFunctions";
 import styles from "./ServicePoint.module.scss";
 
 const Servicepoints = ({
@@ -48,16 +42,22 @@ const Servicepoints = ({
   newNorthing,
   distance,
   user,
+  checksum,
   skip,
 }: ChangeProps): ReactElement => {
   const i18n = useI18n();
   const startState = "0";
-  const [selectedRadioItem, setSelectedRadioItem] = useState(startState);
   const dispatch = useAppDispatch();
   const router = useRouter();
 
+  const [selectedRadioItem, setSelectedRadioItem] = useState(startState);
+  const [confirmDeletion, setConfirmDeletion] = useState(false);
+
   if (user !== undefined) {
     dispatch(setUser(user));
+  }
+  if (checksum !== undefined) {
+    dispatch(setChecksum(checksum));
   }
 
   const setSearchable = async () => {
@@ -71,10 +71,12 @@ const Servicepoints = ({
     const updateAddressUrl = `${getOrigin(router)}/${API_FETCH_SERVICEPOINTS}${servicepointId}/set_searchable/`;
     await fetch(updateAddressUrl, setSearchableOptions);
   };
-  setSearchable();
+  if (skip || changed) {
+    setSearchable();
+  }
 
   if (skip) {
-    router.push(`/details/${servicepointId}`);
+    router.push(`/details/${servicepointId}?checksum=${checksum}`);
   }
 
   const handleRadioClick = (e: ChangeEvent<HTMLInputElement>) => {
@@ -109,7 +111,19 @@ const Servicepoints = ({
     const updateAddressUrl = `${getOrigin(router)}/${API_FETCH_SERVICEPOINTS}${servicepointId}/update_address/`;
     await fetch(updateAddressUrl, updateAddressOptions);
 
-    router.push(`/details/${servicepointId}`);
+    router.push(`/details/${servicepointId}?checksum=${checksum}`);
+  };
+
+  const openDeletionConfirmation = () => {
+    if (selectedRadioItem === "1") {
+      setConfirmDeletion(true);
+    } else {
+      handleContinueClick();
+    }
+  };
+
+  const closeDeletionConfirmation = () => {
+    setConfirmDeletion(false);
   };
 
   return (
@@ -150,14 +164,6 @@ const Servicepoints = ({
             <div className={styles.radioButtonDiv}>
               <SelectionGroup label={i18n.t("AddressChangedPage.hasServicepointMoved")}>
                 <RadioButton
-                  id="v-radio1"
-                  name="v-radio"
-                  label={i18n.t("AddressChangedPage.radioButtonYes")}
-                  value="1"
-                  checked={selectedRadioItem === "1"}
-                  onChange={handleRadioClick}
-                />
-                <RadioButton
                   id="v-radio2"
                   name="v-radio"
                   label={i18n.t("AddressChangedPage.radioButtonNo")}
@@ -165,11 +171,31 @@ const Servicepoints = ({
                   checked={selectedRadioItem === "2"}
                   onChange={handleRadioClick}
                 />
+                <RadioButton
+                  id="v-radio1"
+                  name="v-radio"
+                  label={i18n.t("AddressChangedPage.radioButtonYes")}
+                  value="1"
+                  checked={selectedRadioItem === "1"}
+                  onChange={handleRadioClick}
+                />
               </SelectionGroup>
             </div>
-            <Button id="continueButton" variant="primary" disabled={selectedRadioItem === startState} onClick={handleContinueClick}>
+            <Button id="continueButton" variant="primary" disabled={selectedRadioItem === startState} onClick={openDeletionConfirmation}>
               {i18n.t("accessibilityForm.continue")}
             </Button>
+
+            {confirmDeletion && (
+              <ModalConfirmation
+                open={confirmDeletion}
+                titleKey="servicepoint.buttons.deleteAccessibilityInfo"
+                messageKey="servicepoint.confirmation.deleteAccessibilityInfo"
+                cancelKey="common.buttons.no"
+                confirmKey="common.buttons.yes"
+                closeCallback={closeDeletionConfirmation}
+                confirmCallback={handleContinueClick}
+              />
+            )}
           </div>
         )}
 
@@ -236,7 +262,8 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
       const systemData = await (systemResp.json() as Promise<System[]>);
 
       const checksumSecret = systemData && systemData.length > 0 ? systemData[0].checksum_secret : undefined;
-      const checksum = process.env.NODE_ENV === "production" ? checksumSecret ?? "" : checksumSecretTPRTesti;
+      // const checksum = process.env.NODE_ENV === "production" ? checksumSecret ?? "" : checksumSecretTPRTesti;
+      const checksum = checksumSecret ?? "";
       const checksumString =
         checksum +
         queryParams.systemId +
@@ -250,16 +277,17 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
         queryParams.easting;
 
       const checksumIsValid = validateChecksum(checksumString, queryParams.checksum);
+      const validUntilDateIsValid = validateDate(queryParams.validUntil);
 
-      if (!checksumIsValid) {
-        console.log("Checksums did not match.");
+      if (!checksumIsValid || !validUntilDateIsValid) {
+        console.log(!validUntilDateIsValid ? "Date not valid" : "Checksums did not match.");
         return {
           props: {
             lngDict,
           },
         };
       }
-      console.log("Checksums matched.");
+      console.log("Checksums matched, validUntil date is valid.");
 
       const systemFormResp = await fetch(`${API_URL_BASE}${API_FETCH_SYSTEM_FORMS}`, {
         headers: new Headers({ Authorization: getTokenHash() }),
@@ -271,7 +299,12 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
       );
 
       if (!canUseForm) {
-        throw new Error("A servicepoint with this systemId cannot use form 0 or 1");
+        console.log("Error: A servicepoint with this systemId cannot use form 0 or 1");
+        return {
+          props: {
+            lngDict,
+          },
+        };
       }
 
       // CHOP THE ADDRESS
@@ -297,6 +330,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
 
       let servicepointId = 0;
       let entranceId = 0;
+      let servicepointChecksum = "";
       if (externalServicepointData && externalServicepointData.length > 0) {
         servicepointId = externalServicepointData[0].servicepoint;
       }
@@ -335,6 +369,8 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
           Number(queryParams.easting),
           Number(queryParams.northing)
         );
+
+        servicepointChecksum = getServicepointHash(servicepointId);
 
         console.log("New servicepoint and entrance inserted to the database");
       } else {
@@ -394,6 +430,8 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
         const distance = Math.sqrt(Math.pow(oldNorthing - newNorthing, 2) + Math.pow(oldEasting - newEasting, 2));
         const locationHasChanged = distance > 15;
 
+        servicepointChecksum = getServicepointHash(servicepointId);
+
         if (addressHasChanged) {
           return {
             props: {
@@ -411,6 +449,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
               newEasting,
               newNorthing,
               user: queryParams.user,
+              checksum: servicepointChecksum,
               skip: false,
             },
           };
@@ -430,6 +469,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
               newNorthing,
               distance,
               user: queryParams.user,
+              checksum: servicepointChecksum,
               skip: false,
             },
           };
@@ -441,6 +481,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
         props: {
           servicepointId,
           user: queryParams.user,
+          checksum: servicepointChecksum,
           skip: true,
         },
       };

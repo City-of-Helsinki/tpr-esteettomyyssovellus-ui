@@ -341,14 +341,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       }, {});
     } catch (err) {
       console.error("Error", err);
-
-      servicepointData = {} as BackendServicepoint;
-      entranceSentenceGroupData = [];
-      accessibilityData = {};
-      accessibilityPlaceData = [];
-      entranceData = {};
-      entrancePlaceData = {};
-      entranceChoiceData = {};
     }
   }
 

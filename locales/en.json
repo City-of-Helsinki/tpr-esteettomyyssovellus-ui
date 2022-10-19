@@ -38,6 +38,7 @@
     "opensInANewTab": "Opens in a new tab.",
     "opensExternal": "Moves to another site.",
     "notAuthorized": "You are not authorized to view the requested page",
+    "invalidParams": "Invalid parameters",
     "noData": "Information is not available",
     "landing": {
       "title": "Welcome to updating accessibity information"
@@ -92,13 +93,15 @@
       "addNewEntrance": "Add a new entrance",
       "editServicepoint": "Edit",
       "deleteEntrance": "Remove entrance",
+      "deleteAccessibilityInfo": "NOTE! This selection clears accessibility information",
       "deleting": "Deleting",
       "deletingFinished": "Deleted",
       "mainCtrlReturn": "Return to search",
       "mainCtrlDelete": "Delete accessibility data"
     },
     "confirmation": {
-      "deleteEntrance": "Are you sure you want to remove the entrance?"
+      "deleteEntrance": "Are you sure you want to remove the entrance?",
+      "deleteAccessibilityInfo": "Are you sure you want to clear the accessibility data?"
     },
     "contactInfoHeader": "Contact information",
     "contactFormSummaryHeader": "Accessibility information",
@@ -265,11 +268,11 @@
     "newAddress": "New address",
     "locationHasChanged1": "The location has moved",
     "locationHasChanged2": "meters from last time",
-    "errorHasOccured": "An error has occured in the software",
-    "hasServicepointMoved": "Has the servicepoint moved to new premises?",
+    "errorHasOccured": "Invalid parameters",
+    "hasServicepointMoved": "The location or address of the servicepoint has changed:",
     "headerSentence1": "The location of ",
     "headerSentence2": " servicepoint has changed.",
-    "radioButtonYes": "Yes, it has moved (if you select this, the old accessibility information will be deleted and new information will have to be entered for the new premises)",
-    "radioButtonNo": "No, it has not moved (if you select this, you can edit previously saved accessibility information)"
+    "radioButtonYes": "The accessibility information must be entered again. (The location has moved to other premises)",
+    "radioButtonNo": "The accessibility information will not change."
   }
 }

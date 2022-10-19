@@ -1,14 +1,12 @@
-// this files code from marketing project: needs editing or deleting
-
 import React, { KeyboardEvent, ReactElement } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useI18n } from "next-localization";
 import { IconSignout, Navigation } from "hds-react";
+import { useAppSelector, useAppDispatch } from "../../state/hooks";
+import { setChecksum, setUser } from "../../state/reducers/generalSlice";
 import { defaultLocale } from "../../utils/i18n";
 import styles from "./Header.module.scss";
-import { useAppSelector, useAppDispatch } from "../../state/hooks";
-import { setUser } from "../../state/reducers/generalSlice";
 
 interface HeaderProps {
   isSummary?: boolean;
@@ -38,6 +36,7 @@ const Header = ({ isSummary, children }: HeaderProps): ReactElement => {
     // Nothing to do
     window.open("https://api.hel.fi/sso/openid/end-session/", "_self");
     dispatch(setUser(""));
+    dispatch(setChecksum(""));
   };
 
   const handleKeyPress = (evt: KeyboardEvent<HTMLAnchorElement>, id: string) => {

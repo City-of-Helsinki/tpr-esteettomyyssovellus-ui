@@ -25,6 +25,7 @@ const EntranceLocationPhotoCtrlButtons = ({ entranceLocationPhoto }: EntranceLoc
 
   const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
   const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
+  const checksum = useAppSelector((state) => state.generalSlice.checksum);
 
   const handleAddInvalidValue = (invalidFieldId: string, invalidFieldLabel: string, invalidMessage: string) => {
     dispatch(
@@ -122,8 +123,8 @@ const EntranceLocationPhotoCtrlButtons = ({ entranceLocationPhoto }: EntranceLoc
 
       const url =
         curEntranceId > 0
-          ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}${getPathHash()}`
-          : `/entranceAccessibility/${curServicepointId}${getPathHash()}`;
+          ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}?checksum=${checksum}${getPathHash()}`
+          : `/entranceAccessibility/${curServicepointId}?checksum=${checksum}${getPathHash()}`;
       router.push(url);
     }
   };
@@ -134,8 +135,8 @@ const EntranceLocationPhotoCtrlButtons = ({ entranceLocationPhoto }: EntranceLoc
 
     const url =
       curEntranceId > 0
-        ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}${getPathHash()}`
-        : `/entranceAccessibility/${curServicepointId}${getPathHash()}`;
+        ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}?checksum=${checksum}${getPathHash()}`
+        : `/entranceAccessibility/${curServicepointId}?checksum=${checksum}${getPathHash()}`;
     router.push(url);
   };
 

@@ -31,6 +31,7 @@ const AccessibilityPlaceCtrlButtons = ({
 
   const curServicepointId = useAppSelector((state) => state.formReducer.currentServicepointId);
   const curEntranceId = useAppSelector((state) => state.formReducer.currentEntranceId);
+  const checksum = useAppSelector((state) => state.generalSlice.checksum);
 
   const handleAddInvalidValue = (entrancePlaceBox: EntrancePlaceBox, invalidFieldId: string, invalidFieldLabel: string, invalidMessage: string) => {
     const { entrance_id, place_id, order_number } = entrancePlaceBox;
@@ -189,8 +190,8 @@ const AccessibilityPlaceCtrlButtons = ({
 
       const url =
         curEntranceId > 0
-          ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}${getPathHash()}`
-          : `/entranceAccessibility/${curServicepointId}${getPathHash()}`;
+          ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}?checksum=${checksum}${getPathHash()}`
+          : `/entranceAccessibility/${curServicepointId}?checksum=${checksum}${getPathHash()}`;
       router.push(url);
     }
   };
@@ -200,8 +201,8 @@ const AccessibilityPlaceCtrlButtons = ({
     revertPlace();
     const url =
       curEntranceId > 0
-        ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}${getPathHash()}`
-        : `/entranceAccessibility/${curServicepointId}${getPathHash()}`;
+        ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}?checksum=${checksum}${getPathHash()}`
+        : `/entranceAccessibility/${curServicepointId}?checksum=${checksum}${getPathHash()}`;
     router.push(url);
   };
 
