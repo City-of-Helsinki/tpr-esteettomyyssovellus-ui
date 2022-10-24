@@ -12,7 +12,7 @@ import { saveFormData } from "../utils/utilFunctions";
 import { PreviewControlButtonsProps } from "../types/general";
 
 // usage: controls for preview page
-const PreviewControlButtons = ({ hasSaveDraftButton, setSendingComplete }: PreviewControlButtonsProps): JSX.Element => {
+const PreviewControlButtons = ({ hasSaveDraftButton, setSendingComplete, hasData }: PreviewControlButtonsProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -85,7 +85,12 @@ const PreviewControlButtons = ({ hasSaveDraftButton, setSendingComplete }: Previ
   return (
     <div className={styles.container}>
       <div className={styles.previewControlButtons}>
-        <Button variant="secondary" iconLeft={<IconArrowLeft />} onClickHandler={handleContinueEditing} disabled={isSavingDraft || isSavingFinal}>
+        <Button
+          variant="secondary"
+          iconLeft={<IconArrowLeft />}
+          onClickHandler={handleContinueEditing}
+          disabled={isSavingDraft || isSavingFinal || !hasData}
+        >
           {i18n.t("PreviewPage.continueEditing")}
         </Button>
 
@@ -93,7 +98,7 @@ const PreviewControlButtons = ({ hasSaveDraftButton, setSendingComplete }: Previ
           <Button
             variant="secondary"
             onClickHandler={handleSaveDraftClick}
-            disabled={isSavingDraft || isSavingFinal}
+            disabled={isSavingDraft || isSavingFinal || !hasData}
             iconRight={
               isSavingDraft ? (
                 <SaveSpinner
@@ -111,7 +116,7 @@ const PreviewControlButtons = ({ hasSaveDraftButton, setSendingComplete }: Previ
           variant="primary"
           onClickHandler={handleSaveAndSend}
           //disabled={!formFinished}
-          disabled={isSavingDraft || isSavingFinal}
+          disabled={isSavingDraft || isSavingFinal || !hasData}
           iconRight={
             isSavingFinal ? (
               <SaveSpinner

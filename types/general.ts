@@ -217,6 +217,7 @@ export interface SummaryCtrlButtonsProps {
 }
 
 export interface PreviewControlButtonsProps {
+  hasData: boolean;
   hasSaveDraftButton?: boolean;
   setSendingComplete: Dispatch<SetStateAction<boolean>>;
 }
@@ -441,6 +442,7 @@ export interface DetailsProps {
   entrancePlaceData: EntrancePlaceData;
   entranceChoiceData: EntranceChoiceData;
   formGuideData: BackendFormGuide[];
+  formId: number;
   mainEntranceId: number;
   draftMainEntranceId: number;
   isMainEntrancePublished: boolean;
@@ -473,6 +475,7 @@ export interface SummaryProps {
   entranceData: EntranceData;
   entrancePlaceData: EntrancePlaceData;
   entranceChoiceData: EntranceChoiceData;
+  formId: number;
   mainEntranceId: number;
   isMainEntrancePublished: boolean;
 }
