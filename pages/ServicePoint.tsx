@@ -60,21 +60,6 @@ const Servicepoints = ({
     dispatch(setChecksum(checksum));
   }
 
-  const setSearchable = async () => {
-    const setSearchableOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: getTokenHash(),
-      },
-    };
-    const updateAddressUrl = `${getOrigin(router)}/${API_FETCH_SERVICEPOINTS}${servicepointId}/set_searchable/`;
-    await fetch(updateAddressUrl, setSearchableOptions);
-  };
-  if (skip || changed) {
-    setSearchable();
-  }
-
   if (skip) {
     router.push(`/details/${servicepointId}?checksum=${checksum}`);
   }
@@ -376,6 +361,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
       } else {
         // There could be multiple external servicepoint ids for each servicepoint, so update the
         // servicepoint table with this request's id as a way to record which one was last accessed
+        // Note: update_external also sets is_searchable to 'Y'
         const servicepointRequestOptions = {
           method: "POST",
           headers: { "Content-Type": "application/json", Authorization: getTokenHash() },
@@ -384,7 +370,6 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
             ext_servicepoint_id: queryParams.servicePointId,
             modified: date,
             modified_by: queryParams.user,
-            // is_searchable: "Y",
           }),
         };
 

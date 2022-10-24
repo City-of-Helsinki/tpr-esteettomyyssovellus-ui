@@ -192,6 +192,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
 
         // There could be multiple external servicepoint ids for each servicepoint, so update the
         // servicepoint table with this request's id as a way to record which one was last accessed
+        // Note: update_external also sets is_searchable to 'Y'
         const servicepointRequestOptions = {
           method: "POST",
           headers: { "Content-Type": "application/json", Authorization: getTokenHash() },
@@ -200,7 +201,6 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
             ext_servicepoint_id: queryParams.targetId,
             modified: date,
             modified_by: queryParams.user,
-            // is_searchable: "Y",
           }),
         };
 
