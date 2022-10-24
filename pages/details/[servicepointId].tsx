@@ -57,6 +57,7 @@ const Details = ({
   entrancePlaceData,
   entranceChoiceData,
   formGuideData,
+  formId,
   mainEntranceId,
   draftMainEntranceId,
   isMainEntrancePublished,
@@ -77,8 +78,9 @@ const Details = ({
     persistor.purge();
   }, []);
 
+  // The details page is only allowed for servicepoints (form id 0) not meeting rooms (form id 2)
   // const hasData = Object.keys(servicepointData).length > 0 && Object.keys(entranceData).length > 0;
-  const hasData = Object.keys(servicepointData).length > 0;
+  const hasData = Object.keys(servicepointData).length > 0 && formId === 0;
   const hasMainAccessibilityData = accessibilityData && accessibilityData[mainEntranceId] && accessibilityData[mainEntranceId].length > 0;
 
   const initReduxData = () => {
@@ -257,6 +259,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, lo
   let entrancePlaceData: EntrancePlaceData = {};
   let entranceChoiceData: EntranceChoiceData = {};
   let formGuideData: BackendFormGuide[] = [];
+  let formId = -1;
   let mainEntranceId = -1;
   let draftMainEntranceId = -1;
   let isMainEntrancePublished = false;
@@ -275,8 +278,16 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, lo
 
       if (servicepointBackendDetail?.length > 0) {
         servicepointData = servicepointBackendDetail[0];
+        formId = servicepointData.form_id ?? -1;
       }
+    } catch (err) {
+      console.error("Error", err);
+    }
+  }
 
+  // The details page is only allowed for servicepoints (form id 0) not meeting rooms (form id 2)
+  if (isChecksumValid && params !== undefined && servicepointData && formId === 0) {
+    try {
       // Get all the existing entrances for the service point
       const servicepointEntranceResp = await fetch(
         `${API_URL_BASE}${API_FETCH_ENTRANCES}?servicepoint=${servicepointData.servicepoint_id}&format=json`,
@@ -427,6 +438,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, lo
       entrancePlaceData,
       entranceChoiceData,
       formGuideData,
+      formId,
       mainEntranceId,
       draftMainEntranceId,
       isMainEntrancePublished,

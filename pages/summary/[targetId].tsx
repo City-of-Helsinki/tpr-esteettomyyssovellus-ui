@@ -50,6 +50,7 @@ const Summary = ({
   entranceData,
   entrancePlaceData,
   entranceChoiceData,
+  formId,
   mainEntranceId,
   isMainEntrancePublished,
 }: SummaryProps): ReactElement => {
@@ -99,11 +100,12 @@ const Summary = ({
   const curLocaleId: number = LanguageLocales[i18n.locale() as keyof typeof LanguageLocales];
   const filteredPlaces = accessibilityPlaceData.filter((place) => place.language_id === curLocaleId);
 
-  const subHeader = `${i18n.t("common.mainEntrance")}: ${formatAddress(
+  const servicePointHeader = `${i18n.t("common.mainEntrance")}: ${formatAddress(
     servicepointData.address_street_name,
     servicepointData.address_no,
     servicepointData.address_city
   )}`;
+  const subHeader = formId >= 2 ? "" : servicePointHeader;
 
   return (
     <Layout isSummary>
@@ -134,7 +136,7 @@ const Summary = ({
               </span>
             </div>
 
-            <SummaryContact entranceData={entranceData[mainEntranceId]} hasData={hasMainAccessibilityData} />
+            {formId < 2 && <SummaryContact entranceData={entranceData[mainEntranceId]} hasData={hasMainAccessibilityData} />}
 
             <div>
               {entranceSentenceGroupData
@@ -145,29 +147,23 @@ const Summary = ({
                   const { entrance_id, sentence_group_id } = entranceSentenceGroup;
                   const entranceKey = String(entrance_id);
                   const sentenceGroupKey = String(sentence_group_id);
-                  const subHeading = entranceSentenceGroup[`subheading_${curLocale}`] || "";
+                  const subHeading = (entranceSentenceGroup[`subheading_${curLocale}`] || "") as string;
 
                   return (
                     <div key={`entrance_sentence_group_${entrance_id}_${sentence_group_id}`}>
-                      {sentence_group_id === 0 ? (
-                        <>
-                          <div className={styles.headercontainer}>
-                            <h3>{subHeading}</h3>
-                          </div>
+                      <div className={styles.headercontainer}>{subHeading.length > 0 && <h3>{subHeading}</h3>}</div>
 
-                          <SummaryLocationPicture
-                            entranceKey={entranceKey}
-                            entranceData={entranceData[entranceKey]}
-                            servicepointData={servicepointData}
-                            isMainEntrance={entrance_id === mainEntranceId}
-                          />
-                        </>
-                      ) : (
-                        <>
-                          <div className={styles.headercontainer}>
-                            <h3>{subHeading}</h3>
-                          </div>
+                      {sentence_group_id === 0 && formId < 2 && (
+                        <SummaryLocationPicture
+                          entranceKey={entranceKey}
+                          entranceData={entranceData[entranceKey]}
+                          servicepointData={servicepointData}
+                          isMainEntrance={entrance_id === mainEntranceId}
+                        />
+                      )}
 
+                      {sentence_group_id > 0 && (
+                        <>
                           <SummaryAccessibility
                             entranceKey={entranceKey}
                             sentenceGroupId={sentenceGroupKey}
@@ -205,6 +201,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
   let entranceData: EntranceData = {};
   let entrancePlaceData: EntrancePlaceData = {};
   let entranceChoiceData: EntranceChoiceData = {};
+  let formId = -1;
   let mainEntranceId = -1;
   let isMainEntrancePublished = false;
 
@@ -222,6 +219,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
 
       if (servicepointBackendDetail?.length > 0) {
         servicepointData = servicepointBackendDetail[0];
+        formId = servicepointData.form_id ?? -1;
       }
 
       // Get all the existing entrances for the service point
@@ -354,6 +352,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
       entranceData,
       entrancePlaceData,
       entranceChoiceData,
+      formId,
       mainEntranceId,
       isMainEntrancePublished,
     },

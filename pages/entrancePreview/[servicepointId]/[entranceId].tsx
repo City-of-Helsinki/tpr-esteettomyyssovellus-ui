@@ -44,7 +44,6 @@ import {
   BackendFormGuide,
   BackendPlace,
   BackendServicepoint,
-  Entrance,
   EntranceResults,
   QuestionBlockAnswerCmt,
 } from "../../../types/backendModels";
@@ -77,6 +76,7 @@ const Preview = ({
   questionAnswerData,
   questionExtraAnswerData,
   formGuideData,
+  formId,
   mainEntranceId,
   isMainEntrancePublished,
   isChecksumValid,
@@ -111,7 +111,8 @@ const Preview = ({
         )}`
       : `${i18n.t("common.entrance")}: ${entranceName ?? ""}`;
 
-  const hasData = Object.keys(servicepointData).length > 0;
+  // The preview page is only allowed for servicepoint entrances (form id 0 or 1) not meeting rooms (form id 2)
+  const hasData = Object.keys(servicepointData).length > 0 && (formId === 0 || formId === 1);
   const hasAccessibilityData = accessibilityData && accessibilityData[entranceKey] && accessibilityData[entranceKey].length > 0;
 
   const initReduxData = () => {
@@ -120,7 +121,7 @@ const Preview = ({
       dispatch(setServicepointId(servicepointData.servicepoint_id));
     }
     if (Object.keys(entranceData).length > 0) {
-      dispatch(setEntranceId(entranceData[entranceKey].entrance_id));
+      dispatch(setEntranceId(hasAccessibilityData ? entranceData[entranceKey].entrance_id : -1));
     }
 
     // Put existing answers into redux state
@@ -261,10 +262,12 @@ const Preview = ({
         [entranceKey]: filterByLanguage(accessibilityData[entranceKey], i18n.locale()),
       }
     : {};
-  const sentenceGroups = filteredAccessibilityData[entranceKey].reduce((acc: KeyValueString, sentence) => {
-    const existing = Object.keys(acc).find((s) => Number(s) === sentence.sentence_group_id);
-    return !existing ? { ...acc, [sentence.sentence_group_id]: sentence.sentence_order_text } : acc;
-  }, {});
+  const sentenceGroups = hasAccessibilityData
+    ? filteredAccessibilityData[entranceKey].reduce((acc: KeyValueString, sentence) => {
+        const existing = Object.keys(acc).find((s) => Number(s) === sentence.sentence_group_id);
+        return !existing ? { ...acc, [sentence.sentence_group_id]: sentence.sentence_order_text } : acc;
+      }, {})
+    : {};
 
   const curLocaleId: number = LanguageLocales[i18n.locale() as keyof typeof LanguageLocales];
   const filteredPlaces = accessibilityPlaceData.filter((place) => place.language_id === curLocaleId);
@@ -308,7 +311,11 @@ const Preview = ({
 
             {!isSendingComplete && (
               <div>
-                <PreviewControlButtons hasSaveDraftButton={!isMainEntrancePublished} setSendingComplete={setSendingComplete} />
+                <PreviewControlButtons
+                  hasSaveDraftButton={!isMainEntrancePublished}
+                  setSendingComplete={setSendingComplete}
+                  hasData={hasAccessibilityData}
+                />
 
                 {entranceKey === String(mainEntranceId) && <SummaryContact entranceData={entranceData[entranceKey]} hasData={hasAccessibilityData} />}
 
@@ -356,7 +363,11 @@ const Preview = ({
                   })}
 
                 <div className={styles.footercontainer}>
-                  <PreviewControlButtons hasSaveDraftButton={!isMainEntrancePublished} setSendingComplete={setSendingComplete} />
+                  <PreviewControlButtons
+                    hasSaveDraftButton={!isMainEntrancePublished}
+                    setSendingComplete={setSendingComplete}
+                    hasData={hasAccessibilityData}
+                  />
                 </div>
               </div>
             )}
@@ -397,6 +408,9 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, lo
   let isMainEntrancePublished = false;
 
   const isChecksumValid = params !== undefined && query !== undefined && validateServicepointHash(Number(params.servicepointId), query.checksum);
+
+  let entranceKey: string | undefined = undefined;
+  let draftEntrance: BackendEntrance | undefined = undefined;
 
   if (isChecksumValid && params !== undefined) {
     try {
@@ -445,27 +459,29 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, lo
       }
 
       // Check this specific entrance
-      const entranceResp = await fetch(`${API_URL_BASE}${API_FETCH_ENTRANCES}${params.entranceId}?format=json`, {
-        headers: new Headers({ Authorization: getTokenHash() }),
-      });
-      const entrance = await (entranceResp.json() as Promise<Entrance>);
-      const entranceKey = String(entrance ? entrance.entrance_id : -1);
-
-      // Use the form id from the entrance if available
-      formId = entrance ? entrance.form : -1;
-
       // Use the draft entrance
       const entranceDetailResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE}?entrance_id=${params.entranceId}&format=json`, {
         headers: new Headers({ Authorization: getTokenHash() }),
       });
       const entranceDetail = await (entranceDetailResp.json() as Promise<BackendEntrance[]>);
-      const draftEntrance = entranceDetail.find((e) => e.form_submitted === "D");
+      draftEntrance = entranceDetail.find((e) => e.form_submitted === "D");
+      entranceKey = String(draftEntrance ? draftEntrance.entrance_id : -1);
       if (draftEntrance) {
         entranceData = {
           [entranceKey]: draftEntrance,
         };
       }
 
+      // Use the form id from the entrance if available
+      formId = draftEntrance?.form_id ?? -1;
+    } catch (err) {
+      console.error("Error", err);
+    }
+  }
+
+  // The preview page is only allowed for servicepoint entrances (form id 0 or 1) not meeting rooms (form id 2)
+  if (isChecksumValid && params !== undefined && servicepointData && entranceKey && draftEntrance && (formId === 0 || formId === 1)) {
+    try {
       // Get the draft entrance answer data needed for saving purposes
       const allQuestionAnswersResp = await fetch(
         `${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE_ANSWERS}?entrance_id=${params.entranceId}&format=json`,

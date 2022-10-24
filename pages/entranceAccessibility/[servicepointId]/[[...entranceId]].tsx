@@ -29,7 +29,6 @@ import {
   BackendQuestionBlockField,
   BackendQuestionChoice,
   BackendServicepoint,
-  Entrance,
   EntranceResults,
   QuestionBlockAnswerCmt,
 } from "../../../types/backendModels";
@@ -544,14 +543,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, lo
         formId = !isMainEntrancePublished || !mainEntrance || servicepointData.servicepoint_id === undefined ? 0 : 1;
       } else if (params.entranceId !== undefined) {
         // Existing entrance
-        const entranceResp = await fetch(`${API_URL_BASE}${API_FETCH_ENTRANCES}${params.entranceId}/?format=json`, {
-          headers: new Headers({ Authorization: getTokenHash() }),
-        });
-        const entrance = await (entranceResp.json() as Promise<Entrance>);
-
-        // Use the form id from the entrance if available
-        formId = entrance ? entrance.form : -1;
-
         const entranceDetailResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE}?entrance_id=${params.entranceId}&format=json`, {
           headers: new Headers({ Authorization: getTokenHash() }),
         });
@@ -569,6 +560,9 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, lo
           if (!entranceData) {
             entranceData = entranceDetail[0];
           }
+
+          // Use the form id from the entrance if available
+          formId = entranceData.form_id ?? -1;
         }
       }
 
