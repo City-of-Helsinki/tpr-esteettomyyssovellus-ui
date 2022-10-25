@@ -110,7 +110,6 @@ export interface BackendServicepoint {
   loc_northing?: number; // v0.6
   main_entrance_id: number;
   form_submitted?: string;
-  form_id?: number;
   contact_person_fi?: string;
   contact_person_sv?: string;
   contact_person_en?: string;
@@ -130,7 +129,6 @@ export interface BackendEntrance {
   entrance_id: number;
   servicepoint_id: number; // v0.6
   form_submitted: string;
-  form_id: number;
   loc_easting?: number;
   loc_northing?: number;
   photo_url?: string;
