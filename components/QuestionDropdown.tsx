@@ -10,7 +10,7 @@ import { setAnswer } from "../state/reducers/formSlice";
 // notes: this component uses HDS Select, HDS says:
 // if 1) more than 8 options 2) needs filtering by typing create&use HDS Combobox
 // this project doesn't yet have Combobox, maybe not needed also
-const QuestionDropdown = ({ options, placeholder = "--Valitse--", label = "", questionId, blockId }: QuestionDropdownQuestionProps): JSX.Element => {
+const QuestionDropdown = ({ options, placeholder = "--Valitse--", questionId, blockId }: QuestionDropdownQuestionProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
 
@@ -47,9 +47,9 @@ const QuestionDropdown = ({ options, placeholder = "--Valitse--", label = "", qu
 
   return options ? (
     <Select
-      aria-labelledby={`question_${questionId}`} // doesn't work for Select
+      aria-labelledby={`question_${questionId}`}
       className={style.selectDropdown}
-      label={label} // hidden label used by screen readers only
+      // label={label} // hidden label used by screen readers only - not needed anymore with HDS 2.5.0
       placeholder={placeholder === "--Valitse--" ? i18n.t("accessibilityForm.choose") : placeholder}
       options={options}
       onChange={handleChange}

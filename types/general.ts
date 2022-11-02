@@ -63,7 +63,7 @@ export interface InputOption {
 
 export interface QuestionDropdownQuestionProps {
   options?: InputOption[];
-  label?: string;
+  // label?: string;
   placeholder?: string;
   questionId?: number;
   blockId?: number;
