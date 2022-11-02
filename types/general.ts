@@ -51,7 +51,7 @@ export interface HeadlineQuestionContainerProps {
   text?: string;
   initOpen?: boolean;
   children?: JSX.Element;
-  number?: number;
+  questionBlockId?: number;
   isValid?: boolean;
   id?: string;
 }
