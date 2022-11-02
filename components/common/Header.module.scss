@@ -8,10 +8,12 @@
     border: 0;
   }
 
+  div > svg,
   a > svg {
     display: none;
   }
 
+  div > span,
   a > span {
     display: flex;
     margin-left: $spacing-s;
@@ -20,38 +22,7 @@
   }
 }
 
-.actions {
-  display: flex !important;
-  justify-content: flex-start !important;
-  padding-right: 0 !important;
-}
-
 .choices {
   margin-top: 1.3rem;
   position: relative;
-}
-
-.logout {
-  margin-left: 0;
-}
-
-.mobileLanguages {
-  padding-top: 2rem;
-  padding-bottom: 2.5rem;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  font-weight: bold;
-  white-space: nowrap;
-  font-size: small;
-  justify-content: space-evenly;
-  .chosen {
-    color: black;
-    text-decoration: none;
-  }
-
-  .unchosen {
-    color: #0000bf !important;
-    text-decoration: underline !important;
-  }
 }
