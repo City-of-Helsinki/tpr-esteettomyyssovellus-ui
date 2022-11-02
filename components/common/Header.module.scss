@@ -11,6 +11,13 @@
   a > svg {
     display: none;
   }
+
+  a > span {
+    display: flex;
+    margin-left: $spacing-s;
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }
 
 .actions {
