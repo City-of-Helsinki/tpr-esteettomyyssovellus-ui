@@ -1,6 +1,6 @@
 import { NextRouter } from "next/router";
 import proj4 from "proj4";
-import publicIp from "public-ip";
+import { publicIpv4 } from "public-ip";
 import crypto from "crypto";
 import getOrigin from "./request";
 import { BackendEntranceSentence } from "../types/backendModels";
@@ -96,7 +96,7 @@ export const postData = async (url: string, dataToPost: string, router: NextRout
 };
 
 export const getClientIp = async (): Promise<string> =>
-  publicIp.v4({
+  publicIpv4({
     fallbackUrls: ["https://ifconfig.co/ip"],
   });
 
