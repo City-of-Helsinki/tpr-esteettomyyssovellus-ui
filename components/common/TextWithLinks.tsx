@@ -13,11 +13,13 @@ const TextWithLinks = ({ text }: TextWithLinksProps): JSX.Element => {
   const convertTextUrlsToLinks = () => {
     const splitUrls = splitTextUrls(text);
 
-    return splitUrls.map((textOrLink) => {
+    return splitUrls.map((textOrLink, index) => {
       if (textOrLink.startsWith("http")) {
         // Link
+        const key = `link_${index}`;
         return (
           <HdsLink
+            key={key}
             href={textOrLink}
             size="M"
             openInNewTab

@@ -6,7 +6,14 @@ import styles from "./HeadlineQuestionContainer.module.scss";
 import { useAppSelector } from "../state/hooks";
 
 // usage: used for mainlevel (blue) accordions in form
-const HeadlineQuestionContainer = ({ text, number, initOpen = false, children, isValid, id = "" }: HeadlineQuestionContainerProps): JSX.Element => {
+const HeadlineQuestionContainer = ({
+  text,
+  questionBlockId,
+  initOpen = false,
+  children,
+  isValid,
+  id = "",
+}: HeadlineQuestionContainerProps): JSX.Element => {
   const i18n = useI18n();
 
   // Handle accordion state with useAccordion hook
@@ -19,10 +26,10 @@ const HeadlineQuestionContainer = ({ text, number, initOpen = false, children, i
 
   // Change icon based on accordion open state
   const iconRight = isOpen ? <IconMinus aria-hidden /> : <IconPlus aria-hidden />;
-  let iconLeft = curFinishedBlocks.includes(Number(number)) ? <IconCheckCircleFill aria-label={i18n.t("common.message.valid")} /> : null;
+  let iconLeft = curFinishedBlocks.includes(Number(questionBlockId)) ? <IconCheckCircleFill aria-label={i18n.t("common.message.valid")} /> : null;
   iconLeft = !isValid ? <IconAlertCircle className={styles.invalidIcon} aria-label={i18n.t("common.message.invalid")} /> : iconLeft;
   let buttonVariant: "primary" | "secondary" | "danger" = isOpen ? "primary" : "secondary";
-  buttonVariant = number !== undefined && curInvalidBlocks.includes(number) && isOpen ? "danger" : buttonVariant;
+  buttonVariant = questionBlockId !== undefined && curInvalidBlocks.includes(questionBlockId) && isOpen ? "danger" : buttonVariant;
 
   // for custom toggle and firing event resize for the leaflet maps to render properly
   // if they are hidden and no rerender/window event is triggered they will render poorly
@@ -34,7 +41,7 @@ const HeadlineQuestionContainer = ({ text, number, initOpen = false, children, i
   return (
     <section className={styles.headline} id={id} aria-label={text}>
       <Button
-        id={`headlineButton-${number}`}
+        id={`headlinebutton-${questionBlockId}`}
         {...buttonProps}
         iconRight={iconRight}
         variant={buttonVariant}

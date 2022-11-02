@@ -297,7 +297,7 @@ const EntranceAccessibility = ({
     // Focus on the first question block after the continue button is clicked
     if (isContinueClicked) {
       // document.getElementById("questionblockid-1")?.focus();
-      window.location.href = "#questionblockid-1";
+      window.location.href = "#headlinebutton-1";
     }
   }, [isContinueClicked]);
 
@@ -337,7 +337,7 @@ const EntranceAccessibility = ({
           return isVisible && blockQuestions && blockAnswerChoices && block.question_block_id !== undefined ? (
             <HeadlineQuestionContainer
               key={block.question_block_id}
-              number={block.question_block_id}
+              questionBlockId={block.question_block_id}
               text={`${block.question_block_code} ${block.text}`}
               id={`questionblockid-${block.question_block_id}`}
               initOpen={pathHash === `questionblockid-${block.question_block_id}`}

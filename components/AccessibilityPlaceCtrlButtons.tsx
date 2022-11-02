@@ -89,13 +89,13 @@ const AccessibilityPlaceCtrlButtons = ({
           if (!photo_text_fi || photo_text_fi.length === 0) {
             handleAddInvalidValue(
               box,
-              `text-fin-${order_number}`,
+              `picture-text-fin-${order_number}`,
               `${order_number}. ${i18n.t("additionalInfo.pictureLabel")}`,
               i18n.t("common.message.invalid")
             );
             isValid = false;
           } else {
-            handleRemoveInvalidValue(box, `text-fin-${order_number}`);
+            handleRemoveInvalidValue(box, `picture-text-fin-${order_number}`);
           }
           if (!termsAccepted) {
             handleAddInvalidValue(

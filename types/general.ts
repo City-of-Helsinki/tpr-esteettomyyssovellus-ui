@@ -51,7 +51,7 @@ export interface HeadlineQuestionContainerProps {
   text?: string;
   initOpen?: boolean;
   children?: JSX.Element;
-  number?: number;
+  questionBlockId?: number;
   isValid?: boolean;
   id?: string;
 }
@@ -63,7 +63,7 @@ export interface InputOption {
 
 export interface QuestionDropdownQuestionProps {
   options?: InputOption[];
-  label?: string;
+  // label?: string;
   placeholder?: string;
   questionId?: number;
   blockId?: number;

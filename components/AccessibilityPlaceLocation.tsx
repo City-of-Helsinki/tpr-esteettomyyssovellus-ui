@@ -134,7 +134,7 @@ const AccessibilityPlaceLocation = ({ entrancePlaceBox }: AccessibilityPlaceLoca
         <div className={styles.lowercontentcontainer}>
           <div className={styles.altcontainer}>
             <TextArea
-              id={`text-fin-${currentId}`}
+              id={`location-text-fin-${currentId}`}
               label={i18n.t("additionalInfo.locationLabel")}
               helperText={i18n.t("additionalInfo.locationHelperText")}
               tooltipButtonLabel={i18n.t("additionalInfo.generalTooltipButtonLabel")}
@@ -153,7 +153,7 @@ const AccessibilityPlaceLocation = ({ entrancePlaceBox }: AccessibilityPlaceLoca
                 textOnBottom
               >
                 <TextArea
-                  id={`text-sv-${currentId}`}
+                  id={`location-text-sv-${currentId}`}
                   label={i18n.t("additionalInfo.locationLabelSwe")}
                   helperText={i18n.t("additionalInfo.locationHelperTextSwe")}
                   onChange={(evt: ChangeEvent<HTMLTextAreaElement>) => handleAddLocationText(evt, "sv")}
@@ -171,7 +171,7 @@ const AccessibilityPlaceLocation = ({ entrancePlaceBox }: AccessibilityPlaceLoca
                 textOnBottom
               >
                 <TextArea
-                  id={`text-eng-${currentId}`}
+                  id={`location-text-eng-${currentId}`}
                   label={i18n.t("additionalInfo.locationLabelEng")}
                   helperText={i18n.t("additionalInfo.locationHelperTextEng")}
                   onChange={(evt: ChangeEvent<HTMLTextAreaElement>) => handleAddLocationText(evt, "en")}
