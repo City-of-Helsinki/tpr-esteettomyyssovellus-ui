@@ -332,7 +332,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
         <div className={styles.lowercontentcontainer}>
           <div className={styles.altcontainer}>
             <TextArea
-              id={`text-fin-${currentId}`}
+              id={`picture-text-fin-${currentId}`}
               label={i18n.t("additionalInfo.pictureLabel")}
               helperText={i18n.t("additionalInfo.pictureHelperText")}
               required
@@ -341,8 +341,10 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
               tooltipText={i18n.t("additionalInfo.pictureToolTipContent")}
               onChange={(evt: ChangeEvent<HTMLTextAreaElement>) => handleAddAltText(evt, "fi", i18n.t("additionalInfo.pictureLabel"))}
               value={photo_text_fi ?? ""}
-              invalid={invalidValues.some((v) => v.fieldId === `text-fin-${currentId}`)}
-              errorText={invalidValues.some((v) => v.fieldId === `text-fin-${currentId}`) ? i18n.t("additionalInfo.addCommentFiErrorText") : ""}
+              invalid={invalidValues.some((v) => v.fieldId === `picture-text-fin-${currentId}`)}
+              errorText={
+                invalidValues.some((v) => v.fieldId === `picture-text-fin-${currentId}`) ? i18n.t("additionalInfo.addCommentFiErrorText") : ""
+              }
             />
 
             <div className={styles.altLabel}>
@@ -354,7 +356,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
                 textOnBottom
               >
                 <TextArea
-                  id={`text-sv-${currentId}`}
+                  id={`picture-text-sv-${currentId}`}
                   label={i18n.t("additionalInfo.pictureLabelSwe")}
                   helperText={i18n.t("additionalInfo.pictureHelperTextSwe")}
                   onChange={(evt: ChangeEvent<HTMLTextAreaElement>) => handleAddAltText(evt, "sv", i18n.t("additionalInfo.pictureLabelSwe"))}
@@ -372,7 +374,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
                 textOnBottom
               >
                 <TextArea
-                  id={`text-eng-${currentId}`}
+                  id={`picture-text-eng-${currentId}`}
                   label={i18n.t("additionalInfo.pictureLabelEng")}
                   helperText={i18n.t("additionalInfo.pictureHelperTextEng")}
                   onChange={(evt: ChangeEvent<HTMLTextAreaElement>) => handleAddAltText(evt, "en", i18n.t("additionalInfo.pictureLabelEng"))}
