@@ -8,4 +8,13 @@ module.exports = {
     localeDetection: false,
   },
   trailingSlash: true,
+  // NOTE: the following rewrites section is only needed to use dev mode in the test or production server
+  // async rewrites() {
+  //   return [
+  //     {
+  //       source: "/api/:path*",
+  //       destination: "http://localhost:8000/api/:path*/",
+  //     },
+  //   ];
+  // },
 };
