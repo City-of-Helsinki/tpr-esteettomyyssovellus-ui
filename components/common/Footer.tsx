@@ -36,10 +36,18 @@ const Footer = ({ isSummary }: FooterProps): ReactElement => {
         <HdsFooter.Item
           as="a"
           href={ACCESSIBILITY_URL}
+          target="_blank"
           label={i18n.t("common.footer.accessibility")}
           icon={<IconLinkExternal aria-hidden role="link" />}
         />
-        <HdsFooter.Item as="a" href={TERMS_URL} label={i18n.t("common.footer.terms")} icon={<IconLinkExternal aria-hidden />} role="link" />
+        <HdsFooter.Item
+          as="a"
+          href={TERMS_URL}
+          target="_blank"
+          label={i18n.t("common.footer.terms")}
+          icon={<IconLinkExternal aria-hidden />}
+          role="link"
+        />
       </HdsFooter.Base>
     </HdsFooter>
   );
