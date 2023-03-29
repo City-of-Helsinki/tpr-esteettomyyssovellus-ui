@@ -187,6 +187,7 @@ export interface SummaryLocationPictureProps {
   entranceData?: BackendEntrance;
   servicepointData: BackendServicepoint;
   isMainEntrance: boolean;
+  isMapDisplayed: boolean;
 }
 
 export interface SummaryAccessibilityPlaceGroupProps {

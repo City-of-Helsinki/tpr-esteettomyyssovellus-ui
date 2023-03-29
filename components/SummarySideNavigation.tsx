@@ -143,6 +143,7 @@ const SummarySideNavigation = ({
             entranceData={entranceData}
             servicepointData={servicepointData}
             isMainEntrance={entranceKey === "main"}
+            isMapDisplayed={true}
           />
         )}
 

@@ -331,6 +331,7 @@ const Preview = ({
                     entranceData={entranceData[entranceKey]}
                     servicepointData={servicepointData}
                     isMainEntrance={entranceId === mainEntranceId}
+                    isMapDisplayed={true}
                   />
                 </div>
 

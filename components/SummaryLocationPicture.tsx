@@ -9,7 +9,13 @@ import { convertCoordinates, formatAddress, isLocationValid } from "../utils/uti
 import styles from "./SummaryLocationPicture.module.scss";
 
 // usage: component for entrance location and picture, used in details page
-const SummaryLocationPicture = ({ entranceKey, entranceData, servicepointData, isMainEntrance }: SummaryLocationPictureProps): JSX.Element => {
+const SummaryLocationPicture = ({
+  entranceKey,
+  entranceData,
+  servicepointData,
+  isMainEntrance,
+  isMapDisplayed,
+}: SummaryLocationPictureProps): JSX.Element => {
   const i18n = useI18n();
   const curLocale = i18n.locale();
 
@@ -30,27 +36,29 @@ const SummaryLocationPicture = ({ entranceKey, entranceData, servicepointData, i
 
   const isDevelopment = false;
 
-  return (
+  return isMapDisplayed || photo_url || isDevelopment ? (
     <div className={styles.maincontainer}>
-      <div className={styles.subcontainer}>
-        <h4>{isMainEntrance ? i18n.t("servicepoint.mainEntranceLocationLabel") : i18n.t("servicepoint.entranceLocationLabel")}</h4>
+      {isMapDisplayed && (
+        <div className={styles.subcontainer}>
+          <h4>{isMainEntrance ? i18n.t("servicepoint.mainEntranceLocationLabel") : i18n.t("servicepoint.entranceLocationLabel")}</h4>
 
-        <div className={styles.mappicturecontainer}>
-          <div className={styles.label}>
-            <div>{locationLabel}</div>
-            <SkipMapButton idToSkipTo={`#picturecontainer_${entranceKey}`} />
-          </div>
+          <div className={styles.mappicturecontainer}>
+            <div className={styles.label}>
+              <div>{locationLabel}</div>
+              <SkipMapButton idToSkipTo={`#picturecontainer_${entranceKey}`} />
+            </div>
 
-          <div className={styles.map} aria-hidden>
-            <Map
-              curLocation={isLocationValid(coordinatesEuref) ? coordinatesWGS84 : servicepointCoordinatesWGS84}
-              initZoom={MAP_MAX_ZOOM}
-              draggableMarker={false}
-              makeStatic
-            />
+            <div className={styles.map} aria-hidden>
+              <Map
+                curLocation={isLocationValid(coordinatesEuref) ? coordinatesWGS84 : servicepointCoordinatesWGS84}
+                initZoom={MAP_MAX_ZOOM}
+                draggableMarker={false}
+                makeStatic
+              />
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {(photo_url || isDevelopment) && (
         <div id={`picturecontainer_${entranceKey}`} className={styles.subcontainer}>
@@ -79,6 +87,8 @@ const SummaryLocationPicture = ({ entranceKey, entranceData, servicepointData, i
         </div>
       )}
     </div>
+  ) : (
+    <></>
   );
 };
 

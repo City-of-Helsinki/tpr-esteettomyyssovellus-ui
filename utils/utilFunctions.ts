@@ -196,12 +196,23 @@ const uploadPictureToAzure = async (servicePointId: number, photoBase64: string,
     }),
   };
 
-  const imageResponse = await fetch(`${getOrigin(router)}/${API_AZURE_UPLOAD}${servicePointId}/`, imageRequest);
-  const imageJson = await (imageResponse.json() as Promise<{ status: string; uploaded_file_name: string; url: string }>);
+  let imageResult = "";
 
-  console.log("imageJson", imageJson);
+  try {
+    const imageResponse = await fetch(`${getOrigin(router)}/${API_AZURE_UPLOAD}${servicePointId}/`, imageRequest);
 
-  return imageJson.url;
+    // The response should be json, but get it first as text then parse it
+    // If the azure access token has expired, the response will be an error message instead of json
+    imageResult = await imageResponse.text();
+
+    const imageJson = JSON.parse(imageResult) as { status: string; uploaded_file_name: string; url: string };
+
+    console.log("imageJson", imageJson);
+
+    return imageJson.url;
+  } catch {
+    console.error("Image upload error:", imageResult);
+  }
 };
 
 const saveEntrancePlaceBox = async (entrancePlaceBox: EntrancePlaceBox, placeAnswerId: number, router: NextRouter, photoUrl?: string) => {
