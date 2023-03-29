@@ -144,7 +144,7 @@ const Summary = ({
                   return (a.order_text ?? "").localeCompare(b.order_text ?? "");
                 })
                 .map((entranceSentenceGroup) => {
-                  const { entrance_id, sentence_group_id } = entranceSentenceGroup;
+                  const { entrance_id, sentence_group_id, display_entrance_with_map } = entranceSentenceGroup;
                   const entranceKey = String(entrance_id);
                   const sentenceGroupKey = String(sentence_group_id);
                   const subHeading = (entranceSentenceGroup[`subheading_${curLocale}`] || "") as string;
@@ -159,6 +159,7 @@ const Summary = ({
                           entranceData={entranceData[entranceKey]}
                           servicepointData={servicepointData}
                           isMainEntrance={entrance_id === mainEntranceId}
+                          isMapDisplayed={display_entrance_with_map === "Y"}
                         />
                       )}
 
