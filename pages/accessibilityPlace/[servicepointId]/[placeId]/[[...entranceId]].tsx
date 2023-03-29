@@ -120,6 +120,8 @@ const AccessibilityPlace = ({
     }
   };
 
+  const canAddLocation = filteredPlaceData.can_add_location === "Y";
+
   // Initialise the entrance place box data on first render only, using a workaround utilising useEffect with empty dependency array
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const useMountEffect = (fun: () => void) => useEffect(fun, []);
@@ -178,7 +180,9 @@ const AccessibilityPlace = ({
 
               <div className={styles.infoHeader}>{`${i18n.t("additionalInfo.additionalInfo")} > ${filteredPlaceData.name}`}</div>
               <div className={styles.infoText}>
-                <div>{`${i18n.t("additionalInfo.fillPlaceData1")} '${filteredPlaceData.name}' ${i18n.t("additionalInfo.fillPlaceData2")}`}</div>
+                <div>{`${i18n.t("additionalInfo.fillPlaceData1")} '${filteredPlaceData.name}' ${i18n.t("additionalInfo.fillPlaceData2")}${
+                  canAddLocation ? ` ${i18n.t("additionalInfo.fillPlaceData3")}.` : "."
+                }`}</div>
                 <div>{i18n.t("additionalInfo.orderPlaceData")}</div>
                 <div>{i18n.t("additionalInfo.mandatoryPlaceData")}</div>
               </div>
@@ -192,7 +196,7 @@ const AccessibilityPlace = ({
                     key={key}
                     entrancePlaceBox={entrancePlaceBox}
                     entrancePlaceName={filteredPlaceData.name || ""}
-                    canAddLocation={filteredPlaceData.can_add_location === "Y"}
+                    canAddLocation={canAddLocation}
                     isFirst={entrancePlaceBox.order_number === 1}
                     isLast={entrancePlaceBox.order_number === filteredEntrancePlaceBoxes.length}
                   />
