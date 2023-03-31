@@ -184,7 +184,7 @@ const Details = ({
                   const { entrance_id, sentence_group_id, display_entrance_with_map } = entranceSentenceGroup;
                   const entranceKey = String(entrance_id);
                   const sentenceGroupKey = String(sentence_group_id);
-                  const subHeading = entranceSentenceGroup[`subheading_${curLocale}`] || "";
+                  const subHeading = (entranceSentenceGroup[`subheading_${curLocale}`] || "") as string;
                   const hasAccessibilityData = accessibilityData && accessibilityData[entranceKey] && accessibilityData[entranceKey].length > 0;
                   const entranceIdToModify = entrance_id === mainEntranceId ? mainEntranceIdToModify : entrance_id;
 
@@ -216,9 +216,11 @@ const Details = ({
                         </>
                       ) : (
                         <>
-                          <div className={styles.headercontainer}>
-                            <h3>{subHeading}</h3>
-                          </div>
+                          {subHeading.length > 0 && (
+                            <div className={styles.headercontainer}>
+                              <h3>{subHeading}</h3>
+                            </div>
+                          )}
 
                           <SummaryAccessibility
                             entranceKey={entranceKey}

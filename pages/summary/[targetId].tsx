@@ -151,7 +151,11 @@ const Summary = ({
 
                   return (
                     <div key={`entrance_sentence_group_${entrance_id}_${sentence_group_id}`}>
-                      <div className={styles.headercontainer}>{subHeading.length > 0 && <h3>{subHeading}</h3>}</div>
+                      {subHeading.length > 0 && (
+                        <div className={styles.headercontainer}>
+                          <h3>{subHeading}</h3>
+                        </div>
+                      )}
 
                       {sentence_group_id === 0 && formId < 2 && (
                         <SummaryLocationPicture

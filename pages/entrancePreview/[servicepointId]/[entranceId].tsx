@@ -346,8 +346,6 @@ const Preview = ({
                   .map((sentenceGroupKey) => {
                     return (
                       <div key={`entrance_sentence_group_${entranceId}_${sentenceGroupKey}`}>
-                        <div className={styles.headercontainer}></div>
-
                         <SummaryAccessibility
                           entranceKey={entranceKey}
                           sentenceGroupId={sentenceGroupKey}
