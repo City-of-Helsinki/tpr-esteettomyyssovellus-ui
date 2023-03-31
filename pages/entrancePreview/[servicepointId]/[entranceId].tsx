@@ -17,6 +17,7 @@ import { setEntranceLocationPhoto, setEntrancePlaceBoxes, setQuestionBlockCommen
 import { setServicepointId, setEntranceId, setStartDate, setAnswers, setExtraAnswers } from "../../../state/reducers/formSlice";
 import { persistor } from "../../../state/store";
 import {
+  API_DISPLAY_ENTRANCE_WITH_MAP,
   API_FETCH_BACKEND_ENTRANCE,
   API_FETCH_BACKEND_ENTRANCE_ANSWERS,
   API_FETCH_BACKEND_ENTRANCE_CHOICES,
@@ -76,6 +77,7 @@ const Preview = ({
   questionAnswerData,
   questionExtraAnswerData,
   formGuideData,
+  displayEntranceWithMap,
   formId,
   mainEntranceId,
   isMainEntrancePublished,
@@ -331,7 +333,7 @@ const Preview = ({
                     entranceData={entranceData[entranceKey]}
                     servicepointData={servicepointData}
                     isMainEntrance={entranceId === mainEntranceId}
-                    isMapDisplayed={true}
+                    isMapDisplayed={displayEntranceWithMap === "Y"}
                   />
                 </div>
 
@@ -404,6 +406,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, lo
   let questionAnswerData: BackendEntranceAnswer[] = [];
   let questionExtraAnswerData: BackendEntranceField[] = [];
   let formGuideData: BackendFormGuide[] = [];
+  let displayEntranceWithMap = null;
   let formId = -1;
   let mainEntranceId = -1;
   let isMainEntrancePublished = false;
@@ -577,6 +580,19 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, lo
         });
         formGuideData = await (formGuideResp.json() as Promise<BackendFormGuide[]>);
       }
+
+      // Get whether to display the map for this draft entrance
+      // Note: this value usually comes from ArBackendEntranceSentenceGroup, but this view only returns data for form_submitted 'Y',
+      // so a database function is called instead to get the value for this draft entrance where form_submitted is 'D'
+      const displayEntranceWithMapRequestOptions = {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: getTokenHash() },
+        body: JSON.stringify({
+          logId: draftEntrance?.log_id,
+        }),
+      };
+      const displayEntranceWithMapResponse = await fetch(`${API_URL_BASE}${API_DISPLAY_ENTRANCE_WITH_MAP}`, displayEntranceWithMapRequestOptions);
+      displayEntranceWithMap = await (displayEntranceWithMapResponse.text() as Promise<string | null>);
     } catch (err) {
       console.error("Error", err);
     }
@@ -596,6 +612,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, lo
       questionAnswerData,
       questionExtraAnswerData,
       formGuideData,
+      displayEntranceWithMap,
       formId,
       mainEntranceId,
       isMainEntrancePublished,

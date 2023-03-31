@@ -462,6 +462,7 @@ export interface PreviewProps {
   questionAnswerData: BackendEntranceAnswer[];
   questionExtraAnswerData: BackendEntranceField[];
   formGuideData: BackendFormGuide[];
+  displayEntranceWithMap: string | null;
   formId: number;
   mainEntranceId: number;
   isMainEntrancePublished: boolean;

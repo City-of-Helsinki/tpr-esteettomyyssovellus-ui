@@ -29,6 +29,7 @@ export const API_FETCH_ANSWER_LOGS = "api/ArXAnswerLog/";
 export const API_FETCH_QUESTION_ANSWERS = "api/ArXQuestionAnswer/";
 export const API_CHOP_ADDRESS = "api/ChopAddress/";
 export const API_GENERATE_SENTENCES = "api/GenerateSentences/";
+export const API_DISPLAY_ENTRANCE_WITH_MAP = "api/DisplayEntranceWithMap/";
 export const API_FETCH_ENTRANCES = "api/ArEntrances/";
 export const API_FETCH_BACKEND_ENTRANCE = "api/ArBackendEntrance/";
 export const API_FETCH_BACKEND_ENTRANCE_ANSWERS = "api/ArBackendEntranceAnswer/";
