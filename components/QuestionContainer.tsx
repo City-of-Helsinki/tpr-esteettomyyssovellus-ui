@@ -31,8 +31,8 @@ const QuestionContainer = ({ question, accessibilityPlaces, children }: Question
     place_visible_if_question_choice: placeVisible,
   } = question;
 
-  // const questionDepth = (questionNumber?.toString().split(".") || []).length;
-  // const paddingLeft = `${(questionDepth - 2) * 5}rem`;
+  const questionLevel = question.question_level;
+  const paddingLeft = questionLevel ? `${questionLevel - 1}rem` : "";
   const photoTexts = photoText?.split("<BR>");
   const questionInfos = questionInfo?.split("<BR>");
   const invalidBlocks = useAppSelector((state) => state.formReducer.invalidBlocks);
@@ -73,13 +73,13 @@ const QuestionContainer = ({ question, accessibilityPlaces, children }: Question
   const questionStyle =
     isInvalid && curAnswers[questionId] === undefined
       ? {
-          // paddingLeft,
+          paddingLeft,
           marginBottom: "0.1rem",
           borderStyle: "solid",
           borderColor: "#b01038",
         }
       : {
-          // paddingLeft,
+          paddingLeft,
         };
 
   const editAccessibilityPlace = (placeId: number) => {
