@@ -379,7 +379,7 @@ const Preview = ({
                   {i18n.t("common.formSentAndSaved")}
                 </Notification>
 
-                <AddNewEntranceNotice />
+                {servicepointData.new_entrance_possible === "Y" && <AddNewEntranceNotice />}
               </div>
             )}
           </div>
