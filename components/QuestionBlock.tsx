@@ -133,8 +133,10 @@ const QuestionBlock = ({ block, questions, answerChoices, extraFields, accessibi
         </div>
       ) : (
         <div>
-          <p>{i18n.t("accessibilityForm.generalInfo1")}</p>
-          <p>{i18n.t("accessibilityForm.generalInfo2")}</p>
+          {desc?.map((text, index) => {
+            const key = `br_${index}`;
+            return <TextWithLinks key={key} text={text} />;
+          })}
         </div>
       )}
 
