@@ -203,7 +203,7 @@
       "addNewLocation": "Lisää sijainti"
     },
     "additionalInfo": "Lisätiedot",
-    "fillComment": "Voit tarkentaa esteettömyystietoja vapaamuotoisella lisätekstillä. Lisäteksti näkyy esteettömyyslauseiden lisäksi esteettömyystiedoissa.",
+    "fillComment": "Voit tarkentaa esteettömyystietoja vapaamuotoisella lisätekstillä.",
     "fillPlaceData1": "Voit täydentää",
     "fillPlaceData2": "tietoja kuvilla",
     "fillPlaceData3": "ja/tai sijaintitiedolla",

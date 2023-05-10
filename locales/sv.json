@@ -203,7 +203,7 @@
       "addNewLocation": "Lägg plats"
     },
     "additionalInfo": "Ytterligare information",
-    "fillComment": "Du kan förfina tillgänglighetsinformationen med tilläggstext i fritt format. Ytterligare text visas i tillgänglighetsinformationen utöver tillgänglighetsförklaringarna.",
+    "fillComment": "Du kan förfina tillgänglighetsinformationen med tilläggstext i fritt format.",
     "fillPlaceData1": "Du kan slutföra",
     "fillPlaceData2": "information med bilder",
     "fillPlaceData3": "och/eller platsinformation",
