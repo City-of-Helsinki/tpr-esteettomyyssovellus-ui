@@ -301,20 +301,20 @@ const EntranceAccessibility = ({
     }
   }, [isContinueClicked]);
 
-  // map visible blocks & questions & answers
-  const visibleBlocks =
+  // Get the visible blocks based on the question answers chosen
+  const visibleBlockElements =
     questionBlocksData && questionsData && questionChoicesData
-      ? questionBlocksData.map((block: BackendQuestionBlock) => {
+      ? questionBlocksData.reduce((visibleBlocks: JSX.Element[], block: BackendQuestionBlock) => {
           // The visible_if_question_choice is sometimes of form "1231+1231+12313+etc"
           const visibleQuestions = block.visible_if_question_choice?.split("+");
 
-          const answersIncludeAllVisibleQuestions = visibleQuestions
+          const answersIncludeVisibleQuestions = visibleQuestions
             ? visibleQuestions.some((elem) => curAnsweredChoices.includes(Number(elem)))
             : false;
 
           const isVisible =
             (block.visible_if_question_choice === null && block.language_id === curLocaleId) ||
-            (answersIncludeAllVisibleQuestions && block.language_id === curLocaleId && hasTopLevelAnswer);
+            (answersIncludeVisibleQuestions && block.language_id === curLocaleId && hasTopLevelAnswer);
 
           const blockQuestions = isVisible
             ? questionsData.filter((question) => question.question_block_id === block.question_block_id && question.language_id === curLocaleId)
@@ -334,32 +334,35 @@ const EntranceAccessibility = ({
             ? copyableEntranceData.filter((copy) => copy.question_block_id === block.question_block_id)
             : undefined;
 
-          return isVisible && blockQuestions && blockAnswerChoices && block.question_block_id !== undefined ? (
-            <HeadlineQuestionContainer
-              key={block.question_block_id}
-              questionBlockId={block.question_block_id}
-              text={`${block.question_block_code} ${block.text}`}
-              id={`questionblockid-${block.question_block_id}`}
-              initOpen={pathHash === `questionblockid-${block.question_block_id}`}
-              isValid={!curInvalidBlocks.includes(block.question_block_id)}
-            >
-              <QuestionBlock
-                key={block.question_block_id}
-                block={block}
-                questions={blockQuestions}
-                answerChoices={blockAnswerChoices}
-                extraFields={blockExtraFields}
-                accessibilityPlaces={filteredPlaces}
-                copyableEntrances={blockCopyableEntrances}
-              />
-            </HeadlineQuestionContainer>
-          ) : null;
-        })
+          return isVisible && blockQuestions && blockAnswerChoices && block.question_block_id !== undefined
+            ? [
+                ...visibleBlocks,
+                <HeadlineQuestionContainer
+                  key={block.question_block_id}
+                  questionBlockId={block.question_block_id}
+                  text={`${block.question_block_code} ${block.text}`}
+                  id={`questionblockid-${block.question_block_id}`}
+                  initOpen={pathHash === `questionblockid-${block.question_block_id}`}
+                  isValid={!curInvalidBlocks.includes(block.question_block_id)}
+                >
+                  <QuestionBlock
+                    key={block.question_block_id}
+                    block={block}
+                    questions={blockQuestions}
+                    answerChoices={blockAnswerChoices}
+                    extraFields={blockExtraFields}
+                    accessibilityPlaces={filteredPlaces}
+                    copyableEntrances={blockCopyableEntrances}
+                  />
+                </HeadlineQuestionContainer>,
+              ]
+            : visibleBlocks;
+        }, [])
       : null;
 
   // Determine which blocks are invalid for the validation summary, if any
   const invalidBlockIds =
-    visibleBlocks?.reduce((acc: Validation[], elem) => {
+    visibleBlockElements?.reduce((acc: Validation[], elem) => {
       if (elem !== null) {
         const { id: blockFieldId, number: blockId, text: blockText } = elem.props;
 
@@ -448,7 +451,7 @@ const EntranceAccessibility = ({
                 hasContinueButton={!hasTopLevelAnswer}
                 hasSaveMeetingRoomButton={formId >= 2}
                 setMeetingRoomSaveComplete={setMeetingRoomSaveComplete}
-                visibleBlocks={visibleBlocks}
+                visibleBlocks={visibleBlockElements}
                 questionsData={questionsData}
                 questionChoicesData={questionChoicesData}
                 formId={formId}
@@ -458,7 +461,7 @@ const EntranceAccessibility = ({
             </div>
 
             <div>
-              {visibleBlocks}
+              {visibleBlockElements}
 
               <QuestionFormCtrlButtons
                 hasCancelButton
@@ -470,7 +473,7 @@ const EntranceAccessibility = ({
                 hasContinueButton={!hasTopLevelAnswer}
                 hasSaveMeetingRoomButton={formId >= 2}
                 setMeetingRoomSaveComplete={setMeetingRoomSaveComplete}
-                visibleBlocks={visibleBlocks}
+                visibleBlocks={visibleBlockElements}
                 questionsData={questionsData}
                 questionChoicesData={questionChoicesData}
                 formId={formId}

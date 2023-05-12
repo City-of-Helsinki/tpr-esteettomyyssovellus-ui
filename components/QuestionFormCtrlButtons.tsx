@@ -10,6 +10,7 @@ import { QuestionFormCtrlButtonsProps } from "../types/general";
 import styles from "./QuestionFormCtrlButtons.module.scss";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
 import { setContinue, setEntranceId, setInvalid, setSaving, setValidationTime, unsetInvalid } from "../state/reducers/formSlice";
+import { getVisibleQuestionsForBlock } from "../utils/question";
 import getOrigin from "../utils/request";
 import { getTokenHash, saveFormData } from "../utils/utilFunctions";
 
@@ -93,22 +94,12 @@ const QuestionFormCtrlButtons = ({
     if (entranceId > 0) {
       const visibleQuestionChoiceIds = visibleBlocks?.flatMap((elem) => {
         // Get the visible questions for this block based on the answers chosen
-        const filteredQuestionIds = questionsData
-          .filter((question) => {
-            const visibleQuestions = question.visible_if_question_choice?.split("+");
-
-            const answersIncludeAllVisibleQuestions = visibleQuestions
-              ? visibleQuestions.some((elem2) => curAnsweredChoices.includes(Number(elem2)))
-              : false;
-
-            return question.language_id === curLocaleId && (question.visible_if_question_choice === null || answersIncludeAllVisibleQuestions);
-          })
-          .map((question) => question.question_id);
+        const visibleQuestionIds = getVisibleQuestionsForBlock(questionsData, curAnswers).map((question) => question.question_id);
 
         // Get all possible answer choices for the visible questions
         const questionChoices = questionChoicesData.filter((choice) => {
           return (
-            choice.question_block_id === Number(elem?.key) && choice.language_id === curLocaleId && filteredQuestionIds.includes(choice.question_id)
+            choice.question_block_id === Number(elem?.key) && choice.language_id === curLocaleId && visibleQuestionIds.includes(choice.question_id)
           );
         });
 
