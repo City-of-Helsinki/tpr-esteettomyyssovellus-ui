@@ -45,7 +45,7 @@ export const getServicepointHash = (servicepointId: number): string => {
 export const validateServicepointHash = (servicepointId: number, checksum?: string | string[]): boolean => {
   if (servicepointId > 0 && !!checksum) {
     const checksumString = API_TOKEN + servicepointId;
-    return validateChecksum(checksumString, checksum);
+    return validateChecksum(checksumString, checksum as string);
   } else {
     return false;
   }
