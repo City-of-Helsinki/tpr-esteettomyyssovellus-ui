@@ -17,7 +17,6 @@ import {
   BackendQuestionBlockField,
   BackendQuestionChoice,
   BackendServicepoint,
-  QuestionBlockAnswerCmt,
 } from "./backendModels";
 
 export interface KeyValueNumber {
@@ -322,7 +321,6 @@ export interface EntranceFormProps {
   accessibilityPlaceData: BackendPlace[];
   entranceData: BackendEntrance;
   entrancePlaceData: BackendEntrancePlace[];
-  questionBlockCommentData: QuestionBlockAnswerCmt[];
   copyableEntranceData: BackendCopyableEntrance[];
   servicepointData: BackendServicepoint;
   questionAnswerData: BackendEntranceAnswer[];
@@ -457,7 +455,6 @@ export interface PreviewProps {
   accessibilityPlaceData: BackendPlace[];
   entranceData: EntranceData;
   entrancePlaceData: EntrancePlaceData;
-  questionBlockCommentData: QuestionBlockAnswerCmt[];
   entranceChoiceData: EntranceChoiceData;
   questionAnswerData: BackendEntranceAnswer[];
   questionExtraAnswerData: BackendEntranceField[];

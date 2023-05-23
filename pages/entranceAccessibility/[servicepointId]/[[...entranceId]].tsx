@@ -31,7 +31,6 @@ import {
   BackendServicepoint,
   Entrance,
   EntranceResults,
-  QuestionBlockAnswerCmt,
 } from "../../../types/backendModels";
 import {
   API_FETCH_BACKEND_ENTRANCE,
@@ -47,7 +46,6 @@ import {
   API_URL_BASE,
   LanguageLocales,
   API_FETCH_BACKEND_ENTRANCE_PLACES,
-  API_FETCH_QUESTION_BLOCK_COMMENT,
   API_FETCH_BACKEND_FORM_GUIDE,
   API_FETCH_COPYABLE_ENTRANCE,
 } from "../../../types/constants";
@@ -68,7 +66,6 @@ const EntranceAccessibility = ({
   accessibilityPlaceData,
   entranceData,
   entrancePlaceData,
-  questionBlockCommentData,
   copyableEntranceData,
   servicepointData,
   formGuideData,
@@ -234,40 +231,31 @@ const EntranceAccessibility = ({
       // Put question block comments into redux state
       const questionBlockComments: QuestionBlockComment[] = [];
 
+      // Try to get the answers with comment data (not the location or photo data, which also has empty question_id)
+      const questionBlockCommentData = questionAnswerData.filter((a) => {
+        const { comment_fi, comment_sv, comment_en } = a || {};
+        return (a.question_id === undefined || a.question_id === null) && (comment_fi || comment_sv || comment_en);
+      });
+
       questionBlockCommentData.forEach((answerComment) => {
-        const { question_block_id, language_id, comment } = answerComment;
-        const language = LanguageLocales[language_id];
+        const { question_block_id, comment_fi, comment_sv, comment_en } = answerComment;
 
         const blockComment: BlockComment = {
           question_block_id: question_block_id,
-          [`comment_text_${language}`]: comment,
+          comment_text_fi: comment_fi,
+          comment_text_sv: comment_sv,
+          comment_text_en: comment_en,
         };
 
-        const questionBlockComment = questionBlockComments.find(
-          (c) => c.entrance_id === entranceData.entrance_id && c.question_block_id === question_block_id
-        );
-
-        if (questionBlockComment) {
-          // Add the comment for the different language
-          questionBlockComment.existingComment = {
-            ...questionBlockComment.existingComment,
-            ...blockComment,
-          };
-          questionBlockComment.modifiedComment = {
-            ...questionBlockComment.modifiedComment,
-            ...blockComment,
-          };
-        } else {
-          // Add a new question block comment
-          const newQuestionBlockComment: QuestionBlockComment = {
-            entrance_id: entranceData.entrance_id,
-            question_block_id: question_block_id,
-            existingComment: blockComment,
-            modifiedComment: blockComment,
-            invalidValues: [],
-          };
-          questionBlockComments.push(newQuestionBlockComment);
-        }
+        // Add a new question block comment
+        const newQuestionBlockComment: QuestionBlockComment = {
+          entrance_id: entranceData.entrance_id,
+          question_block_id: question_block_id,
+          existingComment: blockComment,
+          modifiedComment: blockComment,
+          invalidValues: [],
+        };
+        questionBlockComments.push(newQuestionBlockComment);
       });
 
       dispatch(setQuestionBlockComments(questionBlockComments));
@@ -499,7 +487,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, lo
   let questionExtraAnswerData: BackendEntranceField[] = [];
   let entranceData: BackendEntrance = {} as BackendEntrance;
   let entrancePlaceData: BackendEntrancePlace[] = [];
-  let questionBlockCommentData: QuestionBlockAnswerCmt[] = [];
   let copyableEntranceData: BackendCopyableEntrance[] = [];
   let servicepointData: BackendServicepoint = {} as BackendServicepoint;
   let formGuideData: BackendFormGuide[] = [];
@@ -663,25 +650,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, lo
           entrancePlaceData = allEntrancePlaceData.filter((a) => a.log_id === maxLogId);
         }
 
-        // Get the question block comment data
-        const allQuestionBlockCommentDataResp = await fetch(
-          `${API_URL_BASE}${API_FETCH_QUESTION_BLOCK_COMMENT}?entrance_id=${params.entranceId}&format=json`,
-          {
-            headers: new Headers({ Authorization: getTokenHash() }),
-          }
-        );
-        const allQuestionBlockCommentData = await (allQuestionBlockCommentDataResp.json() as Promise<QuestionBlockAnswerCmt[]>);
-
-        if (allQuestionBlockCommentData?.length > 0) {
-          // Return question block comment data for the highest log id only, in case both published and draft data exists (form_submitted = 'Y' and 'D')
-          // Note: This log id value may be different from the main answer data log id
-          const maxLogId =
-            allQuestionBlockCommentData.sort((a: QuestionBlockAnswerCmt, b: QuestionBlockAnswerCmt) => {
-              return (b.log_id ?? 0) - (a.log_id ?? 0);
-            })[0].log_id ?? -1;
-
-          questionBlockCommentData = allQuestionBlockCommentData.filter((a) => a.log_id === maxLogId);
-        }
 
         // Get the copyable entrance data, used in question blocks
         const copyableEntranceDataResp = await fetch(`${API_URL_BASE}${API_FETCH_COPYABLE_ENTRANCE}?entrance_id=${params.entranceId}&format=json`, {
@@ -705,7 +673,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, lo
       questionExtraAnswerData,
       entranceData,
       entrancePlaceData,
-      questionBlockCommentData,
       copyableEntranceData,
       servicepointData,
       formGuideData,

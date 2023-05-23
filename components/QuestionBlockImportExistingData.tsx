@@ -6,17 +6,11 @@ import Button from "./QuestionButton";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { addEntrancePlaceBox, deleteEntrancePlace, setEntranceLocationPhoto, setQuestionBlockComment } from "../state/reducers/additionalInfoSlice";
 import { setAnswer, setExtraAnswer } from "../state/reducers/formSlice";
-import { BackendEntranceAnswer, BackendEntranceField, BackendEntrancePlace, QuestionBlockAnswerCmt } from "../types/backendModels";
+import { BackendEntranceAnswer, BackendEntranceField, BackendEntrancePlace } from "../types/backendModels";
 import { BlockComment, InputOption, QuestionBlockComment, QuestionBlockImportProps } from "../types/general";
-import {
-  API_FETCH_BACKEND_ENTRANCE_ANSWERS,
-  API_FETCH_BACKEND_ENTRANCE_FIELD,
-  API_FETCH_BACKEND_ENTRANCE_PLACES,
-  API_FETCH_QUESTION_BLOCK_COMMENT,
-  LanguageLocales,
-} from "../types/constants";
+import { API_FETCH_BACKEND_ENTRANCE_ANSWERS, API_FETCH_BACKEND_ENTRANCE_FIELD, API_FETCH_BACKEND_ENTRANCE_PLACES } from "../types/constants";
 import getOrigin from "../utils/request";
-import { getTokenHash } from "../utils/utilFunctions";
+import { getTokenHash, isLocationValid } from "../utils/utilFunctions";
 import styles from "./QuestionBlockImportExistingData.module.scss";
 
 // usage: button for copying data from existing servicepoint
@@ -82,41 +76,39 @@ const QuestionBlockImportExistingData = ({ block, copyableEntrances }: QuestionB
       );
       const entrancePlaceData = await (allEntrancePlaceDataResp.json() as Promise<BackendEntrancePlace[]>);
 
-      // Get the question block comment data
-      const allQuestionBlockCommentDataResp = await fetch(
-        `${getOrigin(
-          router
-        )}/${API_FETCH_QUESTION_BLOCK_COMMENT}?entrance_id=${entranceId}&question_block_id=${question_block_id}&form_submitted=Y&format=json`,
-        {
-          headers: new Headers({ Authorization: getTokenHash() }),
-        }
-      );
-      const questionBlockCommentData = await (allQuestionBlockCommentDataResp.json() as Promise<QuestionBlockAnswerCmt[]>);
-
       if (questionAnswerData && questionAnswerData.length > 0) {
         // Put copied answers into redux state
         questionAnswerData.forEach((copiedAnswer) => {
           const { question_id: questionId, question_choice_id: answer } = copiedAnswer;
 
-          if (questionId === undefined || questionId === null) {
-            // Copy the location and/or photo
-            dispatch(
-              setEntranceLocationPhoto({
-                entrance_id: curEntranceId,
-                question_block_id: question_block_id,
-                existingAnswer: copiedAnswer,
-                modifiedAnswer: copiedAnswer,
-                termsAccepted: true,
-                invalidValues: [],
-                canAddLocation: false,
-                canAddPhoto: false,
-              })
-            );
-          } else if (questionId !== undefined && answer !== undefined) {
+          if (questionId !== undefined && questionId !== null && answer !== undefined && answer !== null) {
             // Copy the question answer
             dispatch(setAnswer({ questionId, answer }));
           }
         });
+
+        // Get the answer with the location and/or photo data (not comment data, which also has empty question_id)
+        const copiedEntranceLocationPhotoAnswer = questionAnswerData.find((a) => {
+          const { loc_easting, loc_northing, photo_url } = a || {};
+          const coordinatesEuref = [loc_easting ?? 0, loc_northing ?? 0] as [number, number];
+          return (a.question_id === undefined || a.question_id === null) && (photo_url || isLocationValid(coordinatesEuref));
+        });
+
+        if (copiedEntranceLocationPhotoAnswer) {
+          // Copy the location and/or photo
+          dispatch(
+            setEntranceLocationPhoto({
+              entrance_id: curEntranceId,
+              question_block_id: question_block_id,
+              existingAnswer: copiedEntranceLocationPhotoAnswer,
+              modifiedAnswer: copiedEntranceLocationPhotoAnswer,
+              termsAccepted: true,
+              invalidValues: [],
+              canAddLocation: false,
+              canAddPhoto: false,
+            })
+          );
+        }
       }
 
       if (questionExtraAnswerData && questionExtraAnswerData.length > 0) {
@@ -160,44 +152,35 @@ const QuestionBlockImportExistingData = ({ block, copyableEntrances }: QuestionB
         });
       }
 
-      if (questionBlockCommentData && questionBlockCommentData.length > 0) {
+      if (questionAnswerData && questionAnswerData.length > 0) {
         // Convert the copied comments to block comment models
         const questionBlockComments: QuestionBlockComment[] = [];
 
-        questionBlockCommentData.forEach((answerComment) => {
-          const { language_id, comment } = answerComment;
-          const language = LanguageLocales[language_id];
+        // Try to get the answers with comment data (not the location or photo data, which also has empty question_id)
+        const questionBlockCommentData = questionAnswerData.filter((a) => {
+          const { comment_fi, comment_sv, comment_en } = a || {};
+          return (a.question_id === undefined || a.question_id === null) && (comment_fi || comment_sv || comment_en);
+        });
+
+        questionBlockCommentData.forEach((copiedAnswer) => {
+          const { comment_fi, comment_sv, comment_en } = copiedAnswer;
 
           const blockComment: BlockComment = {
             question_block_id: question_block_id,
-            [`comment_text_${language}`]: comment,
+            comment_text_fi: comment_fi,
+            comment_text_sv: comment_sv,
+            comment_text_en: comment_en,
           };
 
-          const questionBlockComment = questionBlockComments.find(
-            (c) => c.entrance_id === curEntranceId && c.question_block_id === question_block_id
-          );
-
-          if (questionBlockComment) {
-            // Add the comment for the different language
-            questionBlockComment.existingComment = {
-              ...questionBlockComment.existingComment,
-              ...blockComment,
-            };
-            questionBlockComment.modifiedComment = {
-              ...questionBlockComment.modifiedComment,
-              ...blockComment,
-            };
-          } else {
-            // Add a new question block comment
-            const newQuestionBlockComment: QuestionBlockComment = {
-              entrance_id: curEntranceId,
-              question_block_id: question_block_id,
-              existingComment: blockComment,
-              modifiedComment: blockComment,
-              invalidValues: [],
-            };
-            questionBlockComments.push(newQuestionBlockComment);
-          }
+          // Add a new question block comment
+          const newQuestionBlockComment: QuestionBlockComment = {
+            entrance_id: curEntranceId,
+            question_block_id: question_block_id,
+            existingComment: blockComment,
+            modifiedComment: blockComment,
+            invalidValues: [],
+          };
+          questionBlockComments.push(newQuestionBlockComment);
         });
 
         // Put the copied comments into redux state

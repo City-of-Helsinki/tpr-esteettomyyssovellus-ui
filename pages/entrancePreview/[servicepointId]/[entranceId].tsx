@@ -29,7 +29,6 @@ import {
   API_FETCH_BACKEND_SENTENCES,
   API_FETCH_BACKEND_SERVICEPOINT,
   API_FETCH_ENTRANCES,
-  API_FETCH_QUESTION_BLOCK_COMMENT,
   API_URL_BASE,
   LanguageLocales,
 } from "../../../types/constants";
@@ -46,7 +45,6 @@ import {
   BackendPlace,
   BackendServicepoint,
   EntranceResults,
-  QuestionBlockAnswerCmt,
 } from "../../../types/backendModels";
 import {
   AccessibilityData,
@@ -72,7 +70,6 @@ const Preview = ({
   accessibilityPlaceData,
   entranceData,
   entrancePlaceData,
-  questionBlockCommentData,
   entranceChoiceData,
   questionAnswerData,
   questionExtraAnswerData,
@@ -206,40 +203,31 @@ const Preview = ({
     // Put question block comments into redux state
     const questionBlockComments: QuestionBlockComment[] = [];
 
+    // Try to get the answers with comment data (not the location or photo data, which also has empty question_id)
+    const questionBlockCommentData = questionAnswerData.filter((a) => {
+      const { comment_fi, comment_sv, comment_en } = a || {};
+      return (a.question_id === undefined || a.question_id === null) && (comment_fi || comment_sv || comment_en);
+    });
+
     questionBlockCommentData.forEach((answerComment) => {
-      const { question_block_id, language_id, comment } = answerComment;
-      const language = LanguageLocales[language_id];
+      const { question_block_id, comment_fi, comment_sv, comment_en } = answerComment;
 
       const blockComment: BlockComment = {
         question_block_id: question_block_id,
-        [`comment_text_${language}`]: comment,
+        comment_text_fi: comment_fi,
+        comment_text_sv: comment_sv,
+        comment_text_en: comment_en,
       };
 
-      const questionBlockComment = questionBlockComments.find(
-        (c) => c.entrance_id === entranceData[entranceKey].entrance_id && c.question_block_id === question_block_id
-      );
-
-      if (questionBlockComment) {
-        // Add the comment for the different language
-        questionBlockComment.existingComment = {
-          ...questionBlockComment.existingComment,
-          ...blockComment,
-        };
-        questionBlockComment.modifiedComment = {
-          ...questionBlockComment.modifiedComment,
-          ...blockComment,
-        };
-      } else {
-        // Add a new question block comment
-        const newQuestionBlockComment: QuestionBlockComment = {
-          entrance_id: entranceData[entranceKey].entrance_id,
-          question_block_id: question_block_id,
-          existingComment: blockComment,
-          modifiedComment: blockComment,
-          invalidValues: [],
-        };
-        questionBlockComments.push(newQuestionBlockComment);
-      }
+      // Add a new question block comment
+      const newQuestionBlockComment: QuestionBlockComment = {
+        entrance_id: entranceData[entranceKey].entrance_id,
+        question_block_id: question_block_id,
+        existingComment: blockComment,
+        modifiedComment: blockComment,
+        invalidValues: [],
+      };
+      questionBlockComments.push(newQuestionBlockComment);
     });
 
     dispatch(setQuestionBlockComments(questionBlockComments));
@@ -399,7 +387,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, lo
   let accessibilityPlaceData: BackendPlace[] = [];
   let entranceData: EntranceData = {};
   let entrancePlaceData: EntrancePlaceData = {};
-  let questionBlockCommentData: QuestionBlockAnswerCmt[] = [];
   let entranceChoiceData: EntranceChoiceData = {};
   let questionAnswerData: BackendEntranceAnswer[] = [];
   let questionExtraAnswerData: BackendEntranceField[] = [];
@@ -524,20 +511,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, lo
         };
       }
 
-      // Get the draft question block comment data
-      const allQuestionBlockCommentDataResp = await fetch(
-        `${API_URL_BASE}${API_FETCH_QUESTION_BLOCK_COMMENT}?entrance_id=${params.entranceId}&format=json`,
-        {
-          headers: new Headers({ Authorization: getTokenHash() }),
-        }
-      );
-      const allQuestionBlockCommentData = await (allQuestionBlockCommentDataResp.json() as Promise<QuestionBlockAnswerCmt[]>);
-
-      if (allQuestionBlockCommentData?.length > 0) {
-        // Note: in this case use the draftEntrance log id to filter since QuestionBlockAnswerCmt does not contain form_submitted
-        questionBlockCommentData = allQuestionBlockCommentData.filter((a) => a.log_id === draftEntrance?.log_id);
-      }
-
       // Get the draft questions and answers for use in the accessibility summaries
       const allEntranceChoicesResp = await fetch(
         `${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE_CHOICES}?entrance_id=${params.entranceId}&format=json`,
@@ -605,7 +578,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, lo
       accessibilityPlaceData,
       entranceData,
       entrancePlaceData,
-      questionBlockCommentData,
       entranceChoiceData,
       questionAnswerData,
       questionExtraAnswerData,
