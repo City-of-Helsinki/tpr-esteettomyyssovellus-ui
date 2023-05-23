@@ -86,6 +86,7 @@ export interface AnswerLog {
 }
 */
 
+/*
 export interface QuestionBlockAnswerCmt {
   question_block_answer_cmt_id: number;
   log_id: number;
@@ -93,6 +94,7 @@ export interface QuestionBlockAnswerCmt {
   language_id: number;
   comment?: string;
 }
+*/
 
 // Views
 // Note: Optional id fields have been changed to mandatory according to the underlying sql of the backend views

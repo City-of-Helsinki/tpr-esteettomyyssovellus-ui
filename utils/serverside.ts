@@ -1,5 +1,13 @@
 import crypto from "crypto";
-import { Entrance, ExternalBackendServicepoint, Servicepoint } from "../types/backendModels";
+import {
+  BackendEntrance,
+  BackendEntranceAnswer,
+  BackendEntranceField,
+  BackendEntrancePlace,
+  Entrance,
+  ExternalBackendServicepoint,
+  Servicepoint,
+} from "../types/backendModels";
 import {
   API_FETCH_BACKEND_EXTERNAL_SERVICEPOINTS,
   API_FETCH_ENTRANCES,
@@ -159,4 +167,29 @@ export const createEntrance = async (
   }
 
   return -1;
+};
+
+type dataTypeForLogId = BackendEntrance | BackendEntranceAnswer | BackendEntranceField | BackendEntrancePlace;
+
+const getMaxFormLogId = (data: dataTypeForLogId[], formSubmitted: "Y" | "D"): number => {
+  // Return the highest log id for either published or draft data (form_submitted = 'Y' or 'D')
+  const logIds = data
+    .filter((obj) => {
+      return obj.form_submitted === formSubmitted;
+    })
+    .sort((a: dataTypeForLogId, b: dataTypeForLogId) => {
+      return (b.log_id ?? 0) - (a.log_id ?? 0);
+    });
+
+  return logIds.length > 0 ? logIds[0].log_id ?? -1 : -1;
+};
+
+export const getMaxLogId = (data: dataTypeForLogId[]): number => {
+  // Return the 'best' highest log id for the data, so that the question form shows sensible data
+  // If published data exists (form_submitted = 'Y'), then preferably use that
+  // If only draft data exists (form_submitted = 'D'), for example if the data is for a new location, then use that instead
+  const maxLogIdY = getMaxFormLogId(data, "Y");
+  const maxLogIdD = getMaxFormLogId(data, "D");
+
+  return maxLogIdY > 0 ? maxLogIdY : maxLogIdD;
 };

@@ -32,7 +32,7 @@ import {
 } from "../../../../types/backendModels";
 import { AccessibilityPlaceProps, EntrancePlaceBox } from "../../../../types/general";
 import i18nLoader from "../../../../utils/i18n";
-import { validateServicepointHash } from "../../../../utils/serverside";
+import { getMaxLogId, validateServicepointHash } from "../../../../utils/serverside";
 import styles from "./accessibilityPlace.module.scss";
 
 // usage: the accessibility place of a question
@@ -297,12 +297,8 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, lo
         });
         const entranceDetail = await (entranceDetailResp.json() as Promise<BackendEntrance[]>);
         if (entranceDetail.length > 0) {
-          // Return entrance data for the highest log id only, in case both published and draft data exists (form_submitted = 'Y' and 'D')
-          const maxLogId =
-            entranceDetail.sort((a: BackendEntrance, b: BackendEntrance) => {
-              return (b.log_id ?? 0) - (a.log_id ?? 0);
-            })[0].log_id ?? -1;
-
+          // Return entrance data for the published log id if available (form_submitted = 'Y'), otherwise the draft log id (form_submitted = 'D')
+          const maxLogId = getMaxLogId(entranceDetail);
           entranceData = entranceDetail.find((a) => a.log_id === maxLogId) as BackendEntrance;
 
           // In some cases there is no published entrance, so form_submitted and log_id are null
