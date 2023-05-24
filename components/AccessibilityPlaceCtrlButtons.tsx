@@ -19,6 +19,7 @@ import styles from "./AccessibilityPlaceCtrlButtons.module.scss";
 // usage: save and return without saving buttons in additionalinfo page
 // notes: only save if save clicked, if return no save or back button (browser, mice etc) returns to old or empty value
 const AccessibilityPlaceCtrlButtons = ({
+  questionBlockId,
   placeId,
   entrancePlaceBoxes,
   deletedEntrancePlaceBoxes,
@@ -175,12 +176,8 @@ const AccessibilityPlaceCtrlButtons = ({
   }, [pageSaved, revertPlace, router]);
 
   const getPathHash = () => {
-    // Try to get the question block id for returning to the block via the path hash
-    // Note: this is not available for a new entrance place box
-    const savedBox = entrancePlaceBoxes.find((box) => {
-      return box.question_block_id > 0;
-    });
-    return savedBox ? `#questionblockid-${savedBox.question_block_id}` : "";
+    // Get the question block id for returning to the block via the path hash
+    return `#questionblockid-${questionBlockId}`;
   };
 
   // don't alter already saved state, set pageSaved to true

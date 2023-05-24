@@ -2,16 +2,16 @@ import React, { ReactElement, useEffect } from "react";
 import { GetServerSideProps } from "next";
 import { useI18n } from "next-localization";
 import Head from "next/head";
-import Layout from "../../../../components/common/Layout";
-import LoadSpinner from "../../../../components/common/LoadSpinner";
-import PageHelp from "../../../../components/common/PageHelp";
-import ValidationSummary from "../../../../components/common/ValidationSummary";
-import AccessibilityPlaceBox from "../../../../components/AccessibilityPlaceBox";
-import AccessibilityPlaceCtrlButtons from "../../../../components/AccessibilityPlaceCtrlButtons";
-import AccessibilityPlaceNewButton from "../../../../components/AccessibilityPlaceNewButton";
-import { useAppDispatch, useAppSelector, useLoading } from "../../../../state/hooks";
-import { addEntrancePlaceBox } from "../../../../state/reducers/additionalInfoSlice";
-import { formatAddress, getTokenHash } from "../../../../utils/utilFunctions";
+import Layout from "../../../../../components/common/Layout";
+import LoadSpinner from "../../../../../components/common/LoadSpinner";
+import PageHelp from "../../../../../components/common/PageHelp";
+import ValidationSummary from "../../../../../components/common/ValidationSummary";
+import AccessibilityPlaceBox from "../../../../../components/AccessibilityPlaceBox";
+import AccessibilityPlaceCtrlButtons from "../../../../../components/AccessibilityPlaceCtrlButtons";
+import AccessibilityPlaceNewButton from "../../../../../components/AccessibilityPlaceNewButton";
+import { useAppDispatch, useAppSelector, useLoading } from "../../../../../state/hooks";
+import { addEntrancePlaceBox } from "../../../../../state/reducers/additionalInfoSlice";
+import { formatAddress, getTokenHash } from "../../../../../utils/utilFunctions";
 import {
   API_FETCH_BACKEND_ENTRANCE,
   API_FETCH_BACKEND_FORM_GUIDE,
@@ -20,7 +20,7 @@ import {
   API_FETCH_ENTRANCES,
   API_URL_BASE,
   LanguageLocales,
-} from "../../../../types/constants";
+} from "../../../../../types/constants";
 import {
   BackendEntrance,
   BackendEntrancePlace,
@@ -29,10 +29,10 @@ import {
   BackendServicepoint,
   Entrance,
   EntranceResults,
-} from "../../../../types/backendModels";
-import { AccessibilityPlaceProps, EntrancePlaceBox } from "../../../../types/general";
-import i18nLoader from "../../../../utils/i18n";
-import { getMaxLogId, validateServicepointHash } from "../../../../utils/serverside";
+} from "../../../../../types/backendModels";
+import { AccessibilityPlaceProps, EntrancePlaceBox } from "../../../../../types/general";
+import i18nLoader from "../../../../../utils/i18n";
+import { getMaxLogId, validateServicepointHash } from "../../../../../utils/serverside";
 import styles from "./accessibilityPlace.module.scss";
 
 // usage: the accessibility place of a question
@@ -40,6 +40,7 @@ const AccessibilityPlace = ({
   servicepointData,
   entranceData,
   accessibilityPlaceData,
+  questionBlockId,
   placeId,
   formGuideData,
   formId,
@@ -108,7 +109,7 @@ const AccessibilityPlace = ({
     if (filteredEntrancePlaceBoxes.length === 0) {
       const newBox: EntrancePlaceBox = {
         entrance_id: curEntranceId,
-        question_block_id: -1,
+        question_block_id: questionBlockId,
         place_id: filteredPlaceData.place_id,
         order_number: 1,
         modifiedBox: {} as BackendEntrancePlace,
@@ -135,8 +136,8 @@ const AccessibilityPlace = ({
         : `/entranceAccessibility/${curServicepointId}?checksum=${checksum}`,
     [`${i18n.t("additionalInfo.additionalInfo")} > ${filteredPlaceData.name}`]:
       curEntranceId > 0
-        ? `/accessibilityPlace/${curServicepointId}/${placeId}/${curEntranceId}?checksum=${checksum}`
-        : `/accessibilityPlace/${curServicepointId}/${placeId}?checksum=${checksum}`,
+        ? `/accessibilityPlace/${curServicepointId}/${questionBlockId}/${placeId}/${curEntranceId}?checksum=${checksum}`
+        : `/accessibilityPlace/${curServicepointId}/${questionBlockId}/${placeId}?checksum=${checksum}`,
   };
 
   return (
@@ -165,6 +166,7 @@ const AccessibilityPlace = ({
 
               <div className={styles.mainbuttons}>
                 <AccessibilityPlaceCtrlButtons
+                  questionBlockId={questionBlockId}
                   placeId={filteredPlaceData.place_id}
                   entrancePlaceBoxes={filteredEntrancePlaceBoxes}
                   deletedEntrancePlaceBoxes={filteredDeletedEntrancePlaceBoxes}
@@ -206,10 +208,15 @@ const AccessibilityPlace = ({
 
             <div className={styles.footercontainer}>
               <div className={styles.footerbutton}>
-                <AccessibilityPlaceNewButton accessibilityPlaceData={filteredPlaceData} orderNumber={filteredEntrancePlaceBoxes.length + 1} />
+                <AccessibilityPlaceNewButton
+                  accessibilityPlaceData={filteredPlaceData}
+                  questionBlockId={questionBlockId}
+                  orderNumber={filteredEntrancePlaceBoxes.length + 1}
+                />
               </div>
               <div className={styles.footerbutton}>
                 <AccessibilityPlaceCtrlButtons
+                  questionBlockId={questionBlockId}
                   placeId={filteredPlaceData.place_id}
                   entrancePlaceBoxes={filteredEntrancePlaceBoxes}
                   deletedEntrancePlaceBoxes={filteredDeletedEntrancePlaceBoxes}
@@ -230,6 +237,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, lo
   let entranceData: BackendEntrance = {} as BackendEntrance;
   let servicepointData: BackendServicepoint = {} as BackendServicepoint;
   let accessibilityPlaceData: BackendPlace[] = [];
+  let questionBlockId = -1;
   let placeId = -1;
   let formGuideData: BackendFormGuide[] = [];
   let formId = -1;
@@ -238,6 +246,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, lo
 
   if (isChecksumValid && params !== undefined) {
     try {
+      questionBlockId = Number(params.questionBlockId);
       placeId = Number(params.placeId);
 
       const servicepointBackendDetailResp = await fetch(
@@ -326,6 +335,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, lo
       servicepointData,
       entranceData,
       accessibilityPlaceData,
+      questionBlockId,
       placeId,
       formGuideData,
       formId,

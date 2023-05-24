@@ -503,6 +503,7 @@ export interface AccessibilityPlaceProps {
   servicepointData: BackendServicepoint;
   entranceData: BackendEntrance;
   accessibilityPlaceData: BackendPlace[];
+  questionBlockId: number;
   placeId: number;
   formGuideData: BackendFormGuide[];
   formId: number;
@@ -526,6 +527,7 @@ export interface AccessibilityPlacePictureProps {
 }
 
 export interface AccessibilityPlaceCtrlButtonsProps {
+  questionBlockId: number;
   placeId: number;
   entrancePlaceBoxes: EntrancePlaceBox[];
   deletedEntrancePlaceBoxes: EntrancePlaceBox[];
@@ -533,6 +535,7 @@ export interface AccessibilityPlaceCtrlButtonsProps {
 
 export interface AccessibilityPlaceNewButtonProps {
   accessibilityPlaceData: BackendPlace;
+  questionBlockId: number;
   orderNumber: number;
 }
 

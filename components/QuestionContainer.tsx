@@ -98,8 +98,8 @@ const QuestionContainer = ({ question, accessibilityPlaces, children }: Question
 
     const url =
       curEntranceId > 0
-        ? `/accessibilityPlace/${curServicepointId}/${placeId}/${curEntranceId}?checksum=${checksum}`
-        : `/accessibilityPlace/${curServicepointId}/${placeId}?checksum=${checksum}`;
+        ? `/accessibilityPlace/${curServicepointId}/${questionBlockId}/${placeId}/${curEntranceId}?checksum=${checksum}`
+        : `/accessibilityPlace/${curServicepointId}/${questionBlockId}/${placeId}?checksum=${checksum}`;
     router.push(url);
   };
 
