@@ -17,7 +17,6 @@ import {
   BackendQuestionBlockField,
   BackendQuestionChoice,
   BackendServicepoint,
-  QuestionBlockAnswerCmt,
 } from "./backendModels";
 
 export interface KeyValueNumber {
@@ -53,7 +52,6 @@ export interface HeadlineQuestionContainerProps {
   children?: JSX.Element;
   questionBlockId?: number;
   isValid?: boolean;
-  id?: string;
 }
 
 export interface InputOption {
@@ -322,7 +320,6 @@ export interface EntranceFormProps {
   accessibilityPlaceData: BackendPlace[];
   entranceData: BackendEntrance;
   entrancePlaceData: BackendEntrancePlace[];
-  questionBlockCommentData: QuestionBlockAnswerCmt[];
   copyableEntranceData: BackendCopyableEntrance[];
   servicepointData: BackendServicepoint;
   questionAnswerData: BackendEntranceAnswer[];
@@ -335,7 +332,7 @@ export interface EntranceFormProps {
 
 export interface QuestionBlockProps {
   block: BackendQuestionBlock;
-  questions?: BackendQuestion[];
+  questions: BackendQuestion[];
   answerChoices?: BackendQuestionChoice[];
   extraFields?: BackendQuestionBlockField[];
   accessibilityPlaces: BackendPlace[];
@@ -457,7 +454,6 @@ export interface PreviewProps {
   accessibilityPlaceData: BackendPlace[];
   entranceData: EntranceData;
   entrancePlaceData: EntrancePlaceData;
-  questionBlockCommentData: QuestionBlockAnswerCmt[];
   entranceChoiceData: EntranceChoiceData;
   questionAnswerData: BackendEntranceAnswer[];
   questionExtraAnswerData: BackendEntranceField[];
@@ -506,6 +502,7 @@ export interface AccessibilityPlaceProps {
   servicepointData: BackendServicepoint;
   entranceData: BackendEntrance;
   accessibilityPlaceData: BackendPlace[];
+  questionBlockId: number;
   placeId: number;
   formGuideData: BackendFormGuide[];
   formId: number;
@@ -529,6 +526,7 @@ export interface AccessibilityPlacePictureProps {
 }
 
 export interface AccessibilityPlaceCtrlButtonsProps {
+  questionBlockId: number;
   placeId: number;
   entrancePlaceBoxes: EntrancePlaceBox[];
   deletedEntrancePlaceBoxes: EntrancePlaceBox[];
@@ -536,6 +534,7 @@ export interface AccessibilityPlaceCtrlButtonsProps {
 
 export interface AccessibilityPlaceNewButtonProps {
   accessibilityPlaceData: BackendPlace;
+  questionBlockId: number;
   orderNumber: number;
 }
 

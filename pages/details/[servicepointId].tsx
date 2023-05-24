@@ -129,7 +129,9 @@ const Details = ({
   const treeItems = { [servicepointData.servicepoint_name ?? ""]: `/details/${servicepointData.servicepoint_id}?checksum=${checksum}` };
 
   // Special case where the saved draft main entrance has a different id
-  const mainEntranceIdToModify = draftMainEntranceId > 0 && mainEntranceId !== draftMainEntranceId ? draftMainEntranceId : mainEntranceId;
+  // NOTE: this has been changed to preferably use the published id, and only use the draft id if no published data exists
+  // const mainEntranceIdToModify = draftMainEntranceId > 0 && mainEntranceId !== draftMainEntranceId ? draftMainEntranceId : mainEntranceId;
+  const mainEntranceIdToModify = mainEntranceId > 0 ? mainEntranceId : draftMainEntranceId;
 
   return (
     <Layout>

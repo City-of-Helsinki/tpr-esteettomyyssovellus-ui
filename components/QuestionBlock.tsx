@@ -12,6 +12,7 @@ import QuestionsList from "./QuestionsList";
 import { QuestionBlockProps } from "../types/general";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
 import { setFinished, unsetFinished, unsetInvalid } from "../state/reducers/formSlice";
+import { getVisibleQuestionsForBlock } from "../utils/question";
 import styles from "./QuestionBlock.module.scss";
 
 // usage: in form groups up all questions under a single "question block" / accordion
@@ -52,23 +53,16 @@ const QuestionBlock = ({ block, questions, answerChoices, extraFields, accessibi
   const canAddPhoto = add_photo_possible === "Y";
   // const curAnsweredChoices = useAppSelector((state) => state.formReducer.answeredChoices);
   const curAnswers = useAppSelector((state) => state.formReducer.answers);
-  const curAnsweredChoices = Object.values(curAnswers);
   const curInvalidBlocks = useAppSelector((state) => state.formReducer.invalidBlocks);
   // const continueActive = curAnsweredChoices.length !== 0;
   const keys = Object.keys(curAnswers);
 
-  // filter questions to get only correct ones with curAnsweredChoices
-  const filteredQuestions = questions
-    ? questions.filter(
-        (question) =>
-          question.visible_if_question_choice === null ||
-          question.visible_if_question_choice?.split("+").some((elem) => curAnsweredChoices.includes(Number(elem)))
-      )
-    : undefined;
+  // Get the visible questions for this block based on the answers chosen
+  const visibleQuestions = getVisibleQuestionsForBlock(questions, curAnswers);
 
   useEffect(() => {
     // check if block is finished (all visible questions are answered), also used to display icon if finished and with validation
-    const blockFinished = filteredQuestions?.every((element) => {
+    const blockFinished = visibleQuestions.every((element) => {
       return element.question_id ? keys.includes(element.question_id.toString()) : false;
     });
 
@@ -84,7 +78,7 @@ const QuestionBlock = ({ block, questions, answerChoices, extraFields, accessibi
     } else {
       dispatch(unsetFinished(blockId));
     }
-  }, [blockId, filteredQuestions, keys, curInvalidBlocks, dispatch]);
+  }, [blockId, visibleQuestions, keys, curInvalidBlocks, dispatch]);
 
   // Turn "<BR>" to linebreaks
   const desc = description?.split("<BR>");
@@ -133,8 +127,10 @@ const QuestionBlock = ({ block, questions, answerChoices, extraFields, accessibi
         </div>
       ) : (
         <div>
-          <p>{i18n.t("accessibilityForm.generalInfo1")}</p>
-          <p>{i18n.t("accessibilityForm.generalInfo2")}</p>
+          {desc?.map((text, index) => {
+            const key = `br_${index}`;
+            return <TextWithLinks key={key} text={text} />;
+          })}
         </div>
       )}
 
@@ -142,8 +138,8 @@ const QuestionBlock = ({ block, questions, answerChoices, extraFields, accessibi
 
       {(canAddLocation || canAddPhoto) && <QuestionBlockLocationPhoto block={block} canAddLocation={canAddLocation} canAddPhoto={canAddPhoto} />}
 
-      {/* QtionList loops the single question row(s) */}
-      <QuestionsList questions={filteredQuestions} answerChoices={answerChoices} accessibilityPlaces={accessibilityPlaces} />
+      {/* QuestionsList loops the single question row(s) */}
+      <QuestionsList questions={visibleQuestions} answerChoices={answerChoices} accessibilityPlaces={accessibilityPlaces} />
 
       {!putFieldsBeforeQuestions && <QuestionBlockExtraFieldList extraFields={extraFields} />}
 

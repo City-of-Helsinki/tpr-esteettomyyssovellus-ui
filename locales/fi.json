@@ -203,7 +203,7 @@
       "addNewLocation": "Lisää sijainti"
     },
     "additionalInfo": "Lisätiedot",
-    "fillComment": "Voit tarkentaa esteettömyystietoja vapaamuotoisella lisätekstillä. Lisäteksti näkyy esteettömyyslauseiden lisäksi esteettömyystiedoissa.",
+    "fillComment": "Voit tarkentaa esteettömyystietoja vapaamuotoisella lisätekstillä.",
     "fillPlaceData1": "Voit täydentää",
     "fillPlaceData2": "tietoja kuvilla",
     "fillPlaceData3": "ja/tai sijaintitiedolla",
@@ -221,8 +221,6 @@
     "locationTitle": "Sijainti"
   },
   "accessibilityForm": {
-    "generalInfo1": "Kysymyksiin vastaaminen vie aikaa toimipisteestä ja sisäänkäynnistä riippuen noin 5 - 15 minuuttia. Jokaiseen avautuvaan kysymykseen täytyy vastata ellei toisin mainita. Vastausten perusteella muodostuu esteettömyyslauseet suomeksi, ruotsiksi ja englanniksi.",
-    "generalInfo2": "Valitse ensin toimipisteen tapahtumapaikka, muut kysymykset riippuvat tästä valinnasta.",
     "choose": "--Valitse--",
     "continue": "Jatka",
     "whatDoesThisMean": "Mitä tämä tarkoittaa?",
