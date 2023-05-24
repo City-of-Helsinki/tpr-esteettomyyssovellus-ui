@@ -329,8 +329,7 @@ const EntranceAccessibility = ({
                   key={block.question_block_id}
                   questionBlockId={block.question_block_id}
                   text={`${block.question_block_code} ${block.text}`}
-                  id={`questionblockid-${block.question_block_id}`}
-                  initOpen={pathHash === `questionblockid-${block.question_block_id}`}
+                  initOpen={pathHash?.startsWith(`questionblockid-${block.question_block_id}`)}
                   isValid={!curInvalidBlocks.includes(block.question_block_id)}
                 >
                   <QuestionBlock

@@ -6,14 +6,7 @@ import styles from "./HeadlineQuestionContainer.module.scss";
 import { useAppSelector } from "../state/hooks";
 
 // usage: used for mainlevel (blue) accordions in form
-const HeadlineQuestionContainer = ({
-  text,
-  questionBlockId,
-  initOpen = false,
-  children,
-  isValid,
-  id = "",
-}: HeadlineQuestionContainerProps): JSX.Element => {
+const HeadlineQuestionContainer = ({ text, questionBlockId, initOpen = false, children, isValid }: HeadlineQuestionContainerProps): JSX.Element => {
   const i18n = useI18n();
 
   // Handle accordion state with useAccordion hook
@@ -39,7 +32,7 @@ const HeadlineQuestionContainer = ({
   };
 
   return (
-    <section className={styles.headline} id={id} aria-label={text}>
+    <section className={styles.headline} id={`questionblockid-${questionBlockId}`} aria-label={text}>
       <Button
         id={`headlinebutton-${questionBlockId}`}
         {...buttonProps}

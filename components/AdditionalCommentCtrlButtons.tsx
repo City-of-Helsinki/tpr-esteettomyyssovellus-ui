@@ -106,7 +106,7 @@ const AdditionalCommentCtrlButtons = ({ questionBlockId, questionBlockComment }:
 
   const getPathHash = () => {
     // Get the question block id for returning to the block via the path hash
-    return `#questionblockid-${questionBlockId}`;
+    return `#questionblockid-${questionBlockId}-comment`;
   };
 
   // don't alter already saved state, set pageSaved to true

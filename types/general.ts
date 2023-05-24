@@ -52,7 +52,6 @@ export interface HeadlineQuestionContainerProps {
   children?: JSX.Element;
   questionBlockId?: number;
   isValid?: boolean;
-  id?: string;
 }
 
 export interface InputOption {
