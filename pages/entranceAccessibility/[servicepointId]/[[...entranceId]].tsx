@@ -626,14 +626,12 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, lo
         );
         const allEntrancePlaceData = await (allEntrancePlaceDataResp.json() as Promise<BackendEntrancePlace[]>);
 
-
         if (allEntrancePlaceData?.length > 0) {
           // Return entrance place data for the published log id if available (form_submitted = 'Y'), otherwise the draft log id (form_submitted = 'D')
           // Note: This log id value may be different from the main answer data log id
           const maxLogId = getMaxLogId(allEntrancePlaceData);
           entrancePlaceData = allEntrancePlaceData.filter((a) => a.log_id === maxLogId);
         }
-
 
         // Get the copyable entrance data, used in question blocks
         const copyableEntranceDataResp = await fetch(`${API_URL_BASE}${API_FETCH_COPYABLE_ENTRANCE}?entrance_id=${params.entranceId}&format=json`, {
