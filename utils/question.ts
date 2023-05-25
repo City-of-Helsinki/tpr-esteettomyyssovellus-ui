@@ -1,7 +1,11 @@
 import { BackendQuestion } from "../types/backendModels";
 import { KeyValueNumber } from "../types/general";
 
-export const getVisibleQuestionsForBlock = (blockQuestions: BackendQuestion[], curAnswers: KeyValueNumber): BackendQuestion[] => {
+export const getVisibleQuestionsForBlock = (
+  blockQuestions: BackendQuestion[],
+  topLevelQuestions: BackendQuestion[],
+  curAnswers: KeyValueNumber
+): BackendQuestion[] => {
   const curAnswerQuestionIds = Object.keys(curAnswers);
   const curAnsweredChoices = Object.values(curAnswers);
 
@@ -18,10 +22,12 @@ export const getVisibleQuestionsForBlock = (blockQuestions: BackendQuestion[], c
       // Check if this question's parent is visible and was answered with a choice that makes this question visible
       return question.visible_if_question_choice?.split("+").some((parentChoice) => {
         const parentQuestionId = curAnswerQuestionIds.find((key) => curAnswers[Number(key)] === Number(parentChoice));
-        const parentQuestionVisible = visibleQuestions.some((q) => q.question_id === Number(parentQuestionId));
+        const parentQuestionVisible =
+          visibleQuestions.some((q) => q.question_id === Number(parentQuestionId)) ||
+          topLevelQuestions.some((q) => q.question_id === Number(parentQuestionId));
         const questionVisible = curAnsweredChoices.includes(Number(parentChoice));
 
-        return (parentQuestionVisible || visibleQuestions.length === 0) && questionVisible;
+        return parentQuestionVisible && questionVisible;
       })
         ? [...visibleQuestions, question]
         : visibleQuestions;

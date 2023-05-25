@@ -17,7 +17,15 @@ import styles from "./QuestionBlock.module.scss";
 
 // usage: in form groups up all questions under a single "question block" / accordion
 // notes: used under headlineQuestionContainer in main form
-const QuestionBlock = ({ block, questions, answerChoices, extraFields, accessibilityPlaces, copyableEntrances }: QuestionBlockProps): JSX.Element => {
+const QuestionBlock = ({
+  block,
+  blockQuestions,
+  topLevelQuestions,
+  answerChoices,
+  extraFields,
+  accessibilityPlaces,
+  copyableEntrances,
+}: QuestionBlockProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
   // const isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
@@ -47,7 +55,7 @@ const QuestionBlock = ({ block, questions, answerChoices, extraFields, accessibi
 
   // const blockId = questions && questions.length > 0 && questions[0].question_block_id !== undefined ? questions[0].question_block_id : -1;
   const blockId = question_block_id;
-  const hasInfoAndButtons = questions && questions.length > 0 ? blockId !== 0 : true;
+  const hasInfoAndButtons = blockQuestions && blockQuestions.length > 0 ? blockId !== 0 : true;
   const putFieldsBeforeQuestions = put_fields_before_questions === "Y";
   const canAddLocation = add_location_possible === "Y";
   const canAddPhoto = add_photo_possible === "Y";
@@ -58,7 +66,7 @@ const QuestionBlock = ({ block, questions, answerChoices, extraFields, accessibi
   const keys = Object.keys(curAnswers);
 
   // Get the visible questions for this block based on the answers chosen
-  const visibleQuestions = getVisibleQuestionsForBlock(questions, curAnswers);
+  const visibleQuestions = getVisibleQuestionsForBlock(blockQuestions, topLevelQuestions, curAnswers);
 
   useEffect(() => {
     // check if block is finished (all visible questions are answered), also used to display icon if finished and with validation

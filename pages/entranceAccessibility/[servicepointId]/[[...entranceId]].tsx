@@ -281,6 +281,11 @@ const EntranceAccessibility = ({
   // or the top-level question has been answered and the continue button has been clicked
   const hasTopLevelAnswer = isMainEntrancePublished || formId >= 1 || (curAnsweredChoices.length > 0 && isContinueClicked);
 
+  // Some questions parent is the top-level question, and their visibility depends on the top-level answer
+  const topLevelQuestions = questionsData
+    ? questionsData.filter((question) => question.visible_if_question_choice === null && question.language_id === curLocaleId)
+    : [];
+
   useEffect(() => {
     // Focus on the first question block after the continue button is clicked
     if (isContinueClicked) {
@@ -335,7 +340,8 @@ const EntranceAccessibility = ({
                   <QuestionBlock
                     key={block.question_block_id}
                     block={block}
-                    questions={blockQuestions}
+                    blockQuestions={blockQuestions}
+                    topLevelQuestions={topLevelQuestions}
                     answerChoices={blockAnswerChoices}
                     extraFields={blockExtraFields}
                     accessibilityPlaces={filteredPlaces}
