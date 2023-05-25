@@ -332,7 +332,8 @@ export interface EntranceFormProps {
 
 export interface QuestionBlockProps {
   block: BackendQuestionBlock;
-  questions: BackendQuestion[];
+  blockQuestions: BackendQuestion[];
+  topLevelQuestions: BackendQuestion[];
   answerChoices?: BackendQuestionChoice[];
   extraFields?: BackendQuestionBlockField[];
   accessibilityPlaces: BackendPlace[];
