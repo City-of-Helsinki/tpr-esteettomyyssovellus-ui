@@ -94,9 +94,14 @@ const QuestionFormCtrlButtons = ({
     if (entranceId > 0) {
       const visibleBlockIds = visibleBlocks?.map((elem) => Number(elem?.key)) || [];
 
+      // Some questions parent is the top-level question, and their visibility depends on the top-level answer
+      const topLevelQuestions = questionsData
+        ? questionsData.filter((question) => question.visible_if_question_choice === null && question.language_id === curLocaleId)
+        : [];
+
       const visibleQuestionChoiceIds = visibleBlockIds.flatMap((blockId) => {
         // Get the visible questions for this block based on the answers chosen
-        const visibleQuestionIds = getVisibleQuestionsForBlock(questionsData, curAnswers).map((question) => question.question_id);
+        const visibleQuestionIds = getVisibleQuestionsForBlock(questionsData, topLevelQuestions, curAnswers).map((question) => question.question_id);
 
         // Get all possible answer choices for the visible questions
         const questionChoices = questionChoicesData.filter((choice) => {
