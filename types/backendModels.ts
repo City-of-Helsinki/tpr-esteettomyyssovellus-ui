@@ -276,6 +276,7 @@ export interface BackendForm {
   language_id: number;
   text?: string;
   description?: string;
+  show_summary_page: string;
 }
 
 // BackendQuestion - use in accessibility form page

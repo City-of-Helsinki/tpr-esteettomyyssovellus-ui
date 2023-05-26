@@ -24,6 +24,7 @@ import {
   API_FETCH_BACKEND_ENTRANCE_FIELD,
   API_FETCH_BACKEND_ENTRANCE_PLACES,
   // API_FETCH_BACKEND_ENTRANCE_SENTENCE_GROUPS,
+  API_FETCH_BACKEND_FORM,
   API_FETCH_BACKEND_FORM_GUIDE,
   API_FETCH_BACKEND_PLACES,
   API_FETCH_BACKEND_SENTENCES,
@@ -41,6 +42,7 @@ import {
   BackendEntrancePlace,
   BackendEntranceSentence,
   // BackendEntranceSentenceGroup,
+  BackendForm,
   BackendFormGuide,
   BackendPlace,
   BackendServicepoint,
@@ -73,6 +75,7 @@ const Preview = ({
   entranceChoiceData,
   questionAnswerData,
   questionExtraAnswerData,
+  formData,
   formGuideData,
   displayEntranceWithMap,
   formId,
@@ -261,6 +264,7 @@ const Preview = ({
 
   const curLocaleId: number = LanguageLocales[i18n.locale() as keyof typeof LanguageLocales];
   const filteredPlaces = accessibilityPlaceData.filter((place) => place.language_id === curLocaleId);
+  const filteredFormData = formData.find((form) => form.language_id === curLocaleId);
 
   const treeItems = {
     [servicepointData.servicepoint_name ?? ""]: hasData ? `/details/${servicepointData.servicepoint_id}?checksum=${checksum}` : "",
@@ -302,9 +306,11 @@ const Preview = ({
             {!isSendingComplete && (
               <div>
                 <PreviewControlButtons
-                  hasSaveDraftButton={!isMainEntrancePublished}
-                  setSendingComplete={setSendingComplete}
                   hasData={hasAccessibilityData}
+                  hasSaveDraftButton={!isMainEntrancePublished}
+                  formData={filteredFormData}
+                  isNewEntrancePossible={servicepointData.new_entrance_possible === "Y"}
+                  setSendingComplete={setSendingComplete}
                 />
 
                 {entranceKey === String(mainEntranceId) && <SummaryContact entranceData={entranceData[entranceKey]} hasData={hasAccessibilityData} />}
@@ -353,9 +359,11 @@ const Preview = ({
 
                 <div className={styles.footercontainer}>
                   <PreviewControlButtons
-                    hasSaveDraftButton={!isMainEntrancePublished}
-                    setSendingComplete={setSendingComplete}
                     hasData={hasAccessibilityData}
+                    hasSaveDraftButton={!isMainEntrancePublished}
+                    formData={filteredFormData}
+                    isNewEntrancePossible={servicepointData.new_entrance_possible === "Y"}
+                    setSendingComplete={setSendingComplete}
                   />
                 </div>
               </div>
@@ -390,6 +398,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, lo
   let entranceChoiceData: EntranceChoiceData = {};
   let questionAnswerData: BackendEntranceAnswer[] = [];
   let questionExtraAnswerData: BackendEntranceField[] = [];
+  let formData: BackendForm[] = [];
   let formGuideData: BackendFormGuide[] = [];
   let displayEntranceWithMap = null;
   let formId = -1;
@@ -544,8 +553,14 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, lo
       });
       accessibilityPlaceData = await (accessibilityPlaceResp.json() as Promise<BackendPlace[]>);
 
-      // Get the guide text using the form id for this entrance
       if (formId >= 0) {
+        // Get the form data using the form id for this entrance
+        const formResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_FORM}?form_id=${formId}`, {
+          headers: new Headers({ Authorization: getTokenHash() }),
+        });
+        formData = await (formResp.json() as Promise<BackendForm[]>);
+
+        // Get the guide text using the form id for this entrance
         const formGuideResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_FORM_GUIDE}?form_id=${formId}`, {
           headers: new Headers({ Authorization: getTokenHash() }),
         });
@@ -581,6 +596,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, lo
       entranceChoiceData,
       questionAnswerData,
       questionExtraAnswerData,
+      formData,
       formGuideData,
       displayEntranceWithMap,
       formId,

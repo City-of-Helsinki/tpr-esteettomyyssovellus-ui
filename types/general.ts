@@ -10,6 +10,7 @@ import {
   BackendEntrancePlace,
   BackendEntranceSentence,
   BackendEntranceSentenceGroup,
+  BackendForm,
   BackendFormGuide,
   BackendPlace,
   BackendQuestion,
@@ -218,6 +219,8 @@ export interface SummaryCtrlButtonsProps {
 export interface PreviewControlButtonsProps {
   hasData: boolean;
   hasSaveDraftButton?: boolean;
+  formData?: BackendForm;
+  isNewEntrancePossible: boolean;
   setSendingComplete: Dispatch<SetStateAction<boolean>>;
 }
 
@@ -458,6 +461,7 @@ export interface PreviewProps {
   entranceChoiceData: EntranceChoiceData;
   questionAnswerData: BackendEntranceAnswer[];
   questionExtraAnswerData: BackendEntranceField[];
+  formData: BackendForm[];
   formGuideData: BackendFormGuide[];
   displayEntranceWithMap: string | null;
   formId: number;
