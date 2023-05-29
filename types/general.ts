@@ -118,8 +118,8 @@ export interface QuestionFormCtrlButtonsProps {
   hasSaveMeetingRoomButton?: boolean;
   setMeetingRoomSaveComplete: Dispatch<SetStateAction<boolean>>;
   visibleBlocks?: (JSX.Element | null)[] | null;
-  questionsData: BackendQuestion[];
   questionChoicesData: BackendQuestionChoice[];
+  visibleQuestions: BackendQuestion[];
   formId: number;
 }
 
@@ -336,7 +336,6 @@ export interface EntranceFormProps {
 export interface QuestionBlockProps {
   block: BackendQuestionBlock;
   blockQuestions: BackendQuestion[];
-  topLevelQuestions: BackendQuestion[];
   answerChoices?: BackendQuestionChoice[];
   extraFields?: BackendQuestionBlockField[];
   accessibilityPlaces: BackendPlace[];
