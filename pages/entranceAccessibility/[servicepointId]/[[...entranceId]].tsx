@@ -51,6 +51,7 @@ import {
 } from "../../../types/constants";
 import { BlockComment, EntranceFormProps, KeyValueNumber, KeyValueString, QuestionBlockComment, Validation } from "../../../types/general";
 import i18nLoader from "../../../utils/i18n";
+import { getVisibleQuestions } from "../../../utils/question";
 import { getMaxLogId, validateServicepointHash } from "../../../utils/serverside";
 import { getTokenHash, getCurrentDate, formatAddress, convertCoordinates, isLocationValid } from "../../../utils/utilFunctions";
 import styles from "./entranceAccessibility.module.scss";
@@ -79,6 +80,12 @@ const EntranceAccessibility = ({
   const router = useRouter();
   const curLocaleId: number = LanguageLocales[curLocale as keyof typeof LanguageLocales];
   const isLoading = useLoading();
+
+  const [filteredQuestions, setFilteredQuestions] = useState<BackendQuestion[]>([]);
+  const [filteredAnswerChoices, setFilteredAnswerChoices] = useState<BackendQuestionChoice[]>([]);
+  const [filteredBlockData, setFilteredBlockData] = useState<BackendQuestionBlock[]>([]);
+  const [filteredBlockFieldData, setFilteredBlockFieldData] = useState<BackendQuestionBlockField[]>([]);
+  const [filteredPlaces, setFilteredPlaces] = useState<BackendPlace[]>([]);
 
   const [isMeetingRoomSaveComplete, setMeetingRoomSaveComplete] = useState(false);
 
@@ -274,7 +281,14 @@ const EntranceAccessibility = ({
     }
   }, [startedAnswering, dispatch]);
 
-  const filteredPlaces = accessibilityPlaceData.filter((place) => place.language_id === curLocaleId);
+  useEffect(() => {
+    // Store the data needed for the form filtered by language
+    setFilteredQuestions(questionsData?.filter((question) => question.language_id === curLocaleId) || []);
+    setFilteredAnswerChoices(questionChoicesData?.filter((choice) => choice.language_id === curLocaleId) || []);
+    setFilteredBlockData(questionBlocksData?.filter((block) => block.language_id === curLocaleId) || []);
+    setFilteredBlockFieldData(questionBlockFieldData?.filter((field) => field.language_id === curLocaleId) || []);
+    setFilteredPlaces(accessibilityPlaceData?.filter((place) => place.language_id === curLocaleId) || []);
+  }, [questionsData, questionChoicesData, questionBlocksData, questionBlockFieldData, accessibilityPlaceData, curLocaleId]);
 
   // Show the continue button if the main entrance does not exist and the top-level question has not been answered yet
   // Show the save/preview buttons if the main entrance exists, or this is an additional entrance,
@@ -282,9 +296,8 @@ const EntranceAccessibility = ({
   const hasTopLevelAnswer = isMainEntrancePublished || formId >= 1 || (curAnsweredChoices.length > 0 && isContinueClicked);
 
   // Some questions parent is the top-level question, and their visibility depends on the top-level answer
-  const topLevelQuestions = questionsData
-    ? questionsData.filter((question) => question.visible_if_question_choice === null && question.language_id === curLocaleId)
-    : [];
+  // Some questions parents are in other blocks, so determine all the visible questions based on the answers so far
+  const allVisibleQuestions = getVisibleQuestions(filteredQuestions, [], curAnswers);
 
   useEffect(() => {
     // Focus on the first question block after the continue button is clicked
@@ -295,63 +308,43 @@ const EntranceAccessibility = ({
   }, [isContinueClicked]);
 
   // Get the visible blocks based on the question answers chosen
-  const visibleBlockElements =
-    questionBlocksData && questionsData && questionChoicesData
-      ? questionBlocksData.reduce((visibleBlocks: JSX.Element[], block: BackendQuestionBlock) => {
-          // The visible_if_question_choice is sometimes of form "1231+1231+12313+etc"
-          const visibleQuestions = block.visible_if_question_choice?.split("+");
+  const visibleBlockElements = filteredBlockData.reduce((visibleBlocks: JSX.Element[], block: BackendQuestionBlock) => {
+    // Get the visible questions for this block
+    const blockQuestions = allVisibleQuestions.filter((question) => question.question_block_id === block.question_block_id);
+    const visibleQuestions = getVisibleQuestions(blockQuestions, allVisibleQuestions, curAnswers);
 
-          const answersIncludeVisibleQuestions = visibleQuestions
-            ? visibleQuestions.some((elem) => curAnsweredChoices.includes(Number(elem)))
-            : false;
+    // The block is only visible if it has visible questions, or is the top-level block 0
+    const isVisible = block.visible_if_question_choice === null || (visibleQuestions.length > 0 && hasTopLevelAnswer);
+    if (!isVisible) {
+      return visibleBlocks;
+    }
 
-          const isVisible =
-            (block.visible_if_question_choice === null && block.language_id === curLocaleId) ||
-            (answersIncludeVisibleQuestions && block.language_id === curLocaleId && hasTopLevelAnswer);
+    // Get the other data needed for this block
+    const blockExtraFields = filteredBlockFieldData.filter((field) => field.question_block_id === block.question_block_id);
+    const blockAnswerChoices = filteredAnswerChoices.filter((choice) => choice.question_block_id === block.question_block_id);
+    const blockCopyableEntrances = copyableEntranceData.filter((copy) => copy.question_block_id === block.question_block_id);
 
-          const blockQuestions = isVisible
-            ? questionsData.filter((question) => question.question_block_id === block.question_block_id && question.language_id === curLocaleId)
-            : undefined;
-
-          const blockExtraFields = isVisible
-            ? questionBlockFieldData.filter(
-                (question) => question.question_block_id === block.question_block_id && question.language_id === curLocaleId
-              )
-            : undefined;
-
-          const blockAnswerChoices = isVisible
-            ? questionChoicesData.filter((choice) => choice.question_block_id === block.question_block_id && choice.language_id === curLocaleId)
-            : undefined;
-
-          const blockCopyableEntrances = isVisible
-            ? copyableEntranceData.filter((copy) => copy.question_block_id === block.question_block_id)
-            : undefined;
-
-          return isVisible && blockQuestions && blockAnswerChoices && block.question_block_id !== undefined
-            ? [
-                ...visibleBlocks,
-                <HeadlineQuestionContainer
-                  key={block.question_block_id}
-                  questionBlockId={block.question_block_id}
-                  text={`${block.question_block_code} ${block.text}`}
-                  initOpen={pathHash?.startsWith(`questionblockid-${block.question_block_id}`)}
-                  isValid={!curInvalidBlocks.includes(block.question_block_id)}
-                >
-                  <QuestionBlock
-                    key={block.question_block_id}
-                    block={block}
-                    blockQuestions={blockQuestions}
-                    topLevelQuestions={topLevelQuestions}
-                    answerChoices={blockAnswerChoices}
-                    extraFields={blockExtraFields}
-                    accessibilityPlaces={filteredPlaces}
-                    copyableEntrances={blockCopyableEntrances}
-                  />
-                </HeadlineQuestionContainer>,
-              ]
-            : visibleBlocks;
-        }, [])
-      : null;
+    return [
+      ...visibleBlocks,
+      <HeadlineQuestionContainer
+        key={block.question_block_id}
+        questionBlockId={block.question_block_id}
+        text={`${block.question_block_code} ${block.text}`}
+        initOpen={pathHash?.startsWith(`questionblockid-${block.question_block_id}`)}
+        isValid={!curInvalidBlocks.includes(block.question_block_id)}
+      >
+        <QuestionBlock
+          key={block.question_block_id}
+          block={block}
+          blockQuestions={blockQuestions}
+          answerChoices={blockAnswerChoices}
+          extraFields={blockExtraFields}
+          accessibilityPlaces={filteredPlaces}
+          copyableEntrances={blockCopyableEntrances}
+        />
+      </HeadlineQuestionContainer>,
+    ];
+  }, []);
 
   // Determine which blocks are invalid for the validation summary, if any
   const invalidBlockIds =
@@ -400,6 +393,7 @@ const EntranceAccessibility = ({
               ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}?checksum=${checksum}`
               : `/entranceAccessibility/${curServicepointId}?checksum=${checksum}`,
         };
+
   return (
     <Layout>
       <Head>
@@ -445,7 +439,7 @@ const EntranceAccessibility = ({
                 hasSaveMeetingRoomButton={formId >= 2}
                 setMeetingRoomSaveComplete={setMeetingRoomSaveComplete}
                 visibleBlocks={visibleBlockElements}
-                questionsData={questionsData}
+                visibleQuestions={allVisibleQuestions}
                 questionChoicesData={questionChoicesData}
                 formId={formId}
               />
@@ -467,7 +461,7 @@ const EntranceAccessibility = ({
                 hasSaveMeetingRoomButton={formId >= 2}
                 setMeetingRoomSaveComplete={setMeetingRoomSaveComplete}
                 visibleBlocks={visibleBlockElements}
-                questionsData={questionsData}
+                visibleQuestions={allVisibleQuestions}
                 questionChoicesData={questionChoicesData}
                 formId={formId}
               />

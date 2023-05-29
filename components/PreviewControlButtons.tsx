@@ -12,7 +12,13 @@ import { saveFormData } from "../utils/utilFunctions";
 import { PreviewControlButtonsProps } from "../types/general";
 
 // usage: controls for preview page
-const PreviewControlButtons = ({ hasSaveDraftButton, setSendingComplete, hasData }: PreviewControlButtonsProps): JSX.Element => {
+const PreviewControlButtons = ({
+  hasData,
+  hasSaveDraftButton,
+  isNewEntrancePossible,
+  formData,
+  setSendingComplete,
+}: PreviewControlButtonsProps): JSX.Element => {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -46,6 +52,10 @@ const PreviewControlButtons = ({ hasSaveDraftButton, setSendingComplete, hasData
     router.push(pageUrl);
   };
 
+  const handleReturnToDetailsPage = async () => {
+    router.push(`/details/${curServicepointId}?checksum=${checksum}`);
+  };
+
   const saveData = async (isDraft: boolean): Promise<void> => {
     // Filter to make sure the answered choices do not include any null values
     const filteredAnswerChoices = curAnsweredChoices.filter((a) => a);
@@ -77,6 +87,14 @@ const PreviewControlButtons = ({ hasSaveDraftButton, setSendingComplete, hasData
     dispatch(setSaving({ final: true }));
     await saveData(false);
     dispatch(setSaving({ final: false }));
+
+    // For form id 0 or 1, if it's not possible to add a new entrance, then redirect to the details page immediately after sending
+    if (!isNewEntrancePossible) {
+      const showSummaryPage = formData?.show_summary_page ?? "N";
+      if (showSummaryPage === "Y") {
+        handleReturnToDetailsPage();
+      }
+    }
 
     // Show the sent successfully message
     setSendingComplete(true);

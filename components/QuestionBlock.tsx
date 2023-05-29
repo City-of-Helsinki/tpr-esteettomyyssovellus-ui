@@ -12,7 +12,6 @@ import QuestionsList from "./QuestionsList";
 import { QuestionBlockProps } from "../types/general";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
 import { setFinished, unsetFinished, unsetInvalid } from "../state/reducers/formSlice";
-import { getVisibleQuestionsForBlock } from "../utils/question";
 import styles from "./QuestionBlock.module.scss";
 
 // usage: in form groups up all questions under a single "question block" / accordion
@@ -20,7 +19,6 @@ import styles from "./QuestionBlock.module.scss";
 const QuestionBlock = ({
   block,
   blockQuestions,
-  topLevelQuestions,
   answerChoices,
   extraFields,
   accessibilityPlaces,
@@ -65,8 +63,9 @@ const QuestionBlock = ({
   // const continueActive = curAnsweredChoices.length !== 0;
   const keys = Object.keys(curAnswers);
 
-  // Get the visible questions for this block based on the answers chosen
-  const visibleQuestions = getVisibleQuestionsForBlock(blockQuestions, topLevelQuestions, curAnswers);
+  // The visible questions for this block are based on the answers chosen
+  // The filtering is now done at the page level, so all these block questions are visible
+  const visibleQuestions = blockQuestions;
 
   useEffect(() => {
     // check if block is finished (all visible questions are answered), also used to display icon if finished and with validation

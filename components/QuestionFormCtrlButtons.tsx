@@ -10,7 +10,6 @@ import { QuestionFormCtrlButtonsProps } from "../types/general";
 import styles from "./QuestionFormCtrlButtons.module.scss";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
 import { setContinue, setEntranceId, setInvalid, setSaving, setValidationTime, unsetInvalid } from "../state/reducers/formSlice";
-import { getVisibleQuestionsForBlock } from "../utils/question";
 import getOrigin from "../utils/request";
 import { getTokenHash, saveFormData } from "../utils/utilFunctions";
 
@@ -24,7 +23,7 @@ const QuestionFormCtrlButtons = ({
   hasSaveMeetingRoomButton,
   setMeetingRoomSaveComplete,
   visibleBlocks,
-  questionsData,
+  visibleQuestions,
   questionChoicesData,
   formId,
 }: QuestionFormCtrlButtonsProps): JSX.Element => {
@@ -92,7 +91,9 @@ const QuestionFormCtrlButtons = ({
     dispatch(setEntranceId(entranceId));
 
     if (entranceId > 0) {
+      // The visible questions are based on the answers chosen
       const visibleBlockIds = visibleBlocks?.map((elem) => Number(elem?.key)) || [];
+      const visibleQuestionIds = visibleQuestions.map((question) => question.question_id);
 
       // Some questions parent is the top-level question, and their visibility depends on the top-level answer
       const topLevelQuestions = questionsData
@@ -100,9 +101,6 @@ const QuestionFormCtrlButtons = ({
         : [];
 
       const visibleQuestionChoiceIds = visibleBlockIds.flatMap((blockId) => {
-        // Get the visible questions for this block based on the answers chosen
-        const visibleQuestionIds = getVisibleQuestionsForBlock(questionsData, topLevelQuestions, curAnswers).map((question) => question.question_id);
-
         // Get all possible answer choices for the visible questions
         const questionChoices = questionChoicesData.filter((choice) => {
           return choice.question_block_id === blockId && choice.language_id === curLocaleId && visibleQuestionIds.includes(choice.question_id);
