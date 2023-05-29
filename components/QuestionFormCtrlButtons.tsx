@@ -95,6 +95,11 @@ const QuestionFormCtrlButtons = ({
       const visibleBlockIds = visibleBlocks?.map((elem) => Number(elem?.key)) || [];
       const visibleQuestionIds = visibleQuestions.map((question) => question.question_id);
 
+      // Some questions parent is the top-level question, and their visibility depends on the top-level answer
+      const topLevelQuestions = questionsData
+        ? questionsData.filter((question) => question.visible_if_question_choice === null && question.language_id === curLocaleId)
+        : [];
+
       const visibleQuestionChoiceIds = visibleBlockIds.flatMap((blockId) => {
         // Get all possible answer choices for the visible questions
         const questionChoices = questionChoicesData.filter((choice) => {
