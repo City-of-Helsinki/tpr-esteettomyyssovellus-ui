@@ -23,7 +23,7 @@ const QuestionFormCtrlButtons = ({
   hasSaveMeetingRoomButton,
   setMeetingRoomSaveComplete,
   visibleBlocks,
-  questionsData,
+  visibleQuestions,
   questionChoicesData,
   formId,
 }: QuestionFormCtrlButtonsProps): JSX.Element => {
@@ -91,25 +91,14 @@ const QuestionFormCtrlButtons = ({
     dispatch(setEntranceId(entranceId));
 
     if (entranceId > 0) {
-      const visibleQuestionChoiceIds = visibleBlocks?.flatMap((elem) => {
-        // Get the visible questions for this block based on the answers chosen
-        const filteredQuestionIds = questionsData
-          .filter((question) => {
-            const visibleQuestions = question.visible_if_question_choice?.split("+");
+      // The visible questions are based on the answers chosen
+      const visibleBlockIds = visibleBlocks?.map((elem) => Number(elem?.key)) || [];
+      const visibleQuestionIds = visibleQuestions.map((question) => question.question_id);
 
-            const answersIncludeAllVisibleQuestions = visibleQuestions
-              ? visibleQuestions.some((elem2) => curAnsweredChoices.includes(Number(elem2)))
-              : false;
-
-            return question.language_id === curLocaleId && (question.visible_if_question_choice === null || answersIncludeAllVisibleQuestions);
-          })
-          .map((question) => question.question_id);
-
+      const visibleQuestionChoiceIds = visibleBlockIds.flatMap((blockId) => {
         // Get all possible answer choices for the visible questions
         const questionChoices = questionChoicesData.filter((choice) => {
-          return (
-            choice.question_block_id === Number(elem?.key) && choice.language_id === curLocaleId && filteredQuestionIds.includes(choice.question_id)
-          );
+          return choice.question_block_id === blockId && choice.language_id === curLocaleId && visibleQuestionIds.includes(choice.question_id);
         });
 
         // Return the answer choice ids only for easier lookups
@@ -122,14 +111,24 @@ const QuestionFormCtrlButtons = ({
         return visibleQuestionChoiceIds?.includes(Number(choice));
       });
 
+      // Filter accessibility places and comments to make sure they are applicable for the visible question blocks
+      // It is possible to add a place or comment in a block, then change the location type (block 0 answer),
+      // which changes the visible blocks and makes the accessibility place or comment invalid for the form
+      const filteredEntrancePlaceBoxes = curEntrancePlaceBoxes.filter((box) => {
+        return visibleBlockIds.includes(box.question_block_id);
+      });
+      const filteredBlockComments = curQuestionBlockComments.filter((comment) => {
+        return visibleBlockIds.includes(comment.question_block_id);
+      });
+
       await saveFormData(
         curServicepointId,
         entranceId,
         filteredAnswerChoices,
         curExtraAnswers,
         curEntranceLocationPhoto,
-        curEntrancePlaceBoxes,
-        curQuestionBlockComments,
+        filteredEntrancePlaceBoxes,
+        filteredBlockComments,
         startedAnswering,
         user,
         isDraft,

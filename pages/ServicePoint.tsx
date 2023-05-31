@@ -9,9 +9,10 @@ import LoadSpinner from "../components/common/LoadSpinner";
 import ModalConfirmation from "../components/common/ModalConfirmation";
 import { useAppDispatch } from "../state/hooks";
 import { setChecksum, setUser } from "../state/reducers/generalSlice";
-import { EntranceResults, ExternalServicepoint, Servicepoint, System, SystemForm } from "../types/backendModels";
+import { BackendServicepoint, EntranceResults, ExternalServicepoint, Servicepoint, System, SystemForm } from "../types/backendModels";
 import {
   API_CHOP_ADDRESS,
+  API_FETCH_BACKEND_SERVICEPOINT,
   API_FETCH_ENTRANCES,
   API_FETCH_SERVICEPOINTS,
   API_FETCH_SYSTEMS,
@@ -392,6 +393,16 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
           }
         }
 
+        // Check if there is any accessibility data according to the backend servicepoint data
+        const servicepointBackendDetailResp = await fetch(
+          `${API_URL_BASE}${API_FETCH_BACKEND_SERVICEPOINT}?servicepoint_id=${servicepointId}&format=json`,
+          {
+            headers: new Headers({ Authorization: getTokenHash() }),
+          }
+        );
+        const servicepointBackendDetail = await (servicepointBackendDetailResp.json() as Promise<BackendServicepoint[]>);
+        const finishedEntranceCount = servicepointBackendDetail?.length > 0 ? servicepointBackendDetail[0].finished_entrance_count ?? 0 : 0;
+
         console.log("Compare old data");
         servicepointId = servicepointData[0].servicepoint_id;
         const oldAddress = servicepointData[0].address_street_name ?? "";
@@ -417,6 +428,17 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
 
         servicepointChecksum = getServicepointHash(servicepointId);
 
+        if (finishedEntranceCount === 0) {
+          // No accessibility data yet, so go straight to the details page
+          return {
+            props: {
+              servicepointId,
+              user: queryParams.user,
+              checksum: servicepointChecksum,
+              skip: true,
+            },
+          };
+        }
         if (addressHasChanged) {
           return {
             props: {

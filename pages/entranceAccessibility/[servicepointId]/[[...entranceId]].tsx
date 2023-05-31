@@ -31,7 +31,6 @@ import {
   BackendServicepoint,
   Entrance,
   EntranceResults,
-  QuestionBlockAnswerCmt,
 } from "../../../types/backendModels";
 import {
   API_FETCH_BACKEND_ENTRANCE,
@@ -47,13 +46,13 @@ import {
   API_URL_BASE,
   LanguageLocales,
   API_FETCH_BACKEND_ENTRANCE_PLACES,
-  API_FETCH_QUESTION_BLOCK_COMMENT,
   API_FETCH_BACKEND_FORM_GUIDE,
   API_FETCH_COPYABLE_ENTRANCE,
 } from "../../../types/constants";
 import { BlockComment, EntranceFormProps, KeyValueNumber, KeyValueString, QuestionBlockComment, Validation } from "../../../types/general";
 import i18nLoader from "../../../utils/i18n";
-import { validateServicepointHash } from "../../../utils/serverside";
+import { getVisibleQuestions } from "../../../utils/question";
+import { getMaxLogId, validateServicepointHash } from "../../../utils/serverside";
 import { getTokenHash, getCurrentDate, formatAddress, convertCoordinates, isLocationValid } from "../../../utils/utilFunctions";
 import styles from "./entranceAccessibility.module.scss";
 
@@ -68,7 +67,6 @@ const EntranceAccessibility = ({
   accessibilityPlaceData,
   entranceData,
   entrancePlaceData,
-  questionBlockCommentData,
   copyableEntranceData,
   servicepointData,
   formGuideData,
@@ -82,6 +80,12 @@ const EntranceAccessibility = ({
   const router = useRouter();
   const curLocaleId: number = LanguageLocales[curLocale as keyof typeof LanguageLocales];
   const isLoading = useLoading();
+
+  const [filteredQuestions, setFilteredQuestions] = useState<BackendQuestion[]>([]);
+  const [filteredAnswerChoices, setFilteredAnswerChoices] = useState<BackendQuestionChoice[]>([]);
+  const [filteredBlockData, setFilteredBlockData] = useState<BackendQuestionBlock[]>([]);
+  const [filteredBlockFieldData, setFilteredBlockFieldData] = useState<BackendQuestionBlockField[]>([]);
+  const [filteredPlaces, setFilteredPlaces] = useState<BackendPlace[]>([]);
 
   const [isMeetingRoomSaveComplete, setMeetingRoomSaveComplete] = useState(false);
 
@@ -234,40 +238,31 @@ const EntranceAccessibility = ({
       // Put question block comments into redux state
       const questionBlockComments: QuestionBlockComment[] = [];
 
+      // Try to get the answers with comment data (not the location or photo data, which also has empty question_id)
+      const questionBlockCommentData = questionAnswerData.filter((a) => {
+        const { comment_fi, comment_sv, comment_en } = a || {};
+        return (a.question_id === undefined || a.question_id === null) && (comment_fi || comment_sv || comment_en);
+      });
+
       questionBlockCommentData.forEach((answerComment) => {
-        const { question_block_id, language_id, comment } = answerComment;
-        const language = LanguageLocales[language_id];
+        const { question_block_id, comment_fi, comment_sv, comment_en } = answerComment;
 
         const blockComment: BlockComment = {
           question_block_id: question_block_id,
-          [`comment_text_${language}`]: comment,
+          comment_text_fi: comment_fi,
+          comment_text_sv: comment_sv,
+          comment_text_en: comment_en,
         };
 
-        const questionBlockComment = questionBlockComments.find(
-          (c) => c.entrance_id === entranceData.entrance_id && c.question_block_id === question_block_id
-        );
-
-        if (questionBlockComment) {
-          // Add the comment for the different language
-          questionBlockComment.existingComment = {
-            ...questionBlockComment.existingComment,
-            ...blockComment,
-          };
-          questionBlockComment.modifiedComment = {
-            ...questionBlockComment.modifiedComment,
-            ...blockComment,
-          };
-        } else {
-          // Add a new question block comment
-          const newQuestionBlockComment: QuestionBlockComment = {
-            entrance_id: entranceData.entrance_id,
-            question_block_id: question_block_id,
-            existingComment: blockComment,
-            modifiedComment: blockComment,
-            invalidValues: [],
-          };
-          questionBlockComments.push(newQuestionBlockComment);
-        }
+        // Add a new question block comment
+        const newQuestionBlockComment: QuestionBlockComment = {
+          entrance_id: entranceData.entrance_id,
+          question_block_id: question_block_id,
+          existingComment: blockComment,
+          modifiedComment: blockComment,
+          invalidValues: [],
+        };
+        questionBlockComments.push(newQuestionBlockComment);
       });
 
       dispatch(setQuestionBlockComments(questionBlockComments));
@@ -286,12 +281,23 @@ const EntranceAccessibility = ({
     }
   }, [startedAnswering, dispatch]);
 
-  const filteredPlaces = accessibilityPlaceData.filter((place) => place.language_id === curLocaleId);
+  useEffect(() => {
+    // Store the data needed for the form filtered by language
+    setFilteredQuestions(questionsData?.filter((question) => question.language_id === curLocaleId) || []);
+    setFilteredAnswerChoices(questionChoicesData?.filter((choice) => choice.language_id === curLocaleId) || []);
+    setFilteredBlockData(questionBlocksData?.filter((block) => block.language_id === curLocaleId) || []);
+    setFilteredBlockFieldData(questionBlockFieldData?.filter((field) => field.language_id === curLocaleId) || []);
+    setFilteredPlaces(accessibilityPlaceData?.filter((place) => place.language_id === curLocaleId) || []);
+  }, [questionsData, questionChoicesData, questionBlocksData, questionBlockFieldData, accessibilityPlaceData, curLocaleId]);
 
   // Show the continue button if the main entrance does not exist and the top-level question has not been answered yet
   // Show the save/preview buttons if the main entrance exists, or this is an additional entrance,
   // or the top-level question has been answered and the continue button has been clicked
   const hasTopLevelAnswer = isMainEntrancePublished || formId >= 1 || (curAnsweredChoices.length > 0 && isContinueClicked);
+
+  // Some questions parent is the top-level question, and their visibility depends on the top-level answer
+  // Some questions parents are in other blocks, so determine all the visible questions based on the answers so far
+  const allVisibleQuestions = getVisibleQuestions(filteredQuestions, [], curAnswers);
 
   useEffect(() => {
     // Focus on the first question block after the continue button is clicked
@@ -301,65 +307,48 @@ const EntranceAccessibility = ({
     }
   }, [isContinueClicked]);
 
-  // map visible blocks & questions & answers
-  const visibleBlocks =
-    questionBlocksData && questionsData && questionChoicesData
-      ? questionBlocksData.map((block: BackendQuestionBlock) => {
-          // The visible_if_question_choice is sometimes of form "1231+1231+12313+etc"
-          const visibleQuestions = block.visible_if_question_choice?.split("+");
+  // Get the visible blocks based on the question answers chosen
+  const visibleBlockElements = filteredBlockData.reduce((visibleBlocks: JSX.Element[], block: BackendQuestionBlock) => {
+    // Get the visible questions for this block
+    const blockQuestions = allVisibleQuestions.filter((question) => question.question_block_id === block.question_block_id);
+    const visibleQuestions = getVisibleQuestions(blockQuestions, allVisibleQuestions, curAnswers);
 
-          const answersIncludeAllVisibleQuestions = visibleQuestions
-            ? visibleQuestions.some((elem) => curAnsweredChoices.includes(Number(elem)))
-            : false;
+    // The block is only visible if it has visible questions, or is the top-level block 0
+    const isVisible = block.visible_if_question_choice === null || (visibleQuestions.length > 0 && hasTopLevelAnswer);
+    if (!isVisible) {
+      return visibleBlocks;
+    }
 
-          const isVisible =
-            (block.visible_if_question_choice === null && block.language_id === curLocaleId) ||
-            (answersIncludeAllVisibleQuestions && block.language_id === curLocaleId && hasTopLevelAnswer);
+    // Get the other data needed for this block
+    const blockExtraFields = filteredBlockFieldData.filter((field) => field.question_block_id === block.question_block_id);
+    const blockAnswerChoices = filteredAnswerChoices.filter((choice) => choice.question_block_id === block.question_block_id);
+    const blockCopyableEntrances = copyableEntranceData.filter((copy) => copy.question_block_id === block.question_block_id);
 
-          const blockQuestions = isVisible
-            ? questionsData.filter((question) => question.question_block_id === block.question_block_id && question.language_id === curLocaleId)
-            : undefined;
-
-          const blockExtraFields = isVisible
-            ? questionBlockFieldData.filter(
-                (question) => question.question_block_id === block.question_block_id && question.language_id === curLocaleId
-              )
-            : undefined;
-
-          const blockAnswerChoices = isVisible
-            ? questionChoicesData.filter((choice) => choice.question_block_id === block.question_block_id && choice.language_id === curLocaleId)
-            : undefined;
-
-          const blockCopyableEntrances = isVisible
-            ? copyableEntranceData.filter((copy) => copy.question_block_id === block.question_block_id)
-            : undefined;
-
-          return isVisible && blockQuestions && blockAnswerChoices && block.question_block_id !== undefined ? (
-            <HeadlineQuestionContainer
-              key={block.question_block_id}
-              questionBlockId={block.question_block_id}
-              text={`${block.question_block_code} ${block.text}`}
-              id={`questionblockid-${block.question_block_id}`}
-              initOpen={pathHash === `questionblockid-${block.question_block_id}`}
-              isValid={!curInvalidBlocks.includes(block.question_block_id)}
-            >
-              <QuestionBlock
-                key={block.question_block_id}
-                block={block}
-                questions={blockQuestions}
-                answerChoices={blockAnswerChoices}
-                extraFields={blockExtraFields}
-                accessibilityPlaces={filteredPlaces}
-                copyableEntrances={blockCopyableEntrances}
-              />
-            </HeadlineQuestionContainer>
-          ) : null;
-        })
-      : null;
+    return [
+      ...visibleBlocks,
+      <HeadlineQuestionContainer
+        key={block.question_block_id}
+        questionBlockId={block.question_block_id}
+        text={`${block.question_block_code} ${block.text}`}
+        initOpen={pathHash?.startsWith(`questionblockid-${block.question_block_id}`)}
+        isValid={!curInvalidBlocks.includes(block.question_block_id)}
+      >
+        <QuestionBlock
+          key={block.question_block_id}
+          block={block}
+          blockQuestions={blockQuestions}
+          answerChoices={blockAnswerChoices}
+          extraFields={blockExtraFields}
+          accessibilityPlaces={filteredPlaces}
+          copyableEntrances={blockCopyableEntrances}
+        />
+      </HeadlineQuestionContainer>,
+    ];
+  }, []);
 
   // Determine which blocks are invalid for the validation summary, if any
   const invalidBlockIds =
-    visibleBlocks?.reduce((acc: Validation[], elem) => {
+    visibleBlockElements?.reduce((acc: Validation[], elem) => {
       if (elem !== null) {
         const { id: blockFieldId, number: blockId, text: blockText } = elem.props;
 
@@ -404,6 +393,7 @@ const EntranceAccessibility = ({
               ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}?checksum=${checksum}`
               : `/entranceAccessibility/${curServicepointId}?checksum=${checksum}`,
         };
+
   return (
     <Layout>
       <Head>
@@ -448,8 +438,8 @@ const EntranceAccessibility = ({
                 hasContinueButton={!hasTopLevelAnswer}
                 hasSaveMeetingRoomButton={formId >= 2}
                 setMeetingRoomSaveComplete={setMeetingRoomSaveComplete}
-                visibleBlocks={visibleBlocks}
-                questionsData={questionsData}
+                visibleBlocks={visibleBlockElements}
+                visibleQuestions={allVisibleQuestions}
                 questionChoicesData={questionChoicesData}
                 formId={formId}
               />
@@ -458,7 +448,7 @@ const EntranceAccessibility = ({
             </div>
 
             <div>
-              {visibleBlocks}
+              {visibleBlockElements}
 
               <QuestionFormCtrlButtons
                 hasCancelButton
@@ -470,8 +460,8 @@ const EntranceAccessibility = ({
                 hasContinueButton={!hasTopLevelAnswer}
                 hasSaveMeetingRoomButton={formId >= 2}
                 setMeetingRoomSaveComplete={setMeetingRoomSaveComplete}
-                visibleBlocks={visibleBlocks}
-                questionsData={questionsData}
+                visibleBlocks={visibleBlockElements}
+                visibleQuestions={allVisibleQuestions}
                 questionChoicesData={questionChoicesData}
                 formId={formId}
               />
@@ -496,7 +486,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, lo
   let questionExtraAnswerData: BackendEntranceField[] = [];
   let entranceData: BackendEntrance = {} as BackendEntrance;
   let entrancePlaceData: BackendEntrancePlace[] = [];
-  let questionBlockCommentData: QuestionBlockAnswerCmt[] = [];
   let copyableEntranceData: BackendCopyableEntrance[] = [];
   let servicepointData: BackendServicepoint = {} as BackendServicepoint;
   let formGuideData: BackendFormGuide[] = [];
@@ -557,12 +546,8 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, lo
         });
         const entranceDetail = await (entranceDetailResp.json() as Promise<BackendEntrance[]>);
         if (entranceDetail.length > 0) {
-          // Return entrance data for the highest log id only, in case both published and draft data exists (form_submitted = 'Y' and 'D')
-          const maxLogId =
-            entranceDetail.sort((a: BackendEntrance, b: BackendEntrance) => {
-              return (b.log_id ?? 0) - (a.log_id ?? 0);
-            })[0].log_id ?? -1;
-
+          // Return entrance data for the published log id if available (form_submitted = 'Y'), otherwise the draft log id (form_submitted = 'D')
+          const maxLogId = getMaxLogId(entranceDetail);
           entranceData = entranceDetail.find((a) => a.log_id === maxLogId) as BackendEntrance;
 
           // In some cases there is no published entrance, so form_submitted and log_id are null
@@ -611,12 +596,8 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, lo
         const allQuestionAnswerData = await (allQuestionAnswersResp.json() as Promise<BackendEntranceAnswer[]>);
 
         if (allQuestionAnswerData?.length > 0) {
-          // Return answer data for the highest log id only, in case both published and draft data exists (form_submitted = 'Y' and 'D')
-          const maxLogId =
-            allQuestionAnswerData.sort((a: BackendEntranceAnswer, b: BackendEntranceAnswer) => {
-              return (b.log_id ?? 0) - (a.log_id ?? 0);
-            })[0].log_id ?? -1;
-
+          // Return answer data for the published log id if available (form_submitted = 'Y'), otherwise the draft log id (form_submitted = 'D')
+          const maxLogId = getMaxLogId(allQuestionAnswerData);
           questionAnswerData = allQuestionAnswerData.filter((a) => a.log_id === maxLogId);
         }
 
@@ -630,13 +611,9 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, lo
         const allQuestionExtraAnswerData = await (allQuestionExtraAnswersResp.json() as Promise<BackendEntranceField[]>);
 
         if (allQuestionExtraAnswerData?.length > 0) {
-          // Return extra answer data for the highest log id only, in case both published and draft data exists (form_submitted = 'Y' and 'D')
+          // Return extra answer data for the published log id if available (form_submitted = 'Y'), otherwise the draft log id (form_submitted = 'D')
           // Note: This log id value may be different from the main answer data log id
-          const maxLogId =
-            allQuestionExtraAnswerData.sort((a: BackendEntranceField, b: BackendEntranceField) => {
-              return (b.log_id ?? 0) - (a.log_id ?? 0);
-            })[0].log_id ?? -1;
-
+          const maxLogId = getMaxLogId(allQuestionExtraAnswerData);
           questionExtraAnswerData = allQuestionExtraAnswerData.filter((a) => a.log_id === maxLogId);
         }
 
@@ -650,34 +627,10 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, lo
         const allEntrancePlaceData = await (allEntrancePlaceDataResp.json() as Promise<BackendEntrancePlace[]>);
 
         if (allEntrancePlaceData?.length > 0) {
-          // Return entrance place data for the highest log id only, in case both published and draft data exists (form_submitted = 'Y' and 'D')
+          // Return entrance place data for the published log id if available (form_submitted = 'Y'), otherwise the draft log id (form_submitted = 'D')
           // Note: This log id value may be different from the main answer data log id
-          const maxLogId =
-            allEntrancePlaceData.sort((a: BackendEntrancePlace, b: BackendEntrancePlace) => {
-              return (b.log_id ?? 0) - (a.log_id ?? 0);
-            })[0].log_id ?? -1;
-
+          const maxLogId = getMaxLogId(allEntrancePlaceData);
           entrancePlaceData = allEntrancePlaceData.filter((a) => a.log_id === maxLogId);
-        }
-
-        // Get the question block comment data
-        const allQuestionBlockCommentDataResp = await fetch(
-          `${API_URL_BASE}${API_FETCH_QUESTION_BLOCK_COMMENT}?entrance_id=${params.entranceId}&format=json`,
-          {
-            headers: new Headers({ Authorization: getTokenHash() }),
-          }
-        );
-        const allQuestionBlockCommentData = await (allQuestionBlockCommentDataResp.json() as Promise<QuestionBlockAnswerCmt[]>);
-
-        if (allQuestionBlockCommentData?.length > 0) {
-          // Return question block comment data for the highest log id only, in case both published and draft data exists (form_submitted = 'Y' and 'D')
-          // Note: This log id value may be different from the main answer data log id
-          const maxLogId =
-            allQuestionBlockCommentData.sort((a: QuestionBlockAnswerCmt, b: QuestionBlockAnswerCmt) => {
-              return (b.log_id ?? 0) - (a.log_id ?? 0);
-            })[0].log_id ?? -1;
-
-          questionBlockCommentData = allQuestionBlockCommentData.filter((a) => a.log_id === maxLogId);
         }
 
         // Get the copyable entrance data, used in question blocks
@@ -702,7 +655,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, lo
       questionExtraAnswerData,
       entranceData,
       entrancePlaceData,
-      questionBlockCommentData,
       copyableEntranceData,
       servicepointData,
       formGuideData,

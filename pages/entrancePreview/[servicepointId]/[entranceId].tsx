@@ -24,12 +24,12 @@ import {
   API_FETCH_BACKEND_ENTRANCE_FIELD,
   API_FETCH_BACKEND_ENTRANCE_PLACES,
   // API_FETCH_BACKEND_ENTRANCE_SENTENCE_GROUPS,
+  API_FETCH_BACKEND_FORM,
   API_FETCH_BACKEND_FORM_GUIDE,
   API_FETCH_BACKEND_PLACES,
   API_FETCH_BACKEND_SENTENCES,
   API_FETCH_BACKEND_SERVICEPOINT,
   API_FETCH_ENTRANCES,
-  API_FETCH_QUESTION_BLOCK_COMMENT,
   API_URL_BASE,
   LanguageLocales,
 } from "../../../types/constants";
@@ -42,11 +42,11 @@ import {
   BackendEntrancePlace,
   BackendEntranceSentence,
   // BackendEntranceSentenceGroup,
+  BackendForm,
   BackendFormGuide,
   BackendPlace,
   BackendServicepoint,
   EntranceResults,
-  QuestionBlockAnswerCmt,
 } from "../../../types/backendModels";
 import {
   AccessibilityData,
@@ -72,10 +72,10 @@ const Preview = ({
   accessibilityPlaceData,
   entranceData,
   entrancePlaceData,
-  questionBlockCommentData,
   entranceChoiceData,
   questionAnswerData,
   questionExtraAnswerData,
+  formData,
   formGuideData,
   displayEntranceWithMap,
   formId,
@@ -206,40 +206,31 @@ const Preview = ({
     // Put question block comments into redux state
     const questionBlockComments: QuestionBlockComment[] = [];
 
+    // Try to get the answers with comment data (not the location or photo data, which also has empty question_id)
+    const questionBlockCommentData = questionAnswerData.filter((a) => {
+      const { comment_fi, comment_sv, comment_en } = a || {};
+      return (a.question_id === undefined || a.question_id === null) && (comment_fi || comment_sv || comment_en);
+    });
+
     questionBlockCommentData.forEach((answerComment) => {
-      const { question_block_id, language_id, comment } = answerComment;
-      const language = LanguageLocales[language_id];
+      const { question_block_id, comment_fi, comment_sv, comment_en } = answerComment;
 
       const blockComment: BlockComment = {
         question_block_id: question_block_id,
-        [`comment_text_${language}`]: comment,
+        comment_text_fi: comment_fi,
+        comment_text_sv: comment_sv,
+        comment_text_en: comment_en,
       };
 
-      const questionBlockComment = questionBlockComments.find(
-        (c) => c.entrance_id === entranceData[entranceKey].entrance_id && c.question_block_id === question_block_id
-      );
-
-      if (questionBlockComment) {
-        // Add the comment for the different language
-        questionBlockComment.existingComment = {
-          ...questionBlockComment.existingComment,
-          ...blockComment,
-        };
-        questionBlockComment.modifiedComment = {
-          ...questionBlockComment.modifiedComment,
-          ...blockComment,
-        };
-      } else {
-        // Add a new question block comment
-        const newQuestionBlockComment: QuestionBlockComment = {
-          entrance_id: entranceData[entranceKey].entrance_id,
-          question_block_id: question_block_id,
-          existingComment: blockComment,
-          modifiedComment: blockComment,
-          invalidValues: [],
-        };
-        questionBlockComments.push(newQuestionBlockComment);
-      }
+      // Add a new question block comment
+      const newQuestionBlockComment: QuestionBlockComment = {
+        entrance_id: entranceData[entranceKey].entrance_id,
+        question_block_id: question_block_id,
+        existingComment: blockComment,
+        modifiedComment: blockComment,
+        invalidValues: [],
+      };
+      questionBlockComments.push(newQuestionBlockComment);
     });
 
     dispatch(setQuestionBlockComments(questionBlockComments));
@@ -273,6 +264,7 @@ const Preview = ({
 
   const curLocaleId: number = LanguageLocales[i18n.locale() as keyof typeof LanguageLocales];
   const filteredPlaces = accessibilityPlaceData.filter((place) => place.language_id === curLocaleId);
+  const filteredFormData = formData.find((form) => form.language_id === curLocaleId);
 
   const treeItems = {
     [servicepointData.servicepoint_name ?? ""]: hasData ? `/details/${servicepointData.servicepoint_id}?checksum=${checksum}` : "",
@@ -314,9 +306,11 @@ const Preview = ({
             {!isSendingComplete && (
               <div>
                 <PreviewControlButtons
-                  hasSaveDraftButton={!isMainEntrancePublished}
-                  setSendingComplete={setSendingComplete}
                   hasData={hasAccessibilityData}
+                  hasSaveDraftButton={!isMainEntrancePublished}
+                  formData={filteredFormData}
+                  isNewEntrancePossible={servicepointData.new_entrance_possible === "Y"}
+                  setSendingComplete={setSendingComplete}
                 />
 
                 {entranceKey === String(mainEntranceId) && <SummaryContact entranceData={entranceData[entranceKey]} hasData={hasAccessibilityData} />}
@@ -365,9 +359,11 @@ const Preview = ({
 
                 <div className={styles.footercontainer}>
                   <PreviewControlButtons
-                    hasSaveDraftButton={!isMainEntrancePublished}
-                    setSendingComplete={setSendingComplete}
                     hasData={hasAccessibilityData}
+                    hasSaveDraftButton={!isMainEntrancePublished}
+                    formData={filteredFormData}
+                    isNewEntrancePossible={servicepointData.new_entrance_possible === "Y"}
+                    setSendingComplete={setSendingComplete}
                   />
                 </div>
               </div>
@@ -379,7 +375,7 @@ const Preview = ({
                   {i18n.t("common.formSentAndSaved")}
                 </Notification>
 
-                <AddNewEntranceNotice />
+                {servicepointData.new_entrance_possible === "Y" && <AddNewEntranceNotice />}
               </div>
             )}
           </div>
@@ -399,10 +395,10 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, lo
   let accessibilityPlaceData: BackendPlace[] = [];
   let entranceData: EntranceData = {};
   let entrancePlaceData: EntrancePlaceData = {};
-  let questionBlockCommentData: QuestionBlockAnswerCmt[] = [];
   let entranceChoiceData: EntranceChoiceData = {};
   let questionAnswerData: BackendEntranceAnswer[] = [];
   let questionExtraAnswerData: BackendEntranceField[] = [];
+  let formData: BackendForm[] = [];
   let formGuideData: BackendFormGuide[] = [];
   let displayEntranceWithMap = null;
   let formId = -1;
@@ -524,20 +520,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, lo
         };
       }
 
-      // Get the draft question block comment data
-      const allQuestionBlockCommentDataResp = await fetch(
-        `${API_URL_BASE}${API_FETCH_QUESTION_BLOCK_COMMENT}?entrance_id=${params.entranceId}&format=json`,
-        {
-          headers: new Headers({ Authorization: getTokenHash() }),
-        }
-      );
-      const allQuestionBlockCommentData = await (allQuestionBlockCommentDataResp.json() as Promise<QuestionBlockAnswerCmt[]>);
-
-      if (allQuestionBlockCommentData?.length > 0) {
-        // Note: in this case use the draftEntrance log id to filter since QuestionBlockAnswerCmt does not contain form_submitted
-        questionBlockCommentData = allQuestionBlockCommentData.filter((a) => a.log_id === draftEntrance?.log_id);
-      }
-
       // Get the draft questions and answers for use in the accessibility summaries
       const allEntranceChoicesResp = await fetch(
         `${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE_CHOICES}?entrance_id=${params.entranceId}&format=json`,
@@ -571,8 +553,14 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, lo
       });
       accessibilityPlaceData = await (accessibilityPlaceResp.json() as Promise<BackendPlace[]>);
 
-      // Get the guide text using the form id for this entrance
       if (formId >= 0) {
+        // Get the form data using the form id for this entrance
+        const formResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_FORM}?form_id=${formId}`, {
+          headers: new Headers({ Authorization: getTokenHash() }),
+        });
+        formData = await (formResp.json() as Promise<BackendForm[]>);
+
+        // Get the guide text using the form id for this entrance
         const formGuideResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_FORM_GUIDE}?form_id=${formId}`, {
           headers: new Headers({ Authorization: getTokenHash() }),
         });
@@ -605,10 +593,10 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, lo
       accessibilityPlaceData,
       entranceData,
       entrancePlaceData,
-      questionBlockCommentData,
       entranceChoiceData,
       questionAnswerData,
       questionExtraAnswerData,
+      formData,
       formGuideData,
       displayEntranceWithMap,
       formId,

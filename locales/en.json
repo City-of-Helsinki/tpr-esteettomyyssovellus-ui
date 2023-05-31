@@ -203,7 +203,7 @@
       "addNewLocation": "Add location"
     },
     "additionalInfo": "Additional information",
-    "fillComment": "You can refine the accessibility information with free-form additional text. The additional text is displayed in the accessibility information in addition to the accessibility statements.",
+    "fillComment": "You can refine the accessibility information with free-form additional text.",
     "fillPlaceData1": "You can complete the",
     "fillPlaceData2": "information with images",
     "fillPlaceData3": "and/or location information",
@@ -221,8 +221,6 @@
     "locationTitle": "Location"
   },
   "accessibilityForm": {
-    "generalInfo1": "Answering the questions takes about 5 - 15 minutes of time depending on the place and entrances. Every open question must be answered unless otherwise mentioned. Accessibility sentences are formed based on the answers in Finnish, Swedish and English.",
-    "generalInfo2": "First choose the venue of the place, other questions depend on this choice.",
     "choose": "--Choose--",
     "continue": "Continue",
     "whatDoesThisMean": "What does this mean?",

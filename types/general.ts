@@ -10,6 +10,7 @@ import {
   BackendEntrancePlace,
   BackendEntranceSentence,
   BackendEntranceSentenceGroup,
+  BackendForm,
   BackendFormGuide,
   BackendPlace,
   BackendQuestion,
@@ -17,7 +18,6 @@ import {
   BackendQuestionBlockField,
   BackendQuestionChoice,
   BackendServicepoint,
-  QuestionBlockAnswerCmt,
 } from "./backendModels";
 
 export interface KeyValueNumber {
@@ -53,7 +53,6 @@ export interface HeadlineQuestionContainerProps {
   children?: JSX.Element;
   questionBlockId?: number;
   isValid?: boolean;
-  id?: string;
 }
 
 export interface InputOption {
@@ -119,8 +118,8 @@ export interface QuestionFormCtrlButtonsProps {
   hasSaveMeetingRoomButton?: boolean;
   setMeetingRoomSaveComplete: Dispatch<SetStateAction<boolean>>;
   visibleBlocks?: (JSX.Element | null)[] | null;
-  questionsData: BackendQuestion[];
   questionChoicesData: BackendQuestionChoice[];
+  visibleQuestions: BackendQuestion[];
   formId: number;
 }
 
@@ -220,6 +219,8 @@ export interface SummaryCtrlButtonsProps {
 export interface PreviewControlButtonsProps {
   hasData: boolean;
   hasSaveDraftButton?: boolean;
+  formData?: BackendForm;
+  isNewEntrancePossible: boolean;
   setSendingComplete: Dispatch<SetStateAction<boolean>>;
 }
 
@@ -322,7 +323,6 @@ export interface EntranceFormProps {
   accessibilityPlaceData: BackendPlace[];
   entranceData: BackendEntrance;
   entrancePlaceData: BackendEntrancePlace[];
-  questionBlockCommentData: QuestionBlockAnswerCmt[];
   copyableEntranceData: BackendCopyableEntrance[];
   servicepointData: BackendServicepoint;
   questionAnswerData: BackendEntranceAnswer[];
@@ -335,7 +335,7 @@ export interface EntranceFormProps {
 
 export interface QuestionBlockProps {
   block: BackendQuestionBlock;
-  questions?: BackendQuestion[];
+  blockQuestions: BackendQuestion[];
   answerChoices?: BackendQuestionChoice[];
   extraFields?: BackendQuestionBlockField[];
   accessibilityPlaces: BackendPlace[];
@@ -457,10 +457,10 @@ export interface PreviewProps {
   accessibilityPlaceData: BackendPlace[];
   entranceData: EntranceData;
   entrancePlaceData: EntrancePlaceData;
-  questionBlockCommentData: QuestionBlockAnswerCmt[];
   entranceChoiceData: EntranceChoiceData;
   questionAnswerData: BackendEntranceAnswer[];
   questionExtraAnswerData: BackendEntranceField[];
+  formData: BackendForm[];
   formGuideData: BackendFormGuide[];
   displayEntranceWithMap: string | null;
   formId: number;
@@ -506,6 +506,7 @@ export interface AccessibilityPlaceProps {
   servicepointData: BackendServicepoint;
   entranceData: BackendEntrance;
   accessibilityPlaceData: BackendPlace[];
+  questionBlockId: number;
   placeId: number;
   formGuideData: BackendFormGuide[];
   formId: number;
@@ -529,6 +530,7 @@ export interface AccessibilityPlacePictureProps {
 }
 
 export interface AccessibilityPlaceCtrlButtonsProps {
+  questionBlockId: number;
   placeId: number;
   entrancePlaceBoxes: EntrancePlaceBox[];
   deletedEntrancePlaceBoxes: EntrancePlaceBox[];
@@ -536,6 +538,7 @@ export interface AccessibilityPlaceCtrlButtonsProps {
 
 export interface AccessibilityPlaceNewButtonProps {
   accessibilityPlaceData: BackendPlace;
+  questionBlockId: number;
   orderNumber: number;
 }
 

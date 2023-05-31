@@ -47,7 +47,7 @@ const QuestionBlockComment = ({ block }: QuestionBlockCommentProps): JSX.Element
   };
 
   return (
-    <div className={styles.maincontainer}>
+    <div className={styles.maincontainer} id={`questionblockid-${question_block_id}-comment`}>
       <div className={styles.questionwrapper}>
         <div className={styles.questioncontainer}>
           <div className={styles.question}>

@@ -203,7 +203,7 @@
       "addNewLocation": "Lägg plats"
     },
     "additionalInfo": "Ytterligare information",
-    "fillComment": "Du kan förfina tillgänglighetsinformationen med tilläggstext i fritt format. Ytterligare text visas i tillgänglighetsinformationen utöver tillgänglighetsförklaringarna.",
+    "fillComment": "Du kan förfina tillgänglighetsinformationen med tilläggstext i fritt format.",
     "fillPlaceData1": "Du kan slutföra",
     "fillPlaceData2": "information med bilder",
     "fillPlaceData3": "och/eller platsinformation",
@@ -221,8 +221,6 @@
     "locationTitle": "Plats"
   },
   "accessibilityForm": {
-    "generalInfo1": "(SV) Kysymyksiin vastaaminen vie aikaa toimipisteestä ja sisäänkäynnistä riippuen noin 5 - 15 minuuttia. Jokaiseen avautuvaan kysymykseen täytyy vastata ellei toisin mainita. Vastausten perusteella muodostuu esteettömyyslauseet suomeksi, ruotsiksi ja englanniksi.",
-    "generalInfo2": "(SV) Valitse ensin toimipisteen tapahtumapaikka, muut kysymykset riippuvat tästä valinnasta.",
     "choose": "--Välja--",
     "continue": "Fortsätta",
     "whatDoesThisMean": "Vad betyder det här?",
