@@ -165,9 +165,10 @@ const QuestionContainer = ({ question, accessibilityPlaces, children }: Question
         {visiblePlaces && (
           <div>
             {visiblePlaces.map((place) => {
-              const { place_id, name } = place;
+              const { place_id, name, can_add_location } = place;
               const key = `place_${place_id}`;
               const placeText = getAccessibilityPlaceText(place_id);
+              const canAddLocation = can_add_location === "Y";
 
               return (
                 <div key={key} className={styles.placecontainer}>
@@ -179,7 +180,11 @@ const QuestionContainer = ({ question, accessibilityPlaces, children }: Question
                       iconLeft={<IconPenLine aria-hidden />}
                       onClick={() => editAccessibilityPlace(place_id)}
                     >
-                      {`${placeText.length > 0 ? i18n.t("accessibilityForm.editPlaceLink") : i18n.t("accessibilityForm.addPlaceLink")} '${name}'?`}
+                      {`${
+                        placeText.length > 0
+                          ? `${i18n.t("accessibilityForm.editPlaceLink1")} ${canAddLocation ? i18n.t("accessibilityForm.editPlaceLink2") : ""}`
+                          : `${i18n.t("accessibilityForm.addPlaceLink1")} ${canAddLocation ? i18n.t("accessibilityForm.addPlaceLink2") : ""}`
+                      } '${name}'?`}
                     </HdsLink>
                   </div>
                   <div className={styles.placeresult}>

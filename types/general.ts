@@ -187,6 +187,7 @@ export interface SummaryLocationPictureProps {
   entranceData?: BackendEntrance;
   servicepointData: BackendServicepoint;
   isMainEntrance: boolean;
+  isMapDisplayed: boolean;
 }
 
 export interface SummaryAccessibilityPlaceGroupProps {
@@ -461,6 +462,7 @@ export interface PreviewProps {
   questionAnswerData: BackendEntranceAnswer[];
   questionExtraAnswerData: BackendEntranceField[];
   formGuideData: BackendFormGuide[];
+  displayEntranceWithMap: string | null;
   formId: number;
   mainEntranceId: number;
   isMainEntrancePublished: boolean;

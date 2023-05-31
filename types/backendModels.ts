@@ -264,6 +264,7 @@ export interface BackendEntranceSentenceGroup {
   subheading_fi?: string;
   subheading_sv?: string;
   subheading_en?: string;
+  display_entrance_with_map?: string;
   [key: string]: number | string | undefined;
 }
 
