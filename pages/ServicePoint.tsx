@@ -1,4 +1,4 @@
-import React, { ChangeEvent, ReactElement, useState } from "react";
+import React, { ChangeEvent, ReactElement, useEffect, useState } from "react";
 import { useI18n } from "next-localization";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
@@ -30,6 +30,7 @@ import styles from "./ServicePoint.module.scss";
 
 const Servicepoints = ({
   changed,
+  forceAddressChange,
   servicepointId,
   servicepointName,
   entranceId,
@@ -61,22 +62,7 @@ const Servicepoints = ({
     dispatch(setChecksum(checksum));
   }
 
-  if (skip) {
-    router.push(`/details/${servicepointId}?checksum=${checksum}`);
-  }
-
-  const handleRadioClick = (e: ChangeEvent<HTMLInputElement>) => {
-    setSelectedRadioItem(e.target.value);
-  };
-
-  const handleContinueClick = async () => {
-    if (selectedRadioItem === "1" && entranceId !== undefined) {
-      // Delete the main entrance data and create a new empty one
-      // Form id 0 means main entrance
-      await deleteEntrance(entranceId, router);
-      await createEntrance(servicepointId as number, 0, user as string, `${getOrigin(router)}/`, newEasting as number, newNorthing as number);
-    }
-
+  const updateAddress = async () => {
     // Update the address and coordinates for both options
     const updateAddressOptions = {
       method: "POST",
@@ -96,8 +82,27 @@ const Servicepoints = ({
     };
     const updateAddressUrl = `${getOrigin(router)}/${API_FETCH_SERVICEPOINTS}${servicepointId}/update_address/`;
     await fetch(updateAddressUrl, updateAddressOptions);
+  };
+
+  const updateAddressAndShowDetails = async () => {
+    await updateAddress();
 
     router.push(`/details/${servicepointId}?checksum=${checksum}`);
+  };
+
+  const handleRadioClick = (e: ChangeEvent<HTMLInputElement>) => {
+    setSelectedRadioItem(e.target.value);
+  };
+
+  const handleContinueClick = async () => {
+    if (selectedRadioItem === "1" && entranceId !== undefined) {
+      // Delete the main entrance data and create a new empty one
+      // Form id 0 means main entrance
+      await deleteEntrance(entranceId, router);
+      await createEntrance(servicepointId as number, 0, user as string, `${getOrigin(router)}/`, newEasting as number, newNorthing as number);
+    }
+
+    await updateAddressAndShowDetails();
   };
 
   const openDeletionConfirmation = () => {
@@ -111,6 +116,23 @@ const Servicepoints = ({
   const closeDeletionConfirmation = () => {
     setConfirmDeletion(false);
   };
+
+  useEffect(() => {
+    const updateAddressSync = async () => {
+      await updateAddressAndShowDetails();
+    };
+
+    if (skip) {
+      if (forceAddressChange) {
+        // Update the address without prompting the user and show the details page
+        updateAddressSync();
+      } else {
+        // Show the details page without any other actions
+        router.push(`/details/${servicepointId}?checksum=${checksum}`);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Layout>
@@ -430,12 +452,19 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
 
         if (finishedEntranceCount === 0) {
           // No accessibility data yet, so go straight to the details page
+          // In this case it is assumed that the provided address and location are correct, so make sure they are updated
           return {
             props: {
               servicepointId,
+              newAddress,
+              newAddressNumber,
+              newAddressCity,
+              newEasting,
+              newNorthing,
               user: queryParams.user,
               checksum: servicepointChecksum,
               skip: true,
+              forceAddressChange: true,
             },
           };
         }
