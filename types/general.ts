@@ -362,6 +362,7 @@ export interface AdditionalInfoCtrlButtonsProps {
 
 export interface ChangeProps {
   changed?: string;
+  forceAddressChange?: boolean;
   servicepointId?: number;
   servicepointName?: string;
   entranceId?: number;
