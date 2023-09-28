@@ -402,7 +402,8 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
           `${API_URL_BASE}${API_FETCH_SERVICEPOINTS}${servicepointId}/update_external/`,
           servicepointRequestOptions
         );
-        await (existingServicepointResp.json() as Promise<Servicepoint>);
+        const existingServicepointResult = await (existingServicepointResp.json() as Promise<Servicepoint>);
+        console.log("Existing servicepoint update result:", existingServicepointResult);
 
         const entranceResp = await fetch(`${API_URL_BASE}${API_FETCH_ENTRANCES}?servicepoint=${servicepointId}&format=json`, {
           headers: new Headers({ Authorization: getTokenHash() }),
