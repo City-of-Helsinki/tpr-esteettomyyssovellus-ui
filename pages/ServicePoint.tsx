@@ -391,6 +391,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
           body: JSON.stringify({
             servicepoint_name: queryParams.name,
             ext_servicepoint_id: queryParams.servicePointId,
+            system_id: queryParams.systemId,
             modified: date,
             modified_by: queryParams.user,
           }),
