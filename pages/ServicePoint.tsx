@@ -329,7 +329,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
       const [choppedAddress = "", choppedAddressNumber = "", choppedPostOffice = ""] = addressData || [];
 
       const externalServicepointResp = await fetch(
-        `${API_URL_BASE}${API_FETCH_EXTERNAL_SERVICEPOINTS}?format=json&external_servicepoint_id=${queryParams.servicePointId}`,
+        `${API_URL_BASE}${API_FETCH_EXTERNAL_SERVICEPOINTS}?format=json&system_id=${queryParams.systemId}&external_servicepoint_id=${queryParams.servicePointId}`,
         {
           headers: new Headers({ Authorization: getTokenHash() }),
         }
