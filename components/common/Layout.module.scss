@@ -18,6 +18,7 @@
     // HDS 2.0 only has container-width-xl
     max-width: $container-width-xl;
     width: 100%;
+    box-sizing: border-box;
     padding: 0 $spacing-s;
   }
 }
