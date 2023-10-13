@@ -329,7 +329,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
       const [choppedAddress = "", choppedAddressNumber = "", choppedPostOffice = ""] = addressData || [];
 
       const externalServicepointResp = await fetch(
-        `${API_URL_BASE}${API_FETCH_EXTERNAL_SERVICEPOINTS}?format=json&external_servicepoint_id=${queryParams.servicePointId}`,
+        `${API_URL_BASE}${API_FETCH_EXTERNAL_SERVICEPOINTS}?format=json&system_id=${queryParams.systemId}&external_servicepoint_id=${queryParams.servicePointId}`,
         {
           headers: new Headers({ Authorization: getTokenHash() }),
         }
@@ -391,6 +391,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
           body: JSON.stringify({
             servicepoint_name: queryParams.name,
             ext_servicepoint_id: queryParams.servicePointId,
+            system_id: queryParams.systemId,
             modified: date,
             modified_by: queryParams.user,
           }),
@@ -401,7 +402,8 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
           `${API_URL_BASE}${API_FETCH_SERVICEPOINTS}${servicepointId}/update_external/`,
           servicepointRequestOptions
         );
-        await (existingServicepointResp.json() as Promise<Servicepoint>);
+        const existingServicepointResult = await (existingServicepointResp.json() as Promise<Servicepoint>);
+        console.log("Existing servicepoint update result:", existingServicepointResult);
 
         const entranceResp = await fetch(`${API_URL_BASE}${API_FETCH_ENTRANCES}?servicepoint=${servicepointId}&format=json`, {
           headers: new Headers({ Authorization: getTokenHash() }),
