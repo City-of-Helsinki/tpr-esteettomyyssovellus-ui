@@ -11,7 +11,7 @@
     "json2ts": "json2ts -i ./schemas/ -o ./types/"
   },
   "dependencies": {
-    "@axe-core/react": "^4.5.0",
+    "@axe-core/react": "^4.8.1",
     "@material-ui/core": "^4.12.4",
     "@reduxjs/toolkit": "^1.8.6",
     "ajv": "^8.11.0",
