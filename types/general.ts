@@ -372,6 +372,8 @@ export interface ChangeProps {
   oldAddressNumber?: string;
   newAddressCity?: string;
   oldAddressCity?: string;
+  oldEasting?: number;
+  oldNorthing?: number;
   newEasting?: number;
   newNorthing?: number;
   distance?: number;
@@ -449,6 +451,8 @@ export interface DetailsProps {
   draftMainEntranceId: number;
   isMainEntrancePublished: boolean;
   isChecksumValid: boolean;
+  user?: string;
+  checksum?: string;
 }
 
 export interface PreviewProps {
