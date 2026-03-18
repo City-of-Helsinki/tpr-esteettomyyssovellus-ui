@@ -520,17 +520,28 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
             },
           };
         }
+
+        // No significant changes (distance <= 15m and address unchanged), but coordinates may still
+        // have shifted slightly. Always persist any coordinate change silently via forceAddressChange.
+        const coordinatesHaveChanged = distance > 0;
+        return {
+          props: {
+            servicepointId,
+            oldEasting,
+            oldNorthing,
+            newAddress,
+            newAddressNumber,
+            newAddressCity,
+            newEasting,
+            newNorthing,
+            user: queryParams.user,
+            checksum: servicepointChecksum,
+            skip: true,
+            forceAddressChange: coordinatesHaveChanged,
+          },
+        };
       }
 
-      // No changes
-      return {
-        props: {
-          servicepointId,
-          user: queryParams.user,
-          checksum: servicepointChecksum,
-          skip: true,
-        },
-      };
     } catch (err) {
       console.log(err);
     }
