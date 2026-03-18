@@ -541,7 +541,6 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
           },
         };
       }
-
     } catch (err) {
       console.log(err);
     }
