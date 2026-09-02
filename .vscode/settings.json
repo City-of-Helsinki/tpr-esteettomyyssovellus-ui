@@ -6,8 +6,7 @@
         "configFile": ".stylelintrc.json"
     },
     "editor.codeActionsOnSave": {
-        "source.fixAll.eslint": "explicit",
-        "source.fixAll.stylelint": "explicit"
-    },
-    "js/ts.tsdk.path": "node_modules/typescript/lib"
+        "source.fixAll.eslint": true,
+        "source.fixAll.stylelint": true
+    }
 }
