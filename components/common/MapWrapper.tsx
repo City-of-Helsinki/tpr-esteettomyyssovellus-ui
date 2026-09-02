@@ -65,9 +65,6 @@ const MapWrapper = ({ initialZoom, curLocation, setLocation, setMapReady, dragga
       map.scrollWheelZoom.disable();
       map.boxZoom.disable();
       map.keyboard.disable();
-      if (map.tap) {
-        map.tap.disable();
-      }
     }
 
     // Force a map update otherwise the map does not always render correctly after a page is first loaded
