@@ -4,6 +4,7 @@ import React from "react";
 
 import { makeStyles, Typography, Container, Hidden, Card, CardMedia, CardContent, withStyles } from "@material-ui/core";
 import dynamic from "next/dynamic";
+import { Koros } from "hds-react";
 
 const FiCard = withStyles({
   root: {
@@ -216,7 +217,7 @@ export const Hero = (props: HeroProps): JSX.Element => {
               <DynamicKoros
                 // @ts-ignore: The HDS Koros component comes from a dynamic import, see above for details
                 type="basic"
-                flipHorizontal
+                rotate="180deg"
                 className={classes.koro}
               />
               <CardMedia className={classes.smallCard} component="img" alt="picture" height="440" image={imagePath} title={title} />
