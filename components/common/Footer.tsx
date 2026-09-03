@@ -19,23 +19,29 @@ const Footer = ({ isSummary }: FooterProps): ReactElement => {
   };
 
   return (
-    <HdsFooter korosType="basic" className={styles.footer} title={i18n.t("common.footer.title")} theme={{
-          "--footer-background": "var(--color-bus-medium-light)",
-        }}>
+    <HdsFooter
+      korosType="basic"
+      className={styles.footer}
+      title={i18n.t("common.footer.title")}
+      theme={{
+        "--footer-background": "var(--color-bus-medium-light)",
+      }}
+    >
       <HdsFooter.Navigation>
         {!isSummary && (
           <HdsFooter.Link as="a" href="#help" onClick={openHelp} label={i18n.t("common.footer.instructions")} icon={<IconArrowUp aria-hidden />} />
         )}
         <HdsFooter.Link as="a" href="#content" label={i18n.t("common.footer.backToTop")} icon={<IconArrowUp aria-hidden />} />
       </HdsFooter.Navigation>
-      <HdsFooter.Base 
-        copyrightHolder={i18n.t("common.footer.copyright")} 
+      <HdsFooter.Base
+        copyrightHolder={i18n.t("common.footer.copyright")}
         copyrightText={i18n.t("common.footer.rightsReserved")}
         logo={<Logo src={logoFi} size="medium" alt={i18n.t("common.header.titleAlt")} />}
-        backToTopLabel={i18n.t("common.footer.backToTop")}>
+        backToTopLabel={i18n.t("common.footer.backToTop")}
+      >
         <HdsFooter.Link as="div" className={styles.helsinkiLogoItem}>
           <div className={styles.helsinkiLogoContainer}>
-            <Logo src={logoFi}  size="medium" aria-hidden />
+            <Logo src={logoFi} size="medium" aria-hidden />
             <span className={styles.helsinkiLogoText}>{i18n.t("common.footer.logotext")}</span>
           </div>
         </HdsFooter.Link>

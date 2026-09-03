@@ -2,21 +2,22 @@ import React, { KeyboardEvent, ReactElement } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useI18n } from "next-localization";
-import { Header as HdsHeader,
-    IconSearch,
-    IconUser,
-    IconSignin,
-    IconSignout,
-    LoginProvider,
-    Button,
-    LoginButton,
-    Logo,
-    logoFi,
-    logoSv,
-    logoSvDark,
-    WithoutAuthenticatedUser,
-    WithAuthenticatedUser,
- } from "hds-react";
+import {
+  Header as HdsHeader,
+  IconSearch,
+  IconUser,
+  IconSignin,
+  IconSignout,
+  LoginProvider,
+  Button,
+  LoginButton,
+  Logo,
+  logoFi,
+  logoSv,
+  logoSvDark,
+  WithoutAuthenticatedUser,
+  WithAuthenticatedUser,
+} from "hds-react";
 import { useAppSelector, useAppDispatch } from "../../state/hooks";
 import { setChecksum, setUser } from "../../state/reducers/generalSlice";
 import { defaultLocale } from "../../utils/i18n";
@@ -76,9 +77,7 @@ const Header = ({ isSummary, children, homePagePath }: HeaderProps): ReactElemen
         // @ts-ignore: The HDS Navigation component comes from a dynamic import, see above for details
         title={i18n.t("common.header.title")}
         // titleUrl={`${router.basePath}${router.asPath}`}
-        theme={{
-          
-        }}
+        theme={{}}
         className={styles.header}
       >
         {children}
@@ -90,7 +89,6 @@ const Header = ({ isSummary, children, homePagePath }: HeaderProps): ReactElemen
           titleHref={`${router.basePath}${homePagePath}/`}
           aria-label={i18n.t("common.header.openMenu")}
           frontPageLabel=""
-
         >
           {/*
           <div className={styles.choices} role="region">
@@ -119,20 +117,20 @@ const Header = ({ isSummary, children, homePagePath }: HeaderProps): ReactElemen
             </Navigation.Row>
           </div>
           */}
-
-          {!isSummary && (
-            <><HdsHeader.ActionBarItem
-              id="user"
-              fixedRightPosition
-              aria-label={user}
-              icon={<IconUser />}
-              label={user}
-              className="user"
-            >
-              <HdsHeader.ActionBarSubItem href="#" iconRight={<IconSignout aria-hidden />} label={i18n.t("common.header.logout")} onClick={signOut} />
-            </HdsHeader.ActionBarItem>
-            </>)
-              /*
+          {
+            !isSummary && (
+              <>
+                <HdsHeader.ActionBarItem id="user" fixedRightPosition aria-label={user} icon={<IconUser />} label={user} className="user">
+                  <HdsHeader.ActionBarSubItem
+                    href="#"
+                    iconRight={<IconSignout aria-hidden />}
+                    label={i18n.t("common.header.logout")}
+                    onClick={signOut}
+                  />
+                </HdsHeader.ActionBarItem>
+              </>
+            )
+            /*
               <Navigation.User label={i18n.t("common.header.login")} authenticated userName={user}>
                 <Navigation.Item
                   as="a"
@@ -143,10 +141,9 @@ const Header = ({ isSummary, children, homePagePath }: HeaderProps): ReactElemen
                   onClick={signOut}
                 />
               </Navigation.User>*/
-              }
-
+          }
           <HdsHeader.LanguageSelector label={(router.locale || defaultLocale).toUpperCase()}>
-            <HdsHeader.ActionBarSubItem 
+            <HdsHeader.ActionBarSubItem
               role="button"
               id="fi"
               lang="fi"
@@ -155,7 +152,7 @@ const Header = ({ isSummary, children, homePagePath }: HeaderProps): ReactElemen
               onKeyPress={(e: KeyboardEvent<HTMLAnchorElement>) => handleKeyPress(e, "fi")}
               onClick={() => changeLanguage("fi")}
             />
-            <HdsHeader.ActionBarSubItem 
+            <HdsHeader.ActionBarSubItem
               role="button"
               id="sv"
               lang="sv"
@@ -164,7 +161,7 @@ const Header = ({ isSummary, children, homePagePath }: HeaderProps): ReactElemen
               onKeyPress={(e: KeyboardEvent<HTMLAnchorElement>) => handleKeyPress(e, "sv")}
               onClick={() => changeLanguage("sv")}
             />
-            <HdsHeader.ActionBarSubItem 
+            <HdsHeader.ActionBarSubItem
               role="button"
               id="en"
               lang="en"
@@ -173,7 +170,8 @@ const Header = ({ isSummary, children, homePagePath }: HeaderProps): ReactElemen
               onKeyPress={(e: KeyboardEvent<HTMLAnchorElement>) => handleKeyPress(e, "en")}
               onClick={() => changeLanguage("en")}
             />
-          </HdsHeader.LanguageSelector>*/
+          </HdsHeader.LanguageSelector>
+          */
         </HdsHeader.ActionBar>
       </DynamicHeader>
     </>

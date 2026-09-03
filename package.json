@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint --config .eslintrc.json --ext .js,.jsx,.ts,.tsx .; exit 0",
+    "lint": "eslint --config .eslintrc.json --ext .js,.jsx,.ts,.tsx .",
     "lintcss": "stylelint --config .stylelintrc.json \"**/*.{css,scss}\"; exit 0",
     "json2ts": "json2ts -i ./schemas/ -o ./types/"
   },
