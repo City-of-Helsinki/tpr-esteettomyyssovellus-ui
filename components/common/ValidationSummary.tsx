@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useRef } from "react";
 import { useI18n } from "next-localization";
-import { Link as HdsLink, Notification as HdsNotification } from "hds-react";
+import { Link as HdsLink, LinkSize, Notification as HdsNotification, NotificationSize } from "hds-react";
 import { Validation } from "../../types/general";
 import styles from "./ValidationSummary.module.scss";
 
@@ -25,7 +25,7 @@ const ValidationSummary = ({ pageValid, validationSummary, validationTime }: Val
 
   return (
     <div className={styles.validationSummary} ref={ref} tabIndex={-1}>
-      <HdsNotification size="default" className="formNotification" type="error" label={i18n.t("common.message.validationFailed.title")}>
+      <HdsNotification size={NotificationSize.Medium} className="formNotification" type="error" label={i18n.t("common.message.validationFailed.title")}>
         <div>{i18n.t("common.message.validationFailed.message")}</div>
 
         <div className={styles.linkContainer}>
@@ -35,7 +35,7 @@ const ValidationSummary = ({ pageValid, validationSummary, validationTime }: Val
               const { fieldId, fieldLabel, message } = validation;
               return (
                 <div key={fieldId}>
-                  <HdsLink href={`#${fieldId}`} size="M" disableVisitedStyles>
+                  <HdsLink href={`#${fieldId}`} size={LinkSize.Medium} disableVisitedStyles>
                     {fieldLabel}
                   </HdsLink>
                   <span>{` - ${message}`}</span>

@@ -24,6 +24,7 @@ import { defaultLocale } from "../../utils/i18n";
 import styles from "./Header.module.scss";
 import { useSelector } from "react-redux";
 import { RootState } from "../../state/store";
+import { MAIN_URL } from "../../types/constants";
 
 interface HeaderProps {
   isSummary?: boolean;
@@ -80,13 +81,13 @@ const Header = ({ isSummary, children, homePagePath }: HeaderProps): ReactElemen
         theme={{}}
         className={styles.header}
       >
-        {children}
+        
         <HdsHeader.ActionBar
           logo={<Logo src={logoSrcFromLanguage()} alt={i18n.t("common.header.title")} />}
-          logoHref={`${router.basePath}${homePagePath}/`}
+          logoHref={`${MAIN_URL}/${router.locale}`}
           title={i18n.t("common.header.title")}
           titleAriaLabel={i18n.t("common.header.titleAlt")}
-          titleHref={`${router.basePath}${homePagePath}/`}
+          titleHref={`${MAIN_URL}/${router.locale}`}
           aria-label={i18n.t("common.header.openMenu")}
           frontPageLabel=""
         >
@@ -123,7 +124,7 @@ const Header = ({ isSummary, children, homePagePath }: HeaderProps): ReactElemen
                 <HdsHeader.ActionBarItem id="user" fixedRightPosition aria-label={user} icon={<IconUser />} label={user} className="user">
                   <HdsHeader.ActionBarSubItem
                     href="#"
-                    iconRight={<IconSignout aria-hidden />}
+                    iconEnd={<IconSignout aria-hidden />}
                     label={i18n.t("common.header.logout")}
                     onClick={signOut}
                   />

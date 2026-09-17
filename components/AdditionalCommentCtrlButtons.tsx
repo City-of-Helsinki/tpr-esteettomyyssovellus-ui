@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { IconArrowLeft } from "hds-react";
+import { ButtonVariant, IconArrowLeft } from "hds-react";
 import { useI18n } from "next-localization";
 import { useRouter } from "next/router";
 import QuestionButton from "./QuestionButton";
@@ -144,16 +144,16 @@ const AdditionalCommentCtrlButtons = ({ questionBlockId, questionBlockComment }:
 
   return (
     <div className={styles.maincontainer}>
-      <QuestionButton variant="secondary" iconLeft={<IconArrowLeft />} onClickHandler={handleSaveAndReturn}>
+      <QuestionButton variant={ButtonVariant.Secondary} iconStart={<IconArrowLeft />} onClickHandler={handleSaveAndReturn}>
         {i18n.t("common.buttons.saveAndReturn")}
       </QuestionButton>
       <span className={styles.noborderbutton}>
-        <QuestionButton variant="secondary" onClickHandler={() => handleReturnNoSave()}>
+        <QuestionButton variant={ButtonVariant.Secondary} onClickHandler={() => handleReturnNoSave()}>
           {i18n.t("common.buttons.returnNoSave")}
         </QuestionButton>
       </span>
       <span className={styles.noborderbutton}>
-        <QuestionButton variant="secondary" onClickHandler={() => handleDeleteAdditionalInfo()}>
+        <QuestionButton variant={ButtonVariant.Secondary} onClickHandler={() => handleDeleteAdditionalInfo()}>
           {i18n.t("common.buttons.deleteAdditionalInfo")}
         </QuestionButton>
       </span>

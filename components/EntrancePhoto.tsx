@@ -1,5 +1,6 @@
 import React, { ChangeEvent, useState } from "react";
 import {
+  ButtonVariant,
   Checkbox,
   FileInput,
   IconCross,
@@ -7,6 +8,7 @@ import {
   IconMinus,
   IconPlus,
   Link as HdsLink,
+  LinkSize,
   SelectionGroup,
   TextArea,
   TextInput,
@@ -242,7 +244,7 @@ const EntrancePhoto = ({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
             <div className={styles.pictureurl}>
               <HdsLink
                 href={photo_url}
-                size="M"
+                size={LinkSize.Medium}
                 openInNewTab
                 openInNewTabAriaLabel={i18n.t("common.opensInANewTab")}
                 external
@@ -274,7 +276,7 @@ const EntrancePhoto = ({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
 
         <div className={styles.inputbuttons}>
           {(modifiedPhotoBase64 || photo_url) && (
-            <QuestionButton variant="secondary" onClickHandler={handleChangePicture}>
+            <QuestionButton variant={ButtonVariant.Secondary} onClickHandler={handleChangePicture}>
               {i18n.t("additionalInfo.changePicture")}
             </QuestionButton>
           )}
@@ -294,7 +296,7 @@ const EntrancePhoto = ({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
               </div>
 
               <div className={styles.linkinput}>
-                <QuestionButton variant="secondary" iconRight={<IconLink aria-hidden />} onClickHandler={() => handleAddImageLink()}>
+                <QuestionButton variant={ButtonVariant.Secondary} iconEnd={<IconLink aria-hidden />} onClickHandler={() => handleAddImageLink()}>
                   {i18n.t("additionalInfo.addPictureLink")}
                 </QuestionButton>
               </div>
@@ -303,7 +305,7 @@ const EntrancePhoto = ({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
 
           {linkInput && (
             <QuestionButton
-              variant="secondary"
+              variant={ButtonVariant.Secondary}
               onClickHandler={() =>
                 handleConfirmImageLink("chooseimg", onlyLink ? i18n.t("additionalInfo.pictureInputLink") : i18n.t("additionalInfo.pictureInput"))
               }
@@ -314,7 +316,7 @@ const EntrancePhoto = ({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
           )}
 
           {(modifiedPhotoBase64 || photo_url || linkInput) && (
-            <QuestionButton variant="secondary" iconRight={<IconCross aria-hidden />} onClickHandler={() => handleOnDelete()}>
+            <QuestionButton variant={ButtonVariant.Secondary} iconEnd={<IconCross aria-hidden />} onClickHandler={() => handleOnDelete()}>
               {i18n.t("additionalInfo.cancelPicture")}
             </QuestionButton>
           )}
@@ -384,7 +386,7 @@ const EntrancePhoto = ({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
                     {`${i18n.t("additionalInfo.sharePictureLicenseText")} `}
                     <HdsLink
                       href="https://creativecommons.org/licenses/by/4.0/"
-                      size="M"
+                      size={LinkSize.Medium}
                       openInNewTab
                       openInNewTabAriaLabel={i18n.t("common.opensInANewTab")}
                       external

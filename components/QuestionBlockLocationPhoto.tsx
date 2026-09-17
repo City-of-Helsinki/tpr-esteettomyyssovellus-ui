@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useRouter } from "next/router";
 import { useI18n } from "next-localization";
-import { IconCrossCircle, IconInfoCircle, Link as HdsLink } from "hds-react";
+import { IconCrossCircle, IconInfoCircle, Link as HdsLink, LinkSize } from "hds-react";
 import Map from "./common/Map";
 import SkipMapButton from "./common/SkipMapButton";
 import TextWithLinks from "./common/TextWithLinks";
@@ -114,7 +114,7 @@ const QuestionBlockLocationPhoto = ({ block, canAddLocation, canAddPhoto }: Ques
               </QuestionInfo>
 
               <div className={styles.link}>
-                <HdsLink href="#" size="M" disableVisitedStyles onClick={editLocationPhoto}>
+                <HdsLink href="#" size={LinkSize.Medium} disableVisitedStyles onClick={editLocationPhoto}>
                   {isLocationValid(coordinatesWGS84) ? i18n.t("accessibilityForm.editLocation") : i18n.t("accessibilityForm.addLocation")}
                 </HdsLink>
               </div>
@@ -164,7 +164,7 @@ const QuestionBlockLocationPhoto = ({ block, canAddLocation, canAddPhoto }: Ques
               )}
 
               <div className={styles.link}>
-                <HdsLink href="#" size="M" disableVisitedStyles onClick={editLocationPhoto}>
+                <HdsLink href="#" size={LinkSize.Medium} disableVisitedStyles onClick={editLocationPhoto}>
                   {modifiedPhotoBase64 || photo_url ? i18n.t("accessibilityForm.editPhoto") : i18n.t("accessibilityForm.addPhoto")}
                 </HdsLink>
               </div>

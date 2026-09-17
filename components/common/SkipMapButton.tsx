@@ -1,6 +1,6 @@
 import React from "react";
 import { useI18n } from "next-localization";
-import { Button, IconPlaybackNext } from "hds-react";
+import { Button, ButtonVariant, ButtonSize, IconPlaybackNext } from "hds-react";
 import { SkipMapButtonProps } from "../../types/general";
 import styles from "./SkipMapButton.module.scss";
 
@@ -14,10 +14,10 @@ const SkipMapButton = ({ idToSkipTo }: SkipMapButtonProps): JSX.Element => {
 
   return (
     <Button
-      variant="supplementary"
-      size="small"
+      variant={ButtonVariant.Supplementary}
+      size={ButtonSize.Small}
       className={`${styles.skipMapButton} visibleOnFocusOnly`}
-      iconRight={<IconPlaybackNext aria-hidden />}
+      iconEnd={<IconPlaybackNext aria-hidden />}
       onClick={skipMap}
     >
       {i18n.t("common.map.skipMap")}

@@ -5,9 +5,12 @@ import { PersistGate } from "redux-persist/integration/react";
 import { AppProps } from "next/app";
 import { I18nProvider } from "next-localization";
 import { useRouter } from "next/router";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { defaultLocale } from "../utils/i18n";
 import store, { persistor } from "../state/store";
 import "../styles/global.scss";
+
+const theme = createTheme();
 
 const App = ({ Component, pageProps }: AppProps): ReactElement => {
   // This function is called when doing both server-side and client-side rendering
@@ -23,13 +26,15 @@ const App = ({ Component, pageProps }: AppProps): ReactElement => {
   }
 
   return (
-    <I18nProvider lngDict={lngDict ? lngDict[locale] : {}} locale={locale}>
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <Component {...rest} />
-        </PersistGate>
-      </Provider>
-    </I18nProvider>
+    <ThemeProvider theme={theme}>
+      <I18nProvider lngDict={lngDict ? lngDict[locale] : {}} locale={locale}>
+        <Provider store={store}>
+          <PersistGate loading={null} persistor={persistor}>
+            <Component {...rest} />
+          </PersistGate>
+        </Provider>
+      </I18nProvider>
+    </ThemeProvider>
   );
 };
 

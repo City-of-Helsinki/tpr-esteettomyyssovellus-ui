@@ -1,4 +1,4 @@
-import { Button, Card, useAccordion } from "hds-react";
+import { Button, ButtonVariant, ButtonSize, Card, useAccordion } from "hds-react";
 import { QuestionInfoProps } from "../types/general";
 import styles from "./QuestionInfo.module.scss";
 
@@ -9,7 +9,7 @@ const QuestionInfo = ({ openText, openIcon, closeIcon, textOnBottom = false, chi
   return (
     <div className={styles.infocontainer}>
       {textOnBottom && (
-        <Button variant="supplementary" size="small" iconLeft={isOpen ? closeIcon ?? null : openIcon ?? null} {...buttonProps}>
+        <Button variant={ButtonVariant.Supplementary} size={ButtonSize.Small} iconStart={isOpen ? closeIcon ?? null : openIcon ?? null} {...buttonProps}>
           {openText}
         </Button>
       )}
@@ -17,7 +17,7 @@ const QuestionInfo = ({ openText, openIcon, closeIcon, textOnBottom = false, chi
         {children}
       </Card>
       {!textOnBottom && (
-        <Button variant="supplementary" size="small" iconLeft={isOpen ? closeIcon ?? null : openIcon ?? null} {...buttonProps}>
+        <Button variant={ButtonVariant.Supplementary} size={ButtonSize.Small} iconStart={isOpen ? closeIcon ?? null : openIcon ?? null} {...buttonProps}>
           {openText}
         </Button>
       )}

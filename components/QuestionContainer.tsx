@@ -1,5 +1,5 @@
 import React from "react";
-import { IconCrossCircle, IconInfoCircle, IconPenLine, Link as HdsLink } from "hds-react";
+import { IconCrossCircle, IconInfoCircle, IconPenLine, Link as HdsLink, LinkSize } from "hds-react";
 import { useI18n } from "next-localization";
 import { useRouter } from "next/router";
 import GuideLink from "./common/GuideLink";
@@ -175,9 +175,9 @@ const QuestionContainer = ({ question, accessibilityPlaces, children }: Question
                   <div className={styles.place}>
                     <HdsLink
                       href="#"
-                      size="M"
+                      size={LinkSize.Medium}
                       disableVisitedStyles
-                      iconLeft={<IconPenLine aria-hidden />}
+                      iconStart={<IconPenLine aria-hidden />}
                       onClick={() => editAccessibilityPlace(place_id)}
                     >
                       {`${

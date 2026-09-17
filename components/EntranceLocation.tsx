@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { IconCross, IconLocation } from "hds-react";
+import { ButtonVariant, IconCross, IconLocation } from "hds-react";
 import { useI18n } from "next-localization";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { editEntranceLocation } from "../state/reducers/additionalInfoSlice";
@@ -75,13 +75,13 @@ const EntranceLocation = ({ entranceLocationPhoto }: EntranceLocationProps): JSX
       <div id="locationinputcontainer" className={styles.inputcontainer}>
         <div className={styles.inputbuttons}>
           {!mapInput && !isLocationValid(coordinatesWGS84) && (
-            <QuestionButton variant="secondary" iconRight={<IconLocation aria-hidden />} onClickHandler={() => handleAddLocation()}>
+            <QuestionButton variant={ButtonVariant.Secondary} iconEnd={<IconLocation aria-hidden />} onClickHandler={() => handleAddLocation()}>
               {i18n.t("additionalInfo.addLocation")}
             </QuestionButton>
           )}
 
           {(mapInput || isLocationValid(coordinatesWGS84)) && (
-            <QuestionButton variant="secondary" iconRight={<IconCross aria-hidden />} onClickHandler={() => handleOnDelete()}>
+            <QuestionButton variant={ButtonVariant.Secondary} iconEnd={<IconCross aria-hidden />} onClickHandler={() => handleOnDelete()}>
               {i18n.t("additionalInfo.cancelLocation")}
             </QuestionButton>
           )}

@@ -1,6 +1,7 @@
 import React from "react";
 import { useI18n } from "next-localization";
 import { useRouter } from "next/router";
+import { ButtonVariant } from "hds-react";
 import Button from "./QuestionButton";
 import { SummaryModifyButtonProps } from "../types/general";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
@@ -29,7 +30,7 @@ const SummaryModifyButton = ({ entranceIdToModify, hasData }: SummaryModifyButto
   };
 
   return (
-    <Button variant="primary" onClickHandler={handleEditorModifyPointData}>
+    <Button variant={ButtonVariant.Primary} onClickHandler={handleEditorModifyPointData}>
       {!hasData ? i18n.t("servicepoint.buttons.createServicepoint") : i18n.t("servicepoint.buttons.editServicepoint")}
     </Button>
   );

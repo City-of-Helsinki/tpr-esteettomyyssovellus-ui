@@ -1,6 +1,6 @@
 import React from "react";
 import { useI18n } from "next-localization";
-import { Link as HdsLink } from "hds-react";
+import { Link as HdsLink, LinkSize } from "hds-react";
 import { splitTextUrls } from "../../utils/utilFunctions";
 
 interface TextWithLinksProps {
@@ -21,7 +21,7 @@ const TextWithLinks = ({ text }: TextWithLinksProps): JSX.Element => {
           <HdsLink
             key={key}
             href={textOrLink}
-            size="M"
+            size={LinkSize.Medium}
             openInNewTab
             openInNewTabAriaLabel={i18n.t("common.opensInANewTab")}
             external

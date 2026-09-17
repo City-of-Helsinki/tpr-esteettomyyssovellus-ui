@@ -1,5 +1,5 @@
 import React from "react";
-import { IconArrowRight, IconArrowLeft } from "hds-react";
+import { ButtonVariant, IconArrowRight, IconArrowLeft } from "hds-react";
 import { useRouter } from "next/router";
 import { useI18n } from "next-localization";
 import SaveSpinner from "./common/SaveSpinner";
@@ -218,24 +218,24 @@ const QuestionFormCtrlButtons = ({
     <div className={styles.container}>
       <div className={styles.left}>
         {hasCancelButton && (formId === 0 || formId === 1) ? (
-          <Button variant="secondary" iconLeft={<IconArrowLeft />} onClickHandler={handleCancel} disabled={isSavingDraft || isSavingPreview}>
+          <Button variant={ButtonVariant.Secondary} iconStart={<IconArrowLeft />} onClickHandler={handleCancel} disabled={isSavingDraft || isSavingPreview}>
             {i18n.t("questionFormControlButtons.quit")}
           </Button>
         ) : null}
       </div>
       <div className={styles.right}>
         {hasValidateButton ? (
-          <Button variant="secondary" onClickHandler={handleValidateClick} disabled={isSavingDraft || isSavingPreview}>
+          <Button variant={ButtonVariant.Secondary} onClickHandler={handleValidateClick} disabled={isSavingDraft || isSavingPreview}>
             {i18n.t("questionFormControlButtons.verifyInformation")}
           </Button>
         ) : null}
 
         {hasSaveDraftButton && formId === 0 ? (
           <Button
-            variant="secondary"
+            variant={ButtonVariant.Secondary}
             onClickHandler={handleSaveDraftClick}
             disabled={isSavingDraft || isSavingPreview}
-            iconRight={
+            iconEnd={
               isSavingDraft ? (
                 <SaveSpinner
                   savingText={i18n.t("questionFormControlButtons.saving")}
@@ -250,11 +250,11 @@ const QuestionFormCtrlButtons = ({
 
         {hasPreviewButton && (formId === 0 || formId === 1) ? (
           <Button
-            variant="primary"
+            variant={ButtonVariant.Primary}
             onClickHandler={handlePreviewClick}
             // disabled={!isPreviewActive || !isContinueClicked}
             disabled={isSavingDraft || isSavingPreview}
-            iconRight={
+            iconEnd={
               isSavingPreview ? (
                 <SaveSpinner
                   savingText={i18n.t("questionFormControlButtons.saving")}
@@ -270,17 +270,17 @@ const QuestionFormCtrlButtons = ({
         ) : null}
 
         {hasContinueButton ? (
-          <Button variant="primary" iconRight={<IconArrowRight />} onClickHandler={handleContinueClick}>
+          <Button variant={ButtonVariant.Primary} iconEnd={<IconArrowRight />} onClickHandler={handleContinueClick}>
             {i18n.t("accessibilityForm.continue")}
           </Button>
         ) : null}
 
         {hasSaveMeetingRoomButton && formId >= 2 ? (
           <Button
-            variant="primary"
+            variant={ButtonVariant.Primary}
             onClickHandler={handleSaveMeetingRoomClick}
             disabled={isSavingDraft || isSavingPreview || isSavingMeetingRoom}
-            iconRight={
+            iconEnd={
               isSavingMeetingRoom ? (
                 <SaveSpinner
                   savingText={i18n.t("questionFormControlButtons.saving")}

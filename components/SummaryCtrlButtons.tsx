@@ -1,4 +1,4 @@
-import { IconTrash } from "hds-react";
+import { ButtonVariant, IconTrash } from "hds-react";
 import { useI18n } from "next-localization";
 import QuestionButton from "./QuestionButton";
 import { SummaryCtrlButtonsProps } from "../types/general";
@@ -9,11 +9,11 @@ const SummaryCtrlButtons = ({ hasData }: SummaryCtrlButtonsProps): JSX.Element =
   const i18n = useI18n();
   return (
     <div className={styles.maincontainer}>
-      <QuestionButton variant="secondary">{i18n.t("servicepoint.buttons.mainCtrlReturn")}</QuestionButton>
+      <QuestionButton variant={ButtonVariant.Secondary}>{i18n.t("servicepoint.buttons.mainCtrlReturn")}</QuestionButton>
       {hasData ? (
         <>
-          <QuestionButton variant="primary">{i18n.t("servicepoint.buttons.editServicepoint")}</QuestionButton>
-          <QuestionButton variant="primary" iconLeft={<IconTrash />}>
+          <QuestionButton variant={ButtonVariant.Primary}>{i18n.t("servicepoint.buttons.editServicepoint")}</QuestionButton>
+          <QuestionButton variant={ButtonVariant.Primary} iconStart={<IconTrash />}>
             {i18n.t("servicepoint.buttons.mainCtrlDelete")}
           </QuestionButton>
         </>

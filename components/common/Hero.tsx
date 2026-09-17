@@ -2,32 +2,28 @@
 
 import React from "react";
 
-import { makeStyles, Typography, Container, Hidden, Card, CardMedia, CardContent, withStyles } from "@material-ui/core";
+import { Card, CardContent, CardMedia, Container, Hidden, Typography } from "@mui/material";
+import { styled, Theme } from "@mui/material/styles";
+import { makeStyles } from "@mui/styles";
 import dynamic from "next/dynamic";
 import { Koros } from "hds-react";
 
-const FiCard = withStyles({
-  root: {
-    position: "relative",
-  },
-})(Card);
+const FiCard = styled(Card)({
+  position: "relative",
+});
 
-const FiCardMedia = withStyles({
-  root: {
-    position: "absolute",
-    top: 0,
-    right: 0,
-    height: 550,
-    width: "100%",
-  },
-})(CardMedia);
+const FiCardMedia = styled(CardMedia)({
+  position: "absolute",
+  top: 0,
+  right: 0,
+  height: 550,
+  width: "100%",
+});
 
-const FiCardContent = withStyles({
-  root: {
-    position: "relative",
-    backgroundColor: "transparent",
-  },
-})(CardContent);
+const FiCardContent = styled(CardContent)({
+  position: "relative",
+  backgroundColor: "transparent",
+});
 
 // @ts-ignore: A dynamic import must be used to force client-side rendering regardless of the typescript errors
 const DynamicKoros = dynamic(() => import("hds-react").then((hds) => hds.Koros), { ssr: false });
@@ -36,14 +32,14 @@ const DynamicKoros = dynamic(() => import("hds-react").then((hds) => hds.Koros),
 // const drupalUrl = process.env.REACT_APP_DRUPAL_URL;
 
 // TODO: Move styles to Hero.module.scss
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<Theme>((theme) => ({
   container: {
-    padding: 0,
+    padding: "0 !important",
     height: 550,
     marginBottom: 32,
   },
   card: {
-    backgroundColor: "#0000bf",
+    backgroundColor: "#0000bf !important",
   },
   media: {
     height: 550,

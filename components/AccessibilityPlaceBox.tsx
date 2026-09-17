@@ -1,6 +1,6 @@
 import React from "react";
 import { useI18n } from "next-localization";
-import { Button, IconArrowDown, IconArrowUp, IconCross } from "hds-react";
+import { Button, ButtonVariant, IconArrowDown, IconArrowUp, IconCross } from "hds-react";
 import SkipMapButton from "./common/SkipMapButton";
 import { useAppDispatch } from "../state/hooks";
 import { changeEntrancePlaceBoxOrder, deleteEntrancePlaceBox } from "../state/reducers/additionalInfoSlice";
@@ -48,8 +48,8 @@ const AccessibilityPlaceBox = ({ entrancePlaceBox, entrancePlaceName, canAddLoca
         <div className={`${styles.headingsection} ${styles.rightsection}`}>
           <div>{i18n.t("additionalInfo.order")}</div>
           <Button
-            variant="supplementary"
-            iconLeft={<IconArrowUp aria-hidden />}
+            variant={ButtonVariant.Supplementary}
+            iconStart={<IconArrowUp aria-hidden />}
             aria-label={i18n.t("additionalInfo.orderButtons.moveUp")}
             onClick={() => changeBoxOrder(-1)}
             disabled={isFirst}
@@ -57,8 +57,8 @@ const AccessibilityPlaceBox = ({ entrancePlaceBox, entrancePlaceName, canAddLoca
             {""}
           </Button>
           <Button
-            variant="supplementary"
-            iconLeft={<IconArrowDown aria-hidden />}
+            variant={ButtonVariant.Supplementary}
+            iconStart={<IconArrowDown aria-hidden />}
             aria-label={i18n.t("additionalInfo.orderButtons.moveDown")}
             onClick={() => changeBoxOrder(1)}
             disabled={isLast}
@@ -66,8 +66,8 @@ const AccessibilityPlaceBox = ({ entrancePlaceBox, entrancePlaceName, canAddLoca
             {""}
           </Button>
           <Button
-            variant="supplementary"
-            iconLeft={<IconCross aria-hidden />}
+            variant={ButtonVariant.Supplementary}
+            iconStart={<IconCross aria-hidden />}
             aria-label={i18n.t("additionalInfo.orderButtons.remove")}
             onClick={deleteBox}
           >

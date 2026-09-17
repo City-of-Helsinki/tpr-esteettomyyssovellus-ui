@@ -1,6 +1,6 @@
 import React from "react";
 import { useI18n } from "next-localization";
-import { IconPlus } from "hds-react";
+import { ButtonVariant, IconPlus } from "hds-react";
 import Button from "./QuestionButton";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { addEntrancePlaceBox } from "../state/reducers/additionalInfoSlice";
@@ -29,7 +29,7 @@ const AccessibilityPlaceNewButton = ({ accessibilityPlaceData, questionBlockId, 
   };
 
   return (
-    <Button variant="primary" iconLeft={<IconPlus aria-hidden />} onClickHandler={handleAddPlaceData}>
+    <Button variant={ButtonVariant.Primary} iconStart={<IconPlus aria-hidden />} onClickHandler={handleAddPlaceData}>
       {i18n.t("additionalInfo.addAdditionalInfoSet")}
     </Button>
   );

@@ -1,5 +1,5 @@
 import { useI18n } from "next-localization";
-import { Button, Card, IconCrossCircle, IconQuestionCircle, useAccordion } from "hds-react";
+import { Button, ButtonVariant, Card, IconCrossCircle, IconQuestionCircle, useAccordion } from "hds-react";
 import PathTreeComponent from "./PathTreeComponent";
 import QuestionFormGuide from "./QuestionFormGuide";
 import { useAppDispatch, useAppSelector } from "../../state/hooks";
@@ -28,8 +28,8 @@ const PageHelp = ({ formGuideData, treeItems }: PageHelpProps): JSX.Element => {
         </div>
         <div className={styles.helpbutton}>
           <Button
-            variant={isOpen ? "secondary" : "primary"}
-            iconLeft={isOpen ? <IconCrossCircle aria-hidden /> : <IconQuestionCircle aria-hidden />}
+            variant={isOpen ? ButtonVariant.Secondary : ButtonVariant.Primary}
+            iconStart={isOpen ? <IconCrossCircle aria-hidden /> : <IconQuestionCircle aria-hidden />}
             {...buttonProps}
             onClick={handleToggleContent}
           >

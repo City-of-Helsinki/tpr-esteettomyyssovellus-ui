@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useI18n } from "next-localization";
 import { useRouter } from "next/router";
+import { ButtonVariant } from "hds-react";
 import Button from "./QuestionButton";
 import ModalConfirmation from "./common/ModalConfirmation";
 import SaveSpinner from "./common/SaveSpinner";
@@ -42,10 +43,10 @@ const SummaryRemoveButton = ({ entranceData }: SummaryRemoveButtonProps): JSX.El
   return (
     <div>
       <Button
-        variant="secondary"
+        variant={ButtonVariant.Secondary}
         onClickHandler={openDeletionConfirmation}
         disabled={isDeleting}
-        iconRight={
+        iconEnd={
           isDeleting ? (
             <SaveSpinner savingText={i18n.t("servicepoint.buttons.deleting")} savingFinishedText={i18n.t("servicepoint.buttons.deletingFinished")} />
           ) : undefined

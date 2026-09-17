@@ -3,7 +3,7 @@ import { useI18n } from "next-localization";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
-import { Button, RadioButton, SelectionGroup } from "hds-react";
+import { Button, ButtonVariant, RadioButton, SelectionGroup } from "hds-react";
 import Layout from "../components/common/Layout";
 import LoadSpinner from "../components/common/LoadSpinner";
 import ModalConfirmation from "../components/common/ModalConfirmation";
@@ -193,7 +193,7 @@ const Servicepoints = ({
                 />
               </SelectionGroup>
             </div>
-            <Button id="continueButton" variant="primary" disabled={selectedRadioItem === startState} onClick={openDeletionConfirmation}>
+            <Button id="continueButton" variant={ButtonVariant.Primary} disabled={selectedRadioItem === startState} onClick={openDeletionConfirmation}>
               {i18n.t("accessibilityForm.continue")}
             </Button>
 

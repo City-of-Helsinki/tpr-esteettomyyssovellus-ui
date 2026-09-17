@@ -44,7 +44,7 @@ const SummaryLocationPicture = ({
 
           <div className={styles.mappicturecontainer}>
             <div className={styles.label}>
-              <div>{locationLabel}</div>
+              <div>{locationLabel.toString()}</div>
               <SkipMapButton idToSkipTo={`#picturecontainer_${entranceKey}`} />
             </div>
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { useRouter } from "next/router";
 import { useI18n } from "next-localization";
-import { IconPenLine, Link as HdsLink } from "hds-react";
+import { IconPenLine, Link as HdsLink, LinkSize } from "hds-react";
 import { setQuestionBlockComment } from "../state/reducers/additionalInfoSlice";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { QuestionBlockCommentProps } from "../types/general";
@@ -55,7 +55,7 @@ const QuestionBlockComment = ({ block }: QuestionBlockCommentProps): JSX.Element
               <IconPenLine aria-hidden onClick={editComment} />
             </div>
             <div className={styles.maintext}>
-              <HdsLink href="#" size="M" disableVisitedStyles onClick={editComment}>
+              <HdsLink href="#" size={LinkSize.Medium} disableVisitedStyles onClick={editComment}>
                 {`${
                   comment_text_fi || comment_text_sv || comment_text_en
                     ? i18n.t("accessibilityForm.editComment")

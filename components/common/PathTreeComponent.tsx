@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { useI18n } from "next-localization";
-import { Link as HdsLink } from "hds-react";
+import { Link as HdsLink, LinkSize } from "hds-react";
 import { PathTreeProps } from "../../types/general";
 import styles from "./PathTreeComponent.module.scss";
 
@@ -18,7 +18,7 @@ const PathTreeComponent = ({ treeItems }: PathTreeProps): JSX.Element => {
       return (
         <li key={key} className={styles.pathTreeItem}>
           <Link href={itemUrl}>
-            <HdsLink href="#" size="M" disableVisitedStyles aria-current={isLastItem ? "page" : undefined}>
+            <HdsLink href="#" size={LinkSize.Medium} disableVisitedStyles aria-current={isLastItem ? "page" : undefined}>
               {itemText}
             </HdsLink>
           </Link>

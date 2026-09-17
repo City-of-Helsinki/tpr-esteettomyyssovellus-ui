@@ -24,7 +24,7 @@ const SummaryContact = ({ entranceData, entranceIdToModify, hasData, hasModifyBu
             <div className={styles.contactInformation}>
               <div className={styles.infocontainer}>
                 <h4>{i18n.t("servicepoint.contactPerson")}</h4>
-                <p>{entranceData?.[`contact_person_${curLocale}`] ?? i18n.t("servicepoint.noInfo")}</p>
+                <p>{entranceData?.[`contact_person_${curLocale}`]?.toString() ?? i18n.t("servicepoint.noInfo").toString()}</p>
               </div>
               <div className={styles.infocontainer}>
                 <h4>{i18n.t("servicepoint.phoneNumber")}</h4>

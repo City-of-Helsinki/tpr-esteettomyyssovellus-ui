@@ -1,7 +1,7 @@
 import React, { ReactElement } from "react";
 import { useI18n } from "next-localization";
-import { Button } from "hds-react";
-import { Dialog } from "@material-ui/core";
+import { Button, ButtonVariant } from "hds-react";
+import { Dialog } from "@mui/material";
 import styles from "./ModalConfirmation.module.scss";
 
 interface ModalConfirmationProps {
@@ -33,7 +33,7 @@ const ModalConfirmation = ({
         <div className={styles.buttons}>
           <Button onClick={confirmCallback}>{i18n.t(confirmKey)}</Button>
           <div className="flexSpace" />
-          <Button variant="secondary" onClick={closeCallback}>
+          <Button variant={ButtonVariant.Secondary} onClick={closeCallback}>
             {i18n.t(cancelKey)}
           </Button>
         </div>

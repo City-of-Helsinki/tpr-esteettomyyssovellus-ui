@@ -23,7 +23,7 @@ const CustomAccordion = ({ className, heading, children }: CustomAccordionProps)
 
   return (
     <div className={`${styles.maincontainer} ${className}`}>
-      <Button {...buttonProps} iconRight={icon} fullWidth onClick={() => handleOnClickAccordions()}>
+      <Button {...buttonProps} iconEnd={icon} fullWidth onClick={() => handleOnClickAccordions()}>
         {heading}
       </Button>
       <Card className={styles.contentcontainer} {...contentProps}>

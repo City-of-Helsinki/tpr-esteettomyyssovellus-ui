@@ -1,5 +1,6 @@
 import React, { ChangeEvent, useState } from "react";
 import {
+  ButtonVariant, 
   Checkbox,
   FileInput,
   IconCross,
@@ -7,6 +8,7 @@ import {
   IconMinus,
   IconPlus,
   Link as HdsLink,
+  LinkSize, 
   SelectionGroup,
   TextArea,
   TextInput,
@@ -246,7 +248,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
             <div className={styles.pictureurl}>
               <HdsLink
                 href={photo_url}
-                size="M"
+                size={LinkSize.Medium}
                 openInNewTab
                 openInNewTabAriaLabel={i18n.t("common.opensInANewTab")}
                 external
@@ -278,7 +280,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
 
         <div className={styles.inputbuttons}>
           {(modifiedPhotoBase64 || photo_url) && (
-            <QuestionButton variant="secondary" onClickHandler={handleChangePicture}>
+            <QuestionButton variant={ButtonVariant.Secondary} onClickHandler={handleChangePicture}>
               {i18n.t("additionalInfo.changePicture")}
             </QuestionButton>
           )}
@@ -298,7 +300,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
               </div>
 
               <div className={styles.linkinput}>
-                <QuestionButton variant="secondary" iconRight={<IconLink aria-hidden />} onClickHandler={() => handleAddImageLink()}>
+                <QuestionButton variant={ButtonVariant.Secondary} iconEnd={<IconLink aria-hidden />} onClickHandler={() => handleAddImageLink()}>
                   {i18n.t("additionalInfo.addPictureLink")}
                 </QuestionButton>
               </div>
@@ -307,7 +309,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
 
           {linkInput && (
             <QuestionButton
-              variant="secondary"
+              variant={ButtonVariant.Secondary}
               onClickHandler={() =>
                 handleConfirmImageLink(
                   `chooseimg-${currentId}`,
@@ -321,7 +323,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
           )}
 
           {(modifiedPhotoBase64 || photo_url || linkInput) && (
-            <QuestionButton variant="secondary" iconRight={<IconCross aria-hidden />} onClickHandler={() => handleOnDelete()}>
+            <QuestionButton variant={ButtonVariant.Secondary} iconEnd={<IconCross aria-hidden />} onClickHandler={() => handleOnDelete()}>
               {i18n.t("additionalInfo.cancelPicture")}
             </QuestionButton>
           )}
@@ -393,7 +395,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
                     {`${i18n.t("additionalInfo.sharePictureLicenseText")} `}
                     <HdsLink
                       href="https://creativecommons.org/licenses/by/4.0/"
-                      size="M"
+                      size={LinkSize.Medium}
                       openInNewTab
                       openInNewTabAriaLabel={i18n.t("common.opensInANewTab")}
                       external

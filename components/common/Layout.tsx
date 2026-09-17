@@ -28,7 +28,7 @@ const Layout = ({ isSummary, children }: LayoutProps): ReactElement => {
       </Head>
       <div className={styles.left} />
       <div className={styles.main}>
-        <Header isSummary={isSummary} />
+        <Header isSummary={isSummary} children={children} />
         {children}
         <Footer isSummary={isSummary} />
       </div>

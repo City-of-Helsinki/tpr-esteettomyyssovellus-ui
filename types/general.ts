@@ -1,6 +1,7 @@
 // place for custom typescript interfaces/"models"
 
 import { Dispatch, SetStateAction } from "react";
+import { ButtonVariant } from 'hds-react';
 import {
   BackendCopyableEntrance,
   BackendEntrance,
@@ -84,9 +85,9 @@ export interface PageHelpProps {
 
 export interface QuestionButtonProps {
   children: string;
-  variant: "primary" | "secondary" | "success" | "danger";
-  iconLeft?: JSX.Element | undefined;
-  iconRight?: JSX.Element | undefined;
+  variant: ButtonVariant.Primary | ButtonVariant.Secondary | ButtonVariant.Success | ButtonVariant.Danger;
+  iconStart?: JSX.Element | undefined;
+  iconEnd?: JSX.Element | undefined;
   disabled?: boolean;
   onClickHandler?: () => void;
   onChange?: () => void;

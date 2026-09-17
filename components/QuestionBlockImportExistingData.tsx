@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
 import { useI18n } from "next-localization";
-import { Notification, Select } from "hds-react";
+import { ButtonVariant, Notification, Select } from "hds-react";
+import type { Option, OptionInProps } from "hds-react";
 import Button from "./QuestionButton";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { addEntrancePlaceBox, deleteEntrancePlace, setEntranceLocationPhoto, setQuestionBlockComment } from "../state/reducers/additionalInfoSlice";
@@ -24,15 +25,15 @@ const QuestionBlockImportExistingData = ({ block, copyableEntrances }: QuestionB
   const [selectedOption, setSelectedOption] = useState<InputOption>();
   const [importCompleted, setImportCompleted] = useState<boolean>(false);
 
-  const copyOptions = copyableEntrances
+  const copyOptions: OptionInProps[] = copyableEntrances
     .map((copy) => {
       const { copyable_entrance_id, copyable_servicepoint_name } = copy;
-      return { value: copyable_entrance_id, label: copyable_servicepoint_name };
+      return { value: String(copyable_entrance_id), label: copyable_servicepoint_name };
     })
-    .sort((a, b) => a.label.localeCompare(b.label));
+    .sort((a, b) => (a.label ?? "").localeCompare(b.label ?? ""));
 
-  const handleSelect = (option: InputOption) => {
-    setSelectedOption(option);
+  const handleSelect = (option: Option) => {
+    setSelectedOption({ value: Number(option.value), label: option.label });
     setImportCompleted(false);
   };
 
@@ -201,12 +202,15 @@ const QuestionBlockImportExistingData = ({ block, copyableEntrances }: QuestionB
         <div className={styles.inputContainer}>
           <Select
             className={styles.selectDropdown}
-            label=""
-            placeholder={i18n.t("QuestionFormImportExistingData.chooseServicepoint")}
+            texts={{
+              label: "",
+              placeholder: i18n.t("QuestionFormImportExistingData.chooseServicepoint"),
+            }}
             options={copyOptions}
-            onChange={(selected: InputOption) => handleSelect(selected)}
+            onChange={(_selectedOptions, clickedOption) => handleSelect(clickedOption)}
+            value={selectedOption ? String(selectedOption.value) : undefined}
           />
-          <Button variant="secondary" disabled={!selectedOption} onClickHandler={handleCopy}>
+          <Button variant={ButtonVariant.Secondary} disabled={!selectedOption} onClickHandler={handleCopy}>
             {i18n.t("QuestionFormImportExistingData.bringInformation")}
           </Button>
         </div>
