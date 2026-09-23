@@ -64,6 +64,10 @@
       "validationFailed": {
         "title": "The form is missing information",
         "message": "Please check the information, incorrect fields are highlighted below"
+      },
+      "saveFailed": {
+        "title": "Saving failed",
+        "message": "The information could not be saved. Please try again."
       }
     },
     "mainEntrance": "Main entrance",

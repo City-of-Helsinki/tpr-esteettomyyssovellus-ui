@@ -64,6 +64,10 @@
       "validationFailed": {
         "title": "Lomakkeelta puuttuu tietoja",
         "message": "Tarkista tiedot, virheellisiä kohtia on korostettu alla"
+      },
+      "saveFailed": {
+        "title": "Tallennus epäonnistui",
+        "message": "Tietojen tallentaminen epäonnistui. Yritä uudelleen."
       }
     },
     "mainEntrance": "Pääsisäänkäynti",

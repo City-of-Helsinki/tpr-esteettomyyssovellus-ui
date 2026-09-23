@@ -64,6 +64,10 @@
       "validationFailed": {
         "title": "Blanketten saknar information",
         "message": "Kontrollera uppgifterna, de felaktiga punkterna är markerade här under"
+      },
+      "saveFailed": {
+        "title": "Det gick inte att spara",
+        "message": "Informationen kunde inte sparas. Försök igen."
       }
     },
     "mainEntrance": "Huvudingången",
