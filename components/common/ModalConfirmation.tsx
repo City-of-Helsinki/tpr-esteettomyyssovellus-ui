@@ -2,6 +2,7 @@ import React, { ReactElement } from "react";
 import { useI18n } from "next-localization";
 import { Button } from "hds-react";
 import { Dialog } from "@material-ui/core";
+import SaveSpinner from "./SaveSpinner";
 import styles from "./ModalConfirmation.module.scss";
 
 interface ModalConfirmationProps {
@@ -12,6 +13,8 @@ interface ModalConfirmationProps {
   confirmKey: string;
   closeCallback: () => void;
   confirmCallback: () => void;
+  confirmDisabled?: boolean;
+  confirmLoading?: boolean;
 }
 
 const ModalConfirmation = ({
@@ -22,6 +25,8 @@ const ModalConfirmation = ({
   cancelKey,
   confirmKey,
   confirmCallback,
+  confirmDisabled = false,
+  confirmLoading = false,
 }: ModalConfirmationProps): ReactElement => {
   const i18n = useI18n();
 
@@ -31,7 +36,20 @@ const ModalConfirmation = ({
         <div className={styles.title}>{i18n.t(titleKey as string)}</div>
         <div>{i18n.t(messageKey)}</div>
         <div className={styles.buttons}>
-          <Button onClick={confirmCallback}>{i18n.t(confirmKey)}</Button>
+          <Button
+            onClick={confirmCallback}
+            disabled={confirmDisabled}
+            iconRight={
+              confirmLoading ? (
+                <SaveSpinner
+                  savingText={i18n.t("questionFormControlButtons.saving")}
+                  savingFinishedText={i18n.t("questionFormControlButtons.savingFinished")}
+                />
+              ) : undefined
+            }
+          >
+            {i18n.t(confirmKey)}
+          </Button>
           <div className="flexSpace" />
           <Button variant="secondary" onClick={closeCallback}>
             {i18n.t(cancelKey)}

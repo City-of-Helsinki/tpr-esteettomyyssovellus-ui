@@ -274,6 +274,8 @@
     "headerSentence1": "Toimipisteen ",
     "headerSentence2": " sijainti on muuttunut.",
     "radioButtonYes": "Esteettömyystiedot tulee syöttää uudelleen. (Toimipiste on muuttanut toisiin tiloihin)",
-    "radioButtonNo": "Esteettömyystiedot eivät muutu."
+    "radioButtonNo": "Esteettömyystiedot eivät muutu.",
+    "updateErrorTitle": "Tietojen päivitys epäonnistui",
+    "updateErrorMessage": "Tietoja ei voitu päivittää. Yritä myöhemmin uudelleen tai ota yhteyttä ylläpitoon."
   }
 }
