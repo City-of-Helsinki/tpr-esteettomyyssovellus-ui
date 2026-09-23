@@ -159,6 +159,9 @@ export const createEntrance = async (
     };
 
     const newEntranceResp = await fetch(`${baseUrl}${API_FETCH_ENTRANCES}`, entranceRequestOptions);
+    if (!newEntranceResp.ok) {
+      throw new Error(`Creating entrance failed with status ${newEntranceResp.status}`);
+    }
     const newEntranceData = await (newEntranceResp.json() as Promise<Entrance>);
     const entranceId = newEntranceData.entrance_id;
     console.log("Created new entrance", entranceId);

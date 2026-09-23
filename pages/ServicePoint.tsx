@@ -1,9 +1,9 @@
-import React, { ChangeEvent, ReactElement, useEffect, useState } from "react";
+import React, { ChangeEvent, ReactElement, useEffect, useRef, useState } from "react";
 import { useI18n } from "next-localization";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
-import { Button, RadioButton, SelectionGroup } from "hds-react";
+import { Button, Notification, RadioButton, SelectionGroup } from "hds-react";
 import Layout from "../components/common/Layout";
 import LoadSpinner from "../components/common/LoadSpinner";
 import ModalConfirmation from "../components/common/ModalConfirmation";
@@ -56,6 +56,9 @@ const Servicepoints = ({
 
   const [selectedRadioItem, setSelectedRadioItem] = useState(startState);
   const [confirmDeletion, setConfirmDeletion] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submissionError, setSubmissionError] = useState(false);
+  const submissionStarted = useRef(false);
 
   if (user !== undefined) {
     dispatch(setUser(user));
@@ -91,7 +94,7 @@ const Servicepoints = ({
   const updateAddressAndShowDetails = async () => {
     await updateAddress();
 
-    router.push(`/details/${servicepointId}?checksum=${checksum}`);
+    await router.push(`/details/${servicepointId}?checksum=${checksum}`);
   };
 
   const handleRadioClick = (e: ChangeEvent<HTMLInputElement>) => {
@@ -99,14 +102,29 @@ const Servicepoints = ({
   };
 
   const handleContinueClick = async () => {
-    if (selectedRadioItem === "1" && entranceId !== undefined) {
-      // Delete the main entrance data and create a new empty one
-      // Form id 0 means main entrance
-      await deleteEntrance(entranceId, router);
-      await createEntrance(servicepointId as number, 0, user as string, `${getOrigin(router)}/`, newEasting as number, newNorthing as number);
+    if (submissionStarted.current) {
+      return;
     }
 
-    await updateAddressAndShowDetails();
+    submissionStarted.current = true;
+    setIsSubmitting(true);
+    setSubmissionError(false);
+
+    try {
+      if (selectedRadioItem === "1" && entranceId !== undefined) {
+        // Delete the main entrance data and create a new empty one
+        // Form id 0 means main entrance
+        await deleteEntrance(entranceId, router);
+        await createEntrance(servicepointId as number, 0, user as string, `${getOrigin(router)}/`, newEasting as number, newNorthing as number);
+      }
+
+      await updateAddressAndShowDetails();
+    } catch (error) {
+      console.error("Error updating service point entrance", error);
+      setSubmissionError(true);
+      submissionStarted.current = false;
+      setIsSubmitting(false);
+    }
   };
 
   const openDeletionConfirmation = () => {
@@ -144,6 +162,11 @@ const Servicepoints = ({
         <title>{i18n.t("common.header.title")}</title>
       </Head>
       <main id="content">
+        {submissionError && (
+          <Notification label={i18n.t("AddressChangedPage.updateErrorTitle")} type="error">
+            {i18n.t("AddressChangedPage.updateErrorMessage")}
+          </Notification>
+        )}
         {changed && (
           <div>
             <h1>
@@ -206,6 +229,8 @@ const Servicepoints = ({
                 confirmKey="common.buttons.yes"
                 closeCallback={closeDeletionConfirmation}
                 confirmCallback={handleContinueClick}
+                confirmDisabled={isSubmitting}
+                confirmLoading={isSubmitting}
               />
             )}
           </div>
