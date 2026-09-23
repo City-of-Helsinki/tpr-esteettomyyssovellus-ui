@@ -34,7 +34,7 @@ const ModalConfirmation = ({
     <Dialog open={open} onClose={closeCallback}>
       <div className={styles.dialog}>
         <div className={styles.title}>{i18n.t(titleKey as string)}</div>
-        <div>{i18n.t(messageKey)}</div>
+        <div className={styles.message}>{i18n.t(messageKey)}</div>
         <div className={styles.buttons}>
           <Button
             onClick={confirmCallback}
