@@ -88,7 +88,11 @@ const Servicepoints = ({
       }),
     };
     const updateAddressUrl = `${getOrigin(router)}/${API_FETCH_SERVICEPOINTS}${servicepointId}/update_address/`;
-    await fetch(updateAddressUrl, updateAddressOptions);
+    const updateAddressResponse = await fetch(updateAddressUrl, updateAddressOptions);
+    if (!updateAddressResponse.ok) {
+      const errorMessage = await updateAddressResponse.text();
+      throw new Error(`Updating service point address failed (${updateAddressResponse.status}): ${errorMessage}`);
+    }
   };
 
   const updateAddressAndShowDetails = async () => {
@@ -141,7 +145,12 @@ const Servicepoints = ({
 
   useEffect(() => {
     const updateAddressSync = async () => {
-      await updateAddressAndShowDetails();
+      try {
+        await updateAddressAndShowDetails();
+      } catch (error) {
+        console.error("Error updating service point address", error);
+        setSubmissionError(true);
+      }
     };
 
     if (skip) {
@@ -483,10 +492,12 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
 
         if (finishedEntranceCount === 0) {
           // No accessibility data yet, so go straight to the details page
-          // In this case it is assumed that the provided address and location are correct, so make sure they are updated
+          // In this case it is assumed that the provided address and location are correct, so make sure they are updated.
           return {
             props: {
               servicepointId,
+              oldEasting,
+              oldNorthing,
               newAddress,
               newAddressNumber,
               newAddressCity,
