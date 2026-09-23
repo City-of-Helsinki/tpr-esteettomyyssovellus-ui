@@ -77,7 +77,14 @@ const QuestionFormCtrlButtons = ({
         }),
       };
       const newEntranceResponse = await fetch(`${getOrigin(router)}/${API_FETCH_ENTRANCES}`, entranceRequestOptions);
+      if (!newEntranceResponse.ok) {
+        throw new Error(`Creating entrance failed with status ${newEntranceResponse.status}`);
+      }
       const newEntrance = await (newEntranceResponse.json() as Promise<Entrance>);
+
+      if (!newEntrance.entrance_id) {
+        throw new Error("Creating entrance did not return an entrance id");
+      }
 
       return newEntrance.entrance_id;
     } else {
@@ -141,8 +148,11 @@ const QuestionFormCtrlButtons = ({
 
   const handleSaveDraftClick = async () => {
     dispatch(setSaving({ draft: true }));
-    await saveData(true);
-    dispatch(setSaving({ draft: false }));
+    try {
+      await saveData(true);
+    } finally {
+      dispatch(setSaving({ draft: false }));
+    }
   };
 
   const validateForm = () => {
@@ -184,8 +194,12 @@ const QuestionFormCtrlButtons = ({
   const handlePreviewClick = async () => {
     if (validateForm()) {
       dispatch(setSaving({ preview: true }));
-      const entranceId = await saveData(true);
-      dispatch(setSaving({ preview: false }));
+      let entranceId: number;
+      try {
+        entranceId = await saveData(true);
+      } finally {
+        dispatch(setSaving({ preview: false }));
+      }
 
       if (entranceId > 0) {
         router.push(`/entrancePreview/${curServicepointId}/${entranceId}?checksum=${checksum}`);
@@ -204,8 +218,12 @@ const QuestionFormCtrlButtons = ({
 
     if (validateForm()) {
       dispatch(setSaving({ meetingRoom: true }));
-      const entranceId = await saveData(false);
-      dispatch(setSaving({ meetingRoom: false }));
+      let entranceId: number;
+      try {
+        entranceId = await saveData(false);
+      } finally {
+        dispatch(setSaving({ meetingRoom: false }));
+      }
 
       if (entranceId > 0) {
         // Show the saved successfully message
