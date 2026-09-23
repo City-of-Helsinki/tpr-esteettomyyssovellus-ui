@@ -18,12 +18,12 @@ import styles from "./AccessibilityPlaceCtrlButtons.module.scss";
 
 // usage: save and return without saving buttons in additionalinfo page
 // notes: only save if save clicked, if return no save or back button (browser, mice etc) returns to old or empty value
-const AccessibilityPlaceCtrlButtons = ({
+function AccessibilityPlaceCtrlButtons({
   questionBlockId,
   placeId,
   entrancePlaceBoxes,
   deletedEntrancePlaceBoxes,
-}: AccessibilityPlaceCtrlButtonsProps): JSX.Element => {
+}: AccessibilityPlaceCtrlButtonsProps): JSX.Element {
   const i18n = useI18n();
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -63,9 +63,7 @@ const AccessibilityPlaceCtrlButtons = ({
   };
 
   const hasData = () => {
-    const pictures = entrancePlaceBoxes.filter((box) => {
-      return box.modifiedBox.photo_url || box.modifiedPhotoBase64;
-    });
+    const pictures = entrancePlaceBoxes.filter((box) => box.modifiedBox.photo_url || box.modifiedPhotoBase64);
 
     const locations = entrancePlaceBoxes.filter((box) => {
       const coordinatesEuref = [box.modifiedBox.loc_easting ?? 0, box.modifiedBox.loc_northing ?? 0] as [number, number];
@@ -175,11 +173,9 @@ const AccessibilityPlaceCtrlButtons = ({
     });
   }, [pageSaved, revertPlace, router]);
 
-  const getPathHash = () => {
+  const getPathHash = () =>
     // Get the question block id for returning to the block via the path hash
-    return `#questionblockid-${questionBlockId}`;
-  };
-
+    `#questionblockid-${questionBlockId}`;
   // don't alter already saved state, set pageSaved to true
   const handleSaveAndReturn = () => {
     if (validateForm()) {
@@ -235,6 +231,6 @@ const AccessibilityPlaceCtrlButtons = ({
       </span>
     </div>
   );
-};
+}
 
 export default AccessibilityPlaceCtrlButtons;

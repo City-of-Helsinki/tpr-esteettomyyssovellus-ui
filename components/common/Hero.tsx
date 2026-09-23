@@ -162,7 +162,7 @@ interface HeroProps {
   imageUrl: string;
 }
 
-export const Hero = (props: HeroProps): JSX.Element => {
+export function Hero(props: HeroProps): JSX.Element {
   const classes = useStyles();
   const { title, text, imageUrl } = props;
 
@@ -223,14 +223,14 @@ export const Hero = (props: HeroProps): JSX.Element => {
       </Hidden>
     </>
   );
-};
+}
 
 interface HeroShallowProps {
   title: string;
   imageUrl: string;
 }
 
-export const HeroShallow = (props: HeroShallowProps): JSX.Element => {
+export function HeroShallow(props: HeroShallowProps): JSX.Element {
   const classes = useStyles();
   const { title, imageUrl } = props;
 
@@ -247,4 +247,4 @@ export const HeroShallow = (props: HeroShallowProps): JSX.Element => {
       />
     </Container>
   );
-};
+}

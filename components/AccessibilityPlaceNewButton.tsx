@@ -8,7 +8,7 @@ import { AccessibilityPlaceNewButtonProps, EntrancePlaceBox } from "../types/gen
 import { BackendEntrancePlace } from "../types/backendModels";
 
 // usage: add new button for AccessibilityPlace
-const AccessibilityPlaceNewButton = ({ accessibilityPlaceData, questionBlockId, orderNumber }: AccessibilityPlaceNewButtonProps): JSX.Element => {
+function AccessibilityPlaceNewButton({ accessibilityPlaceData, questionBlockId, orderNumber }: AccessibilityPlaceNewButtonProps): JSX.Element {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
 
@@ -33,6 +33,6 @@ const AccessibilityPlaceNewButton = ({ accessibilityPlaceData, questionBlockId, 
       {i18n.t("additionalInfo.addAdditionalInfoSet")}
     </Button>
   );
-};
+}
 
 export default AccessibilityPlaceNewButton;

@@ -13,7 +13,7 @@ import styles from "./QuestionContainer.module.scss";
 
 // usage: container for single question row e.g. header/text, additional infos and dropdown/radiobutton
 // and possible addinfo previews if question has addinfos
-const QuestionContainer = ({ question, accessibilityPlaces, children }: QuestionContainerProps): JSX.Element => {
+function QuestionContainer({ question, accessibilityPlaces, children }: QuestionContainerProps): JSX.Element {
   const i18n = useI18n();
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -63,11 +63,7 @@ const QuestionContainer = ({ question, accessibilityPlaces, children }: Question
     return acc;
   }, []);
   const visiblePlaces =
-    visiblePlaceIds && visiblePlaceIds.length > 0
-      ? accessibilityPlaces.filter((place) => {
-          return visiblePlaceIds.includes(place.place_id);
-        })
-      : undefined;
+    visiblePlaceIds && visiblePlaceIds.length > 0 ? accessibilityPlaces.filter((place) => visiblePlaceIds.includes(place.place_id)) : undefined;
 
   // set invalid style if validation errors
   const questionStyle =
@@ -86,13 +82,11 @@ const QuestionContainer = ({ question, accessibilityPlaces, children }: Question
     // Update the existing data in case the user returns without saving
     dispatch(
       setEntrancePlaceBoxes(
-        curEntrancePlaceBoxes.map((placeBox) => {
-          return {
-            ...placeBox,
-            existingBox: placeBox.modifiedBox,
-            existingPhotoBase64: placeBox.modifiedPhotoBase64,
-          };
-        })
+        curEntrancePlaceBoxes.map((placeBox) => ({
+          ...placeBox,
+          existingBox: placeBox.modifiedBox,
+          existingPhotoBase64: placeBox.modifiedPhotoBase64,
+        }))
       )
     );
 
@@ -105,9 +99,9 @@ const QuestionContainer = ({ question, accessibilityPlaces, children }: Question
 
   const getAccessibilityPlaceText = (placeId: number) => {
     if (curEntrancePlaceBoxes) {
-      const pictures = curEntrancePlaceBoxes.filter((placeBox) => {
-        return placeBox.place_id === placeId && !placeBox.isDeleted && (placeBox.modifiedBox.photo_url || placeBox.modifiedPhotoBase64);
-      });
+      const pictures = curEntrancePlaceBoxes.filter(
+        (placeBox) => placeBox.place_id === placeId && !placeBox.isDeleted && (placeBox.modifiedBox.photo_url || placeBox.modifiedPhotoBase64)
+      );
       const picturesText = pictures.length > 0 ? `${i18n.t("accessibilityForm.pictures")} (${pictures.length})` : "";
 
       const locations = curEntrancePlaceBoxes.filter((placeBox) => {
@@ -198,6 +192,6 @@ const QuestionContainer = ({ question, accessibilityPlaces, children }: Question
       </div>
     </div>
   );
-};
+}
 
 export default QuestionContainer;

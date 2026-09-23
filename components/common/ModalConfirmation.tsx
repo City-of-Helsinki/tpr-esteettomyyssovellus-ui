@@ -14,7 +14,7 @@ interface ModalConfirmationProps {
   confirmCallback: () => void;
 }
 
-const ModalConfirmation = ({
+function ModalConfirmation({
   open,
   closeCallback,
   titleKey,
@@ -22,7 +22,7 @@ const ModalConfirmation = ({
   cancelKey,
   confirmKey,
   confirmCallback,
-}: ModalConfirmationProps): ReactElement => {
+}: ModalConfirmationProps): ReactElement {
   const i18n = useI18n();
 
   return (
@@ -40,7 +40,7 @@ const ModalConfirmation = ({
       </div>
     </Dialog>
   );
-};
+}
 
 ModalConfirmation.defaultProps = {
   titleKey: "",

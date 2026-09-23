@@ -3,7 +3,7 @@ import { Link as HdsLink, LinkSize } from "hds-react";
 import { GuideLinkProps } from "../../types/general";
 
 // usage: Help guide link
-const GuideLink = ({ guideTitle, guideUrl }: GuideLinkProps): JSX.Element => {
+function GuideLink({ guideTitle, guideUrl }: GuideLinkProps): JSX.Element {
   const i18n = useI18n();
 
   return guideUrl ? (
@@ -21,6 +21,6 @@ const GuideLink = ({ guideTitle, guideUrl }: GuideLinkProps): JSX.Element => {
   ) : (
     <></>
   );
-};
+}
 
 export default GuideLink;

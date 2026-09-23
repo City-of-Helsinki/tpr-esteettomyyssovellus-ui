@@ -8,7 +8,7 @@ import { PageHelpProps } from "../../types/general";
 import styles from "./PageHelp.module.scss";
 
 // usage: display help at top of page
-const PageHelp = ({ formGuideData, treeItems }: PageHelpProps): JSX.Element => {
+function PageHelp({ formGuideData, treeItems }: PageHelpProps): JSX.Element {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
 
@@ -42,6 +42,6 @@ const PageHelp = ({ formGuideData, treeItems }: PageHelpProps): JSX.Element => {
       </Card>
     </div>
   );
-};
+}
 
 export default PageHelp;

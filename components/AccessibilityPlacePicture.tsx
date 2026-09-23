@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useState } from "react";
 import {
-  ButtonVariant, 
+  ButtonVariant,
   Checkbox,
   FileInput,
   IconCross,
@@ -8,7 +8,7 @@ import {
   IconMinus,
   IconPlus,
   Link as HdsLink,
-  LinkSize, 
+  LinkSize,
   SelectionGroup,
   TextArea,
   TextInput,
@@ -26,7 +26,7 @@ import styles from "./AccessibilityPlacePicture.module.scss";
 
 // usage: accessibility place page picture components
 // notes: this component has both "upload" and "link/url" image components for they are such similar
-const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictureProps): JSX.Element => {
+function AccessibilityPlacePicture({ entrancePlaceBox }: AccessibilityPlacePictureProps): JSX.Element {
   const i18n = useI18n();
   const curLocale: string = i18n.locale();
   const dispatch = useAppDispatch();
@@ -78,7 +78,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
   const handleChangePicture = () => {
     updatePlaceBox({
       ...entrancePlaceBox,
-      modifiedBox: { ...((modifiedBox || {}) as BackendEntrancePlace), photo_url: undefined },
+      modifiedBox: { ...(modifiedBox || {}), photo_url: undefined },
       modifiedPhotoBase64: undefined,
     });
   };
@@ -104,7 +104,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
     updatePlaceBox({
       ...entrancePlaceBox,
       modifiedBox: {
-        ...((modifiedBox || {}) as BackendEntrancePlace),
+        ...(modifiedBox || {}),
         photo_url: undefined,
         photo_text_fi: undefined,
         photo_text_sv: undefined,
@@ -131,7 +131,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
 
           updatePlaceBox({
             ...entrancePlaceBox,
-            modifiedBox: { ...((modifiedBox || {}) as BackendEntrancePlace), photo_url: undefined },
+            modifiedBox: { ...(modifiedBox || {}), photo_url: undefined },
             modifiedPhotoBase64: base64,
             termsAccepted: false,
           });
@@ -154,7 +154,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
     if (isImage) {
       updatePlaceBox({
         ...entrancePlaceBox,
-        modifiedBox: { ...((modifiedBox || {}) as BackendEntrancePlace), photo_url: linkText },
+        modifiedBox: { ...(modifiedBox || {}), photo_url: linkText },
         modifiedPhotoBase64: undefined,
         termsAccepted: false,
       });
@@ -179,7 +179,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
     */
     updatePlaceBox({
       ...entrancePlaceBox,
-      modifiedBox: { ...((modifiedBox || {}) as BackendEntrancePlace), [`photo_text_${language}`]: altText },
+      modifiedBox: { ...(modifiedBox || {}), [`photo_text_${language}`]: altText },
     });
 
     if (language === "fi") {
@@ -214,7 +214,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
 
     updatePlaceBox({
       ...entrancePlaceBox,
-      modifiedBox: { ...((modifiedBox || {}) as BackendEntrancePlace), photo_source_text: source },
+      modifiedBox: { ...(modifiedBox || {}), photo_source_text: source },
     });
 
     // remove or add mandatory source validation to state
@@ -435,6 +435,6 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
       )}
     </div>
   );
-};
+}
 
 export default AccessibilityPlacePicture;

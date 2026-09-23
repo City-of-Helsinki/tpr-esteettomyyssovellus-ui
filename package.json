@@ -4,9 +4,10 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run lint && next build",
     "start": "next start",
-    "lint": "eslint --config .eslintrc.json --ext .js,.jsx,.ts,.tsx .",
+    "lint": "eslint --config eslint.config.mjs --ext .js,.jsx,.ts,.tsx .",
+    "lint:fix": "eslint --config eslint.config.mjs --ext .js,.jsx,.ts,.tsx . --fix",
     "lintcss": "stylelint --config .stylelintrc.json \"**/*.{css,scss}\"; exit 0",
     "json2ts": "json2ts -i ./schemas/ -o ./types/"
   },
@@ -14,6 +15,7 @@
     "@axe-core/react": "^4.3.2",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
+    "@eslint/compat": "^2.1.1",
     "@eslint/eslintrc": "^3.3.5",
     "@mui/icons-material": "^5.13.0",
     "@mui/material": "^5.13.0",

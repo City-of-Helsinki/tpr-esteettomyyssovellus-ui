@@ -42,21 +42,19 @@ export const getServicepointIdFromTargetId = async (targetId?: string | string[]
   return servicepointId;
 };
 
-export const getServicepointHash = (servicepointId: number): string => {
-  return crypto
+export const getServicepointHash = (servicepointId: number): string =>
+  crypto
     .createHash("sha256")
     .update(API_TOKEN + servicepointId)
     .digest("hex")
     .toUpperCase();
-};
 
 export const validateServicepointHash = (servicepointId: number, checksum?: string | string[]): boolean => {
   if (servicepointId > 0 && !!checksum) {
     const checksumString = API_TOKEN + servicepointId;
     return validateChecksum(checksumString, checksum as string);
-  } else {
-    return false;
   }
+  return false;
 };
 
 export const createServicePoint = async (
@@ -174,12 +172,8 @@ type dataTypeForLogId = BackendEntrance | BackendEntranceAnswer | BackendEntranc
 const getMaxFormLogId = (data: dataTypeForLogId[], formSubmitted: "Y" | "D"): number => {
   // Return the highest log id for either published or draft data (form_submitted = 'Y' or 'D')
   const logIds = data
-    .filter((obj) => {
-      return obj.form_submitted === formSubmitted;
-    })
-    .sort((a: dataTypeForLogId, b: dataTypeForLogId) => {
-      return (b.log_id ?? 0) - (a.log_id ?? 0);
-    });
+    .filter((obj) => obj.form_submitted === formSubmitted)
+    .sort((a: dataTypeForLogId, b: dataTypeForLogId) => (b.log_id ?? 0) - (a.log_id ?? 0));
 
   return logIds.length > 0 ? logIds[0].log_id ?? -1 : -1;
 };

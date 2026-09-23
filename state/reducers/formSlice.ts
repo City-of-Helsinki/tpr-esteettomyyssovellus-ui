@@ -49,18 +49,14 @@ export const formSlice = createSlice({
   name: "mainForm",
   initialState,
   reducers: {
-    setServicepointId: (state, action: PayloadAction<number>) => {
-      return {
-        ...state,
-        currentServicepointId: action.payload,
-      };
-    },
-    setEntranceId: (state, action: PayloadAction<number>) => {
-      return {
-        ...state,
-        currentEntranceId: action.payload,
-      };
-    },
+    setServicepointId: (state, action: PayloadAction<number>) => ({
+      ...state,
+      currentServicepointId: action.payload,
+    }),
+    setEntranceId: (state, action: PayloadAction<number>) => ({
+      ...state,
+      currentEntranceId: action.payload,
+    }),
     /*
     setAnsweredChoice: (state, action: PayloadAction<number>) => {
       return {
@@ -75,36 +71,26 @@ export const formSlice = createSlice({
       };
     },
     */
-    setAnswer: (state, action: PayloadAction<{ questionId: number; answer: number }>) => {
-      return {
-        ...state,
-        answers: { ...state.answers, [action.payload.questionId]: action.payload.answer },
-      };
-    },
-    setAnswers: (state, action: PayloadAction<KeyValueNumber>) => {
-      return {
-        ...state,
-        answers: { ...action.payload },
-      };
-    },
-    setExtraAnswer: (state, action: PayloadAction<{ questionBlockFieldId: number; answer: string }>) => {
-      return {
-        ...state,
-        extraAnswers: { ...state.extraAnswers, [action.payload.questionBlockFieldId]: action.payload.answer },
-      };
-    },
-    setExtraAnswers: (state, action: PayloadAction<KeyValueString>) => {
-      return {
-        ...state,
-        extraAnswers: { ...action.payload },
-      };
-    },
-    setContinue: (state) => {
-      return {
-        ...state,
-        isContinueClicked: true,
-      };
-    },
+    setAnswer: (state, action: PayloadAction<{ questionId: number; answer: number }>) => ({
+      ...state,
+      answers: { ...state.answers, [action.payload.questionId]: action.payload.answer },
+    }),
+    setAnswers: (state, action: PayloadAction<KeyValueNumber>) => ({
+      ...state,
+      answers: { ...action.payload },
+    }),
+    setExtraAnswer: (state, action: PayloadAction<{ questionBlockFieldId: number; answer: string }>) => ({
+      ...state,
+      extraAnswers: { ...state.extraAnswers, [action.payload.questionBlockFieldId]: action.payload.answer },
+    }),
+    setExtraAnswers: (state, action: PayloadAction<KeyValueString>) => ({
+      ...state,
+      extraAnswers: { ...action.payload },
+    }),
+    setContinue: (state) => ({
+      ...state,
+      isContinueClicked: true,
+    }),
     /*
     unsetContinue: (state) => {
       return {
@@ -124,24 +110,18 @@ export const formSlice = createSlice({
         ...state,
       };
     },
-    unsetFinished: (state, action: PayloadAction<number>) => {
-      return {
-        ...state,
-        finishedBlocks: [...(state.finishedBlocks?.filter((elem) => elem !== action.payload) ?? [])],
-      };
-    },
-    setStartDate: (state, action: PayloadAction<string>) => {
-      return {
-        ...state,
-        startedAnswering: action.payload,
-      };
-    },
-    setValidationTime: (state, action: PayloadAction<number>) => {
-      return {
-        ...state,
-        validationTime: action.payload,
-      };
-    },
+    unsetFinished: (state, action: PayloadAction<number>) => ({
+      ...state,
+      finishedBlocks: [...(state.finishedBlocks?.filter((elem) => elem !== action.payload) ?? [])],
+    }),
+    setStartDate: (state, action: PayloadAction<string>) => ({
+      ...state,
+      startedAnswering: action.payload,
+    }),
+    setValidationTime: (state, action: PayloadAction<number>) => ({
+      ...state,
+      validationTime: action.payload,
+    }),
     setInvalid: (state, action: PayloadAction<number>) => {
       if (!state.invalidBlocks.includes(action.payload)) {
         return {
@@ -153,18 +133,14 @@ export const formSlice = createSlice({
         ...state,
       };
     },
-    unsetInvalid: (state, action: PayloadAction<number>) => {
-      return {
-        ...state,
-        invalidBlocks: [...(state.invalidBlocks?.filter((elem) => elem !== action.payload) ?? [])],
-      };
-    },
-    setSaving: (state, action: PayloadAction<{ [key: string]: boolean }>) => {
-      return {
-        ...state,
-        isSaving: { ...state.isSaving, ...action.payload },
-      };
-    },
+    unsetInvalid: (state, action: PayloadAction<number>) => ({
+      ...state,
+      invalidBlocks: [...(state.invalidBlocks?.filter((elem) => elem !== action.payload) ?? [])],
+    }),
+    setSaving: (state, action: PayloadAction<Record<string, boolean>>) => ({
+      ...state,
+      isSaving: { ...state.isSaving, ...action.payload },
+    }),
     /*
     setFormFinished: (state) => {
       return {

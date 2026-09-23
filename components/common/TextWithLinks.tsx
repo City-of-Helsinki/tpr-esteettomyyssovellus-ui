@@ -7,7 +7,7 @@ interface TextWithLinksProps {
   text: string;
 }
 
-const TextWithLinks = ({ text }: TextWithLinksProps): JSX.Element => {
+function TextWithLinks({ text }: TextWithLinksProps): JSX.Element {
   const i18n = useI18n();
 
   const convertTextUrlsToLinks = () => {
@@ -31,14 +31,13 @@ const TextWithLinks = ({ text }: TextWithLinksProps): JSX.Element => {
             {textOrLink}
           </HdsLink>
         );
-      } else {
-        // Text
-        return textOrLink.trim();
       }
+      // Text
+      return textOrLink.trim();
     });
   };
 
   return <p>{convertTextUrlsToLinks()}</p>;
-};
+}
 
 export default TextWithLinks;

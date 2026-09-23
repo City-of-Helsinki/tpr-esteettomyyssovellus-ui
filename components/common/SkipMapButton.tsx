@@ -5,7 +5,7 @@ import { SkipMapButtonProps } from "../../types/general";
 import styles from "./SkipMapButton.module.scss";
 
 // usage: accessibility component to allow keyboard users to skip over a map
-const SkipMapButton = ({ idToSkipTo }: SkipMapButtonProps): JSX.Element => {
+function SkipMapButton({ idToSkipTo }: SkipMapButtonProps): JSX.Element {
   const i18n = useI18n();
 
   const skipMap = () => {
@@ -23,6 +23,6 @@ const SkipMapButton = ({ idToSkipTo }: SkipMapButtonProps): JSX.Element => {
       {i18n.t("common.map.skipMap")}
     </Button>
   );
-};
+}
 
 export default SkipMapButton;

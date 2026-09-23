@@ -10,7 +10,7 @@ interface FooterProps {
   isSummary?: boolean;
 }
 
-const Footer = ({ isSummary }: FooterProps): ReactElement => {
+function Footer({ isSummary }: FooterProps): ReactElement {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
 
@@ -63,6 +63,6 @@ const Footer = ({ isSummary }: FooterProps): ReactElement => {
       </HdsFooter.Base>
     </HdsFooter>
   );
-};
+}
 
 export default Footer;

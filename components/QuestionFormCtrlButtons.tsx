@@ -14,7 +14,7 @@ import getOrigin from "../utils/request";
 import { getTokenHash, saveFormData } from "../utils/utilFunctions";
 
 // usage: Form control buttons: return, save / draft, preview, validate
-const QuestionFormCtrlButtons = ({
+function QuestionFormCtrlButtons({
   hasCancelButton,
   hasValidateButton,
   hasSaveDraftButton,
@@ -26,7 +26,7 @@ const QuestionFormCtrlButtons = ({
   visibleQuestions,
   questionChoicesData,
   formId,
-}: QuestionFormCtrlButtonsProps): JSX.Element => {
+}: QuestionFormCtrlButtonsProps): JSX.Element {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -80,10 +80,9 @@ const QuestionFormCtrlButtons = ({
       const newEntrance = await (newEntranceResponse.json() as Promise<Entrance>);
 
       return newEntrance.entrance_id;
-    } else {
-      // Entrance id is already valid
-      return entranceId;
     }
+    // Entrance id is already valid
+    return entranceId;
   };
 
   const saveData = async (isDraft: boolean): Promise<number> => {
@@ -97,9 +96,9 @@ const QuestionFormCtrlButtons = ({
 
       const visibleQuestionChoiceIds = visibleBlockIds.flatMap((blockId) => {
         // Get all possible answer choices for the visible questions
-        const questionChoices = questionChoicesData.filter((choice) => {
-          return choice.question_block_id === blockId && choice.language_id === curLocaleId && visibleQuestionIds.includes(choice.question_id);
-        });
+        const questionChoices = questionChoicesData.filter(
+          (choice) => choice.question_block_id === blockId && choice.language_id === curLocaleId && visibleQuestionIds.includes(choice.question_id)
+        );
 
         // Return the answer choice ids only for easier lookups
         return questionChoices.map((choice) => choice.question_choice_id);
@@ -107,19 +106,13 @@ const QuestionFormCtrlButtons = ({
 
       // Filter to make sure the answered choices only include answers for the visible questions
       // It is possible to answer a question, then change a previous answer, which then makes this question hidden
-      const filteredAnswerChoices = curAnsweredChoices.filter((choice) => {
-        return visibleQuestionChoiceIds?.includes(Number(choice));
-      });
+      const filteredAnswerChoices = curAnsweredChoices.filter((choice) => visibleQuestionChoiceIds?.includes(Number(choice)));
 
       // Filter accessibility places and comments to make sure they are applicable for the visible question blocks
       // It is possible to add a place or comment in a block, then change the location type (block 0 answer),
       // which changes the visible blocks and makes the accessibility place or comment invalid for the form
-      const filteredEntrancePlaceBoxes = curEntrancePlaceBoxes.filter((box) => {
-        return visibleBlockIds.includes(box.question_block_id);
-      });
-      const filteredBlockComments = curQuestionBlockComments.filter((comment) => {
-        return visibleBlockIds.includes(comment.question_block_id);
-      });
+      const filteredEntrancePlaceBoxes = curEntrancePlaceBoxes.filter((box) => visibleBlockIds.includes(box.question_block_id));
+      const filteredBlockComments = curQuestionBlockComments.filter((comment) => visibleBlockIds.includes(comment.question_block_id));
 
       await saveFormData(
         curServicepointId,
@@ -153,10 +146,9 @@ const QuestionFormCtrlButtons = ({
           dispatch(setInvalid(Number(elem?.key?.toString())));
           // dispatch(unsetFormFinished());
           return false;
-        } else {
-          dispatch(unsetInvalid(Number(elem?.key?.toString())));
-          return true;
         }
+        dispatch(unsetInvalid(Number(elem?.key?.toString())));
+        return true;
       }
       return true;
     });
@@ -218,7 +210,12 @@ const QuestionFormCtrlButtons = ({
     <div className={styles.container}>
       <div className={styles.left}>
         {hasCancelButton && (formId === 0 || formId === 1) ? (
-          <Button variant={ButtonVariant.Secondary} iconStart={<IconArrowLeft />} onClickHandler={handleCancel} disabled={isSavingDraft || isSavingPreview}>
+          <Button
+            variant={ButtonVariant.Secondary}
+            iconStart={<IconArrowLeft />}
+            onClickHandler={handleCancel}
+            disabled={isSavingDraft || isSavingPreview}
+          >
             {i18n.t("questionFormControlButtons.quit")}
           </Button>
         ) : null}
@@ -295,5 +292,5 @@ const QuestionFormCtrlButtons = ({
       </div>
     </div>
   );
-};
+}
 export default QuestionFormCtrlButtons;

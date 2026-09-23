@@ -12,7 +12,7 @@ import "../styles/global.scss";
 
 const theme = createTheme();
 
-const App = ({ Component, pageProps }: AppProps): ReactElement => {
+function App({ Component, pageProps }: AppProps): ReactElement {
   // This function is called when doing both server-side and client-side rendering
   const router = useRouter();
   // @ts-ignore: pageProps vary between pages
@@ -36,6 +36,6 @@ const App = ({ Component, pageProps }: AppProps): ReactElement => {
       </I18nProvider>
     </ThemeProvider>
   );
-};
+}
 
 export default App;

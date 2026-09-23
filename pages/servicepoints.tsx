@@ -28,7 +28,7 @@ const useStyles = makeStyles<Theme, { heroShallow: boolean }>((theme) => ({
   },
 }));
 
-const Main = (): ReactElement => {
+function Main(): ReactElement {
   const i18n = useI18n();
 
   const heroTitle = i18n.t("common.header.servicepoints");
@@ -52,7 +52,7 @@ const Main = (): ReactElement => {
       </main>
     </Layout>
   );
-};
+}
 
 // Server-side rendering
 export const getServerSideProps: GetServerSideProps = async ({ locales }) => {

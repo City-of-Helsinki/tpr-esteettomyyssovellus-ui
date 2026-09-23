@@ -10,7 +10,7 @@ interface ValidationSummaryProps {
   validationTime?: number;
 }
 
-const ValidationSummary = ({ pageValid, validationSummary, validationTime }: ValidationSummaryProps): ReactElement => {
+function ValidationSummary({ pageValid, validationSummary, validationTime }: ValidationSummaryProps): ReactElement {
   const i18n = useI18n();
   const ref = useRef<HTMLDivElement>(null);
 
@@ -25,7 +25,12 @@ const ValidationSummary = ({ pageValid, validationSummary, validationTime }: Val
 
   return (
     <div className={styles.validationSummary} ref={ref} tabIndex={-1}>
-      <HdsNotification size={NotificationSize.Medium} className="formNotification" type="error" label={i18n.t("common.message.validationFailed.title")}>
+      <HdsNotification
+        size={NotificationSize.Medium}
+        className="formNotification"
+        type="error"
+        label={i18n.t("common.message.validationFailed.title")}
+      >
         <div>{i18n.t("common.message.validationFailed.message")}</div>
 
         <div className={styles.linkContainer}>
@@ -46,6 +51,6 @@ const ValidationSummary = ({ pageValid, validationSummary, validationTime }: Val
       </HdsNotification>
     </div>
   );
-};
+}
 
 export default ValidationSummary;

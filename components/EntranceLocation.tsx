@@ -11,7 +11,7 @@ import QuestionButton from "./QuestionButton";
 import styles from "./EntranceLocation.module.scss";
 
 // usage: entrance location photo page location component
-const EntranceLocation = ({ entranceLocationPhoto }: EntranceLocationProps): JSX.Element => {
+function EntranceLocation({ entranceLocationPhoto }: EntranceLocationProps): JSX.Element {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
 
@@ -64,9 +64,10 @@ const EntranceLocation = ({ entranceLocationPhoto }: EntranceLocationProps): JSX
   };
 
   // useMemo for preventing leaflet map rendering each time something updates on page
-  const memoMap = useMemo(() => {
-    return <Map curLocation={coordinatesWGS84} setLocation={setLocation} initZoom={MAP_MAX_ZOOM} draggableMarker />;
-  }, [coordinatesWGS84, setLocation]);
+  const memoMap = useMemo(
+    () => <Map curLocation={coordinatesWGS84} setLocation={setLocation} initZoom={MAP_MAX_ZOOM} draggableMarker />,
+    [coordinatesWGS84, setLocation]
+  );
 
   return (
     <div className={styles.maincontainer}>
@@ -89,5 +90,5 @@ const EntranceLocation = ({ entranceLocationPhoto }: EntranceLocationProps): JSX
       </div>
     </div>
   );
-};
+}
 export default EntranceLocation;

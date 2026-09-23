@@ -28,7 +28,7 @@ const useStyles = makeStyles<Theme, { heroShallow: boolean }>((theme) => ({
   },
 }));
 
-const Main = (): ReactElement => {
+function Main(): ReactElement {
   const i18n = useI18n();
 
   // This checks whether the view has become so thin, i.e. mobile view, that the languageselector component should change place.
@@ -69,7 +69,7 @@ const Main = (): ReactElement => {
       </main>
     </Layout>
   );
-};
+}
 
 // Server-side rendering
 export const getServerSideProps: GetServerSideProps = async ({ locales }) => {

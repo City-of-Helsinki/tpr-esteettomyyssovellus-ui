@@ -16,7 +16,7 @@ import styles from "./AdditionalCommentCtrlButtons.module.scss";
 
 // usage: save and return without saving buttons in additionalinfo page
 // notes: only save if save clicked, if return no save or back button (browser, mice etc) returns to old or empty value
-const AdditionalCommentCtrlButtons = ({ questionBlockId, questionBlockComment }: AdditionalCommentCtrlButtonsProps): JSX.Element => {
+function AdditionalCommentCtrlButtons({ questionBlockId, questionBlockComment }: AdditionalCommentCtrlButtonsProps): JSX.Element {
   const i18n = useI18n();
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -104,11 +104,9 @@ const AdditionalCommentCtrlButtons = ({ questionBlockId, questionBlockComment }:
     });
   }, [pageSaved, revertComment, router]);
 
-  const getPathHash = () => {
+  const getPathHash = () =>
     // Get the question block id for returning to the block via the path hash
-    return `#questionblockid-${questionBlockId}-comment`;
-  };
-
+    `#questionblockid-${questionBlockId}-comment`;
   // don't alter already saved state, set pageSaved to true
   const handleSaveAndReturn = () => {
     if (validateForm()) {
@@ -159,6 +157,6 @@ const AdditionalCommentCtrlButtons = ({ questionBlockId, questionBlockComment }:
       </span>
     </div>
   );
-};
+}
 
 export default AdditionalCommentCtrlButtons;

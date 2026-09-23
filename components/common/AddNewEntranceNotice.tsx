@@ -7,7 +7,7 @@ import QuestionButton from "../QuestionButton";
 import { useAppSelector } from "../../state/hooks";
 
 // usage: in preview page, add new entrances component
-const AddNewEntranceNotice = (): ReactElement => {
+function AddNewEntranceNotice(): ReactElement {
   const i18n = useI18n();
   const router = useRouter();
 
@@ -45,6 +45,6 @@ const AddNewEntranceNotice = (): ReactElement => {
       </div>
     </div>
   );
-};
+}
 
 export default AddNewEntranceNotice;

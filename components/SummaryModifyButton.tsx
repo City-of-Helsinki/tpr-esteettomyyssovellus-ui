@@ -9,7 +9,7 @@ import { setStartDate } from "../state/reducers/formSlice";
 import { getCurrentDate } from "../utils/utilFunctions";
 
 // usage: modify button for ServicepointLandingSummary
-const SummaryModifyButton = ({ entranceIdToModify, hasData }: SummaryModifyButtonProps): JSX.Element => {
+function SummaryModifyButton({ entranceIdToModify, hasData }: SummaryModifyButtonProps): JSX.Element {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -34,6 +34,6 @@ const SummaryModifyButton = ({ entranceIdToModify, hasData }: SummaryModifyButto
       {!hasData ? i18n.t("servicepoint.buttons.createServicepoint") : i18n.t("servicepoint.buttons.editServicepoint")}
     </Button>
   );
-};
+}
 
 export default SummaryModifyButton;

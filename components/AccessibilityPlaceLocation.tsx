@@ -12,7 +12,7 @@ import QuestionInfo from "./QuestionInfo";
 import styles from "./AccessibilityPlaceLocation.module.scss";
 
 // usage: accessibility place page location component
-const AccessibilityPlaceLocation = ({ entrancePlaceBox }: AccessibilityPlaceLocationProps): JSX.Element => {
+function AccessibilityPlaceLocation({ entrancePlaceBox }: AccessibilityPlaceLocationProps): JSX.Element {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
 
@@ -106,9 +106,10 @@ const AccessibilityPlaceLocation = ({ entrancePlaceBox }: AccessibilityPlaceLoca
   };
 
   // useMemo for preventing leaflet map rendering each time something updates on page
-  const memoMap = useMemo(() => {
-    return <Map curLocation={coordinatesWGS84} setLocation={setLocation} initZoom={MAP_MAX_ZOOM} draggableMarker />;
-  }, [coordinatesWGS84, setLocation]);
+  const memoMap = useMemo(
+    () => <Map curLocation={coordinatesWGS84} setLocation={setLocation} initZoom={MAP_MAX_ZOOM} draggableMarker />,
+    [coordinatesWGS84, setLocation]
+  );
 
   return (
     <div className={styles.maincontainer}>
@@ -184,5 +185,5 @@ const AccessibilityPlaceLocation = ({ entrancePlaceBox }: AccessibilityPlaceLoca
       )}
     </div>
   );
-};
+}
 export default AccessibilityPlaceLocation;

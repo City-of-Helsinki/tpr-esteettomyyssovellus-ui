@@ -6,11 +6,11 @@ import { PathTreeProps } from "../../types/general";
 import styles from "./PathTreeComponent.module.scss";
 
 // usage: general breadcrumb component
-const PathTreeComponent = ({ treeItems }: PathTreeProps): JSX.Element => {
+function PathTreeComponent({ treeItems }: PathTreeProps): JSX.Element {
   const i18n = useI18n();
 
-  const getPathTree = () => {
-    return Object.keys(treeItems).map((itemText, index, array) => {
+  const getPathTree = () =>
+    Object.keys(treeItems).map((itemText, index, array) => {
       const itemUrl = treeItems[itemText];
       const isLastItem = index + 1 === array.length;
       const key = `treeitem_${index}`;
@@ -25,13 +25,12 @@ const PathTreeComponent = ({ treeItems }: PathTreeProps): JSX.Element => {
         </li>
       );
     });
-  };
 
   return (
     <nav aria-label={i18n.t("common.breadcrumb")} className={styles.pathTree}>
       <ul className={styles.pathTreeList}>{getPathTree()}</ul>
     </nav>
   );
-};
+}
 
 export default PathTreeComponent;

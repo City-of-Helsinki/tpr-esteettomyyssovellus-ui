@@ -32,7 +32,7 @@ import { getMaxLogId, validateServicepointHash } from "../../../../utils/servers
 import styles from "./blockComment.module.scss";
 
 // usage: the comments of a question block for an entrance
-const EntranceQuestionBlockComment = ({
+function EntranceQuestionBlockComment({
   servicepointData,
   entranceData,
   questionBlockId,
@@ -40,7 +40,7 @@ const EntranceQuestionBlockComment = ({
   formGuideData,
   formId,
   isChecksumValid,
-}: EntranceQuestionBlockCommentProps): ReactElement => {
+}: EntranceQuestionBlockCommentProps): ReactElement {
   const i18n = useI18n();
   const curLocale: string = i18n.locale();
   const isLoading = useLoading();
@@ -83,9 +83,7 @@ const EntranceQuestionBlockComment = ({
   const { text } = block;
 
   // Show the comments for this question block
-  const filteredQuestionBlockComment = curQuestionBlockComments.find((blockComment) => {
-    return blockComment.question_block_id === questionBlockId;
-  });
+  const filteredQuestionBlockComment = curQuestionBlockComments.find((blockComment) => blockComment.question_block_id === questionBlockId);
   const { invalidValues = [] } = filteredQuestionBlockComment || {};
 
   const treeItems = {
@@ -155,7 +153,7 @@ const EntranceQuestionBlockComment = ({
       )}
     </Layout>
   );
-};
+}
 
 // Server-side rendering
 export const getServerSideProps: GetServerSideProps = async ({ params, query, locales }) => {
@@ -194,7 +192,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, lo
 
       const mainEntrance = servicepointEntranceResults?.results?.find((result) => result.is_main_entrance === "Y");
       let isMainEntrancePublished = false;
-      if (!!mainEntrance) {
+      if (mainEntrance) {
         // The main entrance exists, but check if it's published
         const entranceDetailResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE}?entrance_id=${mainEntrance.entrance_id}&format=json`, {
           headers: new Headers({ Authorization: getTokenHash() }),

@@ -13,7 +13,7 @@ import { convertCoordinates, isLocationValid } from "../utils/utilFunctions";
 import QuestionInfo from "./QuestionInfo";
 import styles from "./QuestionBlockLocationPhoto.module.scss";
 
-const QuestionBlockLocationPhoto = ({ block, canAddLocation, canAddPhoto }: QuestionBlockLocationPhotoProps): JSX.Element => {
+function QuestionBlockLocationPhoto({ block, canAddLocation, canAddPhoto }: QuestionBlockLocationPhotoProps): JSX.Element {
   const i18n = useI18n();
   const curLocale = i18n.locale();
   const router = useRouter();
@@ -182,6 +182,6 @@ const QuestionBlockLocationPhoto = ({ block, canAddLocation, canAddPhoto }: Ques
       )}
     </>
   );
-};
+}
 
 export default QuestionBlockLocationPhoto;

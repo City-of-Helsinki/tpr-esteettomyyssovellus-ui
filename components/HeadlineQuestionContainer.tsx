@@ -6,7 +6,7 @@ import styles from "./HeadlineQuestionContainer.module.scss";
 import { useAppSelector } from "../state/hooks";
 
 // usage: used for mainlevel (blue) accordions in form
-const HeadlineQuestionContainer = ({ text, questionBlockId, initOpen = false, children, isValid }: HeadlineQuestionContainerProps): JSX.Element => {
+function HeadlineQuestionContainer({ text, questionBlockId, initOpen = false, children, isValid }: HeadlineQuestionContainerProps): JSX.Element {
   const i18n = useI18n();
   const headlineText = text ?? "";
 
@@ -22,7 +22,9 @@ const HeadlineQuestionContainer = ({ text, questionBlockId, initOpen = false, ch
   const accordionIcon = isOpen ? <IconMinus aria-hidden /> : <IconPlus aria-hidden />;
   let statusIcon = curFinishedBlocks.includes(Number(questionBlockId)) ? <IconCheckCircleFill aria-label={i18n.t("common.message.valid")} /> : null;
   statusIcon = !isValid ? <IconAlertCircle className={styles.invalidIcon} aria-label={i18n.t("common.message.invalid")} /> : statusIcon;
-  let buttonVariant: ButtonVariant.Primary | ButtonVariant.Secondary | ButtonVariant.Danger = isOpen ? ButtonVariant.Primary : ButtonVariant.Secondary;
+  let buttonVariant: ButtonVariant.Primary | ButtonVariant.Secondary | ButtonVariant.Danger = isOpen
+    ? ButtonVariant.Primary
+    : ButtonVariant.Secondary;
   buttonVariant = questionBlockId !== undefined && curInvalidBlocks.includes(questionBlockId) && isOpen ? ButtonVariant.Danger : buttonVariant;
   const iconEnd = (
     <>
@@ -57,6 +59,6 @@ const HeadlineQuestionContainer = ({ text, questionBlockId, initOpen = false, ch
       </Card>
     </section>
   );
-};
+}
 
 export default HeadlineQuestionContainer;

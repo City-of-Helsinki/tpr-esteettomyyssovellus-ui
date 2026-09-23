@@ -3,7 +3,7 @@ import { useI18n } from "next-localization";
 import { Button, ButtonVariant, ButtonSize, Card, useAccordion } from "hds-react";
 import styles from "./SummaryAccessibilityInnerAccordion.module.scss";
 
-const SummaryAccessibilityInnerAccordion = ({ children }: { children: JSX.Element }) => {
+function SummaryAccessibilityInnerAccordion({ children }: { children: JSX.Element }) {
   const i18n = useI18n();
 
   const { isOpen, buttonProps, contentProps } = useAccordion({ initiallyOpen: false });
@@ -18,6 +18,6 @@ const SummaryAccessibilityInnerAccordion = ({ children }: { children: JSX.Elemen
       </Card>
     </div>
   );
-};
+}
 
 export default SummaryAccessibilityInnerAccordion;

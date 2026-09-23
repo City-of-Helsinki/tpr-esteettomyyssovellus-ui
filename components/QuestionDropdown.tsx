@@ -11,7 +11,7 @@ import { setAnswer } from "../state/reducers/formSlice";
 // notes: this component uses HDS Select, HDS says:
 // if 1) more than 8 options 2) needs filtering by typing create&use HDS Combobox
 // this project doesn't yet have Combobox, maybe not needed also
-const QuestionDropdown = ({ options, placeholder = "--Valitse--", questionId, blockId }: QuestionDropdownQuestionProps): JSX.Element => {
+function QuestionDropdown({ options, placeholder = "--Valitse--", questionId, blockId }: QuestionDropdownQuestionProps): JSX.Element {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
 
@@ -60,6 +60,6 @@ const QuestionDropdown = ({ options, placeholder = "--Valitse--", questionId, bl
   ) : (
     <></>
   );
-};
+}
 
 export default QuestionDropdown;
