@@ -513,6 +513,10 @@ export const deleteEntrance = async (entranceId: number, router: NextRouter): Pr
     };
 
     const deleteEntranceResponse = await fetch(`${getOrigin(router)}/${API_FETCH_ENTRANCES}${entranceId}/delete_entrance/`, deleteEntranceRequest);
-    console.log("delete entrance response", await deleteEntranceResponse.text());
+    const responseText = await deleteEntranceResponse.text();
+    console.log("delete entrance response", responseText);
+    if (!deleteEntranceResponse.ok) {
+      throw new Error(`Deleting entrance failed with status ${deleteEntranceResponse.status}`);
+    }
   }
 };
