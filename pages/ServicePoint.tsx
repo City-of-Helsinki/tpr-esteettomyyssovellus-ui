@@ -419,6 +419,17 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
         servicepointChecksum = getServicepointHash(servicepointId);
 
         console.log("New servicepoint and entrance inserted to the database");
+
+        return {
+          props: {
+            lngDict,
+            servicepointId,
+            entranceId,
+            user: queryParams.user,
+            checksum: servicepointChecksum,
+            skip: true,
+          },
+        };
       } else {
         // There could be multiple external servicepoint ids for each servicepoint, so update the
         // servicepoint table with this request's id as a way to record which one was last accessed
