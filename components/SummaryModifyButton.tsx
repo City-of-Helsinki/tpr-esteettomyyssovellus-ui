@@ -1,6 +1,7 @@
 import React from "react";
 import { useI18n } from "next-localization";
 import { useRouter } from "next/router";
+import { ButtonVariant } from "hds-react";
 import Button from "./QuestionButton";
 import { SummaryModifyButtonProps } from "../types/general";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
@@ -8,7 +9,7 @@ import { setStartDate } from "../state/reducers/formSlice";
 import { getCurrentDate } from "../utils/utilFunctions";
 
 // usage: modify button for ServicepointLandingSummary
-const SummaryModifyButton = ({ entranceIdToModify, hasData }: SummaryModifyButtonProps): JSX.Element => {
+function SummaryModifyButton({ entranceIdToModify, hasData }: SummaryModifyButtonProps): JSX.Element {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -29,10 +30,10 @@ const SummaryModifyButton = ({ entranceIdToModify, hasData }: SummaryModifyButto
   };
 
   return (
-    <Button variant="primary" onClickHandler={handleEditorModifyPointData}>
+    <Button variant={ButtonVariant.Primary} onClickHandler={handleEditorModifyPointData}>
       {!hasData ? i18n.t("servicepoint.buttons.createServicepoint") : i18n.t("servicepoint.buttons.editServicepoint")}
     </Button>
   );
-};
+}
 
 export default SummaryModifyButton;

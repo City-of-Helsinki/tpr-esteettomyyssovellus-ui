@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { IconArrowLeft } from "hds-react";
+import { IconArrowLeft, ButtonVariant } from "hds-react";
 import { useI18n } from "next-localization";
 import { useRouter } from "next/router";
 import QuestionButton from "./QuestionButton";
@@ -18,12 +18,12 @@ import styles from "./AccessibilityPlaceCtrlButtons.module.scss";
 
 // usage: save and return without saving buttons in additionalinfo page
 // notes: only save if save clicked, if return no save or back button (browser, mice etc) returns to old or empty value
-const AccessibilityPlaceCtrlButtons = ({
+function AccessibilityPlaceCtrlButtons({
   questionBlockId,
   placeId,
   entrancePlaceBoxes,
   deletedEntrancePlaceBoxes,
-}: AccessibilityPlaceCtrlButtonsProps): JSX.Element => {
+}: AccessibilityPlaceCtrlButtonsProps): JSX.Element {
   const i18n = useI18n();
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -63,9 +63,7 @@ const AccessibilityPlaceCtrlButtons = ({
   };
 
   const hasData = () => {
-    const pictures = entrancePlaceBoxes.filter((box) => {
-      return box.modifiedBox.photo_url || box.modifiedPhotoBase64;
-    });
+    const pictures = entrancePlaceBoxes.filter((box) => box.modifiedBox.photo_url || box.modifiedPhotoBase64);
 
     const locations = entrancePlaceBoxes.filter((box) => {
       const coordinatesEuref = [box.modifiedBox.loc_easting ?? 0, box.modifiedBox.loc_northing ?? 0] as [number, number];
@@ -175,11 +173,9 @@ const AccessibilityPlaceCtrlButtons = ({
     });
   }, [pageSaved, revertPlace, router]);
 
-  const getPathHash = () => {
+  const getPathHash = () =>
     // Get the question block id for returning to the block via the path hash
-    return `#questionblockid-${questionBlockId}`;
-  };
-
+    `#questionblockid-${questionBlockId}`;
   // don't alter already saved state, set pageSaved to true
   const handleSaveAndReturn = () => {
     if (validateForm()) {
@@ -215,26 +211,26 @@ const AccessibilityPlaceCtrlButtons = ({
   return (
     <div className={styles.maincontainer}>
       {hasData() ? (
-        <QuestionButton variant="secondary" iconLeft={<IconArrowLeft />} onClickHandler={handleSaveAndReturn}>
+        <QuestionButton variant={ButtonVariant.Secondary} iconStart={<IconArrowLeft />} onClickHandler={handleSaveAndReturn}>
           {i18n.t("common.buttons.saveAndReturn")}
         </QuestionButton>
       ) : (
-        <QuestionButton variant="secondary" iconLeft={<IconArrowLeft />} onClickHandler={handleReturnNoSave}>
+        <QuestionButton variant={ButtonVariant.Secondary} iconStart={<IconArrowLeft />} onClickHandler={handleReturnNoSave}>
           {i18n.t("common.buttons.return")}
         </QuestionButton>
       )}
       <span className={styles.noborderbutton}>
-        <QuestionButton variant="secondary" onClickHandler={() => handleReturnNoSave()}>
+        <QuestionButton variant={ButtonVariant.Secondary} onClickHandler={() => handleReturnNoSave()}>
           {i18n.t("common.buttons.returnNoSave")}
         </QuestionButton>
       </span>
       <span className={styles.noborderbutton}>
-        <QuestionButton variant="secondary" onClickHandler={() => handleDeleteAdditionalInfo()}>
+        <QuestionButton variant={ButtonVariant.Secondary} onClickHandler={() => handleDeleteAdditionalInfo()}>
           {i18n.t("common.buttons.deleteAdditionalInfoSets")}
         </QuestionButton>
       </span>
     </div>
   );
-};
+}
 
 export default AccessibilityPlaceCtrlButtons;

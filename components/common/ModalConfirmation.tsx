@@ -1,7 +1,7 @@
 import React, { ReactElement } from "react";
 import { useI18n } from "next-localization";
-import { Button } from "hds-react";
-import { Dialog } from "@material-ui/core";
+import { Button, ButtonVariant } from "hds-react";
+import { Dialog } from "@mui/material";
 import SaveSpinner from "./SaveSpinner";
 import styles from "./ModalConfirmation.module.scss";
 
@@ -17,7 +17,7 @@ interface ModalConfirmationProps {
   confirmLoading?: boolean;
 }
 
-const ModalConfirmation = ({
+function ModalConfirmation({
   open,
   closeCallback,
   titleKey,
@@ -27,7 +27,7 @@ const ModalConfirmation = ({
   confirmCallback,
   confirmDisabled = false,
   confirmLoading = false,
-}: ModalConfirmationProps): ReactElement => {
+}: ModalConfirmationProps): ReactElement {
   const i18n = useI18n();
 
   return (
@@ -51,14 +51,14 @@ const ModalConfirmation = ({
             {i18n.t(confirmKey)}
           </Button>
           <div className="flexSpace" />
-          <Button variant="secondary" onClick={closeCallback}>
+          <Button variant={ButtonVariant.Secondary} onClick={closeCallback}>
             {i18n.t(cancelKey)}
           </Button>
         </div>
       </div>
     </Dialog>
   );
-};
+}
 
 ModalConfirmation.defaultProps = {
   titleKey: "",

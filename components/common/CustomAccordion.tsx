@@ -8,7 +8,7 @@ interface CustomAccordionProps {
   children: JSX.Element;
 }
 
-const CustomAccordion = ({ className, heading, children }: CustomAccordionProps) => {
+function CustomAccordion({ className, heading, children }: CustomAccordionProps) {
   const { isOpen, buttonProps, contentProps, toggleAccordion } = useAccordion({ initiallyOpen: false });
 
   // Change icon based on accordion open state
@@ -23,7 +23,7 @@ const CustomAccordion = ({ className, heading, children }: CustomAccordionProps)
 
   return (
     <div className={`${styles.maincontainer} ${className}`}>
-      <Button {...buttonProps} iconRight={icon} fullWidth onClick={() => handleOnClickAccordions()}>
+      <Button {...buttonProps} iconEnd={icon} fullWidth onClick={() => handleOnClickAccordions()}>
         {heading}
       </Button>
       <Card className={styles.contentcontainer} {...contentProps}>
@@ -31,6 +31,6 @@ const CustomAccordion = ({ className, heading, children }: CustomAccordionProps)
       </Card>
     </div>
   );
-};
+}
 
 export default CustomAccordion;

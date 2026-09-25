@@ -23,49 +23,37 @@ export const additionalInfoSlice = createSlice({
   name: "additionalInfo",
   initialState,
   reducers: {
-    setEntranceLocationPhoto: (state, action: PayloadAction<EntranceLocationPhoto>) => {
-      return { ...state, entranceLocationPhoto: action.payload };
-    },
-    setEntranceLocationPhotoValid: (state, action: PayloadAction<boolean>) => {
-      return { ...state, entranceLocationPhotoValid: action.payload };
-    },
-    setEntranceLocationPhotoValidationTime: (state, action: PayloadAction<number>) => {
-      return {
-        ...state,
-        entranceLocationPhotoValidationTime: action.payload,
-      };
-    },
-    editEntranceLocationPhoto: (state, action: PayloadAction<{ entrance_id: number; updatedLocationPhoto: EntranceLocationPhoto }>) => {
-      return {
-        ...state,
-        entranceLocationPhoto: { ...state.entranceLocationPhoto, ...action.payload.updatedLocationPhoto },
-      };
-    },
-    editEntranceLocation: (state, action: PayloadAction<{ entrance_id: number; locEasting?: number; locNorthing?: number }>) => {
-      return {
-        ...state,
-        entranceLocationPhoto: {
-          ...state.entranceLocationPhoto,
-          modifiedAnswer: {
-            ...((state.entranceLocationPhoto.modifiedAnswer ?? {}) as BackendEntranceAnswer),
-            loc_easting: action.payload.locEasting !== undefined ? Math.round(action.payload.locEasting) : undefined,
-            loc_northing: action.payload.locNorthing !== undefined ? Math.round(action.payload.locNorthing) : undefined,
-          },
+    setEntranceLocationPhoto: (state, action: PayloadAction<EntranceLocationPhoto>) => ({ ...state, entranceLocationPhoto: action.payload }),
+    setEntranceLocationPhotoValid: (state, action: PayloadAction<boolean>) => ({ ...state, entranceLocationPhotoValid: action.payload }),
+    setEntranceLocationPhotoValidationTime: (state, action: PayloadAction<number>) => ({
+      ...state,
+      entranceLocationPhotoValidationTime: action.payload,
+    }),
+    editEntranceLocationPhoto: (state, action: PayloadAction<{ entrance_id: number; updatedLocationPhoto: EntranceLocationPhoto }>) => ({
+      ...state,
+      entranceLocationPhoto: { ...state.entranceLocationPhoto, ...action.payload.updatedLocationPhoto },
+    }),
+    editEntranceLocation: (state, action: PayloadAction<{ entrance_id: number; locEasting?: number; locNorthing?: number }>) => ({
+      ...state,
+      entranceLocationPhoto: {
+        ...state.entranceLocationPhoto,
+        modifiedAnswer: {
+          ...((state.entranceLocationPhoto.modifiedAnswer ?? {}) as BackendEntranceAnswer),
+          loc_easting: action.payload.locEasting !== undefined ? Math.round(action.payload.locEasting) : undefined,
+          loc_northing: action.payload.locNorthing !== undefined ? Math.round(action.payload.locNorthing) : undefined,
         },
-      };
-    },
-    revertEntranceLocationPhoto: (state, action: PayloadAction<{ entrance_id: number }>) => {
-      return {
-        ...state,
-        entranceLocationPhoto: {
-          ...state.entranceLocationPhoto,
-          entrance_id: action.payload.entrance_id,
-          modifiedAnswer: (state.entranceLocationPhoto.existingAnswer ?? {}) as BackendEntranceAnswer,
-          modifiedPhotoBase64: state.entranceLocationPhoto.existingPhotoBase64,
-          invalidValues: [],
-        },
-      };
-    },
+      },
+    }),
+    revertEntranceLocationPhoto: (state, action: PayloadAction<{ entrance_id: number }>) => ({
+      ...state,
+      entranceLocationPhoto: {
+        ...state.entranceLocationPhoto,
+        entrance_id: action.payload.entrance_id,
+        modifiedAnswer: (state.entranceLocationPhoto.existingAnswer ?? {}) as BackendEntranceAnswer,
+        modifiedPhotoBase64: state.entranceLocationPhoto.existingPhotoBase64,
+        invalidValues: [],
+      },
+    }),
     addInvalidEntranceLocationPhotoValue: (
       state,
       action: PayloadAction<{
@@ -92,32 +80,23 @@ export const additionalInfoSlice = createSlice({
         },
       };
     },
-    removeInvalidEntranceLocationPhotoValue: (state, action: PayloadAction<{ entrance_id: number; invalidFieldIdToRemove: string }>) => {
-      return {
-        ...state,
-        entranceLocationPhoto: {
-          ...state.entranceLocationPhoto,
-          invalidValues: [
-            ...(state.entranceLocationPhoto.invalidValues ?? []).filter((val) => val.fieldId !== action.payload.invalidFieldIdToRemove),
-          ],
-        },
-      };
-    },
-    setEntrancePlaceBoxes: (state, action: PayloadAction<EntrancePlaceBox[]>) => {
-      return { ...state, entrancePlaceBoxes: action.payload };
-    },
-    setEntrancePlaceValid: (state, action: PayloadAction<boolean>) => {
-      return { ...state, entrancePlaceValid: action.payload };
-    },
-    setEntrancePlaceValidationTime: (state, action: PayloadAction<number>) => {
-      return {
-        ...state,
-        entrancePlaceValidationTime: action.payload,
-      };
-    },
-    addEntrancePlaceBox: (state, action: PayloadAction<EntrancePlaceBox>) => {
-      return { ...state, entrancePlaceBoxes: [...(state.entrancePlaceBoxes ?? []), action.payload] };
-    },
+    removeInvalidEntranceLocationPhotoValue: (state, action: PayloadAction<{ entrance_id: number; invalidFieldIdToRemove: string }>) => ({
+      ...state,
+      entranceLocationPhoto: {
+        ...state.entranceLocationPhoto,
+        invalidValues: [...(state.entranceLocationPhoto.invalidValues ?? []).filter((val) => val.fieldId !== action.payload.invalidFieldIdToRemove)],
+      },
+    }),
+    setEntrancePlaceBoxes: (state, action: PayloadAction<EntrancePlaceBox[]>) => ({ ...state, entrancePlaceBoxes: action.payload }),
+    setEntrancePlaceValid: (state, action: PayloadAction<boolean>) => ({ ...state, entrancePlaceValid: action.payload }),
+    setEntrancePlaceValidationTime: (state, action: PayloadAction<number>) => ({
+      ...state,
+      entrancePlaceValidationTime: action.payload,
+    }),
+    addEntrancePlaceBox: (state, action: PayloadAction<EntrancePlaceBox>) => ({
+      ...state,
+      entrancePlaceBoxes: [...(state.entrancePlaceBoxes ?? []), action.payload],
+    }),
     editEntrancePlaceBox: (
       state,
       action: PayloadAction<{
@@ -126,19 +105,19 @@ export const additionalInfoSlice = createSlice({
         order_number: number;
         updatedPlaceBox: EntrancePlaceBox;
       }>
-    ) => {
-      return {
-        ...state,
-        entrancePlaceBoxes: state.entrancePlaceBoxes.reduce((acc: EntrancePlaceBox[], box) => {
-          return box.entrance_id === action.payload.entrance_id &&
-            box.place_id === action.payload.place_id &&
-            box.order_number === action.payload.order_number &&
-            !box.isDeleted
+    ) => ({
+      ...state,
+      entrancePlaceBoxes: state.entrancePlaceBoxes.reduce(
+        (acc: EntrancePlaceBox[], box) =>
+          box.entrance_id === action.payload.entrance_id &&
+          box.place_id === action.payload.place_id &&
+          box.order_number === action.payload.order_number &&
+          !box.isDeleted
             ? [...acc, action.payload.updatedPlaceBox]
-            : [...acc, box];
-        }, []),
-      };
-    },
+            : [...acc, box],
+        []
+      ),
+    }),
     editEntrancePlaceBoxLocation: (
       state,
       action: PayloadAction<{
@@ -148,14 +127,14 @@ export const additionalInfoSlice = createSlice({
         locEasting?: number;
         locNorthing?: number;
       }>
-    ) => {
-      return {
-        ...state,
-        entrancePlaceBoxes: state.entrancePlaceBoxes.reduce((acc: EntrancePlaceBox[], box) => {
-          return box.entrance_id === action.payload.entrance_id &&
-            box.place_id === action.payload.place_id &&
-            box.order_number === action.payload.order_number &&
-            !box.isDeleted
+    ) => ({
+      ...state,
+      entrancePlaceBoxes: state.entrancePlaceBoxes.reduce(
+        (acc: EntrancePlaceBox[], box) =>
+          box.entrance_id === action.payload.entrance_id &&
+          box.place_id === action.payload.place_id &&
+          box.order_number === action.payload.order_number &&
+          !box.isDeleted
             ? [
                 ...acc,
                 {
@@ -167,10 +146,10 @@ export const additionalInfoSlice = createSlice({
                   },
                 },
               ]
-            : [...acc, box];
-        }, []),
-      };
-    },
+            : [...acc, box],
+        []
+      ),
+    }),
     editEntrancePlaceBoxLocationText: (
       state,
       action: PayloadAction<{
@@ -180,14 +159,14 @@ export const additionalInfoSlice = createSlice({
         language: string;
         locationText?: string;
       }>
-    ) => {
-      return {
-        ...state,
-        entrancePlaceBoxes: state.entrancePlaceBoxes.reduce((acc: EntrancePlaceBox[], box) => {
-          return box.entrance_id === action.payload.entrance_id &&
-            box.place_id === action.payload.place_id &&
-            box.order_number === action.payload.order_number &&
-            !box.isDeleted
+    ) => ({
+      ...state,
+      entrancePlaceBoxes: state.entrancePlaceBoxes.reduce(
+        (acc: EntrancePlaceBox[], box) =>
+          box.entrance_id === action.payload.entrance_id &&
+          box.place_id === action.payload.place_id &&
+          box.order_number === action.payload.order_number &&
+          !box.isDeleted
             ? [
                 ...acc,
                 {
@@ -198,10 +177,10 @@ export const additionalInfoSlice = createSlice({
                   },
                 },
               ]
-            : [...acc, box];
-        }, []),
-      };
-    },
+            : [...acc, box],
+        []
+      ),
+    }),
     changeEntrancePlaceBoxOrder: (
       state,
       action: PayloadAction<{
@@ -234,73 +213,63 @@ export const additionalInfoSlice = createSlice({
               const newOrder =
                 box.order_number === box1 ? box.order_number + action.payload.difference : box.order_number - action.payload.difference;
               return [...acc, { ...box, order_number: newOrder }];
-            } else {
-              return [...acc, box];
             }
-          } else {
             return [...acc, box];
           }
+          return [...acc, box];
         }, []),
       };
     },
-    deleteEntrancePlaceBox: (state, action: PayloadAction<{ entrance_id: number; place_id: number; order_number: number }>) => {
+    deleteEntrancePlaceBox: (state, action: PayloadAction<{ entrance_id: number; place_id: number; order_number: number }>) =>
       // Mark the box as deleted, and update the order numbers of the rest for this entrance place
-      return {
+      ({
         ...state,
         entrancePlaceBoxes: state.entrancePlaceBoxes.reduce((acc: EntrancePlaceBox[], box) => {
           if (box.entrance_id === action.payload.entrance_id && box.place_id === action.payload.place_id) {
             return box.order_number === action.payload.order_number
               ? [...acc, { ...box, isDeleted: true }]
               : [...acc, { ...box, order_number: box.order_number > action.payload.order_number ? box.order_number - 1 : box.order_number }];
-          } else {
-            return [...acc, box];
           }
+          return [...acc, box];
         }, []),
-      };
-    },
-    deleteEntrancePlace: (state, action: PayloadAction<{ entrance_id: number; place_id: number }>) => {
+      }),
+    deleteEntrancePlace: (state, action: PayloadAction<{ entrance_id: number; place_id: number }>) =>
       // Mark all boxes as deleted for this entrance place
-      return {
+      ({
         ...state,
         entrancePlaceBoxes: state.entrancePlaceBoxes.reduce((acc: EntrancePlaceBox[], box) => {
           if (box.entrance_id === action.payload.entrance_id && box.place_id === action.payload.place_id) {
             return [...acc, { ...box, isDeleted: true }];
-          } else {
-            return [...acc, box];
           }
+          return [...acc, box];
         }, []),
-      };
-    },
-    revertEntrancePlace: (state, action: PayloadAction<{ entrance_id: number; place_id: number }>) => {
-      return {
-        ...state,
-        entrancePlaceBoxes: state.entrancePlaceBoxes.reduce((acc: EntrancePlaceBox[], box) => {
-          if (box.entrance_id === action.payload.entrance_id && box.place_id === action.payload.place_id) {
-            // Revert this entrance place box
-            if (box.existingBox !== undefined) {
-              // This box existed before, so revert to the existing values
-              // Try to make sure the order number is 1 or higher
-              return [
-                ...acc,
-                {
-                  ...box,
-                  order_number: box.order_number > 0 ? box.order_number : 1,
-                  modifiedBox: box.existingBox,
-                  modifiedPhotoBase64: box.existingPhotoBase64,
-                  isDeleted: false,
-                  invalidValues: [],
-                },
-              ];
-            } else {
-              // This box did not exist before, so remove it
-              return acc;
-            }
-          } else {
-            return [...acc, box];
+      }),
+    revertEntrancePlace: (state, action: PayloadAction<{ entrance_id: number; place_id: number }>) => ({
+      ...state,
+      entrancePlaceBoxes: state.entrancePlaceBoxes.reduce((acc: EntrancePlaceBox[], box) => {
+        if (box.entrance_id === action.payload.entrance_id && box.place_id === action.payload.place_id) {
+          // Revert this entrance place box
+          if (box.existingBox !== undefined) {
+            // This box existed before, so revert to the existing values
+            // Try to make sure the order number is 1 or higher
+            return [
+              ...acc,
+              {
+                ...box,
+                order_number: box.order_number > 0 ? box.order_number : 1,
+                modifiedBox: box.existingBox,
+                modifiedPhotoBase64: box.existingPhotoBase64,
+                isDeleted: false,
+                invalidValues: [],
+              },
+            ];
           }
-        }, []),
-      };
-    },
+          // This box did not exist before, so remove it
+          return acc;
+        }
+        return [...acc, box];
+      }, []),
+    }),
     addInvalidEntrancePlaceBoxValue: (
       state,
       action: PayloadAction<{
@@ -321,22 +290,24 @@ export const additionalInfoSlice = createSlice({
 
       return {
         ...state,
-        entrancePlaceBoxes: state.entrancePlaceBoxes.reduce((acc: EntrancePlaceBox[], box) => {
-          return box.entrance_id === action.payload.entrance_id &&
+        entrancePlaceBoxes: state.entrancePlaceBoxes.reduce(
+          (acc: EntrancePlaceBox[], box) =>
+            box.entrance_id === action.payload.entrance_id &&
             box.place_id === action.payload.place_id &&
             box.order_number === action.payload.order_number &&
             !box.isDeleted
-            ? [
-                ...acc,
-                {
-                  ...box,
-                  invalidValues: [...(box.invalidValues ?? []), validationToAdd].filter(
-                    (v, i, a) => v && a.findIndex((v2) => v2.fieldId === v.fieldId) === i
-                  ),
-                },
-              ]
-            : [...acc, box];
-        }, []),
+              ? [
+                  ...acc,
+                  {
+                    ...box,
+                    invalidValues: [...(box.invalidValues ?? []), validationToAdd].filter(
+                      (v, i, a) => v && a.findIndex((v2) => v2.fieldId === v.fieldId) === i
+                    ),
+                  },
+                ]
+              : [...acc, box],
+          []
+        ),
       };
     },
     removeInvalidEntrancePlaceBoxValue: (
@@ -347,44 +318,35 @@ export const additionalInfoSlice = createSlice({
         order_number: number;
         invalidFieldIdToRemove: string;
       }>
-    ) => {
-      return {
-        ...state,
-        entrancePlaceBoxes: state.entrancePlaceBoxes.reduce((acc: EntrancePlaceBox[], box) => {
-          return box.entrance_id === action.payload.entrance_id &&
-            box.place_id === action.payload.place_id &&
-            box.order_number === action.payload.order_number &&
-            !box.isDeleted
+    ) => ({
+      ...state,
+      entrancePlaceBoxes: state.entrancePlaceBoxes.reduce(
+        (acc: EntrancePlaceBox[], box) =>
+          box.entrance_id === action.payload.entrance_id &&
+          box.place_id === action.payload.place_id &&
+          box.order_number === action.payload.order_number &&
+          !box.isDeleted
             ? [...acc, { ...box, invalidValues: (box.invalidValues ?? []).filter((val) => val.fieldId !== action.payload.invalidFieldIdToRemove) }]
-            : [...acc, box];
-        }, []),
-      };
-    },
-    setQuestionBlockComments: (state, action: PayloadAction<QuestionBlockComment[]>) => {
-      return { ...state, questionBlockComments: action.payload };
-    },
-    setQuestionBlockComment: (state, action: PayloadAction<QuestionBlockComment>) => {
-      return {
-        ...state,
-        questionBlockComments: state.questionBlockComments.reduce(
-          (acc: QuestionBlockComment[], blockComment) => {
-            return blockComment.entrance_id === action.payload.entrance_id && blockComment.question_block_id === action.payload.question_block_id
-              ? acc
-              : [...acc, blockComment];
-          },
-          [action.payload]
-        ),
-      };
-    },
-    setQuestionBlockCommentValid: (state, action: PayloadAction<boolean>) => {
-      return { ...state, questionBlockCommentValid: action.payload };
-    },
-    setQuestionBlockCommentValidationTime: (state, action: PayloadAction<number>) => {
-      return {
-        ...state,
-        questionBlockCommentValidationTime: action.payload,
-      };
-    },
+            : [...acc, box],
+        []
+      ),
+    }),
+    setQuestionBlockComments: (state, action: PayloadAction<QuestionBlockComment[]>) => ({ ...state, questionBlockComments: action.payload }),
+    setQuestionBlockComment: (state, action: PayloadAction<QuestionBlockComment>) => ({
+      ...state,
+      questionBlockComments: state.questionBlockComments.reduce(
+        (acc: QuestionBlockComment[], blockComment) =>
+          blockComment.entrance_id === action.payload.entrance_id && blockComment.question_block_id === action.payload.question_block_id
+            ? acc
+            : [...acc, blockComment],
+        [action.payload]
+      ),
+    }),
+    setQuestionBlockCommentValid: (state, action: PayloadAction<boolean>) => ({ ...state, questionBlockCommentValid: action.payload }),
+    setQuestionBlockCommentValidationTime: (state, action: PayloadAction<number>) => ({
+      ...state,
+      questionBlockCommentValidationTime: action.payload,
+    }),
     editQuestionBlockComment: (
       state,
       action: PayloadAction<{
@@ -393,11 +355,11 @@ export const additionalInfoSlice = createSlice({
         language: string;
         commentText?: string;
       }>
-    ) => {
-      return {
-        ...state,
-        questionBlockComments: state.questionBlockComments.reduce((acc: QuestionBlockComment[], blockComment) => {
-          return blockComment.entrance_id === action.payload.entrance_id && blockComment.question_block_id === action.payload.question_block_id
+    ) => ({
+      ...state,
+      questionBlockComments: state.questionBlockComments.reduce(
+        (acc: QuestionBlockComment[], blockComment) =>
+          blockComment.entrance_id === action.payload.entrance_id && blockComment.question_block_id === action.payload.question_block_id
             ? [
                 ...acc,
                 {
@@ -409,15 +371,15 @@ export const additionalInfoSlice = createSlice({
                   },
                 },
               ]
-            : [...acc, blockComment];
-        }, []),
-      };
-    },
-    removeQuestionBlockComment: (state, action: PayloadAction<{ entrance_id: number; question_block_id: number }>) => {
-      return {
-        ...state,
-        questionBlockComments: state.questionBlockComments.reduce((acc: QuestionBlockComment[], blockComment) => {
-          return blockComment.entrance_id === action.payload.entrance_id && blockComment.question_block_id === action.payload.question_block_id
+            : [...acc, blockComment],
+        []
+      ),
+    }),
+    removeQuestionBlockComment: (state, action: PayloadAction<{ entrance_id: number; question_block_id: number }>) => ({
+      ...state,
+      questionBlockComments: state.questionBlockComments.reduce(
+        (acc: QuestionBlockComment[], blockComment) =>
+          blockComment.entrance_id === action.payload.entrance_id && blockComment.question_block_id === action.payload.question_block_id
             ? [
                 ...acc,
                 {
@@ -426,36 +388,32 @@ export const additionalInfoSlice = createSlice({
                   invalidValues: [],
                 },
               ]
-            : [...acc, blockComment];
-        }, []),
-      };
-    },
-    revertQuestionBlockComment: (state, action: PayloadAction<{ entrance_id: number; question_block_id: number }>) => {
-      return {
-        ...state,
-        questionBlockComments: state.questionBlockComments.reduce((acc: QuestionBlockComment[], blockComment) => {
-          if (blockComment.entrance_id === action.payload.entrance_id && blockComment.question_block_id === action.payload.question_block_id) {
-            // Revert this question block comment
-            if (blockComment.existingComment !== undefined) {
-              // This comment existed before, so revert to the existing values
-              return [
-                ...acc,
-                {
-                  ...blockComment,
-                  modifiedComment: blockComment.existingComment,
-                  invalidValues: [],
-                },
-              ];
-            } else {
-              // This comment did not exist before, so remove it
-              return acc;
-            }
-          } else {
-            return [...acc, blockComment];
+            : [...acc, blockComment],
+        []
+      ),
+    }),
+    revertQuestionBlockComment: (state, action: PayloadAction<{ entrance_id: number; question_block_id: number }>) => ({
+      ...state,
+      questionBlockComments: state.questionBlockComments.reduce((acc: QuestionBlockComment[], blockComment) => {
+        if (blockComment.entrance_id === action.payload.entrance_id && blockComment.question_block_id === action.payload.question_block_id) {
+          // Revert this question block comment
+          if (blockComment.existingComment !== undefined) {
+            // This comment existed before, so revert to the existing values
+            return [
+              ...acc,
+              {
+                ...blockComment,
+                modifiedComment: blockComment.existingComment,
+                invalidValues: [],
+              },
+            ];
           }
-        }, []),
-      };
-    },
+          // This comment did not exist before, so remove it
+          return acc;
+        }
+        return [...acc, blockComment];
+      }, []),
+    }),
     addInvalidQuestionBlockCommentValue: (
       state,
       action: PayloadAction<{
@@ -475,19 +433,21 @@ export const additionalInfoSlice = createSlice({
 
       return {
         ...state,
-        questionBlockComments: state.questionBlockComments.reduce((acc: QuestionBlockComment[], blockComment) => {
-          return blockComment.entrance_id === action.payload.entrance_id && blockComment.question_block_id === action.payload.question_block_id
-            ? [
-                ...acc,
-                {
-                  ...blockComment,
-                  invalidValues: [...(blockComment.invalidValues ?? []), validationToAdd].filter(
-                    (v, i, a) => v && a.findIndex((v2) => v2.fieldId === v.fieldId) === i
-                  ),
-                },
-              ]
-            : [...acc, blockComment];
-        }, []),
+        questionBlockComments: state.questionBlockComments.reduce(
+          (acc: QuestionBlockComment[], blockComment) =>
+            blockComment.entrance_id === action.payload.entrance_id && blockComment.question_block_id === action.payload.question_block_id
+              ? [
+                  ...acc,
+                  {
+                    ...blockComment,
+                    invalidValues: [...(blockComment.invalidValues ?? []), validationToAdd].filter(
+                      (v, i, a) => v && a.findIndex((v2) => v2.fieldId === v.fieldId) === i
+                    ),
+                  },
+                ]
+              : [...acc, blockComment],
+          []
+        ),
       };
     },
     removeInvalidQuestionBlockCommentValue: (
@@ -497,11 +457,11 @@ export const additionalInfoSlice = createSlice({
         question_block_id: number;
         invalidFieldIdToRemove: string;
       }>
-    ) => {
-      return {
-        ...state,
-        questionBlockComments: state.questionBlockComments.reduce((acc: QuestionBlockComment[], blockComment) => {
-          return blockComment.entrance_id === action.payload.entrance_id && blockComment.question_block_id === action.payload.question_block_id
+    ) => ({
+      ...state,
+      questionBlockComments: state.questionBlockComments.reduce(
+        (acc: QuestionBlockComment[], blockComment) =>
+          blockComment.entrance_id === action.payload.entrance_id && blockComment.question_block_id === action.payload.question_block_id
             ? [
                 ...acc,
                 {
@@ -509,10 +469,10 @@ export const additionalInfoSlice = createSlice({
                   invalidValues: (blockComment.invalidValues ?? []).filter((val) => val.fieldId !== action.payload.invalidFieldIdToRemove),
                 },
               ]
-            : [...acc, blockComment];
-        }, []),
-      };
-    },
+            : [...acc, blockComment],
+        []
+      ),
+    }),
   },
   extraReducers: (builder) => {
     builder.addCase(PURGE, () => ({

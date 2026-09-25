@@ -9,13 +9,13 @@ import { convertCoordinates, formatAddress, isLocationValid } from "../utils/uti
 import styles from "./SummaryLocationPicture.module.scss";
 
 // usage: component for entrance location and picture, used in details page
-const SummaryLocationPicture = ({
+function SummaryLocationPicture({
   entranceKey,
   entranceData,
   servicepointData,
   isMainEntrance,
   isMapDisplayed,
-}: SummaryLocationPictureProps): JSX.Element => {
+}: SummaryLocationPictureProps): JSX.Element {
   const i18n = useI18n();
   const curLocale = i18n.locale();
 
@@ -44,7 +44,7 @@ const SummaryLocationPicture = ({
 
           <div className={styles.mappicturecontainer}>
             <div className={styles.label}>
-              <div>{locationLabel}</div>
+              <div>{locationLabel.toString()}</div>
               <SkipMapButton idToSkipTo={`#picturecontainer_${entranceKey}`} />
             </div>
 
@@ -90,6 +90,6 @@ const SummaryLocationPicture = ({
   ) : (
     <></>
   );
-};
+}
 
 export default SummaryLocationPicture;

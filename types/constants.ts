@@ -1,6 +1,7 @@
 // place for general constrants e.g const and enums
 // all 'static text' should be here
 
+export const MAIN_URL = "https://www.hel.fi";
 export const TERMS_URL = ""; // coming later
 export const ACCESSIBILITY_URL = "https://kaupunkialustana.hel.fi/tpr-perhe/esteettomyysohje/esteettomyyssovelluksen-saavutettavuusseloste/";
 export const CREATIVECOMMONS_URL = "creativecommons.org/licences/by/4.0";

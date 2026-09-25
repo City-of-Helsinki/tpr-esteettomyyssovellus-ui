@@ -48,7 +48,7 @@ import { convertCoordinates, filterByLanguage, formatAddress, getFinnishDate, ge
 import styles from "./details.module.scss";
 
 // usage: the details / landing page of servicepoint
-const Details = ({
+function Details({
   servicepointData,
   entranceSentenceGroupData,
   accessibilityData,
@@ -62,7 +62,7 @@ const Details = ({
   draftMainEntranceId,
   isMainEntrancePublished,
   isChecksumValid,
-}: DetailsProps): ReactElement => {
+}: DetailsProps): ReactElement {
   const i18n = useI18n();
   const curLocale: string = i18n.locale();
   const dispatch = useAppDispatch();
@@ -110,12 +110,13 @@ const Details = ({
 
   // Filter by language
   // Make sure that the main entrance is listed before the side entrances.
-  const filteredAccessibilityData: AccessibilityData = Object.keys(accessibilityData).reduce((acc, key) => {
-    return {
+  const filteredAccessibilityData: AccessibilityData = Object.keys(accessibilityData).reduce(
+    (acc, key) => ({
       ...acc,
       [key]: filterByLanguage(accessibilityData[key], i18n.locale()),
-    };
-  }, {});
+    }),
+    {}
+  );
 
   const curLocaleId: number = LanguageLocales[i18n.locale() as keyof typeof LanguageLocales];
   const filteredPlaces = accessibilityPlaceData.filter((place) => place.language_id === curLocaleId);
@@ -179,9 +180,7 @@ const Details = ({
 
             <div>
               {entranceSentenceGroupData
-                .sort((a: BackendEntranceSentenceGroup, b: BackendEntranceSentenceGroup) => {
-                  return (a.order_text ?? "").localeCompare(b.order_text ?? "");
-                })
+                .sort((a: BackendEntranceSentenceGroup, b: BackendEntranceSentenceGroup) => (a.order_text ?? "").localeCompare(b.order_text ?? ""))
                 .map((entranceSentenceGroup) => {
                   const { entrance_id, sentence_group_id, display_entrance_with_map } = entranceSentenceGroup;
                   const entranceKey = String(entrance_id);
@@ -250,7 +249,7 @@ const Details = ({
       )}
     </Layout>
   );
-};
+}
 
 // Server-side rendering
 export const getServerSideProps: GetServerSideProps = async ({ params, query, locales }) => {
@@ -338,12 +337,13 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, lo
         (resultDetails) => resultDetails.entranceResult.is_main_entrance === "Y" && resultDetails.draftEntrance
       );
 
-      entranceData = entranceResultDetails.reduce((acc, resultDetails) => {
-        return {
+      entranceData = entranceResultDetails.reduce(
+        (acc, resultDetails) => ({
           ...acc,
           ...(resultDetails.entrance && { [resultDetails.entrance.entrance_id]: resultDetails.entrance }),
-        };
-      }, {});
+        }),
+        {}
+      );
 
       // Check if the main entrance exists and is published
       // isMainEntrancePublished = !!mainEntranceDetails?.entrance && mainEntranceDetails?.entrance.form_submitted === "Y";
@@ -367,12 +367,13 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, lo
           return { entranceResult, sentenceData };
         })
       );
-      accessibilityData = entranceResultSentences.reduce((acc, resultSentence) => {
-        return {
+      accessibilityData = entranceResultSentences.reduce(
+        (acc, resultSentence) => ({
           ...acc,
           [resultSentence.entranceResult.entrance_id]: resultSentence.sentenceData,
-        };
-      }, {});
+        }),
+        {}
+      );
 
       // Get the accessibility place data for use in the accessibility summaries for entrance place names
       const accessibilityPlaceResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_PLACES}?format=json`, {

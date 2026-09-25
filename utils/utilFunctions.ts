@@ -58,19 +58,15 @@ export const getFinnishDate = (jsonTimeStamp: Date): string => {
 export const filterByLanguage = (dict: BackendEntranceSentence[], locale: string): BackendEntranceSentence[] => {
   const localeId: number = LanguageLocales[locale as keyof typeof LanguageLocales];
 
-  return dict.filter((entry) => {
-    return entry.language_id === localeId;
-  });
+  return dict.filter((entry) => entry.language_id === localeId);
 };
 
-export const formatAddress = (streetName?: string, streetNumber?: string, city?: string) => {
-  return `${streetName ?? ""} ${streetNumber ?? ""}${streetName || streetNumber ? ", " : ""}${city ?? ""}`;
-};
+export const formatAddress = (streetName?: string, streetNumber?: string, city?: string) =>
+  `${streetName ?? ""} ${streetNumber ?? ""}${streetName || streetNumber ? ", " : ""}${city ?? ""}`;
 
 // Helper function
-export const isLocationValid = (coordinates: [number, number] | number[]): boolean => {
-  return coordinates && coordinates.length === 2 && coordinates[0] > 0 && coordinates[1] > 0;
-};
+export const isLocationValid = (coordinates: [number, number] | number[]): boolean =>
+  coordinates && coordinates.length === 2 && coordinates[0] > 0 && coordinates[1] > 0;
 
 // define CRS's here, can be made as a list, need to add named crs here to be able to use it's name in conversion
 proj4.defs("EPSG:3067", "+title=EPSG:3067 +proj=utm +zone=35 +ellps=GRS80 +datum=ETRS89 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs");
@@ -102,7 +98,7 @@ export const getClientIp = async (): Promise<string> =>
 
 export const splitTextUrls = (text: string) => {
   // Try to split the text into urls and other text, so that the urls can be converted into clickable links
-  const regex = /((?:http|https)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(?:\/\S*)?)/g;
+  const regex = /((?:http|https):\/\/[a-zA-Z0-9\-.]+\.[a-zA-Z]{2,3}(?:\/\S*)?)/g;
   return text.split(regex).filter((t) => t.length > 0);
 };
 
@@ -153,11 +149,13 @@ const getEntrancePlaceIdsToSave = async (logId: number, entrancePlaceBoxes: Entr
         // The entrance place has something to be saved
         return placeId;
       }
+
+      return undefined;
     })
   );
 
   // Remove any undefined values from the array
-  return placeIdsToSave.filter((placeId) => placeId !== undefined) as number[];
+  return placeIdsToSave.filter((placeId) => placeId !== undefined);
 };
 
 const getEntrancePlaceAnswerIds = async (logId: number, entrancePlaceIdsToSave: number[], router: NextRouter) => {
@@ -181,9 +179,7 @@ const getEntrancePlaceAnswerIds = async (logId: number, entrancePlaceIdsToSave: 
   );
 
   // Convert the array to an object for easier lookups
-  return placeAnswerIdArray.reduce((acc, placeAnswerObj) => {
-    return { ...acc, ...placeAnswerObj };
-  }, {});
+  return placeAnswerIdArray.reduce((acc, placeAnswerObj) => ({ ...acc, ...placeAnswerObj }), {});
 };
 
 const uploadPictureToAzure = async (servicePointId: number, photoBase64: string, router: NextRouter) => {
@@ -212,6 +208,7 @@ const uploadPictureToAzure = async (servicePointId: number, photoBase64: string,
     return imageJson.url;
   } catch {
     console.error("Image upload error:", imageResult);
+    return undefined;
   }
 };
 
@@ -231,7 +228,7 @@ const saveEntrancePlaceBox = async (entrancePlaceBox: EntrancePlaceBox, placeAns
         ...(modifiedBox.loc_northing !== undefined && { loc_northing: modifiedBox.loc_northing }),
         ...(photoUrl && { photo_url: photoUrl }),
         ...(photoUrl && { photo_source_text: modifiedBox.photo_source_text ?? "" }),
-        order_number: order_number,
+        order_number,
       }),
     };
 
@@ -372,7 +369,7 @@ const saveEntranceLocationPhoto = async (logId: number, servicePointId: number, 
       headers: { "Content-Type": "application/json", Authorization: getTokenHash() },
       body: JSON.stringify({
         log_id: logId,
-        question_block_id: question_block_id,
+        question_block_id,
         ...(modifiedAnswer.loc_easting !== undefined && { loc_easting: modifiedAnswer.loc_easting }),
         ...(modifiedAnswer.loc_northing !== undefined && { loc_northing: modifiedAnswer.loc_northing }),
         ...(photoUrl && { photo_url: photoUrl }),
@@ -433,7 +430,7 @@ const saveQuestionBlockComments = async (
               API_SAVE_QUESTION_BLOCK_COMMENT,
               JSON.stringify({
                 log_id: logId,
-                question_block_id: question_block_id,
+                question_block_id,
                 language_id: LanguageLocales[lang as keyof typeof LanguageLocales],
                 comment: commentText,
               }),

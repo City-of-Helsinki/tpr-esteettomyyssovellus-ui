@@ -5,7 +5,7 @@ import styles from "./Map.module.scss";
 
 // usage: container and middle-component for leaflet map (mapwrapper)
 // notes: dynamic import of MapWrapper is important for leaflet functionality
-const Map = ({ initZoom, curLocation, setLocation, draggableMarker, makeStatic = false }: MapProps): JSX.Element => {
+function Map({ initZoom, curLocation, setLocation, draggableMarker, makeStatic = false }: MapProps): JSX.Element {
   const MapWrapper = dynamic(() => import("./MapWrapper"), { ssr: false });
 
   // The map should not be visible to screen readers, so use aria-hidden here
@@ -20,6 +20,6 @@ const Map = ({ initZoom, curLocation, setLocation, draggableMarker, makeStatic =
       />
     </div>
   );
-};
+}
 
 export default Map;

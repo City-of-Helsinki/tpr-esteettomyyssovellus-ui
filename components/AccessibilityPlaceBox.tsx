@@ -1,6 +1,6 @@
 import React from "react";
 import { useI18n } from "next-localization";
-import { Button, IconArrowDown, IconArrowUp, IconCross } from "hds-react";
+import { Button, ButtonVariant, IconArrowDown, IconArrowUp, IconCross } from "hds-react";
 import SkipMapButton from "./common/SkipMapButton";
 import { useAppDispatch } from "../state/hooks";
 import { changeEntrancePlaceBoxOrder, deleteEntrancePlaceBox } from "../state/reducers/additionalInfoSlice";
@@ -10,7 +10,7 @@ import AccessibilityPlacePicture from "./AccessibilityPlacePicture";
 import styles from "./AccessibilityPlaceBox.module.scss";
 
 // usage: grouping one set of picture and location in accessibility place form
-const AccessibilityPlaceBox = ({ entrancePlaceBox, entrancePlaceName, canAddLocation, isFirst, isLast }: AccessibilityPlaceBoxProps): JSX.Element => {
+function AccessibilityPlaceBox({ entrancePlaceBox, entrancePlaceName, canAddLocation, isFirst, isLast }: AccessibilityPlaceBoxProps): JSX.Element {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
 
@@ -48,31 +48,28 @@ const AccessibilityPlaceBox = ({ entrancePlaceBox, entrancePlaceName, canAddLoca
         <div className={`${styles.headingsection} ${styles.rightsection}`}>
           <div>{i18n.t("additionalInfo.order")}</div>
           <Button
-            variant="supplementary"
-            iconLeft={<IconArrowUp aria-hidden />}
+            variant={ButtonVariant.Supplementary}
+            iconStart={<IconArrowUp aria-hidden />}
             aria-label={i18n.t("additionalInfo.orderButtons.moveUp")}
             onClick={() => changeBoxOrder(-1)}
             disabled={isFirst}
-          >
-            {""}
-          </Button>
+            children=""
+          />
           <Button
-            variant="supplementary"
-            iconLeft={<IconArrowDown aria-hidden />}
+            variant={ButtonVariant.Supplementary}
+            iconStart={<IconArrowDown aria-hidden />}
             aria-label={i18n.t("additionalInfo.orderButtons.moveDown")}
             onClick={() => changeBoxOrder(1)}
             disabled={isLast}
-          >
-            {""}
-          </Button>
+            children=""
+          />
           <Button
-            variant="supplementary"
-            iconLeft={<IconCross aria-hidden />}
+            variant={ButtonVariant.Supplementary}
+            iconStart={<IconCross aria-hidden />}
             aria-label={i18n.t("additionalInfo.orderButtons.remove")}
             onClick={deleteBox}
-          >
-            {""}
-          </Button>
+            children=""
+          />
         </div>
       </div>
 
@@ -92,6 +89,6 @@ const AccessibilityPlaceBox = ({ entrancePlaceBox, entrancePlaceName, canAddLoca
       </div>
     </div>
   );
-};
+}
 
 export default AccessibilityPlaceBox;
