@@ -26,13 +26,13 @@ import { getMaxLogId, validateServicepointHash } from "../../../utils/serverside
 import styles from "./entranceLocationPhoto.module.scss";
 
 // usage: the location and/or photo of an entrance
-const EntranceBlockLocationPhoto = ({
+function EntranceBlockLocationPhoto({
   servicepointData,
   entranceData,
   formGuideData,
   formId,
   isChecksumValid,
-}: EntranceLocationPhotoProps): ReactElement => {
+}: EntranceLocationPhotoProps): ReactElement {
   const i18n = useI18n();
   const curLocale: string = i18n.locale();
   const isLoading = useLoading();
@@ -151,7 +151,7 @@ const EntranceBlockLocationPhoto = ({
       )}
     </Layout>
   );
-};
+}
 
 // Server-side rendering
 export const getServerSideProps: GetServerSideProps = async ({ params, query, locales }) => {
@@ -186,7 +186,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, lo
 
       const mainEntrance = servicepointEntranceResults?.results?.find((result) => result.is_main_entrance === "Y");
       let isMainEntrancePublished = false;
-      if (!!mainEntrance) {
+      if (mainEntrance) {
         // The main entrance exists, but check if it's published
         const entranceDetailResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE}?entrance_id=${mainEntrance.entrance_id}&format=json`, {
           headers: new Headers({ Authorization: getTokenHash() }),

@@ -2,14 +2,15 @@ import React, { ReactElement } from "react";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import { useI18n } from "next-localization";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@mui/styles";
+import { Theme } from "@mui/material/styles";
 import i18nLoader from "../utils/i18n";
 import Layout from "../components/common/Layout";
 import styles from "./index.module.scss";
 import { Hero, HeroShallow } from "../components/common/Hero";
 import homepagephoto from "../public/homepagephoto.png";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles<Theme, { heroShallow: boolean }>((theme) => ({
   navi: {
     zIndex: 10000,
     fontFamily: "HelsinkiGrotesk",
@@ -27,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Main = (): ReactElement => {
+function Main(): ReactElement {
   const i18n = useI18n();
 
   const heroTitle = i18n.t("common.header.information");
@@ -51,7 +52,7 @@ const Main = (): ReactElement => {
       </main>
     </Layout>
   );
-};
+}
 
 // Server-side rendering
 export const getServerSideProps: GetServerSideProps = async ({ locales }) => {

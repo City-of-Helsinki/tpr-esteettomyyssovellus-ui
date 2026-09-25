@@ -1,6 +1,7 @@
 // place for custom typescript interfaces/"models"
 
 import { Dispatch, SetStateAction } from "react";
+import { ButtonVariant } from "hds-react";
 import {
   BackendCopyableEntrance,
   BackendEntrance,
@@ -20,17 +21,11 @@ import {
   BackendServicepoint,
 } from "./backendModels";
 
-export interface KeyValueNumber {
-  [key: number]: number;
-}
+export type KeyValueNumber = Record<number, number>;
 
-export interface KeyValueString {
-  [key: number]: string;
-}
+export type KeyValueString = Record<number, string>;
 
-export interface PathTreeItem {
-  [text: string]: string;
-}
+export type PathTreeItem = Record<string, string>;
 
 export interface QuestionContainerProps {
   question: BackendQuestion;
@@ -84,9 +79,9 @@ export interface PageHelpProps {
 
 export interface QuestionButtonProps {
   children: string;
-  variant: "primary" | "secondary" | "success" | "danger";
-  iconLeft?: JSX.Element | undefined;
-  iconRight?: JSX.Element | undefined;
+  variant: ButtonVariant.Primary | ButtonVariant.Secondary | ButtonVariant.Success | ButtonVariant.Danger;
+  iconStart?: JSX.Element | undefined;
+  iconEnd?: JSX.Element | undefined;
   disabled?: boolean;
   onClickHandler?: () => void;
   onChange?: () => void;
@@ -417,25 +412,15 @@ export interface QuestionBlockImportProps {
   copyableEntrances: BackendCopyableEntrance[];
 }
 
-export interface EntranceData {
-  [key: string]: BackendEntrance;
-}
+export type EntranceData = Record<string, BackendEntrance>;
 
-export interface AccessibilityData {
-  [key: string]: BackendEntranceSentence[];
-}
+export type AccessibilityData = Record<string, BackendEntranceSentence[]>;
 
-export interface EntranceChoiceData {
-  [key: string]: BackendEntranceChoice[];
-}
+export type EntranceChoiceData = Record<string, BackendEntranceChoice[]>;
 
-export interface EntrancePlaceData {
-  [key: string]: BackendEntrancePlace[];
-}
+export type EntrancePlaceData = Record<string, BackendEntrancePlace[]>;
 
-export interface GroupedEntrancePlaceData {
-  [key: string]: EntrancePlaceData;
-}
+export type GroupedEntrancePlaceData = Record<string, EntrancePlaceData>;
 
 export interface DetailsProps {
   servicepointData: BackendServicepoint;

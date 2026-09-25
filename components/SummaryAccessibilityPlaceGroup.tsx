@@ -7,12 +7,12 @@ import { GroupedEntrancePlaceData, SummaryAccessibilityPlaceGroupProps } from ".
 import styles from "./SummaryAccessibilityPlaceGroup.module.scss";
 
 // usage: component for group of accessibility place location and picture, used in details page
-const SummaryAccessibilityPlaceGroup = ({
+function SummaryAccessibilityPlaceGroup({
   entranceKey,
   sentenceGroupKey,
   accessibilityPlaces,
   entrancePlaceData,
-}: SummaryAccessibilityPlaceGroupProps): JSX.Element => {
+}: SummaryAccessibilityPlaceGroupProps): JSX.Element {
   const i18n = useI18n();
 
   const getEntrancePlaceName = (entrancePlaceId: string) => {
@@ -45,9 +45,8 @@ const SummaryAccessibilityPlaceGroup = ({
                 acc[sentence_group_id] && acc[sentence_group_id][place_id] ? [...acc[sentence_group_id][place_id], entrancePlace] : [entrancePlace],
             },
           };
-        } else {
-          return acc;
         }
+        return acc;
       }, {});
     }
   };
@@ -77,6 +76,6 @@ const SummaryAccessibilityPlaceGroup = ({
       )}
     </div>
   );
-};
+}
 
 export default SummaryAccessibilityPlaceGroup;

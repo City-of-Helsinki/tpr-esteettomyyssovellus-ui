@@ -1,5 +1,6 @@
 import React, { ChangeEvent, useState } from "react";
 import {
+  ButtonVariant,
   Checkbox,
   FileInput,
   IconCross,
@@ -7,6 +8,7 @@ import {
   IconMinus,
   IconPlus,
   Link as HdsLink,
+  LinkSize,
   SelectionGroup,
   TextArea,
   TextInput,
@@ -24,7 +26,7 @@ import styles from "./AccessibilityPlacePicture.module.scss";
 
 // usage: accessibility place page picture components
 // notes: this component has both "upload" and "link/url" image components for they are such similar
-const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictureProps): JSX.Element => {
+function AccessibilityPlacePicture({ entrancePlaceBox }: AccessibilityPlacePictureProps): JSX.Element {
   const i18n = useI18n();
   const curLocale: string = i18n.locale();
   const dispatch = useAppDispatch();
@@ -76,7 +78,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
   const handleChangePicture = () => {
     updatePlaceBox({
       ...entrancePlaceBox,
-      modifiedBox: { ...((modifiedBox || {}) as BackendEntrancePlace), photo_url: undefined },
+      modifiedBox: { ...(modifiedBox || {}), photo_url: undefined },
       modifiedPhotoBase64: undefined,
     });
   };
@@ -102,7 +104,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
     updatePlaceBox({
       ...entrancePlaceBox,
       modifiedBox: {
-        ...((modifiedBox || {}) as BackendEntrancePlace),
+        ...(modifiedBox || {}),
         photo_url: undefined,
         photo_text_fi: undefined,
         photo_text_sv: undefined,
@@ -129,7 +131,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
 
           updatePlaceBox({
             ...entrancePlaceBox,
-            modifiedBox: { ...((modifiedBox || {}) as BackendEntrancePlace), photo_url: undefined },
+            modifiedBox: { ...(modifiedBox || {}), photo_url: undefined },
             modifiedPhotoBase64: base64,
             termsAccepted: false,
           });
@@ -152,7 +154,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
     if (isImage) {
       updatePlaceBox({
         ...entrancePlaceBox,
-        modifiedBox: { ...((modifiedBox || {}) as BackendEntrancePlace), photo_url: linkText },
+        modifiedBox: { ...(modifiedBox || {}), photo_url: linkText },
         modifiedPhotoBase64: undefined,
         termsAccepted: false,
       });
@@ -177,7 +179,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
     */
     updatePlaceBox({
       ...entrancePlaceBox,
-      modifiedBox: { ...((modifiedBox || {}) as BackendEntrancePlace), [`photo_text_${language}`]: altText },
+      modifiedBox: { ...(modifiedBox || {}), [`photo_text_${language}`]: altText },
     });
 
     if (language === "fi") {
@@ -212,7 +214,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
 
     updatePlaceBox({
       ...entrancePlaceBox,
-      modifiedBox: { ...((modifiedBox || {}) as BackendEntrancePlace), photo_source_text: source },
+      modifiedBox: { ...(modifiedBox || {}), photo_source_text: source },
     });
 
     // remove or add mandatory source validation to state
@@ -246,7 +248,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
             <div className={styles.pictureurl}>
               <HdsLink
                 href={photo_url}
-                size="M"
+                size={LinkSize.Medium}
                 openInNewTab
                 openInNewTabAriaLabel={i18n.t("common.opensInANewTab")}
                 external
@@ -278,7 +280,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
 
         <div className={styles.inputbuttons}>
           {(modifiedPhotoBase64 || photo_url) && (
-            <QuestionButton variant="secondary" onClickHandler={handleChangePicture}>
+            <QuestionButton variant={ButtonVariant.Secondary} onClickHandler={handleChangePicture}>
               {i18n.t("additionalInfo.changePicture")}
             </QuestionButton>
           )}
@@ -298,7 +300,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
               </div>
 
               <div className={styles.linkinput}>
-                <QuestionButton variant="secondary" iconRight={<IconLink aria-hidden />} onClickHandler={() => handleAddImageLink()}>
+                <QuestionButton variant={ButtonVariant.Secondary} iconEnd={<IconLink aria-hidden />} onClickHandler={() => handleAddImageLink()}>
                   {i18n.t("additionalInfo.addPictureLink")}
                 </QuestionButton>
               </div>
@@ -307,7 +309,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
 
           {linkInput && (
             <QuestionButton
-              variant="secondary"
+              variant={ButtonVariant.Secondary}
               onClickHandler={() =>
                 handleConfirmImageLink(
                   `chooseimg-${currentId}`,
@@ -321,7 +323,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
           )}
 
           {(modifiedPhotoBase64 || photo_url || linkInput) && (
-            <QuestionButton variant="secondary" iconRight={<IconCross aria-hidden />} onClickHandler={() => handleOnDelete()}>
+            <QuestionButton variant={ButtonVariant.Secondary} iconEnd={<IconCross aria-hidden />} onClickHandler={() => handleOnDelete()}>
               {i18n.t("additionalInfo.cancelPicture")}
             </QuestionButton>
           )}
@@ -393,7 +395,7 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
                     {`${i18n.t("additionalInfo.sharePictureLicenseText")} `}
                     <HdsLink
                       href="https://creativecommons.org/licenses/by/4.0/"
-                      size="M"
+                      size={LinkSize.Medium}
                       openInNewTab
                       openInNewTabAriaLabel={i18n.t("common.opensInANewTab")}
                       external
@@ -433,6 +435,6 @@ const AccessibilityPlacePicture = ({ entrancePlaceBox }: AccessibilityPlacePictu
       )}
     </div>
   );
-};
+}
 
 export default AccessibilityPlacePicture;

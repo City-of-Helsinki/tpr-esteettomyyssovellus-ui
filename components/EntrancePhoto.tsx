@@ -1,5 +1,6 @@
 import React, { ChangeEvent, useState } from "react";
 import {
+  ButtonVariant,
   Checkbox,
   FileInput,
   IconCross,
@@ -7,6 +8,7 @@ import {
   IconMinus,
   IconPlus,
   Link as HdsLink,
+  LinkSize,
   SelectionGroup,
   TextArea,
   TextInput,
@@ -28,7 +30,7 @@ import styles from "./EntrancePhoto.module.scss";
 
 // usage: entrance location photo page picture components
 // notes: this component has both "upload" and "link/url" image components for they are such similar
-const EntrancePhoto = ({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Element => {
+function EntrancePhoto({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Element {
   const i18n = useI18n();
   const curLocale: string = i18n.locale();
   const dispatch = useAppDispatch();
@@ -72,7 +74,7 @@ const EntrancePhoto = ({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
   const handleChangePicture = () => {
     updateLocationPhoto({
       ...entranceLocationPhoto,
-      modifiedAnswer: { ...((modifiedAnswer || {}) as BackendEntranceAnswer), photo_url: undefined },
+      modifiedAnswer: { ...(modifiedAnswer || {}), photo_url: undefined },
       modifiedPhotoBase64: undefined,
     });
   };
@@ -98,7 +100,7 @@ const EntrancePhoto = ({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
     updateLocationPhoto({
       ...entranceLocationPhoto,
       modifiedAnswer: {
-        ...((modifiedAnswer || {}) as BackendEntranceAnswer),
+        ...(modifiedAnswer || {}),
         photo_url: undefined,
         photo_text_fi: undefined,
         photo_text_sv: undefined,
@@ -125,7 +127,7 @@ const EntrancePhoto = ({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
 
           updateLocationPhoto({
             ...entranceLocationPhoto,
-            modifiedAnswer: { ...((modifiedAnswer || {}) as BackendEntranceAnswer), photo_url: undefined },
+            modifiedAnswer: { ...(modifiedAnswer || {}), photo_url: undefined },
             modifiedPhotoBase64: base64,
             termsAccepted: false,
           });
@@ -148,7 +150,7 @@ const EntrancePhoto = ({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
     if (isImage) {
       updateLocationPhoto({
         ...entranceLocationPhoto,
-        modifiedAnswer: { ...((modifiedAnswer || {}) as BackendEntranceAnswer), photo_url: linkText },
+        modifiedAnswer: { ...(modifiedAnswer || {}), photo_url: linkText },
         modifiedPhotoBase64: undefined,
         termsAccepted: false,
       });
@@ -173,7 +175,7 @@ const EntrancePhoto = ({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
     */
     updateLocationPhoto({
       ...entranceLocationPhoto,
-      modifiedAnswer: { ...((modifiedAnswer || {}) as BackendEntranceAnswer), [`photo_text_${language}`]: altText },
+      modifiedAnswer: { ...(modifiedAnswer || {}), [`photo_text_${language}`]: altText },
     });
 
     if (language === "fi") {
@@ -208,7 +210,7 @@ const EntrancePhoto = ({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
 
     updateLocationPhoto({
       ...entranceLocationPhoto,
-      modifiedAnswer: { ...((modifiedAnswer || {}) as BackendEntranceAnswer), photo_source_text: source },
+      modifiedAnswer: { ...(modifiedAnswer || {}), photo_source_text: source },
     });
 
     // remove or add mandatory source validation to state
@@ -242,7 +244,7 @@ const EntrancePhoto = ({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
             <div className={styles.pictureurl}>
               <HdsLink
                 href={photo_url}
-                size="M"
+                size={LinkSize.Medium}
                 openInNewTab
                 openInNewTabAriaLabel={i18n.t("common.opensInANewTab")}
                 external
@@ -260,7 +262,7 @@ const EntrancePhoto = ({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
         {linkInput && (
           <div className={styles.inputfield}>
             <TextInput
-              id={"chooseimg"}
+              id="chooseimg"
               label={onlyLink ? i18n.t("additionalInfo.pictureInputLink") : i18n.t("additionalInfo.pictureInput")}
               placeholder={photo_url ?? ""}
               disabled={!onlyLink}
@@ -274,7 +276,7 @@ const EntrancePhoto = ({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
 
         <div className={styles.inputbuttons}>
           {(modifiedPhotoBase64 || photo_url) && (
-            <QuestionButton variant="secondary" onClickHandler={handleChangePicture}>
+            <QuestionButton variant={ButtonVariant.Secondary} onClickHandler={handleChangePicture}>
               {i18n.t("additionalInfo.changePicture")}
             </QuestionButton>
           )}
@@ -283,7 +285,7 @@ const EntrancePhoto = ({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
             <>
               <div className={styles.fileinput}>
                 <FileInput
-                  id={`fileinput`}
+                  id="fileinput"
                   language={curLocale as "fi" | "sv" | "en"}
                   label=""
                   buttonLabel={i18n.t("additionalInfo.chooseFromDevice")}
@@ -294,7 +296,7 @@ const EntrancePhoto = ({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
               </div>
 
               <div className={styles.linkinput}>
-                <QuestionButton variant="secondary" iconRight={<IconLink aria-hidden />} onClickHandler={() => handleAddImageLink()}>
+                <QuestionButton variant={ButtonVariant.Secondary} iconEnd={<IconLink aria-hidden />} onClickHandler={() => handleAddImageLink()}>
                   {i18n.t("additionalInfo.addPictureLink")}
                 </QuestionButton>
               </div>
@@ -303,7 +305,7 @@ const EntrancePhoto = ({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
 
           {linkInput && (
             <QuestionButton
-              variant="secondary"
+              variant={ButtonVariant.Secondary}
               onClickHandler={() =>
                 handleConfirmImageLink("chooseimg", onlyLink ? i18n.t("additionalInfo.pictureInputLink") : i18n.t("additionalInfo.pictureInput"))
               }
@@ -314,7 +316,7 @@ const EntrancePhoto = ({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
           )}
 
           {(modifiedPhotoBase64 || photo_url || linkInput) && (
-            <QuestionButton variant="secondary" iconRight={<IconCross aria-hidden />} onClickHandler={() => handleOnDelete()}>
+            <QuestionButton variant={ButtonVariant.Secondary} iconEnd={<IconCross aria-hidden />} onClickHandler={() => handleOnDelete()}>
               {i18n.t("additionalInfo.cancelPicture")}
             </QuestionButton>
           )}
@@ -325,7 +327,7 @@ const EntrancePhoto = ({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
         <div className={styles.lowercontentcontainer}>
           <div className={styles.altcontainer}>
             <TextArea
-              id={"text-fin"}
+              id="text-fin"
               label={i18n.t("additionalInfo.pictureLabel")}
               helperText={i18n.t("additionalInfo.pictureHelperText")}
               required
@@ -347,7 +349,7 @@ const EntrancePhoto = ({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
                 textOnBottom
               >
                 <TextArea
-                  id={"text-sv"}
+                  id="text-sv"
                   label={i18n.t("additionalInfo.pictureLabelSwe")}
                   helperText={i18n.t("additionalInfo.pictureHelperTextSwe")}
                   onChange={(evt: ChangeEvent<HTMLTextAreaElement>) => handleAddAltText(evt, "sv", i18n.t("additionalInfo.pictureLabelSwe"))}
@@ -365,7 +367,7 @@ const EntrancePhoto = ({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
                 textOnBottom
               >
                 <TextArea
-                  id={"text-eng"}
+                  id="text-eng"
                   label={i18n.t("additionalInfo.pictureLabelEng")}
                   helperText={i18n.t("additionalInfo.pictureHelperTextEng")}
                   onChange={(evt: ChangeEvent<HTMLTextAreaElement>) => handleAddAltText(evt, "en", i18n.t("additionalInfo.pictureLabelEng"))}
@@ -378,13 +380,13 @@ const EntrancePhoto = ({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
           <div className={styles.picturetermscontainer}>
             <SelectionGroup label={i18n.t("additionalInfo.sharePictureLicenseLabel")} required>
               <Checkbox
-                id={"picture-license"}
+                id="picture-license"
                 label={
                   <span>
                     {`${i18n.t("additionalInfo.sharePictureLicenseText")} `}
                     <HdsLink
                       href="https://creativecommons.org/licenses/by/4.0/"
-                      size="M"
+                      size={LinkSize.Medium}
                       openInNewTab
                       openInNewTabAriaLabel={i18n.t("common.opensInANewTab")}
                       external
@@ -406,7 +408,7 @@ const EntrancePhoto = ({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
 
           <div className={styles.picturesourcecontainer}>
             <TextInput
-              id={"tooltip-source"}
+              id="tooltip-source"
               tooltipButtonLabel={i18n.t("additionalInfo.generalTooltipLabel")}
               tooltipLabel={i18n.t("additionalInfo.generalTooltipLabel")}
               tooltipText={i18n.t("additionalInfo.sourceTooltipText")}
@@ -422,6 +424,6 @@ const EntrancePhoto = ({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
       )}
     </div>
   );
-};
+}
 
 export default EntrancePhoto;

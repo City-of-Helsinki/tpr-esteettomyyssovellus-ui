@@ -36,7 +36,7 @@ import { getMaxLogId, validateServicepointHash } from "../../../../../utils/serv
 import styles from "./accessibilityPlace.module.scss";
 
 // usage: the accessibility place of a question
-const AccessibilityPlace = ({
+function AccessibilityPlace({
   servicepointData,
   entranceData,
   accessibilityPlaceData,
@@ -45,7 +45,7 @@ const AccessibilityPlace = ({
   formGuideData,
   formId,
   isChecksumValid,
-}: AccessibilityPlaceProps): ReactElement => {
+}: AccessibilityPlaceProps): ReactElement {
   const i18n = useI18n();
   const curLocale: string = i18n.locale();
   const isLoading = useLoading();
@@ -92,16 +92,12 @@ const AccessibilityPlace = ({
   // Show the boxes for this entrance place that have not been deleted
   const filteredEntrancePlaceBoxes = curEntrancePlaceBoxes
     ? curEntrancePlaceBoxes
-        .filter((placeBox) => {
-          return placeBox.place_id === filteredPlaceData.place_id && !placeBox.isDeleted;
-        })
+        .filter((placeBox) => placeBox.place_id === filteredPlaceData.place_id && !placeBox.isDeleted)
         .sort((a, b) => (a.order_number ?? 1) - (b.order_number ?? 1))
     : [];
   const filteredEntrancePlaceInvalidValues = filteredEntrancePlaceBoxes.flatMap((box) => box.invalidValues);
   const filteredDeletedEntrancePlaceBoxes = curEntrancePlaceBoxes
-    ? curEntrancePlaceBoxes.filter((placeBox) => {
-        return placeBox.place_id === filteredPlaceData.place_id && placeBox.isDeleted;
-      })
+    ? curEntrancePlaceBoxes.filter((placeBox) => placeBox.place_id === filteredPlaceData.place_id && placeBox.isDeleted)
     : [];
 
   const initPlaceBoxes = () => {
@@ -228,7 +224,7 @@ const AccessibilityPlace = ({
       )}
     </Layout>
   );
-};
+}
 
 // Server-side rendering
 export const getServerSideProps: GetServerSideProps = async ({ params, query, locales }) => {
@@ -275,7 +271,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, lo
 
       const mainEntrance = servicepointEntranceResults?.results?.find((result) => result.is_main_entrance === "Y");
       let isMainEntrancePublished = false;
-      if (!!mainEntrance) {
+      if (mainEntrance) {
         // The main entrance exists, but check if it's published
         const entranceDetailResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE}?entrance_id=${mainEntrance.entrance_id}&format=json`, {
           headers: new Headers({ Authorization: getTokenHash() }),
