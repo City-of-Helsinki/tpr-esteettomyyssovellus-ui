@@ -3,7 +3,7 @@ import { useI18n } from "next-localization";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
-import { Button, Notification, RadioButton, SelectionGroup } from "hds-react";
+import { Button, Notification, ButtonVariant, RadioButton, SelectionGroup } from "hds-react";
 import Layout from "../components/common/Layout";
 import LoadSpinner from "../components/common/LoadSpinner";
 import ModalConfirmation from "../components/common/ModalConfirmation";
@@ -28,7 +28,7 @@ import { createEntrance, createServicePoint, getServicepointHash } from "../util
 import { deleteEntrance, formatAddress, getCurrentDate, getTokenHash, validateChecksum, validateDate } from "../utils/utilFunctions";
 import styles from "./ServicePoint.module.scss";
 
-const Servicepoints = ({
+function Servicepoints({
   changed,
   forceAddressChange,
   servicepointId,
@@ -48,7 +48,7 @@ const Servicepoints = ({
   user,
   checksum,
   skip,
-}: ChangeProps): ReactElement => {
+}: ChangeProps): ReactElement {
   const i18n = useI18n();
   const startState = "0";
   const dispatch = useAppDispatch();
@@ -225,7 +225,12 @@ const Servicepoints = ({
                 />
               </SelectionGroup>
             </div>
-            <Button id="continueButton" variant="primary" disabled={selectedRadioItem === startState} onClick={openDeletionConfirmation}>
+            <Button
+              id="continueButton"
+              variant={ButtonVariant.Primary}
+              disabled={selectedRadioItem === startState}
+              onClick={openDeletionConfirmation}
+            >
               {i18n.t("accessibilityForm.continue")}
             </Button>
 
@@ -251,7 +256,7 @@ const Servicepoints = ({
       </main>
     </Layout>
   );
-};
+}
 
 // Server-side rendering
 export const getServerSideProps: GetServerSideProps = async ({ locales, query }) => {
@@ -496,7 +501,7 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
           oldAddressNumber.toUpperCase() !== choppedAddressNumber.toUpperCase() ||
           oldAddressCity.toUpperCase() !== choppedPostOffice.toUpperCase();
 
-        const distance = Math.sqrt(Math.pow(oldNorthing - newNorthing, 2) + Math.pow(oldEasting - newEasting, 2));
+        const distance = Math.sqrt((oldNorthing - newNorthing) ** 2 + (oldEasting - newEasting) ** 2);
         const locationHasChanged = distance > 15;
 
         servicepointChecksum = getServicepointHash(servicepointId);

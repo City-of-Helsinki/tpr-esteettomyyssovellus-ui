@@ -65,7 +65,7 @@ import { filterByLanguage, formatAddress, getCurrentDate, getTokenHash, isLocati
 import styles from "./preview.module.scss";
 
 // usage: the preview page of an entrance, displayed before saving the completed form
-const Preview = ({
+function Preview({
   servicepointData,
   // entranceSentenceGroupData,
   accessibilityData,
@@ -82,7 +82,7 @@ const Preview = ({
   mainEntranceId,
   isMainEntrancePublished,
   isChecksumValid,
-}: PreviewProps): ReactElement => {
+}: PreviewProps): ReactElement {
   const i18n = useI18n();
   const curLocale = i18n.locale();
   const dispatch = useAppDispatch();
@@ -134,9 +134,8 @@ const Preview = ({
           const answer = a.question_choice_id;
           if (questionId !== undefined && answer !== undefined) {
             return { ...acc, [questionId]: answer };
-          } else {
-            return acc;
           }
+          return acc;
         }, {})
       )
     );
@@ -172,9 +171,8 @@ const Preview = ({
           const answer = ea.entry;
           if (questionBlockFieldId !== undefined && answer !== undefined) {
             return { ...acc, [questionBlockFieldId]: answer };
-          } else {
-            return acc;
           }
+          return acc;
         }, {})
       )
     );
@@ -188,9 +186,9 @@ const Preview = ({
 
               // Try to make sure the order number is 1 or higher
               return {
-                entrance_id: entrance_id,
-                question_block_id: question_block_id,
-                place_id: place_id,
+                entrance_id,
+                question_block_id,
+                place_id,
                 order_number: order_number && order_number > 0 ? order_number : 1,
                 existingBox: place,
                 modifiedBox: place,
@@ -216,7 +214,7 @@ const Preview = ({
       const { question_block_id, comment_fi, comment_sv, comment_en } = answerComment;
 
       const blockComment: BlockComment = {
-        question_block_id: question_block_id,
+        question_block_id,
         comment_text_fi: comment_fi,
         comment_text_sv: comment_sv,
         comment_text_en: comment_en,
@@ -225,7 +223,7 @@ const Preview = ({
       // Add a new question block comment
       const newQuestionBlockComment: QuestionBlockComment = {
         entrance_id: entranceData[entranceKey].entrance_id,
-        question_block_id: question_block_id,
+        question_block_id,
         existingComment: blockComment,
         modifiedComment: blockComment,
         invalidValues: [],
@@ -337,25 +335,23 @@ const Preview = ({
                     const orderB = sentenceGroups[Number(b)];
                     return orderA.localeCompare(orderB);
                   })
-                  .map((sentenceGroupKey) => {
-                    return (
-                      <div key={`entrance_sentence_group_${entranceId}_${sentenceGroupKey}`}>
-                        <SummaryAccessibility
-                          entranceKey={entranceKey}
-                          sentenceGroupId={sentenceGroupKey}
-                          accessibilityData={filteredAccessibilityData}
-                          entranceChoiceData={entranceChoiceData}
-                        />
+                  .map((sentenceGroupKey) => (
+                    <div key={`entrance_sentence_group_${entranceId}_${sentenceGroupKey}`}>
+                      <SummaryAccessibility
+                        entranceKey={entranceKey}
+                        sentenceGroupId={sentenceGroupKey}
+                        accessibilityData={filteredAccessibilityData}
+                        entranceChoiceData={entranceChoiceData}
+                      />
 
-                        <SummaryAccessibilityPlaceGroup
-                          entranceKey={entranceKey}
-                          sentenceGroupKey={sentenceGroupKey}
-                          accessibilityPlaces={filteredPlaces}
-                          entrancePlaceData={entrancePlaceData}
-                        />
-                      </div>
-                    );
-                  })}
+                      <SummaryAccessibilityPlaceGroup
+                        entranceKey={entranceKey}
+                        sentenceGroupKey={sentenceGroupKey}
+                        accessibilityPlaces={filteredPlaces}
+                        entrancePlaceData={entrancePlaceData}
+                      />
+                    </div>
+                  ))}
 
                 <div className={styles.footercontainer}>
                   <PreviewControlButtons
@@ -383,7 +379,7 @@ const Preview = ({
       )}
     </Layout>
   );
-};
+}
 
 // Server-side rendering
 export const getServerSideProps: GetServerSideProps = async ({ params, query, locales }) => {
@@ -407,8 +403,8 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, lo
 
   const isChecksumValid = params !== undefined && query !== undefined && validateServicepointHash(Number(params.servicepointId), query.checksum);
 
-  let entranceKey: string | undefined = undefined;
-  let draftEntrance: BackendEntrance | undefined = undefined;
+  let entranceKey: string | undefined;
+  let draftEntrance: BackendEntrance | undefined;
 
   if (isChecksumValid && params !== undefined) {
     try {
@@ -443,7 +439,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, lo
       */
 
       const mainEntrance = servicepointEntranceData?.results?.find((result) => result.is_main_entrance === "Y");
-      if (!!mainEntrance) {
+      if (mainEntrance) {
         // The main entrance exists, but check if it's published
         const entranceDetailResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE}?entrance_id=${mainEntrance.entrance_id}&format=json`, {
           headers: new Headers({ Authorization: getTokenHash() }),

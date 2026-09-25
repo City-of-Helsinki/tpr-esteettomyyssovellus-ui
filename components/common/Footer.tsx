@@ -1,16 +1,16 @@
 import React, { ReactElement } from "react";
 import { useI18n } from "next-localization";
-import { Footer as HdsFooter, IconArrowUp, IconLinkExternal, Logo, logoFi } from "hds-react";
+import { Footer as HdsFooter, IconArrowUp, IconLinkExternal, Logo, logoFi, LogoSize } from "hds-react";
 import { useAppDispatch } from "../../state/hooks";
 import { setHelpOpen } from "../../state/reducers/generalSlice";
-import { ACCESSIBILITY_URL, TERMS_URL } from "../../types/constants";
+import { ACCESSIBILITY_URL, MAIN_URL, TERMS_URL } from "../../types/constants";
 import styles from "./Footer.module.scss";
 
 interface FooterProps {
   isSummary?: boolean;
 }
 
-const Footer = ({ isSummary }: FooterProps): ReactElement => {
+function Footer({ isSummary }: FooterProps): ReactElement {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
 
@@ -36,12 +36,12 @@ const Footer = ({ isSummary }: FooterProps): ReactElement => {
       <HdsFooter.Base
         copyrightHolder={i18n.t("common.footer.copyright")}
         copyrightText={i18n.t("common.footer.rightsReserved")}
-        logo={<Logo src={logoFi} size="medium" alt={i18n.t("common.header.titleAlt")} />}
+        logo={<Logo src={logoFi} size={LogoSize.Medium} alt={i18n.t("common.header.titleAlt")} />}
         backToTopLabel={i18n.t("common.footer.backToTop")}
       >
-        <HdsFooter.Link as="div" className={styles.helsinkiLogoItem}>
+        <HdsFooter.Link as="a" className={styles.helsinkiLogoItem} href={MAIN_URL}>
           <div className={styles.helsinkiLogoContainer}>
-            <Logo src={logoFi} size="medium" aria-hidden />
+            <Logo src={logoFi} size={LogoSize.Medium} aria-hidden />
             <span className={styles.helsinkiLogoText}>{i18n.t("common.footer.logotext")}</span>
           </div>
         </HdsFooter.Link>
@@ -63,6 +63,6 @@ const Footer = ({ isSummary }: FooterProps): ReactElement => {
       </HdsFooter.Base>
     </HdsFooter>
   );
-};
+}
 
 export default Footer;

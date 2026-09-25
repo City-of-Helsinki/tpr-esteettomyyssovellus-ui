@@ -1,15 +1,15 @@
-import { Button } from "hds-react";
+import { Button, ButtonVariant } from "hds-react";
 import styles from "./QuestionButton.module.scss";
 import { QuestionButtonProps } from "../types/general";
 
 // usage: general customized button from HDS
-const QuestionButton = ({ children, variant, iconLeft, iconRight, disabled = false, onClickHandler, onChange }: QuestionButtonProps): JSX.Element => {
+function QuestionButton({ children, variant, iconStart, iconEnd, disabled = false, onClickHandler, onChange }: QuestionButtonProps): JSX.Element {
   return (
     <div className={styles.buttonContainer}>
       <Button
         variant={variant}
-        iconLeft={iconLeft}
-        iconRight={iconRight}
+        iconStart={iconStart}
+        iconEnd={iconEnd}
         disabled={disabled}
         className={styles.button}
         onChange={onChange}
@@ -19,5 +19,5 @@ const QuestionButton = ({ children, variant, iconLeft, iconRight, disabled = fal
       </Button>
     </div>
   );
-};
+}
 export default QuestionButton;

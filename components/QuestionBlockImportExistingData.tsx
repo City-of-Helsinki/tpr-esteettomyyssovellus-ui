@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useRouter } from "next/router";
 import { useI18n } from "next-localization";
-import { Notification, Select } from "hds-react";
+import { ButtonVariant, Notification, Select } from "hds-react";
+import type { Option, OptionInProps } from "hds-react";
 import Button from "./QuestionButton";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { addEntrancePlaceBox, deleteEntrancePlace, setEntranceLocationPhoto, setQuestionBlockComment } from "../state/reducers/additionalInfoSlice";
@@ -14,7 +15,7 @@ import { getTokenHash, isLocationValid } from "../utils/utilFunctions";
 import styles from "./QuestionBlockImportExistingData.module.scss";
 
 // usage: button for copying data from existing servicepoint
-const QuestionBlockImportExistingData = ({ block, copyableEntrances }: QuestionBlockImportProps): JSX.Element => {
+function QuestionBlockImportExistingData({ block, copyableEntrances }: QuestionBlockImportProps): JSX.Element {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -24,15 +25,15 @@ const QuestionBlockImportExistingData = ({ block, copyableEntrances }: QuestionB
   const [selectedOption, setSelectedOption] = useState<InputOption>();
   const [importCompleted, setImportCompleted] = useState<boolean>(false);
 
-  const copyOptions = copyableEntrances
+  const copyOptions: OptionInProps[] = copyableEntrances
     .map((copy) => {
       const { copyable_entrance_id, copyable_servicepoint_name } = copy;
-      return { value: copyable_entrance_id, label: copyable_servicepoint_name };
+      return { value: String(copyable_entrance_id), label: copyable_servicepoint_name };
     })
-    .sort((a, b) => a.label.localeCompare(b.label));
+    .sort((a, b) => (a.label ?? "").localeCompare(b.label ?? ""));
 
-  const handleSelect = (option: InputOption) => {
-    setSelectedOption(option);
+  const handleSelect = (option: Option) => {
+    setSelectedOption({ value: Number(option.value), label: option.label });
     setImportCompleted(false);
   };
 
@@ -99,7 +100,7 @@ const QuestionBlockImportExistingData = ({ block, copyableEntrances }: QuestionB
           dispatch(
             setEntranceLocationPhoto({
               entrance_id: curEntranceId,
-              question_block_id: question_block_id,
+              question_block_id,
               existingAnswer: copiedEntranceLocationPhotoAnswer,
               modifiedAnswer: copiedEntranceLocationPhotoAnswer,
               termsAccepted: true,
@@ -131,7 +132,7 @@ const QuestionBlockImportExistingData = ({ block, copyableEntrances }: QuestionB
           dispatch(
             deleteEntrancePlace({
               entrance_id: curEntranceId,
-              place_id: place_id,
+              place_id,
             })
           );
 
@@ -139,8 +140,8 @@ const QuestionBlockImportExistingData = ({ block, copyableEntrances }: QuestionB
           dispatch(
             addEntrancePlaceBox({
               entrance_id: curEntranceId,
-              question_block_id: question_block_id,
-              place_id: place_id,
+              question_block_id,
+              place_id,
               order_number: order_number && order_number > 0 ? order_number : 1,
               existingBox: copiedPlace,
               modifiedBox: copiedPlace,
@@ -166,7 +167,7 @@ const QuestionBlockImportExistingData = ({ block, copyableEntrances }: QuestionB
           const { comment_fi, comment_sv, comment_en } = copiedAnswer;
 
           const blockComment: BlockComment = {
-            question_block_id: question_block_id,
+            question_block_id,
             comment_text_fi: comment_fi,
             comment_text_sv: comment_sv,
             comment_text_en: comment_en,
@@ -175,7 +176,7 @@ const QuestionBlockImportExistingData = ({ block, copyableEntrances }: QuestionB
           // Add a new question block comment
           const newQuestionBlockComment: QuestionBlockComment = {
             entrance_id: curEntranceId,
-            question_block_id: question_block_id,
+            question_block_id,
             existingComment: blockComment,
             modifiedComment: blockComment,
             invalidValues: [],
@@ -201,12 +202,15 @@ const QuestionBlockImportExistingData = ({ block, copyableEntrances }: QuestionB
         <div className={styles.inputContainer}>
           <Select
             className={styles.selectDropdown}
-            label=""
-            placeholder={i18n.t("QuestionFormImportExistingData.chooseServicepoint")}
+            texts={{
+              label: "",
+              placeholder: i18n.t("QuestionFormImportExistingData.chooseServicepoint"),
+            }}
             options={copyOptions}
-            onChange={(selected: InputOption) => handleSelect(selected)}
+            onChange={(_selectedOptions, clickedOption) => handleSelect(clickedOption)}
+            value={selectedOption ? String(selectedOption.value) : undefined}
           />
-          <Button variant="secondary" disabled={!selectedOption} onClickHandler={handleCopy}>
+          <Button variant={ButtonVariant.Secondary} disabled={!selectedOption} onClickHandler={handleCopy}>
             {i18n.t("QuestionFormImportExistingData.bringInformation")}
           </Button>
         </div>
@@ -225,6 +229,6 @@ const QuestionBlockImportExistingData = ({ block, copyableEntrances }: QuestionB
       )}
     </div>
   );
-};
+}
 
 export default QuestionBlockImportExistingData;

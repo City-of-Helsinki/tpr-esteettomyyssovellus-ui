@@ -57,7 +57,7 @@ import { getTokenHash, getCurrentDate, formatAddress, convertCoordinates, isLoca
 import styles from "./entranceAccessibility.module.scss";
 
 // usage: the main form / entrance page
-const EntranceAccessibility = ({
+function EntranceAccessibility({
   questionsData,
   questionChoicesData,
   questionBlocksData,
@@ -73,7 +73,7 @@ const EntranceAccessibility = ({
   formId,
   isMainEntrancePublished,
   isChecksumValid,
-}: EntranceFormProps): ReactElement => {
+}: EntranceFormProps): ReactElement {
   const i18n = useI18n();
   const curLocale: string = i18n.locale();
   const dispatch = useAppDispatch();
@@ -154,9 +154,8 @@ const EntranceAccessibility = ({
             const answer = a.question_choice_id;
             if (questionId !== undefined && answer !== undefined) {
               return { ...acc, [questionId]: answer };
-            } else {
-              return acc;
             }
+            return acc;
           }, {})
         )
       );
@@ -206,9 +205,8 @@ const EntranceAccessibility = ({
             const answer = ea.entry;
             if (questionBlockFieldId !== undefined && answer !== undefined) {
               return { ...acc, [questionBlockFieldId]: answer };
-            } else {
-              return acc;
             }
+            return acc;
           }, {})
         )
       );
@@ -221,9 +219,9 @@ const EntranceAccessibility = ({
 
             // Try to make sure the order number is 1 or higher
             return {
-              entrance_id: entrance_id,
-              question_block_id: question_block_id,
-              place_id: place_id,
+              entrance_id,
+              question_block_id,
+              place_id,
               order_number: order_number && order_number > 0 ? order_number : 1,
               existingBox: place,
               modifiedBox: place,
@@ -248,7 +246,7 @@ const EntranceAccessibility = ({
         const { question_block_id, comment_fi, comment_sv, comment_en } = answerComment;
 
         const blockComment: BlockComment = {
-          question_block_id: question_block_id,
+          question_block_id,
           comment_text_fi: comment_fi,
           comment_text_sv: comment_sv,
           comment_text_en: comment_en,
@@ -257,7 +255,7 @@ const EntranceAccessibility = ({
         // Add a new question block comment
         const newQuestionBlockComment: QuestionBlockComment = {
           entrance_id: entranceData.entrance_id,
-          question_block_id: question_block_id,
+          question_block_id,
           existingComment: blockComment,
           modifiedComment: blockComment,
           invalidValues: [],
@@ -471,7 +469,7 @@ const EntranceAccessibility = ({
       )}
     </Layout>
   );
-};
+}
 
 // NextJs Server-Side Rendering, HDS best practices (SSR)
 export const getServerSideProps: GetServerSideProps = async ({ params, query, locales }) => {
@@ -515,7 +513,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, lo
       const servicepointEntranceResults = await (servicepointEntranceResp.json() as Promise<EntranceResults>);
 
       const mainEntrance = servicepointEntranceResults?.results?.find((result) => result.is_main_entrance === "Y");
-      if (!!mainEntrance) {
+      if (mainEntrance) {
         // The main entrance exists, but check if it's published
         const entranceDetailResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_ENTRANCE}?entrance_id=${mainEntrance.entrance_id}&format=json`, {
           headers: new Headers({ Authorization: getTokenHash() }),

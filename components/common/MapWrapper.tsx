@@ -20,7 +20,7 @@ interface MapWrapperProps {
 // usage: leaflet map used in the project
 // notes: editable in additionalinfo page, in form/details pages only static "preview"
 // gets the main location from state (fetched from db). User can either click the map or drag-n-drop marker for new location
-const MapWrapper = ({ initialZoom, curLocation, setLocation, setMapReady, draggableMarker, makeStatic }: MapWrapperProps): ReactElement => {
+function MapWrapper({ initialZoom, curLocation, setLocation, setMapReady, draggableMarker, makeStatic }: MapWrapperProps): ReactElement {
   const i18n = useI18n();
   const router = useRouter();
 
@@ -55,7 +55,7 @@ const MapWrapper = ({ initialZoom, curLocation, setLocation, setMapReady, dragga
   const prevLocation = usePrevious(curLocation);
 
   // A child component must be used in order to access the react-leaflet map hook
-  const CustomMapHandler = () => {
+  function CustomMapHandler() {
     const map = useMap();
 
     if (makeStatic) {
@@ -89,7 +89,7 @@ const MapWrapper = ({ initialZoom, curLocation, setLocation, setMapReady, dragga
 
     // Nothing to render for this
     return null;
-  };
+  }
 
   const whenReady = () => {
     if (setMapReady) {
@@ -118,7 +118,7 @@ const MapWrapper = ({ initialZoom, curLocation, setLocation, setMapReady, dragga
       )}
     </MapContainer>
   );
-};
+}
 
 MapWrapper.defaultProps = {
   initLocation: undefined,

@@ -280,6 +280,6 @@
     "radioButtonYes": "Esteettömyystiedot tulee syöttää uudelleen. (Toimipiste on muuttanut toisiin tiloihin)",
     "radioButtonNo": "Esteettömyystiedot eivät muutu.",
     "updateErrorTitle": "Tietojen päivitys epäonnistui",
-    "updateErrorMessage": "Tietoja ei voitu päivittää. Yritä myöhemmin uudelleen tai ota yhteyttä ylläpitoon."
+    "updateErrorMessage": "Yritä myöhemmin uudelleen tai ota yhteyttä osoitteeseen palvelukartta@hel.fi."
   }
 }

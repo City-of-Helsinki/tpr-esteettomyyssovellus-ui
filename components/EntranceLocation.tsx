@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { IconCross, IconLocation } from "hds-react";
+import { ButtonVariant, IconCross, IconLocation } from "hds-react";
 import { useI18n } from "next-localization";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { editEntranceLocation } from "../state/reducers/additionalInfoSlice";
@@ -11,7 +11,7 @@ import QuestionButton from "./QuestionButton";
 import styles from "./EntranceLocation.module.scss";
 
 // usage: entrance location photo page location component
-const EntranceLocation = ({ entranceLocationPhoto }: EntranceLocationProps): JSX.Element => {
+function EntranceLocation({ entranceLocationPhoto }: EntranceLocationProps): JSX.Element {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
 
@@ -64,9 +64,10 @@ const EntranceLocation = ({ entranceLocationPhoto }: EntranceLocationProps): JSX
   };
 
   // useMemo for preventing leaflet map rendering each time something updates on page
-  const memoMap = useMemo(() => {
-    return <Map curLocation={coordinatesWGS84} setLocation={setLocation} initZoom={MAP_MAX_ZOOM} draggableMarker />;
-  }, [coordinatesWGS84, setLocation]);
+  const memoMap = useMemo(
+    () => <Map curLocation={coordinatesWGS84} setLocation={setLocation} initZoom={MAP_MAX_ZOOM} draggableMarker />,
+    [coordinatesWGS84, setLocation]
+  );
 
   return (
     <div className={styles.maincontainer}>
@@ -75,13 +76,13 @@ const EntranceLocation = ({ entranceLocationPhoto }: EntranceLocationProps): JSX
       <div id="locationinputcontainer" className={styles.inputcontainer}>
         <div className={styles.inputbuttons}>
           {!mapInput && !isLocationValid(coordinatesWGS84) && (
-            <QuestionButton variant="secondary" iconRight={<IconLocation aria-hidden />} onClickHandler={() => handleAddLocation()}>
+            <QuestionButton variant={ButtonVariant.Secondary} iconEnd={<IconLocation aria-hidden />} onClickHandler={() => handleAddLocation()}>
               {i18n.t("additionalInfo.addLocation")}
             </QuestionButton>
           )}
 
           {(mapInput || isLocationValid(coordinatesWGS84)) && (
-            <QuestionButton variant="secondary" iconRight={<IconCross aria-hidden />} onClickHandler={() => handleOnDelete()}>
+            <QuestionButton variant={ButtonVariant.Secondary} iconEnd={<IconCross aria-hidden />} onClickHandler={() => handleOnDelete()}>
               {i18n.t("additionalInfo.cancelLocation")}
             </QuestionButton>
           )}
@@ -89,5 +90,5 @@ const EntranceLocation = ({ entranceLocationPhoto }: EntranceLocationProps): JSX
       </div>
     </div>
   );
-};
+}
 export default EntranceLocation;

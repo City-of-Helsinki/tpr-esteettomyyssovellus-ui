@@ -107,10 +107,12 @@ button:hover {
   text-decoration: underline;
 }
 
+
 a:hover {
   /* hover style copied from HDS Link focus style */
-  border: 3px solid var(--color-coat-of-arms);
-  outline: none;
+  //border: 3px solid var(--color-coat-of-arms);
+  //outline: none;
+  outline-color: var(--color-coat-of-arms);
 }
 
 .screenReaderOnly,
@@ -134,5 +136,11 @@ a:hover {
 
   .HeaderActionBarItemButton-module_actionBarItemButtonLabel__12Iec {
     padding-top: 6px;
+  }
+}
+
+.accordion-headline {
+  .Button-module_icon__O-h7R {
+    width: fit-content !important;
   }
 }
