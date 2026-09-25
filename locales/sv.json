@@ -280,6 +280,6 @@
     "radioButtonYes": "Tillgänglighetsinformationen måste anges igen. (Kontoret har flyttat till andra lokaler)",
     "radioButtonNo": "Tillgänglighetsinformationen kommer inte att ändras.",
     "updateErrorTitle": "Uppdateringen misslyckades",
-    "updateErrorMessage": "Informationen kunde inte uppdateras. Försök igen senare eller kontakta administratören."
+    "updateErrorMessage": "Informationen kunde inte uppdateras. Försök igen senare eller kontakta palvelukartta@hel.fi."
   }
 }

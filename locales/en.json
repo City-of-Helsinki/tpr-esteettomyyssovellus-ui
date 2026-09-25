@@ -280,6 +280,6 @@
     "radioButtonYes": "The accessibility information must be entered again. (The location has moved to other premises)",
     "radioButtonNo": "The accessibility information will not change.",
     "updateErrorTitle": "Updating information failed",
-    "updateErrorMessage": "The information could not be updated. Try again later or contact the administrator."
+    "updateErrorMessage": "The information could not be updated. Try again later or contact palvelukartta@hel.fi."
   }
 }

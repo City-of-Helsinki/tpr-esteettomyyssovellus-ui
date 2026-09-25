@@ -39,7 +39,7 @@ function ModalConfirmation({
           <Button
             onClick={confirmCallback}
             disabled={confirmDisabled}
-            iconRight={
+            iconEnd={
               confirmLoading ? (
                 <SaveSpinner
                   savingText={i18n.t("questionFormControlButtons.saving")}
