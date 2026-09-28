@@ -1,7 +1,7 @@
 export const defaultLocale = "fi";
 
 const i18nLoader = async (locale: string): Promise<Record<string, Record<string, unknown>>> => {
-  const { default: lngDict = {} } = await import(`../locales/${locale || defaultLocale}.json`);
+  const lngDict = require(`../locales/${locale || defaultLocale}.json`) as { [key: string]: unknown };
 
   return {
     [locale]: {
