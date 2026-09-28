@@ -250,11 +250,11 @@ function QuestionFormCtrlButtons({
         <div className={styles.left}>
           {hasCancelButton && (formId === 0 || formId === 1) ? (
             <Button
-            variant={ButtonVariant.Secondary}
-            iconStart={<IconArrowLeft />}
-            onClickHandler={handleCancel}
-            disabled={isSavingDraft || isSavingPreview}
-          >
+              variant={ButtonVariant.Secondary}
+              iconStart={<IconArrowLeft />}
+              onClickHandler={handleCancel}
+              disabled={isSavingDraft || isSavingPreview}
+            >
               {i18n.t("questionFormControlButtons.quit")}
             </Button>
           ) : null}
