@@ -148,8 +148,11 @@ function AccessibilityPlaceCtrlButtons({
 
   // Initialise the validation on first render only, using a workaround utilising useEffect with empty dependency array
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const useMountEffect = (fun: () => void) => useEffect(fun, []);
-  useMountEffect(validateForm);
+  //const useMountEffect = (fun: () => void) => useEffect(fun, []);
+  //useMountEffect(validateForm);
+  useEffect(() => {
+    validateForm();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const revertPlace = useCallback(() => {
     // Revert this entrance place using existing values

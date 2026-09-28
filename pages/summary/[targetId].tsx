@@ -85,8 +85,11 @@ function Summary({
 
   // Initialise the redux data on first render only, using a workaround utilising useEffect with empty dependency array
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const useMountEffect = (fun: () => void) => useEffect(fun, []);
-  useMountEffect(initReduxData);
+  //const useMountEffect = (fun: () => void) => useEffect(fun, []);
+  //useMountEffect(validateForm);
+  useEffect(() => {
+    initReduxData();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Filter by language
   // Make sure that the main entrance is listed before the side entrances.

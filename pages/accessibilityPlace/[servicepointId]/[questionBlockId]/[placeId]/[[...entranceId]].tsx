@@ -121,8 +121,11 @@ function AccessibilityPlace({
 
   // Initialise the entrance place box data on first render only, using a workaround utilising useEffect with empty dependency array
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const useMountEffect = (fun: () => void) => useEffect(fun, []);
-  useMountEffect(initPlaceBoxes);
+  //const useMountEffect = (fun: () => void) => useEffect(fun, []);
+  //useMountEffect(validateForm);
+  useEffect(() => {
+    initPlaceBoxes();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const treeItems = {
     [servicepointData.servicepoint_name ?? ""]: hasData ? `/details/${servicepointData.servicepoint_id}?checksum=${checksum}` : "",
