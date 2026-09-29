@@ -58,8 +58,11 @@ function QuestionBlockLocationPhoto({ block, canAddLocation, canAddPhoto }: Ques
 
   // Initialise the location and photo data on first render only, using a workaround utilising useEffect with empty dependency array
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const useMountEffect = (fun: () => void) => useEffect(fun, []);
-  useMountEffect(initLocationPhotoData);
+  //const useMountEffect = (fun: () => void) => useEffect(fun, []);
+  //useMountEffect(validateForm);
+  useEffect(() => {
+    initLocationPhotoData();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const editLocationPhoto = () => {
     // Update the existing data in case the user returns without saving

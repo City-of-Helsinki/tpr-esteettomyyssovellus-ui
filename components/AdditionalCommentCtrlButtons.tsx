@@ -79,8 +79,11 @@ function AdditionalCommentCtrlButtons({ questionBlockId, questionBlockComment }:
 
   // Initialise the validation on first render only, using a workaround utilising useEffect with empty dependency array
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const useMountEffect = (fun: () => void) => useEffect(fun, []);
-  useMountEffect(validateForm);
+  //const useMountEffect = (fun: () => void) => useEffect(fun, []);
+  //useMountEffect(validateForm);
+  useEffect(() => {
+    validateForm();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const revertComment = useCallback(() => {
     // Revert this question block comment using existing values
@@ -123,7 +126,6 @@ function AdditionalCommentCtrlButtons({ questionBlockId, questionBlockComment }:
   // handle user clicked return no save button
   const handleReturnNoSave = () => {
     revertComment();
-
     const url =
       curEntranceId > 0
         ? `/entranceAccessibility/${curServicepointId}/${curEntranceId}?checksum=${checksum}${getPathHash()}`
