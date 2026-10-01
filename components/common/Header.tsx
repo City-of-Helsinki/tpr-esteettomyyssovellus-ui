@@ -76,7 +76,6 @@ function Header({ isSummary, children, homePagePath }: HeaderProps): ReactElemen
       // @ts-ignore: The HDS Navigation component comes from a dynamic import, see above for details
       title={i18n.t("common.header.title")}
       // titleUrl={`${router.basePath}${router.asPath}`}
-      theme={{}}
       className={styles.header}
     >
       <HdsHeader.ActionBar
@@ -85,7 +84,6 @@ function Header({ isSummary, children, homePagePath }: HeaderProps): ReactElemen
         title={i18n.t("common.header.title")}
         titleAriaLabel={i18n.t("common.header.titleAlt")}
         titleHref={`${MAIN_URL}/${router.locale}`}
-        aria-label={i18n.t("common.header.openMenu")}
         frontPageLabel=""
       >
         {/*

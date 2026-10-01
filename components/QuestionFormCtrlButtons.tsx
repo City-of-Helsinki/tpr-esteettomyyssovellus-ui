@@ -6,7 +6,7 @@ import SaveSpinner from "./common/SaveSpinner";
 import Button from "./QuestionButton";
 import { Entrance } from "../types/backendModels";
 import { API_FETCH_ENTRANCES, LanguageLocales } from "../types/constants";
-import { QuestionFormCtrlButtonsProps } from "../types/general";
+import type { EntrancePlaceBox, QuestionBlockComment, QuestionFormCtrlButtonsProps } from "../types/general";
 import styles from "./QuestionFormCtrlButtons.module.scss";
 import { useAppSelector, useAppDispatch } from "../state/hooks";
 import { setContinue, setEntranceId, setInvalid, setSaving, setValidationTime, unsetInvalid } from "../state/reducers/formSlice";
@@ -106,13 +106,18 @@ function QuestionFormCtrlButtons({
 
       // Filter to make sure the answered choices only include answers for the visible questions
       // It is possible to answer a question, then change a previous answer, which then makes this question hidden
-      const filteredAnswerChoices = curAnsweredChoices.filter((choice) => visibleQuestionChoiceIds?.includes(Number(choice)));
+      const filteredAnswerChoices = curAnsweredChoices.filter(
+        (choice): choice is number =>
+        visibleQuestionChoiceIds?.includes(Number(choice)) ?? false 
+      );
 
       // Filter accessibility places and comments to make sure they are applicable for the visible question blocks
       // It is possible to add a place or comment in a block, then change the location type (block 0 answer),
       // which changes the visible blocks and makes the accessibility place or comment invalid for the form
-      const filteredEntrancePlaceBoxes = curEntrancePlaceBoxes.filter((box) => visibleBlockIds.includes(box.question_block_id));
-      const filteredBlockComments = curQuestionBlockComments.filter((comment) => visibleBlockIds.includes(comment.question_block_id));
+      const filteredEntrancePlaceBoxes = curEntrancePlaceBoxes.filter((box: EntrancePlaceBox) => visibleBlockIds.includes(box.question_block_id));
+      const filteredBlockComments = curQuestionBlockComments.filter((comment: QuestionBlockComment) =>
+        visibleBlockIds.includes(comment.question_block_id)
+      );
 
       await saveFormData(
         curServicepointId,

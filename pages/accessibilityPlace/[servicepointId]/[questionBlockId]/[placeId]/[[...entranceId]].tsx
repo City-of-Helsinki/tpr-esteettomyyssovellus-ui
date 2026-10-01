@@ -92,12 +92,12 @@ function AccessibilityPlace({
   // Show the boxes for this entrance place that have not been deleted
   const filteredEntrancePlaceBoxes = curEntrancePlaceBoxes
     ? curEntrancePlaceBoxes
-        .filter((placeBox) => placeBox.place_id === filteredPlaceData.place_id && !placeBox.isDeleted)
-        .sort((a, b) => (a.order_number ?? 1) - (b.order_number ?? 1))
+        .filter((placeBox : EntrancePlaceBox) => placeBox.place_id === filteredPlaceData.place_id && !placeBox.isDeleted)
+        .sort((a: EntrancePlaceBox, b: EntrancePlaceBox) => (a.order_number ?? 1) - (b.order_number ?? 1))
     : [];
-  const filteredEntrancePlaceInvalidValues = filteredEntrancePlaceBoxes.flatMap((box) => box.invalidValues);
+  const filteredEntrancePlaceInvalidValues = filteredEntrancePlaceBoxes.flatMap((box : EntrancePlaceBox) => box.invalidValues);
   const filteredDeletedEntrancePlaceBoxes = curEntrancePlaceBoxes
-    ? curEntrancePlaceBoxes.filter((placeBox) => placeBox.place_id === filteredPlaceData.place_id && placeBox.isDeleted)
+    ? curEntrancePlaceBoxes.filter((placeBox : EntrancePlaceBox) => placeBox.place_id === filteredPlaceData.place_id && placeBox.isDeleted)
     : [];
 
   const initPlaceBoxes = () => {
@@ -190,7 +190,7 @@ function AccessibilityPlace({
             </div>
 
             <div>
-              {filteredEntrancePlaceBoxes.map((entrancePlaceBox, index) => {
+              {filteredEntrancePlaceBoxes.map((entrancePlaceBox: EntrancePlaceBox, index: number) => {
                 const key = `box_${index}`;
                 return (
                   <AccessibilityPlaceBox

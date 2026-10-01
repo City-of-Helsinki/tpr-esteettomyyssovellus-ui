@@ -246,7 +246,7 @@ function EntrancePhoto({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
                 href={photo_url}
                 size={LinkSize.Medium}
                 openInNewTab
-                openInNewTabAriaLabel={i18n.t("common.opensInANewTab")}
+                openInNewTabLabel={i18n.t("common.opensInANewTab")}
                 external
                 openInExternalDomainAriaLabel={i18n.t("common.opensExternal")}
                 disableVisitedStyles
@@ -331,9 +331,11 @@ function EntrancePhoto({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
               label={i18n.t("additionalInfo.pictureLabel")}
               helperText={i18n.t("additionalInfo.pictureHelperText")}
               required
-              tooltipButtonLabel={i18n.t("additionalInfo.generalTooltipButtonLabel")}
-              tooltipLabel={i18n.t("additionalInfo.generalTooltipLabel")}
-              tooltipText={i18n.t("additionalInfo.pictureToolTipContent")}
+              tooltip={
+                <Tooltip tooltipLabel={i18n.t("additionalInfo.generalTooltipLabel")} buttonLabel={i18n.t("additionalInfo.generalTooltipButtonLabel")}>
+                  {i18n.t("additionalInfo.pictureToolTipContent")}
+                </Tooltip>
+              }
               onChange={(evt: ChangeEvent<HTMLTextAreaElement>) => handleAddAltText(evt, "fi", i18n.t("additionalInfo.pictureLabel"))}
               value={photo_text_fi ?? ""}
               invalid={invalidValues.some((v) => v.fieldId === "text-fin")}
@@ -388,7 +390,7 @@ function EntrancePhoto({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
                       href="https://creativecommons.org/licenses/by/4.0/"
                       size={LinkSize.Medium}
                       openInNewTab
-                      openInNewTabAriaLabel={i18n.t("common.opensInANewTab")}
+                      openInNewTabLabel={i18n.t("common.opensInANewTab")}
                       external
                       openInExternalDomainAriaLabel={i18n.t("common.opensExternal")}
                       disableVisitedStyles
@@ -409,9 +411,11 @@ function EntrancePhoto({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Eleme
           <div className={styles.picturesourcecontainer}>
             <TextInput
               id="tooltip-source"
-              tooltipButtonLabel={i18n.t("additionalInfo.generalTooltipLabel")}
-              tooltipLabel={i18n.t("additionalInfo.generalTooltipLabel")}
-              tooltipText={i18n.t("additionalInfo.sourceTooltipText")}
+              tooltip={
+                <Tooltip tooltipLabel={i18n.t("additionalInfo.generalTooltipLabel")} buttonLabel={i18n.t("additionalInfo.generalTooltipButtonLabel")}>
+                  {i18n.t("additionalInfo.sourceTooltipText")}
+                </Tooltip>
+              }
               label={i18n.t("additionalInfo.sourceTooltipMainLabel")}
               onChange={(evt) => handleSourceChange(evt, i18n.t("additionalInfo.sourceTooltipMainLabel"))}
               required

@@ -2,7 +2,7 @@ import React, { ReactElement } from "react";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import { useI18n } from "next-localization";
-import { makeStyles } from "@mui/styles";
+import { makeStyles } from "mui-styles";
 import { Theme } from "@mui/material/styles";
 import i18nLoader from "../utils/i18n";
 import Layout from "../components/common/Layout";
