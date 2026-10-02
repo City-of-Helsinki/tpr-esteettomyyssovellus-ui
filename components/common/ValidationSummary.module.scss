@@ -1,9 +1,9 @@
-@import "~hds-design-tokens/lib/all.scss";
+@use "~hds-design-tokens/lib/all.scss";
 
 .validationSummary {
-  margin-top: $spacing-s;
+  margin-top: all.$spacing-s;
 
   .linkContainer {
-    margin-top: $spacing-s;
+    margin-top: all.$spacing-s;
   }
 }

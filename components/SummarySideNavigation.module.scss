@@ -1,21 +1,21 @@
-@import "~hds-design-tokens/lib/all.scss";
-@import "../styles/mixins.scss";
+@use "~hds-design-tokens/lib/all.scss";
+@use "../styles/mixins.scss";
 
 .maincontainer {
   display: flex;
   flex-direction: row;
-  border: 2px solid $color-black-10;
-  padding: $spacing-xs;
+  border: 2px solid all.$color-black-10;
+  padding: all.$spacing-xs;
 
-  @include media(xs, s) {
+  @include mixins.media(xs, s) {
     flex-direction: column;
   }
 
   .sidenavigation {
     width: 30%;
-    margin-right: $spacing-xs;
+    margin-right: all.$spacing-xs;
 
-    @include media(xs, s) {
+    @include mixins.media(xs, s) {
       width: 100%;
     }
   }
@@ -23,7 +23,7 @@
   .contentcontainer {
     width: 70%;
 
-    @include media(xs, s) {
+    @include mixins.media(xs, s) {
       width: 100%;
     }
   }

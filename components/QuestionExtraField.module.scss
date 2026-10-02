@@ -1,22 +1,22 @@
-@import "~hds-design-tokens/lib/all.scss";
-@import "../styles/mixins.scss";
+@use "~hds-design-tokens/lib/all.scss";
+@use "../styles/mixins.scss";
 
 .maincontainer {
   .questioncontainer {
     display: flex;
     flex-direction: row;
     align-items: flex-start;
-    padding: $spacing-m $spacing-s;
+    padding: all.$spacing-m all.$spacing-s;
 
-    @include media(xs, s) {
+    @include mixins.media(xs, s) {
       flex-direction: column;
     }
 
     .infoContainer {
       display: flex;
       flex-direction: column;
-      border-left: 5px solid $color-bus;
-      padding-left: $spacing-m;
+      border-left: 5px solid all.$color-bus;
+      padding-left: all.$spacing-m;
     }
 
     /*
@@ -39,10 +39,10 @@
     flex-basis: 0;
     width: 100%;
 
-    @include media(m, l, xl) {
+    @include mixins.media(m, l, xl) {
       display: flex;
       justify-content: flex-end;
-      margin-left: $spacing-l;
+      margin-left: all.$spacing-l;
     }
   }
 }

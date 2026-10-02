@@ -1,5 +1,5 @@
-@import "~hds-design-tokens/lib/all.scss";
-@import "../styles/mixins.scss";
+@use "~hds-design-tokens/lib/all.scss";
+@use "../styles/mixins.scss";
 
 .maincontainer {
   .headingcontainer {
@@ -7,8 +7,8 @@
     flex-direction: row;
     flex-wrap: wrap;
     align-items: center;
-    background-color: $color-bus-light;
-    margin-top: $spacing-m;
+    background-color: all.$color-bus-light;
+    margin-top: all.$spacing-m;
 
     .headingsection {
       display: flex;
@@ -21,19 +21,19 @@
       }
 
       .headertext {
-        font-size: $fontsize-heading-m;
+        font-size: all.$fontsize-heading-m;
         font-weight: 700;
-        color: $color-bus;
-        padding: $spacing-s $spacing-m;
+        color: all.$color-bus;
+        padding: all.$spacing-s all.$spacing-m;
 
-        @include media(xs) {
-          font-size: $fontsize-heading-s;
+        @include mixins.media(xs) {
+          font-size: all.$fontsize-heading-s;
         }
       }
 
       .ordernumber {
-        color: $color-white;
-        background-color: $color-bus;
+        color: all.$color-white;
+        background-color: all.$color-bus;
       }
 
       button {
@@ -46,21 +46,21 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    margin-top: $spacing-m;
+    margin-top: all.$spacing-m;
 
     > div {
       width: 50%;
 
-      @include media(xs, s, m) {
+      @include mixins.media(xs, s, m) {
         width: 100%;
       }
     }
 
     .contentheader {
-      font-size: $fontsize-heading-s;
+      font-size: all.$fontsize-heading-s;
       font-weight: 700;
-      color: $color-bus;
-      margin-bottom: $spacing-s;
+      color: all.$color-bus;
+      margin-bottom: all.$spacing-s;
     }
   }
 }

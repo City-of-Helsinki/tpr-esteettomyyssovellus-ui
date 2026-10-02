@@ -1,25 +1,25 @@
-@import "~hds-design-tokens/lib/all.scss";
+@use "~hds-design-tokens/lib/all.scss";
 
 .content {
   .korosTextBox {
     text-align: center;
-    background-color: $color-copper-light;
-    padding: $spacing-xl $spacing-xl 0;
+    background-color: all.$color-copper-light;
+    padding: all.$spacing-xl all.$spacing-xl 0;
 
     h1 {
-      color: $color-bus;
+      color: all.$color-bus;
       margin-bottom: 0;
     }
   }
 
   .koros {
-    fill: $color-copper-light;
+    fill: all.$color-copper-light;
   }
 
   .infoTextBox {
     text-align: center;
-    padding: $spacing-xl;
-    font-size: $fontsize-heading-xs;
+    padding: all.$spacing-xl;
+    font-size: all.$fontsize-heading-xs;
     font-weight: 700;
   }
 
@@ -28,22 +28,22 @@
   }
 
   h2 {
-    color: $color-bus;
+    color: all.$color-bus;
   }
 
   .newPlace {
-    background-color: $color-suomenlinna-light;
+    background-color: all.$color-suomenlinna-light;
   }
 
   .giveTip {
-    background-color: $color-bus-light;
+    background-color: all.$color-bus-light;
   }
 
   .checkPlace {
-    background-color: $color-copper-light;
+    background-color: all.$color-copper-light;
   }
 
   .modifyOwnPlace {
-    background-color: $color-engel-light;
+    background-color: all.$color-engel-light;
   }
 }

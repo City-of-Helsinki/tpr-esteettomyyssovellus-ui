@@ -1,5 +1,5 @@
-@import "~hds-design-tokens/lib/all.scss";
-@import "../../styles/mixins";
+@use "~hds-design-tokens/lib/all.scss";
+@use "../../styles/mixins";
 
 .layout {
   display: flex;
@@ -16,9 +16,9 @@
     flex-grow: 0;
 
     // HDS 2.0 only has container-width-xl
-    max-width: $container-width-xl;
+    max-width: all.$container-width-xl;
     width: 100%;
     box-sizing: border-box;
-    padding: 0 $spacing-s;
+    padding: 0 all.$spacing-s;
   }
 }

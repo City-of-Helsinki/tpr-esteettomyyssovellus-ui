@@ -1,9 +1,9 @@
-@import "~hds-design-tokens/lib/all.scss";
-@import "../styles/mixins.scss";
+@use "~hds-design-tokens/lib/all.scss";
+@use "../styles/mixins.scss";
 
 .maincontainer {
   .questionwrapper {
-    padding: $spacing-m $spacing-s;
+    padding: all.$spacing-m all.$spacing-s;
   }
 
   .questioncontainer {
@@ -11,7 +11,7 @@
     flex-direction: row;
     align-items: flex-start;
 
-    @include media(xs, s) {
+    @include mixins.media(xs, s) {
       flex-direction: column;
     }
 
@@ -22,8 +22,8 @@
     .infoContainer {
       display: flex;
       flex-direction: column;
-      border-left: 5px solid $color-bus;
-      padding-left: $spacing-m;
+      border-left: 5px solid all.$color-bus;
+      padding-left: all.$spacing-m;
       overflow-wrap: break-word;
 
       .infoPicture {
@@ -38,9 +38,9 @@
     flex-direction: row;
     flex-grow: 1;
     align-items: center;
-    color: $color-bus;
+    color: all.$color-bus;
 
-    @include media(xs, s) {
+    @include mixins.media(xs, s) {
       flex-direction: column;
     }
 
@@ -51,7 +51,7 @@
       flex-basis: 0;
       align-items: center;
       width: 100%;
-      margin-top: $spacing-2-xs;
+      margin-top: all.$spacing-2-xs;
     }
 
     .placeresult {
@@ -62,16 +62,16 @@
       align-items: center;
       width: 100%;
       justify-content: space-between;
-      margin-top: $spacing-2-xs;
-      color: $color-black;
+      margin-top: all.$spacing-2-xs;
+      color: all.$color-black;
 
-      @include media(m, l, xl) {
-        margin-left: $spacing-l;
+      @include mixins.media(m, l, xl) {
+        margin-left: all.$spacing-l;
       }
     }
 
     svg {
-      padding-left: $spacing-2-xs;
+      padding-left: all.$spacing-2-xs;
     }
   }
 
@@ -86,10 +86,10 @@
     // align-items: center;
     width: 100%;
 
-    @include media(m, l, xl) {
+    @include mixins.media(m, l, xl) {
       display: flex;
       justify-content: flex-end;
-      margin-left: $spacing-l;
+      margin-left: all.$spacing-l;
     }
   }
 }

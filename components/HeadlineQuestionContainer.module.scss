@@ -1,8 +1,8 @@
-@import "~hds-design-tokens/lib/all.scss";
-@import "../styles/mixins.scss";
+@use "~hds-design-tokens/lib/all.scss";
+@use "../styles/mixins.scss";
 
 .headline {
-  margin-bottom: $spacing-s;
+  margin-bottom: all.$spacing-s;
 
   .importAddinfoContainer {
     display: flex;
@@ -11,7 +11,7 @@
     justify-content: space-between;
     flex-wrap: wrap;
 
-    @include media(l, xl) {
+    @include mixins.media(l, xl) {
       flex-direction: row;
       align-items: flex-end;
     }
@@ -28,7 +28,7 @@
       align-items: center;
 
       .heading {
-        font-size: $fontsize-heading-s;
+        font-size: all.$fontsize-heading-s;
         padding-right: 1rem;
       }
     }
@@ -41,7 +41,7 @@
 
   .headlineButton[aria-expanded="false"] {
     .invalidIcon {
-      color: $color-error;
+      color: all.$color-error;
     }
   }
 
@@ -53,7 +53,7 @@
     padding: 0;
 
     > div:nth-child(2n) {
-      background-color: $color-bus-light;
+      background-color: all.$color-bus-light;
     }
   }
 }

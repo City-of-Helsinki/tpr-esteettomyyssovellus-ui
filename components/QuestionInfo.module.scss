@@ -1,13 +1,13 @@
-@import "~hds-design-tokens/lib/all.scss";
-@import "../styles/mixins.scss";
+@use "~hds-design-tokens/lib/all.scss";
+@use "../styles/mixins.scss";
 
 .infocontainer {
-  @include media(xs) {
-    margin-bottom: $spacing-s;
+  @include mixins.media(xs) {
+    margin-bottom: all.$spacing-s;
   }
 
   button {
-    color: $color-bus !important;
+    color: all.$color-bus !important;
     font-weight: 400;
 
     &:hover {

@@ -1,11 +1,11 @@
-@import "~hds-design-tokens/lib/all.scss";
-@import "../styles/mixins.scss";
+@use "~hds-design-tokens/lib/all.scss";
+@use "../styles/mixins.scss";
 
 .maincontainer {
-  background-color: $color-bus-light;
-  padding: $spacing-s;
-  margin-top: $spacing-xs;
-  margin-bottom: $spacing-5-xl;
+  background-color: all.$color-bus-light;
+  padding: all.$spacing-s;
+  margin-top: all.$spacing-xs;
+  margin-bottom: all.$spacing-5-xl;
 
   > div:last-child {
     margin-bottom: 0;
@@ -13,30 +13,30 @@
 
   .subcontainer {
     width: 100%;
-    margin-bottom: $spacing-m;
+    margin-bottom: all.$spacing-m;
 
     h4 {
-      margin-bottom: $spacing-m;
+      margin-bottom: all.$spacing-m;
     }
 
     .mappicturecontainer {
       display: flex;
       flex-direction: row;
 
-      @include media(xs, s) {
+      @include mixins.media(xs, s) {
         flex-direction: column;
       }
 
       > div {
         width: 50%;
 
-        @include media(xs, s) {
+        @include mixins.media(xs, s) {
           width: 100%;
         }
       }
 
       .label div {
-        margin-bottom: $spacing-m;
+        margin-bottom: all.$spacing-m;
       }
 
       .picture {

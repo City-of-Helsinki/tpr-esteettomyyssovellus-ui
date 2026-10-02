@@ -1,4 +1,4 @@
-@import "~hds-design-tokens/lib/all.scss";
+@use "~hds-design-tokens/lib/all.scss";
 
 .addressBlock {
   display: flex;
@@ -9,14 +9,14 @@
   }
 
   .address {
-    font-size: $fontsize-heading-s;
+    font-size: all.$fontsize-heading-s;
     font-weight: 700;
-    padding: 0 $spacing-2-xs;
+    padding: 0 all.$spacing-2-xs;
   }
 }
 
 .radioButtonDiv {
-  background-color: $color-error-light;
-  padding: $spacing-s;
-  margin-bottom: $spacing-s;
+  background-color: all.$color-error-light;
+  padding: all.$spacing-s;
+  margin-bottom: all.$spacing-s;
 }

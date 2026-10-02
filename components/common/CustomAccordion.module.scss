@@ -1,10 +1,10 @@
-@import "~hds-design-tokens/lib/all.scss";
-@import "../../styles/mixins.scss";
+@use "~hds-design-tokens/lib/all.scss";
+@use "../../styles/mixins.scss";
 
 .maincontainer {
   > button:first-child {
-    color: $color-black;
-    background-color: $color-black-5;
+    color: all.$color-black;
+    background-color: all.$color-black-5;
     border: 0;
     padding: 0 1rem;
 
@@ -14,13 +14,13 @@
     }
 
     &:focus {
-      color: $color-black;
-      background-color: $color-black-5;
+      color: all.$color-black;
+      background-color: all.$color-black-5;
     }
 
     &:hover, &:focus:hover, &:not(:disabled):focus:hover {
-      color: $color-black;
-      background-color: $color-black-5;
+      color: all.$color-black;
+      background-color: all.$color-black-5;
       text-decoration: underline;
     }
   }
