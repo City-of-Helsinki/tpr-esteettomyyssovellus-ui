@@ -107,8 +107,7 @@ function QuestionFormCtrlButtons({
       // Filter to make sure the answered choices only include answers for the visible questions
       // It is possible to answer a question, then change a previous answer, which then makes this question hidden
       const filteredAnswerChoices = curAnsweredChoices.filter(
-        (choice): choice is number =>
-        visibleQuestionChoiceIds?.includes(Number(choice)) ?? false 
+        (choice): choice is number => visibleQuestionChoiceIds?.includes(Number(choice)) ?? false
       );
 
       // Filter accessibility places and comments to make sure they are applicable for the visible question blocks

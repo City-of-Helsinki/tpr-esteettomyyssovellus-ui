@@ -85,7 +85,7 @@ function EntranceLocationPhotoCtrlButtons({ entranceLocationPhoto }: EntranceLoc
   };
 
   // Initialise the validation on first render only, using a workaround utilising useEffect with empty dependency array
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+
   //const useMountEffect = (fun: () => void) => useEffect(fun, []);
   //useMountEffect(validateForm);
   useEffect(() => {

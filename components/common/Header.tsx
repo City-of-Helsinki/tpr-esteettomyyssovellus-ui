@@ -42,6 +42,10 @@ function Header({ isSummary, children, homePagePath }: HeaderProps): ReactElemen
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.generalSlice.user);
 
+  const defaultProps = {
+    children: [],
+  }
+
   //const currentUser = useSelector((state: RootState) => state.general.user);
 
   const logoSrcFromLanguage = () => {
@@ -165,9 +169,5 @@ function Header({ isSummary, children, homePagePath }: HeaderProps): ReactElemen
     </DynamicHeader>
   );
 }
-
-Header.defaultProps = {
-  children: [],
-};
 
 export default Header;

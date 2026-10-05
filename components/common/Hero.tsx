@@ -3,8 +3,7 @@
 import React from "react";
 
 import { Box, Card, CardContent, CardMedia, Container, Hidden, Typography } from "@mui/material";
-import { styled, Theme } from "@mui/material/styles";
-import { makeStyles } from "mui-styles";
+import { styled, Theme, makeStyles } from "mui-styles";
 import dynamic from "next/dynamic";
 import { Koros } from "hds-react";
 
@@ -171,7 +170,7 @@ export function Hero(props: HeroProps): JSX.Element {
 
   return (
     <>
-      <Box sx={{ display: { xs: 'none', sm: 'none', md: 'block' } }}>
+      <Box sx={{ display: { xs: "none", sm: "none", md: "block" } }}>
         <Container maxWidth="xl" className={classes.container}>
           <FiCard className={classes.card}>
             <div>
@@ -202,7 +201,7 @@ export function Hero(props: HeroProps): JSX.Element {
           </svg>
         </Container>
       </Box>
-      <Box sx={{ display: { xs: 'block', sm: 'block', md: 'none' } }}>
+      <Box sx={{ display: { xs: "block", sm: "block", md: "none" } }}>
         <Container maxWidth="lg" className={classes.mobileContainer}>
           <Typography gutterBottom variant="h2" component="h1" className={classes.mobileTitle}>
             {title}
