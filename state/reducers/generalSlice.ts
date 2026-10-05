@@ -31,15 +31,9 @@ export const generalSlice = createSlice({
       const { coordinatesWGS84 } = action.payload;
       return { ...state, coordinatesWGS84 };
     },
-    setHelpOpen: (state, action: PayloadAction<boolean>) => {
-      return { ...state, isHelpOpen: action.payload };
-    },
-    setUser: (state, action: PayloadAction<string>) => {
-      return { ...state, user: action.payload };
-    },
-    setChecksum: (state, action: PayloadAction<string>) => {
-      return { ...state, checksum: action.payload };
-    },
+    setHelpOpen: (state, action: PayloadAction<boolean>) => ({ ...state, isHelpOpen: action.payload }),
+    setUser: (state, action: PayloadAction<string>) => ({ ...state, user: action.payload }),
+    setChecksum: (state, action: PayloadAction<string>) => ({ ...state, checksum: action.payload }),
   },
   extraReducers: (builder) => {
     builder.addCase(PURGE, (state) => ({

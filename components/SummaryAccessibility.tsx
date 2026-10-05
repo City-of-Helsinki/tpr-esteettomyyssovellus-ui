@@ -11,7 +11,7 @@ import styles from "./SummaryAccessibility.module.scss";
 
 // usage: used in details/landing page to create a summary block of sentences etc
 // this component more like a container -> used with SummarySideNavigation
-const SummaryAccessibility = ({ entranceKey, sentenceGroupId, accessibilityData, entranceChoiceData }: SummaryAccessibilityProps): JSX.Element => {
+function SummaryAccessibility({ entranceKey, sentenceGroupId, accessibilityData, entranceChoiceData }: SummaryAccessibilityProps): JSX.Element {
   const i18n = useI18n();
   const curLocaleId: number = LanguageLocales[i18n.locale() as keyof typeof LanguageLocales];
 
@@ -35,9 +35,9 @@ const SummaryAccessibility = ({ entranceKey, sentenceGroupId, accessibilityData,
       return (
         <ul className={styles.sentencelist}>
           {sentenceGroup
-            .sort((a: BackendEntranceSentence, b: BackendEntranceSentence) => {
-              return (a.sentence_order_text ?? "").localeCompare(b.sentence_order_text ?? "");
-            })
+            .sort((a: BackendEntranceSentence, b: BackendEntranceSentence) =>
+              (a.sentence_order_text ?? "").localeCompare(b.sentence_order_text ?? "")
+            )
             .map((s) => {
               const { sentence_type } = s;
               return (
@@ -54,14 +54,13 @@ const SummaryAccessibility = ({ entranceKey, sentenceGroupId, accessibilityData,
 
   const getQuestionsAnswersAccordion = () => {
     if (sentenceGroup && entranceChoiceData[entranceKey]) {
-      const getQuestionAnswers = () => {
-        return entranceChoiceData[entranceKey]
+      const getQuestionAnswers = () =>
+        entranceChoiceData[entranceKey]
           .filter((qa) => qa.sentence_group_id === Number(sentenceGroupId) && qa.language_id === curLocaleId)
           .sort((a, b) => (a.question_order_text ?? "").localeCompare(b.question_order_text ?? ""));
-      };
 
-      const getQuestionAnswerRows = (limit: number, isLessThan: boolean) => {
-        return getQuestionAnswers().map((qa, index) => {
+      const getQuestionAnswerRows = (limit: number, isLessThan: boolean) =>
+        getQuestionAnswers().map((qa, index) => {
           if (qa) {
             const { question_id, question_code, question_text, question_choice_text, question_order_text } = qa;
 
@@ -75,7 +74,6 @@ const SummaryAccessibility = ({ entranceKey, sentenceGroupId, accessibilityData,
             );
           }
         });
-      };
 
       const rows = getQuestionAnswers().length;
       const rowLimit = 10;
@@ -120,6 +118,6 @@ const SummaryAccessibility = ({ entranceKey, sentenceGroupId, accessibilityData,
       )}
     </div>
   );
-};
+}
 
 export default SummaryAccessibility;

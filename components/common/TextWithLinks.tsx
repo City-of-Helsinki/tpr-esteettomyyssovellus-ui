@@ -1,13 +1,13 @@
 import React from "react";
 import { useI18n } from "next-localization";
-import { Link as HdsLink } from "hds-react";
+import { Link as HdsLink, LinkSize } from "hds-react";
 import { splitTextUrls } from "../../utils/utilFunctions";
 
 interface TextWithLinksProps {
   text: string;
 }
 
-const TextWithLinks = ({ text }: TextWithLinksProps): JSX.Element => {
+function TextWithLinks({ text }: TextWithLinksProps): JSX.Element {
   const i18n = useI18n();
 
   const convertTextUrlsToLinks = () => {
@@ -21,7 +21,7 @@ const TextWithLinks = ({ text }: TextWithLinksProps): JSX.Element => {
           <HdsLink
             key={key}
             href={textOrLink}
-            size="M"
+            size={LinkSize.Medium}
             openInNewTab
             openInNewTabAriaLabel={i18n.t("common.opensInANewTab")}
             external
@@ -31,14 +31,13 @@ const TextWithLinks = ({ text }: TextWithLinksProps): JSX.Element => {
             {textOrLink}
           </HdsLink>
         );
-      } else {
-        // Text
-        return textOrLink.trim();
       }
+      // Text
+      return textOrLink.trim();
     });
   };
 
   return <p>{convertTextUrlsToLinks()}</p>;
-};
+}
 
 export default TextWithLinks;

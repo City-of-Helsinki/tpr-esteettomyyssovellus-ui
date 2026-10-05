@@ -64,6 +64,10 @@
       "validationFailed": {
         "title": "The form is missing information",
         "message": "Please check the information, incorrect fields are highlighted below"
+      },
+      "saveFailed": {
+        "title": "Saving failed",
+        "message": "The information could not be saved. Please try again."
       }
     },
     "mainEntrance": "Main entrance",
@@ -274,6 +278,8 @@
     "headerSentence1": "The location of ",
     "headerSentence2": " servicepoint has changed.",
     "radioButtonYes": "The accessibility information must be entered again. (The location has moved to other premises)",
-    "radioButtonNo": "The accessibility information will not change."
+    "radioButtonNo": "The accessibility information will not change.",
+    "updateErrorTitle": "Updating information failed",
+    "updateErrorMessage": "The information could not be updated. Try again later or contact palvelukartta@hel.fi."
   }
 }

@@ -12,7 +12,7 @@ import { AdditionalCommentProps } from "../types/general";
 import styles from "./AdditionalComment.module.scss";
 
 // usage: additional info page comment component
-const AdditionalComment = ({ questionBlockId, questionBlockComment }: AdditionalCommentProps): JSX.Element => {
+function AdditionalComment({ questionBlockId, questionBlockComment }: AdditionalCommentProps): JSX.Element {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
 
@@ -86,7 +86,7 @@ const AdditionalComment = ({ questionBlockId, questionBlockComment }: Additional
       <div className={styles.inputcontainer}>
         <div className={styles.commentcontainer}>
           <TextArea
-            id={"comment-fin"}
+            id="comment-fin"
             label={i18n.t("additionalInfo.commentLabel")}
             helperText={i18n.t("additionalInfo.commentHelperText")}
             // required
@@ -108,7 +108,7 @@ const AdditionalComment = ({ questionBlockId, questionBlockComment }: Additional
               textOnBottom
             >
               <TextArea
-                id={"comment-sv"}
+                id="comment-sv"
                 label={i18n.t("additionalInfo.commentLabelSwe")}
                 helperText={i18n.t("additionalInfo.commentHelperTextSwe")}
                 onChange={(evt: ChangeEvent<HTMLTextAreaElement>) => handleAddComment(evt, "sv", i18n.t("additionalInfo.commentLabelSwe"))}
@@ -126,7 +126,7 @@ const AdditionalComment = ({ questionBlockId, questionBlockComment }: Additional
               textOnBottom
             >
               <TextArea
-                id={"comment-eng"}
+                id="comment-eng"
                 label={i18n.t("additionalInfo.commentLabelEng")}
                 helperText={i18n.t("additionalInfo.commentHelperTextEng")}
                 onChange={(evt: ChangeEvent<HTMLTextAreaElement>) => handleAddComment(evt, "en", i18n.t("additionalInfo.commentLabelEng"))}
@@ -138,6 +138,6 @@ const AdditionalComment = ({ questionBlockId, questionBlockComment }: Additional
       </div>
     </div>
   );
-};
+}
 
 export default AdditionalComment;

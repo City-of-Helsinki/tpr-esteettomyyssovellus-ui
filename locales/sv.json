@@ -64,6 +64,10 @@
       "validationFailed": {
         "title": "Blanketten saknar information",
         "message": "Kontrollera uppgifterna, de felaktiga punkterna är markerade här under"
+      },
+      "saveFailed": {
+        "title": "Det gick inte att spara",
+        "message": "Informationen kunde inte sparas. Försök igen."
       }
     },
     "mainEntrance": "Huvudingången",
@@ -274,6 +278,8 @@
     "headerSentence1": "Platsen för ",
     "headerSentence2": " har ändrats.",
     "radioButtonYes": "Tillgänglighetsinformationen måste anges igen. (Kontoret har flyttat till andra lokaler)",
-    "radioButtonNo": "Tillgänglighetsinformationen kommer inte att ändras."
+    "radioButtonNo": "Tillgänglighetsinformationen kommer inte att ändras.",
+    "updateErrorTitle": "Uppdateringen misslyckades",
+    "updateErrorMessage": "Informationen kunde inte uppdateras. Försök igen senare eller kontakta palvelukartta@hel.fi."
   }
 }

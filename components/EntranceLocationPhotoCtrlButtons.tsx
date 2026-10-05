@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { IconArrowLeft } from "hds-react";
+import { ButtonVariant, IconArrowLeft } from "hds-react";
 import { useI18n } from "next-localization";
 import { useRouter } from "next/router";
 import QuestionButton from "./QuestionButton";
@@ -16,7 +16,7 @@ import styles from "./EntranceLocationPhotoCtrlButtons.module.scss";
 
 // usage: save and return without saving buttons in additionalinfo page
 // notes: only save if save clicked, if return no save or back button (browser, mice etc) returns to old or empty value
-const EntranceLocationPhotoCtrlButtons = ({ entranceLocationPhoto }: EntranceLocationPhotoCtrlButtonsProps): JSX.Element => {
+function EntranceLocationPhotoCtrlButtons({ entranceLocationPhoto }: EntranceLocationPhotoCtrlButtonsProps): JSX.Element {
   const i18n = useI18n();
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -86,8 +86,11 @@ const EntranceLocationPhotoCtrlButtons = ({ entranceLocationPhoto }: EntranceLoc
 
   // Initialise the validation on first render only, using a workaround utilising useEffect with empty dependency array
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const useMountEffect = (fun: () => void) => useEffect(fun, []);
-  useMountEffect(validateForm);
+  //const useMountEffect = (fun: () => void) => useEffect(fun, []);
+  //useMountEffect(validateForm);
+  useEffect(() => {
+    validateForm();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const revertLocationPhoto = useCallback(() => {
     // Revert this entrance location and photo using existing values
@@ -142,16 +145,16 @@ const EntranceLocationPhotoCtrlButtons = ({ entranceLocationPhoto }: EntranceLoc
 
   return (
     <div className={styles.maincontainer}>
-      <QuestionButton variant="secondary" iconLeft={<IconArrowLeft />} onClickHandler={handleSaveAndReturn}>
+      <QuestionButton variant={ButtonVariant.Secondary} iconStart={<IconArrowLeft />} onClickHandler={handleSaveAndReturn}>
         {i18n.t("common.buttons.saveAndReturn")}
       </QuestionButton>
       <span className={styles.noborderbutton}>
-        <QuestionButton variant="secondary" onClickHandler={() => handleReturnNoSave()}>
+        <QuestionButton variant={ButtonVariant.Secondary} onClickHandler={() => handleReturnNoSave()}>
           {i18n.t("common.buttons.returnNoSave")}
         </QuestionButton>
       </span>
     </div>
   );
-};
+}
 
 export default EntranceLocationPhotoCtrlButtons;
