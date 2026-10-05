@@ -1,13 +1,13 @@
 import React from "react";
 import { useRouter } from "next/router";
 import { useI18n } from "next-localization";
-import { IconPenLine, Link as HdsLink } from "hds-react";
+import { IconPenLine, Link as HdsLink, LinkSize } from "hds-react";
 import { setQuestionBlockComment } from "../state/reducers/additionalInfoSlice";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { QuestionBlockCommentProps } from "../types/general";
 import styles from "./QuestionBlockComment.module.scss";
 
-const QuestionBlockComment = ({ block }: QuestionBlockCommentProps): JSX.Element => {
+function QuestionBlockComment({ block }: QuestionBlockCommentProps): JSX.Element {
   const i18n = useI18n();
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -20,9 +20,7 @@ const QuestionBlockComment = ({ block }: QuestionBlockCommentProps): JSX.Element
   const { question_block_id, text } = block;
 
   // Show the comments for this question block
-  const filteredQuestionBlockComment = curQuestionBlockComments.find((blockComment) => {
-    return blockComment.question_block_id === question_block_id;
-  });
+  const filteredQuestionBlockComment = curQuestionBlockComments.find((blockComment) => blockComment.question_block_id === question_block_id);
   const { modifiedComment } = filteredQuestionBlockComment || {};
   const { comment_text_fi, comment_text_sv, comment_text_en } = modifiedComment || {};
 
@@ -32,7 +30,7 @@ const QuestionBlockComment = ({ block }: QuestionBlockCommentProps): JSX.Element
       setQuestionBlockComment({
         ...filteredQuestionBlockComment,
         entrance_id: curEntranceId,
-        question_block_id: question_block_id,
+        question_block_id,
         existingComment: filteredQuestionBlockComment?.modifiedComment,
         modifiedComment: filteredQuestionBlockComment?.modifiedComment,
         invalidValues: [],
@@ -55,7 +53,7 @@ const QuestionBlockComment = ({ block }: QuestionBlockCommentProps): JSX.Element
               <IconPenLine aria-hidden onClick={editComment} />
             </div>
             <div className={styles.maintext}>
-              <HdsLink href="#" size="M" disableVisitedStyles onClick={editComment}>
+              <HdsLink href="#" size={LinkSize.Medium} disableVisitedStyles onClick={editComment}>
                 {`${
                   comment_text_fi || comment_text_sv || comment_text_en
                     ? i18n.t("accessibilityForm.editComment")
@@ -82,6 +80,6 @@ const QuestionBlockComment = ({ block }: QuestionBlockCommentProps): JSX.Element
       </div>
     </div>
   );
-};
+}
 
 export default QuestionBlockComment;

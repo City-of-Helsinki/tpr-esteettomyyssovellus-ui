@@ -1,9 +1,9 @@
-import React, { ChangeEvent, ReactElement, useEffect, useState } from "react";
+import React, { ChangeEvent, ReactElement, useEffect, useRef, useState } from "react";
 import { useI18n } from "next-localization";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
-import { Button, RadioButton, SelectionGroup } from "hds-react";
+import { Button, Notification, ButtonVariant, RadioButton, SelectionGroup } from "hds-react";
 import Layout from "../components/common/Layout";
 import LoadSpinner from "../components/common/LoadSpinner";
 import ModalConfirmation from "../components/common/ModalConfirmation";
@@ -28,7 +28,7 @@ import { createEntrance, createServicePoint, getServicepointHash } from "../util
 import { deleteEntrance, formatAddress, getCurrentDate, getTokenHash, validateChecksum, validateDate } from "../utils/utilFunctions";
 import styles from "./ServicePoint.module.scss";
 
-const Servicepoints = ({
+function Servicepoints({
   changed,
   forceAddressChange,
   servicepointId,
@@ -40,13 +40,15 @@ const Servicepoints = ({
   oldAddressNumber,
   newAddressCity,
   oldAddressCity,
+  oldEasting,
+  oldNorthing,
   newEasting,
   newNorthing,
   distance,
   user,
   checksum,
   skip,
-}: ChangeProps): ReactElement => {
+}: ChangeProps): ReactElement {
   const i18n = useI18n();
   const startState = "0";
   const dispatch = useAppDispatch();
@@ -54,6 +56,9 @@ const Servicepoints = ({
 
   const [selectedRadioItem, setSelectedRadioItem] = useState(startState);
   const [confirmDeletion, setConfirmDeletion] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submissionError, setSubmissionError] = useState(false);
+  const submissionStarted = useRef(false);
 
   if (user !== undefined) {
     dispatch(setUser(user));
@@ -74,6 +79,8 @@ const Servicepoints = ({
         address_street_name: newAddress,
         address_no: newAddressNumber,
         address_city: newAddressCity,
+        old_loc_easting: oldEasting,
+        old_loc_northing: oldNorthing,
         loc_easting: newEasting,
         loc_northing: newNorthing,
         modified: getCurrentDate(),
@@ -81,13 +88,17 @@ const Servicepoints = ({
       }),
     };
     const updateAddressUrl = `${getOrigin(router)}/${API_FETCH_SERVICEPOINTS}${servicepointId}/update_address/`;
-    await fetch(updateAddressUrl, updateAddressOptions);
+    const updateAddressResponse = await fetch(updateAddressUrl, updateAddressOptions);
+    if (!updateAddressResponse.ok) {
+      const errorMessage = await updateAddressResponse.text();
+      throw new Error(`Updating service point address failed (${updateAddressResponse.status}): ${errorMessage}`);
+    }
   };
 
   const updateAddressAndShowDetails = async () => {
     await updateAddress();
 
-    router.push(`/details/${servicepointId}?checksum=${checksum}`);
+    await router.push(`/details/${servicepointId}?checksum=${checksum}`);
   };
 
   const handleRadioClick = (e: ChangeEvent<HTMLInputElement>) => {
@@ -95,14 +106,29 @@ const Servicepoints = ({
   };
 
   const handleContinueClick = async () => {
-    if (selectedRadioItem === "1" && entranceId !== undefined) {
-      // Delete the main entrance data and create a new empty one
-      // Form id 0 means main entrance
-      await deleteEntrance(entranceId, router);
-      await createEntrance(servicepointId as number, 0, user as string, `${getOrigin(router)}/`, newEasting as number, newNorthing as number);
+    if (submissionStarted.current) {
+      return;
     }
 
-    await updateAddressAndShowDetails();
+    submissionStarted.current = true;
+    setIsSubmitting(true);
+    setSubmissionError(false);
+
+    try {
+      if (selectedRadioItem === "1" && entranceId !== undefined) {
+        // Delete the main entrance data and create a new empty one
+        // Form id 0 means main entrance
+        await deleteEntrance(entranceId, router);
+        await createEntrance(servicepointId as number, 0, user as string, `${getOrigin(router)}/`, newEasting as number, newNorthing as number);
+      }
+
+      await updateAddressAndShowDetails();
+    } catch (error) {
+      console.error("Error updating service point entrance", error);
+      setSubmissionError(true);
+      submissionStarted.current = false;
+      setIsSubmitting(false);
+    }
   };
 
   const openDeletionConfirmation = () => {
@@ -119,7 +145,12 @@ const Servicepoints = ({
 
   useEffect(() => {
     const updateAddressSync = async () => {
-      await updateAddressAndShowDetails();
+      try {
+        await updateAddressAndShowDetails();
+      } catch (error) {
+        console.error("Error updating service point address", error);
+        setSubmissionError(true);
+      }
     };
 
     if (skip) {
@@ -140,6 +171,11 @@ const Servicepoints = ({
         <title>{i18n.t("common.header.title")}</title>
       </Head>
       <main id="content">
+        {submissionError && (
+          <Notification label={i18n.t("AddressChangedPage.updateErrorTitle")} type="error">
+            {i18n.t("AddressChangedPage.updateErrorMessage")}
+          </Notification>
+        )}
         {changed && (
           <div>
             <h1>
@@ -189,7 +225,12 @@ const Servicepoints = ({
                 />
               </SelectionGroup>
             </div>
-            <Button id="continueButton" variant="primary" disabled={selectedRadioItem === startState} onClick={openDeletionConfirmation}>
+            <Button
+              id="continueButton"
+              variant={ButtonVariant.Primary}
+              disabled={selectedRadioItem === startState}
+              onClick={openDeletionConfirmation}
+            >
               {i18n.t("accessibilityForm.continue")}
             </Button>
 
@@ -202,6 +243,8 @@ const Servicepoints = ({
                 confirmKey="common.buttons.yes"
                 closeCallback={closeDeletionConfirmation}
                 confirmCallback={handleContinueClick}
+                confirmDisabled={isSubmitting}
+                confirmLoading={isSubmitting}
               />
             )}
           </div>
@@ -213,7 +256,7 @@ const Servicepoints = ({
       </main>
     </Layout>
   );
-};
+}
 
 // Server-side rendering
 export const getServerSideProps: GetServerSideProps = async ({ locales, query }) => {
@@ -381,6 +424,17 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
         servicepointChecksum = getServicepointHash(servicepointId);
 
         console.log("New servicepoint and entrance inserted to the database");
+
+        return {
+          props: {
+            lngDict,
+            servicepointId,
+            entranceId,
+            user: queryParams.user,
+            checksum: servicepointChecksum,
+            skip: true,
+          },
+        };
       } else {
         // There could be multiple external servicepoint ids for each servicepoint, so update the
         // servicepoint table with this request's id as a way to record which one was last accessed
@@ -447,17 +501,19 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
           oldAddressNumber.toUpperCase() !== choppedAddressNumber.toUpperCase() ||
           oldAddressCity.toUpperCase() !== choppedPostOffice.toUpperCase();
 
-        const distance = Math.sqrt(Math.pow(oldNorthing - newNorthing, 2) + Math.pow(oldEasting - newEasting, 2));
+        const distance = Math.sqrt((oldNorthing - newNorthing) ** 2 + (oldEasting - newEasting) ** 2);
         const locationHasChanged = distance > 15;
 
         servicepointChecksum = getServicepointHash(servicepointId);
 
         if (finishedEntranceCount === 0) {
           // No accessibility data yet, so go straight to the details page
-          // In this case it is assumed that the provided address and location are correct, so make sure they are updated
+          // In this case it is assumed that the provided address and location are correct, so make sure they are updated.
           return {
             props: {
               servicepointId,
+              oldEasting,
+              oldNorthing,
               newAddress,
               newAddressNumber,
               newAddressCity,
@@ -481,6 +537,8 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
               oldAddress,
               oldAddressNumber,
               oldAddressCity,
+              oldEasting,
+              oldNorthing,
               newAddress,
               newAddressNumber,
               newAddressCity,
@@ -500,6 +558,8 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
               servicepointId,
               servicepointName,
               entranceId,
+              oldEasting,
+              oldNorthing,
               newAddress,
               newAddressNumber,
               newAddressCity,
@@ -512,17 +572,27 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
             },
           };
         }
-      }
 
-      // No changes
-      return {
-        props: {
-          servicepointId,
-          user: queryParams.user,
-          checksum: servicepointChecksum,
-          skip: true,
-        },
-      };
+        // No significant changes (distance <= 15m and address unchanged), but coordinates may still
+        // have shifted slightly. Always persist any coordinate change silently via forceAddressChange.
+        const coordinatesHaveChanged = distance > 0;
+        return {
+          props: {
+            servicepointId,
+            oldEasting,
+            oldNorthing,
+            newAddress,
+            newAddressNumber,
+            newAddressCity,
+            newEasting,
+            newNorthing,
+            user: queryParams.user,
+            checksum: servicepointChecksum,
+            skip: true,
+            forceAddressChange: coordinatesHaveChanged,
+          },
+        };
+      }
     } catch (err) {
       console.log(err);
     }

@@ -16,14 +16,14 @@ import styles from "./QuestionBlock.module.scss";
 
 // usage: in form groups up all questions under a single "question block" / accordion
 // notes: used under headlineQuestionContainer in main form
-const QuestionBlock = ({
+function QuestionBlock({
   block,
   blockQuestions,
   answerChoices,
   extraFields,
   accessibilityPlaces,
   copyableEntrances,
-}: QuestionBlockProps): JSX.Element => {
+}: QuestionBlockProps): JSX.Element {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
   // const isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
@@ -69,9 +69,7 @@ const QuestionBlock = ({
 
   useEffect(() => {
     // check if block is finished (all visible questions are answered), also used to display icon if finished and with validation
-    const blockFinished = visibleQuestions.every((element) => {
-      return element.question_id ? keys.includes(element.question_id.toString()) : false;
-    });
+    const blockFinished = visibleQuestions.every((element) => (element.question_id ? keys.includes(element.question_id.toString()) : false));
 
     if (blockFinished) {
       // Reset any previously stored validation for this block so the block header colour is reset
@@ -161,6 +159,6 @@ const QuestionBlock = ({
       )*/}
     </>
   );
-};
+}
 
 export default QuestionBlock;

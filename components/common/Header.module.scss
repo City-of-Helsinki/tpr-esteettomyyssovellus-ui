@@ -1,24 +1,30 @@
 @import "~hds-design-tokens/lib/all.scss";
 @import "../../styles/mixins";
 
-.header {
+.hds-header {
   border-bottom: 0.15rem solid black;
 
   a:hover {
     border: 0;
   }
 
-  div > svg,
-  a > svg {
+  div>svg,
+  a>svg {
     display: none;
   }
 
-  div > span,
-  a > span {
-    display: flex;
+  div>span,
+  a>span {
+    display: flex !important;
+    flex-direction: row;
+    align-items: center;
     margin-left: $spacing-s;
     opacity: 1 !important;
     transform: none !important;
+
+    span {
+      display: flex !important;
+    }
   }
 }
 

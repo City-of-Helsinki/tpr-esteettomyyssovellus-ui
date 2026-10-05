@@ -42,7 +42,7 @@ import { convertCoordinates, filterByLanguage, formatAddress, getFinnishDate, ge
 import styles from "./summary.module.scss";
 
 // usage: the summary / landing page of servicepoint
-const Summary = ({
+function Summary({
   servicepointData,
   entranceSentenceGroupData,
   accessibilityData,
@@ -53,7 +53,7 @@ const Summary = ({
   formId,
   mainEntranceId,
   isMainEntrancePublished,
-}: SummaryProps): ReactElement => {
+}: SummaryProps): ReactElement {
   const i18n = useI18n();
   const curLocale: string = i18n.locale();
   const dispatch = useAppDispatch();
@@ -85,17 +85,21 @@ const Summary = ({
 
   // Initialise the redux data on first render only, using a workaround utilising useEffect with empty dependency array
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const useMountEffect = (fun: () => void) => useEffect(fun, []);
-  useMountEffect(initReduxData);
+  //const useMountEffect = (fun: () => void) => useEffect(fun, []);
+  //useMountEffect(validateForm);
+  useEffect(() => {
+    initReduxData();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Filter by language
   // Make sure that the main entrance is listed before the side entrances.
-  const filteredAccessibilityData: AccessibilityData = Object.keys(accessibilityData).reduce((acc, key) => {
-    return {
+  const filteredAccessibilityData: AccessibilityData = Object.keys(accessibilityData).reduce(
+    (acc, key) => ({
       ...acc,
       [key]: filterByLanguage(accessibilityData[key], i18n.locale()),
-    };
-  }, {});
+    }),
+    {}
+  );
 
   const curLocaleId: number = LanguageLocales[i18n.locale() as keyof typeof LanguageLocales];
   const filteredPlaces = accessibilityPlaceData.filter((place) => place.language_id === curLocaleId);
@@ -140,9 +144,7 @@ const Summary = ({
 
             <div>
               {entranceSentenceGroupData
-                .sort((a: BackendEntranceSentenceGroup, b: BackendEntranceSentenceGroup) => {
-                  return (a.order_text ?? "").localeCompare(b.order_text ?? "");
-                })
+                .sort((a: BackendEntranceSentenceGroup, b: BackendEntranceSentenceGroup) => (a.order_text ?? "").localeCompare(b.order_text ?? ""))
                 .map((entranceSentenceGroup) => {
                   const { entrance_id, sentence_group_id, display_entrance_with_map } = entranceSentenceGroup;
                   const entranceKey = String(entrance_id);
@@ -193,7 +195,7 @@ const Summary = ({
       )}
     </Layout>
   );
-};
+}
 
 // Server-side rendering
 export const getServerSideProps: GetServerSideProps = async ({ params, locales }) => {
@@ -265,12 +267,13 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
 
       const mainEntranceDetails = entranceResultDetails.find((resultDetails) => resultDetails.entranceResult.is_main_entrance === "Y");
 
-      entranceData = entranceResultDetails.reduce((acc, resultDetails) => {
-        return {
+      entranceData = entranceResultDetails.reduce(
+        (acc, resultDetails) => ({
           ...acc,
           ...(resultDetails.entrance && { [resultDetails.entrance.entrance_id]: resultDetails.entrance }),
-        };
-      }, {});
+        }),
+        {}
+      );
 
       // Check if the main entrance exists and is published
       isMainEntrancePublished = !!mainEntranceDetails?.entrance && mainEntranceDetails?.entrance.form_submitted === "Y";
@@ -288,12 +291,13 @@ export const getServerSideProps: GetServerSideProps = async ({ params, locales }
           return { entranceResult, sentenceData };
         })
       );
-      accessibilityData = entranceResultSentences.reduce((acc, resultSentence) => {
-        return {
+      accessibilityData = entranceResultSentences.reduce(
+        (acc, resultSentence) => ({
           ...acc,
           [resultSentence.entranceResult.entrance_id]: resultSentence.sentenceData,
-        };
-      }, {});
+        }),
+        {}
+      );
 
       // Get the accessibility place data for use in the accessibility summaries for entrance place names
       const accessibilityPlaceResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_PLACES}?format=json`, {

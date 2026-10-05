@@ -6,18 +6,16 @@ import { BackendQuestion } from "../types/backendModels";
 import { QuestionsListProps } from "../types/general";
 
 // usage: list questions component, should be called once per question block
-const QuestionsList = ({ questions, answerChoices, accessibilityPlaces }: QuestionsListProps): JSX.Element => {
+function QuestionsList({ questions, answerChoices, accessibilityPlaces }: QuestionsListProps): JSX.Element {
   return (
     <>
       {questions?.map((question: BackendQuestion) => {
         const answerOptions = answerChoices
           ?.filter((choice) => choice.question_id === question.question_id)
-          .map((choice) => {
-            return {
-              label: choice.text,
-              value: choice.question_choice_id,
-            };
-          });
+          .map((choice) => ({
+            label: choice.text,
+            value: choice.question_choice_id,
+          }));
 
         return (
           <QuestionContainer key={question.question_id} question={question} accessibilityPlaces={accessibilityPlaces}>
@@ -45,6 +43,6 @@ const QuestionsList = ({ questions, answerChoices, accessibilityPlaces }: Questi
       })}
     </>
   );
-};
+}
 
 export default QuestionsList;

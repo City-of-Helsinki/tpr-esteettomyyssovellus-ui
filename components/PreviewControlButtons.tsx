@@ -1,5 +1,5 @@
 import React from "react";
-import { IconArrowLeft } from "hds-react";
+import { ButtonVariant, IconArrowLeft } from "hds-react";
 import { useRouter } from "next/router";
 import { useI18n } from "next-localization";
 import SaveSpinner from "./common/SaveSpinner";
@@ -12,13 +12,13 @@ import { saveFormData } from "../utils/utilFunctions";
 import { PreviewControlButtonsProps } from "../types/general";
 
 // usage: controls for preview page
-const PreviewControlButtons = ({
+function PreviewControlButtons({
   hasData,
   hasSaveDraftButton,
   isNewEntrancePossible,
   formData,
   setSendingComplete,
-}: PreviewControlButtonsProps): JSX.Element => {
+}: PreviewControlButtonsProps): JSX.Element {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -104,8 +104,8 @@ const PreviewControlButtons = ({
     <div className={styles.container}>
       <div className={styles.previewControlButtons}>
         <Button
-          variant="secondary"
-          iconLeft={<IconArrowLeft />}
+          variant={ButtonVariant.Secondary}
+          iconStart={<IconArrowLeft />}
           onClickHandler={handleContinueEditing}
           disabled={isSavingDraft || isSavingFinal || !hasData}
         >
@@ -114,10 +114,10 @@ const PreviewControlButtons = ({
 
         {hasSaveDraftButton && (
           <Button
-            variant="secondary"
+            variant={ButtonVariant.Secondary}
             onClickHandler={handleSaveDraftClick}
             disabled={isSavingDraft || isSavingFinal || !hasData}
-            iconRight={
+            iconEnd={
               isSavingDraft ? (
                 <SaveSpinner
                   savingText={i18n.t("questionFormControlButtons.saving")}
@@ -131,11 +131,11 @@ const PreviewControlButtons = ({
         )}
 
         <Button
-          variant="primary"
+          variant={ButtonVariant.Primary}
           onClickHandler={handleSaveAndSend}
           //disabled={!formFinished}
           disabled={isSavingDraft || isSavingFinal || !hasData}
-          iconRight={
+          iconEnd={
             isSavingFinal ? (
               <SaveSpinner
                 savingText={i18n.t("questionFormControlButtons.saving")}
@@ -149,6 +149,6 @@ const PreviewControlButtons = ({
       </div>
     </div>
   );
-};
+}
 
 export default PreviewControlButtons;

@@ -8,7 +8,7 @@ import { convertCoordinates, isLocationValid } from "../utils/utilFunctions";
 import styles from "./SummaryAccessibilityPlace.module.scss";
 
 // usage: component for accessibility place location and picture, used in details page
-const SummaryAccessibilityPlace = ({ entrancePlaceName, entrancePlaceData, uniqueId }: SummaryAccessibilityPlaceProps): JSX.Element => {
+function SummaryAccessibilityPlace({ entrancePlaceName, entrancePlaceData, uniqueId }: SummaryAccessibilityPlaceProps): JSX.Element {
   const i18n = useI18n();
   const curLocale = i18n.locale();
 
@@ -87,6 +87,6 @@ const SummaryAccessibilityPlace = ({ entrancePlaceName, entrancePlaceData, uniqu
           })}
     </div>
   );
-};
+}
 
 export default SummaryAccessibilityPlace;

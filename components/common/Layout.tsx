@@ -10,7 +10,7 @@ interface LayoutProps {
 }
 
 // usage: general layout for including head, footer etc for all pages
-const Layout = ({ isSummary, children }: LayoutProps): ReactElement => {
+function Layout({ isSummary, children }: LayoutProps): ReactElement {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -28,13 +28,13 @@ const Layout = ({ isSummary, children }: LayoutProps): ReactElement => {
       </Head>
       <div className={styles.left} />
       <div className={styles.main}>
-        <Header isSummary={isSummary} />
+        <Header isSummary={isSummary} children={children} />
         {children}
         <Footer isSummary={isSummary} />
       </div>
       <div className={styles.right} />
     </div>
   );
-};
+}
 
 export default Layout;

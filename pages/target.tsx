@@ -21,7 +21,7 @@ import i18nLoader from "../utils/i18n";
 import { createEntrance, createServicePoint, getServicepointHash } from "../utils/serverside";
 import { getCurrentDate, getTokenHash, validateChecksum, validateDate } from "../utils/utilFunctions";
 
-const Target = ({ servicepointId, entranceId, user, checksum, skip }: TargetProps): ReactElement => {
+function Target({ servicepointId, entranceId, user, checksum, skip }: TargetProps): ReactElement {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -52,7 +52,7 @@ const Target = ({ servicepointId, entranceId, user, checksum, skip }: TargetProp
       </main>
     </Layout>
   );
-};
+}
 
 // Server-side rendering
 export const getServerSideProps: GetServerSideProps = async ({ locales, query }) => {

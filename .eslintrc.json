@@ -43,8 +43,6 @@
       "selector": "variable",
       "format": ["camelCase", "PascalCase", "UPPER_CASE", "snake_case"]
     }],
-    "@typescript-eslint/ban-ts-comment": ["error", {"ts-ignore": "allow-with-description"}],
-    "no-param-reassign": ["error", { "props": true, "ignorePropertyModificationsFor": ["state"] }],
-    "prettier/prettier": ["error", { "endOfLine": "auto" }]
+    "@typescript-eslint/ban-ts-comment": ["error", {"ts-ignore": "allow-with-description"}]
   }
 }
