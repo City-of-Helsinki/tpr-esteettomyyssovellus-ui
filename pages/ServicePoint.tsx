@@ -1,9 +1,9 @@
-import React, { ChangeEvent, ReactElement, useEffect, useState } from "react";
+import React, { ChangeEvent, ReactElement, useEffect, useRef, useState } from "react";
 import { useI18n } from "next-localization";
 import Head from "next/head";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
-import { Button, ButtonVariant, RadioButton, SelectionGroup } from "hds-react";
+import { Button, Notification, ButtonVariant, RadioButton, SelectionGroup } from "hds-react";
 import Layout from "../components/common/Layout";
 import LoadSpinner from "../components/common/LoadSpinner";
 import ModalConfirmation from "../components/common/ModalConfirmation";
@@ -56,6 +56,9 @@ function Servicepoints({
 
   const [selectedRadioItem, setSelectedRadioItem] = useState(startState);
   const [confirmDeletion, setConfirmDeletion] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submissionError, setSubmissionError] = useState(false);
+  const submissionStarted = useRef(false);
 
   if (user !== undefined) {
     dispatch(setUser(user));
@@ -85,13 +88,17 @@ function Servicepoints({
       }),
     };
     const updateAddressUrl = `${getOrigin(router)}/${API_FETCH_SERVICEPOINTS}${servicepointId}/update_address/`;
-    await fetch(updateAddressUrl, updateAddressOptions);
+    const updateAddressResponse = await fetch(updateAddressUrl, updateAddressOptions);
+    if (!updateAddressResponse.ok) {
+      const errorMessage = await updateAddressResponse.text();
+      throw new Error(`Updating service point address failed (${updateAddressResponse.status}): ${errorMessage}`);
+    }
   };
 
   const updateAddressAndShowDetails = async () => {
     await updateAddress();
 
-    router.push(`/details/${servicepointId}?checksum=${checksum}`);
+    await router.push(`/details/${servicepointId}?checksum=${checksum}`);
   };
 
   const handleRadioClick = (e: ChangeEvent<HTMLInputElement>) => {
@@ -99,14 +106,29 @@ function Servicepoints({
   };
 
   const handleContinueClick = async () => {
-    if (selectedRadioItem === "1" && entranceId !== undefined) {
-      // Delete the main entrance data and create a new empty one
-      // Form id 0 means main entrance
-      await deleteEntrance(entranceId, router);
-      await createEntrance(servicepointId as number, 0, user as string, `${getOrigin(router)}/`, newEasting, newNorthing);
+    if (submissionStarted.current) {
+      return;
     }
 
-    await updateAddressAndShowDetails();
+    submissionStarted.current = true;
+    setIsSubmitting(true);
+    setSubmissionError(false);
+
+    try {
+      if (selectedRadioItem === "1" && entranceId !== undefined) {
+        // Delete the main entrance data and create a new empty one
+        // Form id 0 means main entrance
+        await deleteEntrance(entranceId, router);
+        await createEntrance(servicepointId as number, 0, user as string, `${getOrigin(router)}/`, newEasting as number, newNorthing as number);
+      }
+
+      await updateAddressAndShowDetails();
+    } catch (error) {
+      console.error("Error updating service point entrance", error);
+      setSubmissionError(true);
+      submissionStarted.current = false;
+      setIsSubmitting(false);
+    }
   };
 
   const openDeletionConfirmation = () => {
@@ -123,7 +145,12 @@ function Servicepoints({
 
   useEffect(() => {
     const updateAddressSync = async () => {
-      await updateAddressAndShowDetails();
+      try {
+        await updateAddressAndShowDetails();
+      } catch (error) {
+        console.error("Error updating service point address", error);
+        setSubmissionError(true);
+      }
     };
 
     if (skip) {
@@ -144,6 +171,11 @@ function Servicepoints({
         <title>{i18n.t("common.header.title")}</title>
       </Head>
       <main id="content">
+        {submissionError && (
+          <Notification label={i18n.t("AddressChangedPage.updateErrorTitle")} type="error">
+            {i18n.t("AddressChangedPage.updateErrorMessage")}
+          </Notification>
+        )}
         {changed && (
           <div>
             <h1>
@@ -211,6 +243,8 @@ function Servicepoints({
                 confirmKey="common.buttons.yes"
                 closeCallback={closeDeletionConfirmation}
                 confirmCallback={handleContinueClick}
+                confirmDisabled={isSubmitting}
+                confirmLoading={isSubmitting}
               />
             )}
           </div>
@@ -390,6 +424,17 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
         servicepointChecksum = getServicepointHash(servicepointId);
 
         console.log("New servicepoint and entrance inserted to the database");
+
+        return {
+          props: {
+            lngDict,
+            servicepointId,
+            entranceId,
+            user: queryParams.user,
+            checksum: servicepointChecksum,
+            skip: true,
+          },
+        };
       } else {
         // There could be multiple external servicepoint ids for each servicepoint, so update the
         // servicepoint table with this request's id as a way to record which one was last accessed
@@ -463,10 +508,12 @@ export const getServerSideProps: GetServerSideProps = async ({ locales, query })
 
         if (finishedEntranceCount === 0) {
           // No accessibility data yet, so go straight to the details page
-          // In this case it is assumed that the provided address and location are correct, so make sure they are updated
+          // In this case it is assumed that the provided address and location are correct, so make sure they are updated.
           return {
             props: {
               servicepointId,
+              oldEasting,
+              oldNorthing,
               newAddress,
               newAddressNumber,
               newAddressCity,

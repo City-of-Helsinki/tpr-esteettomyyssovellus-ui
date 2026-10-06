@@ -64,6 +64,10 @@
       "validationFailed": {
         "title": "Lomakkeelta puuttuu tietoja",
         "message": "Tarkista tiedot, virheellisiä kohtia on korostettu alla"
+      },
+      "saveFailed": {
+        "title": "Tallennus epäonnistui",
+        "message": "Tietojen tallentaminen epäonnistui. Yritä uudelleen."
       }
     },
     "mainEntrance": "Pääsisäänkäynti",
@@ -274,6 +278,8 @@
     "headerSentence1": "Toimipisteen ",
     "headerSentence2": " sijainti on muuttunut.",
     "radioButtonYes": "Esteettömyystiedot tulee syöttää uudelleen. (Toimipiste on muuttanut toisiin tiloihin)",
-    "radioButtonNo": "Esteettömyystiedot eivät muutu."
+    "radioButtonNo": "Esteettömyystiedot eivät muutu.",
+    "updateErrorTitle": "Tietojen päivitys epäonnistui",
+    "updateErrorMessage": "Yritä myöhemmin uudelleen tai ota yhteyttä osoitteeseen palvelukartta@hel.fi."
   }
 }

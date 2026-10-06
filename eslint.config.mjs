@@ -49,7 +49,7 @@ export default defineConfig(
     },
     rules: {
       ...prettierConfig.rules,
-      "prettier/prettier": "error",
+      "prettier/prettier": ["error", { endOfLine: "auto" }],
       "react/react-in-jsx-scope": "off",
       "react/jsx-uses-react": "off",
       "react-hooks/rules-of-hooks": "error",

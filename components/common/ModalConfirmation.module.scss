@@ -3,8 +3,10 @@
 .dialog {
   padding: all.$spacing-m;
 
-  div {
-    margin: all.$spacing-s;
+  .title,
+  .message,
+  .buttons {
+    margin: $spacing-s;
   }
 
   .title {
