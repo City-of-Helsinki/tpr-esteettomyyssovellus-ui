@@ -2,9 +2,10 @@ module.exports = {
   // BASE_PATH is defined in .env.development for local development, and .env.production for test and production servers
   // assetPrefix is not currently needed
   basePath: process.env.BASE_PATH || "",
+  transpilePackages: ["mui-styles"],
   eslint: {
     // ESLint 9 is run explicitly before the build; Next 13 uses removed ESLint 8 options.
-    ignoreDuringBuilds: true,
+    // ignoreDuringBuilds: true,
   },
   i18n: {
     locales: ["fi", "sv", "en"],

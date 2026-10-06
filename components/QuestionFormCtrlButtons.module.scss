@@ -1,5 +1,5 @@
-@import "~hds-design-tokens/lib/all.scss";
-@import "../styles/mixins.scss";
+@use "~hds-design-tokens/lib/all.scss";
+@use "../styles/mixins.scss";
 
 .container {
   display: flex;
@@ -7,7 +7,7 @@
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  margin-top: $spacing-l;
+  margin-top: all.$spacing-l;
 
   .left {
     justify-content: flex-start;

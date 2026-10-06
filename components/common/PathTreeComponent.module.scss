@@ -1,5 +1,5 @@
-@import "~hds-design-tokens/lib/all.scss";
-@import "../../styles/mixins.scss";
+@use "~hds-design-tokens/lib/all.scss";
+@use "../../styles/mixins.scss";
 
 .pathTree {
   .pathTreeList {
@@ -18,10 +18,10 @@
 
   .pathTreeItem + .pathTreeItem::before {
     display: inline-block;
-    margin: 0 $spacing-3-xs;
+    margin: 0 all.$spacing-3-xs;
     transform: rotate(15deg);
     border-right: 0.1em solid currentcolor;
-    height: $spacing-xs;
+    height: all.$spacing-xs;
     content: "";
   }
 }

@@ -1,7 +1,7 @@
-@import "~hds-design-tokens/lib/all.scss";
-@import "../styles/mixins.scss";
+@use "~hds-design-tokens/lib/all.scss";
+@use "../styles/mixins.scss";
 
 .maincontainer {
-  margin-top: $spacing-xs;
-  margin-bottom: $spacing-5-xl;
+  margin-top: all.$spacing-xs;
+  margin-bottom: all.$spacing-5-xl;
 }

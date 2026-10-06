@@ -1,5 +1,5 @@
-@import "~hds-design-tokens/lib/all.scss";
-@import "../styles/mixins.scss";
+@use "~hds-design-tokens/lib/all.scss";
+@use "../styles/mixins.scss";
 
 .previewControlButtons {
   display: flex;

@@ -1,11 +1,11 @@
-@import "~hds-design-tokens/lib/all.scss";
-@import "../../styles/mixins.scss";
+@use "~hds-design-tokens/lib/all.scss";
+@use "../../styles/mixins.scss";
 
 .maincontainer {
-  margin-top: $spacing-m;
+  margin-top: all.$spacing-m;
 
   .infocontainer {
-    margin: $spacing-m 0;
+    margin: all.$spacing-m 0;
   }
 
   .headingcontainer {
@@ -14,18 +14,18 @@
       margin-bottom: 0;
     }
     h2, h3 {
-      color: $color-bus;
+      color: all.$color-bus;
     }
 
     .subHeader {
-      color: $color-black;
-      font-size: $fontsize-heading-m !important;
+      color: all.$color-black;
+      font-size: all.$fontsize-heading-m !important;
       font-weight: 700;
       margin-top: 0;
-      margin-bottom: $spacing-l;
+      margin-bottom: all.$spacing-l;
 
-      @include media(xs) {
-        font-size: $fontsize-heading-s !important;
+      @include mixins.media(xs) {
+        font-size: all.$fontsize-heading-s !important;
       }
     }
 
@@ -35,8 +35,8 @@
       flex-direction: row;
 
       span {
-        padding: $spacing-2-xs;
-        margin-right: $spacing-s;
+        padding: all.$spacing-2-xs;
+        margin-right: all.$spacing-s;
       }
     }
 
@@ -54,15 +54,15 @@
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-between;
-    margin-top: $spacing-4-xl;
-    margin-bottom: $spacing-xs;
+    margin-top: all.$spacing-4-xl;
+    margin-bottom: all.$spacing-xs;
 
-    @include media(s, xs) {
+    @include mixins.media(s, xs) {
       flex-direction: column;
     }
 
     h3 {
-      color: $color-bus;
+      color: all.$color-bus;
       margin-bottom: 0;
     }
 
@@ -79,6 +79,6 @@
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: flex-start;
-    margin-top: $spacing-4-xl;
+    margin-top: all.$spacing-4-xl;
   }
 }

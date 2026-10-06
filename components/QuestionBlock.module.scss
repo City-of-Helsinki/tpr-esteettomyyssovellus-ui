@@ -1,12 +1,12 @@
-@import "~hds-design-tokens/lib/all.scss";
-@import "../styles/mixins.scss";
+@use "~hds-design-tokens/lib/all.scss";
+@use "../styles/mixins.scss";
 
 .mainInfo {
   overflow-wrap: break-word;
 }
 
 .continueButton {
-  margin-top: $spacing-m;
+  margin-top: all.$spacing-m;
   :focus::after {
     margin-right: -0.95rem;
   }
@@ -22,7 +22,7 @@
   }
 
   .guideLink {
-    margin-bottom: $spacing-s;
+    margin-bottom: all.$spacing-s;
   }
 }
 

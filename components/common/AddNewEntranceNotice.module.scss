@@ -1,46 +1,46 @@
-@import "~hds-design-tokens/lib/all.scss";
-@import "../../styles/mixins";
+@use "~hds-design-tokens/lib/all.scss";
+@use "../../styles/mixins";
 
 .notice {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  margin: $spacing-m 0;
-  padding: $spacing-m;
-  margin-bottom: $spacing-layout-s;
-  border: solid $color-bus 0;
-  border-left-width: $spacing-2-xs;
-  background-color: $color-fog-light;
+  margin: all.$spacing-m 0;
+  padding: all.$spacing-m;
+  margin-bottom: all.$spacing-layout-s;
+  border: solid all.$color-bus 0;
+  border-left-width: all.$spacing-2-xs;
+  background-color: all.$color-fog-light;
 
   .titlecontainer {
     display: flex;
     align-items: center;
 
     .icon {
-      color: $color-bus;
+      color: all.$color-bus;
     }
 
     .title {
-      margin-left: $spacing-m;
-      font-size: $fontsize-heading-m;
+      margin-left: all.$spacing-m;
+      font-size: all.$fontsize-heading-m;
       font-weight: 700;
       outline: none;
 
-      @include media(xs) {
-        font-size: $fontsize-heading-s;
+      @include mixins.media(xs) {
+        font-size: all.$fontsize-heading-s;
       }
     }
   }
 
   .text {
-    margin: $spacing-xs;
-    @include media(xs) {
-      margin-left: $spacing-s;
+    margin: all.$spacing-xs;
+    @include mixins.media(xs) {
+      margin-left: all.$spacing-s;
     }
 
-    max-width: 8 * $spacing-4-xl;
-    @include media(xl) {
-      max-width: 12 * $spacing-4-xl;
+    max-width: 8 * all.$spacing-4-xl;
+    @include mixins.media(xl) {
+      max-width: 12 * all.$spacing-4-xl;
     }
   }
 
@@ -50,6 +50,6 @@
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: flex-start;
-    margin: $spacing-m 0;
+    margin: all.$spacing-m 0;
   }
 }

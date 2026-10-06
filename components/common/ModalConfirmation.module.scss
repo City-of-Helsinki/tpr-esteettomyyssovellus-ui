@@ -1,7 +1,7 @@
-@import "~hds-design-tokens/lib/all.scss";
+@use "~hds-design-tokens/lib/all.scss";
 
 .dialog {
-  padding: $spacing-m;
+  padding: all.$spacing-m;
 
   .title,
   .message,
@@ -10,7 +10,7 @@
   }
 
   .title {
-    font-size: $fontsize-heading-m;
+    font-size: all.$fontsize-heading-m;
     font-weight: 700;
   }
 

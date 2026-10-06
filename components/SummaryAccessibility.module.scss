@@ -1,10 +1,10 @@
-@import "~hds-design-tokens/lib/all.scss";
-@import "../styles/mixins.scss";
+@use "~hds-design-tokens/lib/all.scss";
+@use "../styles/mixins.scss";
 
 .maincontainer {
   h4 {
-    background-color: $color-bus-light;
-    padding: $spacing-s;
+    background-color: all.$color-bus-light;
+    padding: all.$spacing-s;
   }
 
   .headercontainer {
@@ -15,10 +15,10 @@
   }
 
   .sentencelist {
-    padding: 0 $spacing-s;
+    padding: 0 all.$spacing-s;
 
     .sentence {
-      margin: $spacing-s 0;
+      margin: all.$spacing-s 0;
 
       .comment {
         font-weight: 700;
@@ -27,20 +27,20 @@
   }
 
   .accordioncontent {
-    margin-top: $spacing-m;
+    margin-top: all.$spacing-m;
   }
 
   .questioncontainer {
-    margin-top: $spacing-2-xs;
+    margin-top: all.$spacing-2-xs;
 
     .answer {
       font-weight: 700;
-      margin-left: $spacing-2-xs;
+      margin-left: all.$spacing-2-xs;
     }
   }
 
   .footercontainer {
-    margin-top: $spacing-l;
+    margin-top: all.$spacing-l;
   }
 
   .nodatacontainer {
@@ -49,7 +49,7 @@
       justify-content: flex-start;
       align-items: center;
       svg {
-        margin-right: $spacing-s;
+        margin-right: all.$spacing-s;
       }
     }
   }

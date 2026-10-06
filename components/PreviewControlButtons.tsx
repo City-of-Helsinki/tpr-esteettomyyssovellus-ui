@@ -58,7 +58,7 @@ function PreviewControlButtons({
 
   const saveData = async (isDraft: boolean): Promise<void> => {
     // Filter to make sure the answered choices do not include any null values
-    const filteredAnswerChoices = curAnsweredChoices.filter((a) => a);
+    const filteredAnswerChoices = curAnsweredChoices.filter((a): a is number => a != null);
 
     if (curEntranceId > 0) {
       await saveFormData(

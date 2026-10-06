@@ -26,7 +26,7 @@ import {
   Entrance,
   EntranceResults,
 } from "../../../../types/backendModels";
-import { EntranceQuestionBlockCommentProps } from "../../../../types/general";
+import type { EntranceQuestionBlockCommentProps, QuestionBlockComment } from "../../../../types/general";
 import i18nLoader from "../../../../utils/i18n";
 import { getMaxLogId, validateServicepointHash } from "../../../../utils/serverside";
 import styles from "./blockComment.module.scss";
@@ -83,7 +83,9 @@ function EntranceQuestionBlockComment({
   const { text } = block;
 
   // Show the comments for this question block
-  const filteredQuestionBlockComment = curQuestionBlockComments.find((blockComment) => blockComment.question_block_id === questionBlockId);
+  const filteredQuestionBlockComment = curQuestionBlockComments.find(
+    (blockComment: QuestionBlockComment) => blockComment.question_block_id === questionBlockId
+  );
   const { invalidValues = [] } = filteredQuestionBlockComment || {};
 
   const treeItems = {

@@ -1,8 +1,8 @@
-@import "~hds-design-tokens/lib/all.scss";
-@import "../styles/mixins.scss";
+@use "~hds-design-tokens/lib/all.scss";
+@use "../styles/mixins.scss";
 
 .maincontainer {
-  margin-top: $spacing-s;
+  margin-top: all.$spacing-s;
 
   button {
     > div:first-child {

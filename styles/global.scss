@@ -2,8 +2,8 @@
 // @import "~hds-core/lib/base.css";
 // @import "~hds-core/lib/components/all.css";
 // @import "~hds-core/lib/icons/all.css";
-@import "~hds-design-tokens/lib/all.scss";
-@import "mixins";
+@use "~hds-design-tokens/lib/all.scss";
+@use "mixins";
 @import "leaflet/dist/leaflet.css";
 
 html,
@@ -11,8 +11,8 @@ body {
   padding: 0;
   margin: 0;
   font-family: HelsinkiGrotesk, Arial, sans-serif;
-  font-size: $fontsize-body-m;
-  line-height: $lineheight-l;
+  font-size: all.$fontsize-body-m;
+  line-height: all.$lineheight-l;
 }
 
 @font-face {
@@ -44,44 +44,44 @@ body {
 }
 
 h1 {
-  font-size: $fontsize-heading-xl !important;
+  font-size: all.$fontsize-heading-xl !important;
 
-  @include media(xs) {
-    font-size: $fontsize-heading-l !important;
+  @include mixins.media(xs) {
+    font-size: all.$fontsize-heading-l !important;
   }
 }
 
 h2 {
-  font-size: $fontsize-heading-l !important;
+  font-size: all.$fontsize-heading-l !important;
 
-  @include media(xs) {
-    font-size: $fontsize-heading-m !important;
+  @include mixins.media(xs) {
+    font-size: all.$fontsize-heading-m !important;
   }
 }
 
 h3 {
-  font-size: $fontsize-heading-m !important;
+  font-size: all.$fontsize-heading-m !important;
 
-  @include media(xs) {
-    font-size: $fontsize-heading-s !important;
+  @include mixins.media(xs) {
+    font-size: all.$fontsize-heading-s !important;
   }
 }
 
 h4 {
-  font-size: $fontsize-heading-s !important;
+  font-size: all.$fontsize-heading-s !important;
   margin: 0;
 
-  @include media(xs) {
-    font-size: $fontsize-heading-xs !important;
+  @include mixins.media(xs) {
+    font-size: all.$fontsize-heading-xs !important;
   }
 }
 
 h5 {
-  font-size: $fontsize-heading-xxs !important;
+  font-size: all.$fontsize-heading-xxs !important;
   margin: 0;
 
-  @include media(xs) {
-    font-size: $fontsize-heading-xxs !important;
+  @include mixins.media(xs) {
+    font-size: all.$fontsize-heading-xxs !important;
   }
 }
 
@@ -92,7 +92,7 @@ textarea {
 .disabledTextColor input[disabled],
 .disabledTextColor textarea[disabled],
 .disabledTextColor input[type="checkbox"][disabled] + label {
-  color: $color-black-70 !important;
+  color: all.$color-black-70 !important;
 }
 
 .flexSpace {
