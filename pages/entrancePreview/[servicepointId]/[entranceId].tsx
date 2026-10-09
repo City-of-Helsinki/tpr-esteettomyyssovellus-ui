@@ -563,7 +563,6 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, lo
         } else {
           formData = await (formResp.json() as Promise<BackendForm[]>);
         }
-        
 
         // Get the guide text using the form id for this entrance
         const formGuideResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_FORM_GUIDE}?form_id=${formId}`, {

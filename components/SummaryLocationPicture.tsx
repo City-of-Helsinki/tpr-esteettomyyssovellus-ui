@@ -9,13 +9,7 @@ import { convertCoordinates, formatAddress, isLocationValid } from "../utils/uti
 import styles from "./SummaryLocationPicture.module.scss";
 
 // usage: component for entrance location and picture, used in details page
-function SummaryLocationPicture({
-  entranceKey,
-  entranceData,
-  servicepointData,
-  isMainEntrance,
-  isMapDisplayed,
-}: SummaryLocationPictureProps) {
+function SummaryLocationPicture({ entranceKey, entranceData, servicepointData, isMainEntrance, isMapDisplayed }: SummaryLocationPictureProps) {
   const i18n = useI18n();
   const curLocale = i18n.locale();
 

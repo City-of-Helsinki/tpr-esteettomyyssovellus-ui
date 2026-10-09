@@ -16,14 +16,7 @@ import styles from "./QuestionBlock.module.scss";
 
 // usage: in form groups up all questions under a single "question block" / accordion
 // notes: used under headlineQuestionContainer in main form
-function QuestionBlock({
-  block,
-  blockQuestions,
-  answerChoices,
-  extraFields,
-  accessibilityPlaces,
-  copyableEntrances,
-}: QuestionBlockProps) {
+function QuestionBlock({ block, blockQuestions, answerChoices, extraFields, accessibilityPlaces, copyableEntrances }: QuestionBlockProps) {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
   // const isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);

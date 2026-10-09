@@ -12,13 +12,7 @@ import { saveFormData } from "../utils/utilFunctions";
 import { PreviewControlButtonsProps } from "../types/general";
 
 // usage: controls for preview page
-function PreviewControlButtons({
-  hasData,
-  hasSaveDraftButton,
-  isNewEntrancePossible,
-  formData,
-  setSendingComplete,
-}: PreviewControlButtonsProps) {
+function PreviewControlButtons({ hasData, hasSaveDraftButton, isNewEntrancePossible, formData, setSendingComplete }: PreviewControlButtonsProps) {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
   const router = useRouter();

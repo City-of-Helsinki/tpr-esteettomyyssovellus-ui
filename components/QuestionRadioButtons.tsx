@@ -6,14 +6,7 @@ import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { setAnswer } from "../state/reducers/formSlice";
 
 // usage: general custom radiobutton from HDS
-function QuestionRadioButtons({
-  mainLabel,
-  firstButtonLabel = "",
-  secondButtonLabel = "",
-  options,
-  questionId,
-  blockId,
-}: QuestionRadioButtonsProps) {
+function QuestionRadioButtons({ mainLabel, firstButtonLabel = "", secondButtonLabel = "", options, questionId, blockId }: QuestionRadioButtonsProps) {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
 

@@ -44,7 +44,7 @@ function Header({ isSummary, children, homePagePath }: HeaderProps): ReactElemen
 
   const defaultProps = {
     children: [],
-  }
+  };
 
   //const currentUser = useSelector((state: RootState) => state.general.user);
 
