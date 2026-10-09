@@ -3,7 +3,7 @@ import { LoadingSpinner } from "hds-react";
 import { SaveSpinnerProps } from "../../types/general";
 
 // usage: general saving animation used with save buttons
-function SaveSpinner({ savingText, savingFinishedText }: SaveSpinnerProps): JSX.Element {
+function SaveSpinner({ savingText, savingFinishedText }: SaveSpinnerProps) {
   return (
     <LoadingSpinner
       loadingText={savingText}

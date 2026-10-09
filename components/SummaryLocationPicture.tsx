@@ -15,7 +15,7 @@ function SummaryLocationPicture({
   servicepointData,
   isMainEntrance,
   isMapDisplayed,
-}: SummaryLocationPictureProps): JSX.Element {
+}: SummaryLocationPictureProps) {
   const i18n = useI18n();
   const curLocale = i18n.locale();
 

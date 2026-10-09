@@ -4,7 +4,7 @@ import React from "react";
 import styles from "./LoadSpinner.module.scss";
 
 // usage: general loading animation used with nextjs router events
-function LoadSpinner(): JSX.Element {
+function LoadSpinner() {
   return (
     <div className={styles.maincontainer}>
       <LoadingSpinner

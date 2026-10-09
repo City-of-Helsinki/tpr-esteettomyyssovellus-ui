@@ -6,7 +6,7 @@ import { QuestionFormGuideProps } from "../../types/general";
 import styles from "./QuestionFormGuide.module.scss";
 
 // usage: Question form help guide at top of page
-function QuestionFormGuide({ formGuideData }: QuestionFormGuideProps): JSX.Element {
+function QuestionFormGuide({ formGuideData }: QuestionFormGuideProps) {
   const i18n = useI18n();
   const curLocale: string = i18n.locale();
   const curLocaleId: number = LanguageLocales[curLocale as keyof typeof LanguageLocales];

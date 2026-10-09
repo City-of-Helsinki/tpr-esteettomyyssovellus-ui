@@ -1,4 +1,4 @@
-import React from "react";
+import { JSX } from "react";
 import { useI18n } from "next-localization";
 import { Button, ButtonVariant, ButtonSize, Card, useAccordion } from "hds-react";
 import styles from "./SummaryAccessibilityInnerAccordion.module.scss";

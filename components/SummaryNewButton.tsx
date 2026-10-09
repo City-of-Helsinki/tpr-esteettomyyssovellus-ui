@@ -8,7 +8,7 @@ import { setStartDate } from "../state/reducers/formSlice";
 import { getCurrentDate } from "../utils/utilFunctions";
 
 // usage: add new button for ServicepointLandingSummary
-function SummaryNewButton(): JSX.Element {
+function SummaryNewButton() {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
   const router = useRouter();

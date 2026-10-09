@@ -557,7 +557,13 @@ export const getServerSideProps: GetServerSideProps = async ({ params, query, lo
         const formResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_FORM}?form_id=${formId}`, {
           headers: new Headers({ Authorization: getTokenHash() }),
         });
-        formData = await (formResp.json() as Promise<BackendForm[]>);
+        if (!formResp.ok) {
+          console.log("formResp " + formResp);
+          throw new Error(`Fetching entrance form failed`);
+        } else {
+          formData = await (formResp.json() as Promise<BackendForm[]>);
+        }
+        
 
         // Get the guide text using the form id for this entrance
         const formGuideResp = await fetch(`${API_URL_BASE}${API_FETCH_BACKEND_FORM_GUIDE}?form_id=${formId}`, {

@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from "../state/hooks";
 import type { QuestionBlockComment as QuestionBlockCommentType, QuestionBlockCommentProps } from "../types/general";
 import styles from "./QuestionBlockComment.module.scss";
 
-function QuestionBlockComment({ block }: QuestionBlockCommentProps): JSX.Element {
+function QuestionBlockComment({ block }: QuestionBlockCommentProps) {
   const i18n = useI18n();
   const router = useRouter();
   const dispatch = useAppDispatch();

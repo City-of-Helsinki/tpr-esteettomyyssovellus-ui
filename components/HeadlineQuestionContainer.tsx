@@ -6,7 +6,7 @@ import styles from "./HeadlineQuestionContainer.module.scss";
 import { useAppSelector } from "../state/hooks";
 
 // usage: used for mainlevel (blue) accordions in form
-function HeadlineQuestionContainer({ text, questionBlockId, initOpen = false, children, isValid }: HeadlineQuestionContainerProps): JSX.Element {
+function HeadlineQuestionContainer({ text, questionBlockId, initOpen = false, children, isValid }: HeadlineQuestionContainerProps) {
   const i18n = useI18n();
   const headlineText = text ?? "";
 

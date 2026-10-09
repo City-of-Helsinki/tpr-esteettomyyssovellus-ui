@@ -6,7 +6,7 @@ import { BackendQuestion } from "../types/backendModels";
 import { QuestionsListProps } from "../types/general";
 
 // usage: list questions component, should be called once per question block
-function QuestionsList({ questions, answerChoices, accessibilityPlaces }: QuestionsListProps): JSX.Element {
+function QuestionsList({ questions, answerChoices, accessibilityPlaces }: QuestionsListProps) {
   return (
     <>
       {questions?.map((question: BackendQuestion) => {

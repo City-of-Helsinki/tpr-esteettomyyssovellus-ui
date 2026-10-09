@@ -18,7 +18,7 @@ function PreviewControlButtons({
   isNewEntrancePossible,
   formData,
   setSendingComplete,
-}: PreviewControlButtonsProps): JSX.Element {
+}: PreviewControlButtonsProps) {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
   const router = useRouter();

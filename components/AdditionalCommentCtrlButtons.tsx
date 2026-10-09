@@ -16,7 +16,7 @@ import styles from "./AdditionalCommentCtrlButtons.module.scss";
 
 // usage: save and return without saving buttons in additionalinfo page
 // notes: only save if save clicked, if return no save or back button (browser, mice etc) returns to old or empty value
-function AdditionalCommentCtrlButtons({ questionBlockId, questionBlockComment }: AdditionalCommentCtrlButtonsProps): JSX.Element {
+function AdditionalCommentCtrlButtons({ questionBlockId, questionBlockComment }: AdditionalCommentCtrlButtonsProps) {
   const i18n = useI18n();
   const router = useRouter();
   const dispatch = useAppDispatch();

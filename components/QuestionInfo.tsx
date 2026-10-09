@@ -3,7 +3,7 @@ import { QuestionInfoProps } from "../types/general";
 import styles from "./QuestionInfo.module.scss";
 
 // usage: display info (dropdown) for each question respectively
-function QuestionInfo({ openText, openIcon, closeIcon, textOnBottom = false, children }: QuestionInfoProps): JSX.Element {
+function QuestionInfo({ openText, openIcon, closeIcon, textOnBottom = false, children }: QuestionInfoProps) {
   const { isOpen, buttonProps, contentProps } = useAccordion({ initiallyOpen: false });
 
   return (

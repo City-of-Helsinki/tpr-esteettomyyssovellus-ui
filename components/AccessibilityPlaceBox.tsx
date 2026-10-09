@@ -10,7 +10,7 @@ import AccessibilityPlacePicture from "./AccessibilityPlacePicture";
 import styles from "./AccessibilityPlaceBox.module.scss";
 
 // usage: grouping one set of picture and location in accessibility place form
-function AccessibilityPlaceBox({ entrancePlaceBox, entrancePlaceName, canAddLocation, isFirst, isLast }: AccessibilityPlaceBoxProps): JSX.Element {
+function AccessibilityPlaceBox({ entrancePlaceBox, entrancePlaceName, canAddLocation, isFirst, isLast }: AccessibilityPlaceBoxProps) {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
 

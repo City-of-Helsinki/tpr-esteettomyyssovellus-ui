@@ -26,7 +26,7 @@ import styles from "./AccessibilityPlacePicture.module.scss";
 
 // usage: accessibility place page picture components
 // notes: this component has both "upload" and "link/url" image components for they are such similar
-function AccessibilityPlacePicture({ entrancePlaceBox }: AccessibilityPlacePictureProps): JSX.Element {
+function AccessibilityPlacePicture({ entrancePlaceBox }: AccessibilityPlacePictureProps) {
   const i18n = useI18n();
   const curLocale: string = i18n.locale();
   const dispatch = useAppDispatch();

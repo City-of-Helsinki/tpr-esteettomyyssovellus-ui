@@ -7,7 +7,7 @@ interface TextWithLinksProps {
   text: string;
 }
 
-function TextWithLinks({ text }: TextWithLinksProps): JSX.Element {
+function TextWithLinks({ text }: TextWithLinksProps) {
   const i18n = useI18n();
 
   const convertTextUrlsToLinks = () => {

@@ -1,4 +1,4 @@
-import React from "react";
+import { JSX } from "react";
 import { Button, Card, IconAngleDown, IconAngleUp, useAccordion } from "hds-react";
 import styles from "./CustomAccordion.module.scss";
 

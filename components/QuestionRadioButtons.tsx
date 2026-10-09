@@ -13,7 +13,7 @@ function QuestionRadioButtons({
   options,
   questionId,
   blockId,
-}: QuestionRadioButtonsProps): JSX.Element {
+}: QuestionRadioButtonsProps) {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
 

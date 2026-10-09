@@ -3,7 +3,7 @@ import styles from "./SummaryContent.module.scss";
 import { SummaryContentProps } from "../types/general";
 
 // usage: used in details/landing page for content to ServicepointLandingSummary
-function SummaryContent({ contentHeader, children }: SummaryContentProps): JSX.Element {
+function SummaryContent({ contentHeader, children }: SummaryContentProps) {
   return (
     <div className={styles.maincontainer}>
       {contentHeader && <h2 className={styles.header}>{contentHeader}</h2>}

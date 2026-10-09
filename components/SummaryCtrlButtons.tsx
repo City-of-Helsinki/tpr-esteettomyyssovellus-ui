@@ -5,7 +5,7 @@ import { SummaryCtrlButtonsProps } from "../types/general";
 import styles from "./SummaryCtrlButtons.module.scss";
 
 // usage: control buttons for ServicepointLandingSummary
-function SummaryCtrlButtons({ hasData }: SummaryCtrlButtonsProps): JSX.Element {
+function SummaryCtrlButtons({ hasData }: SummaryCtrlButtonsProps) {
   const i18n = useI18n();
   return (
     <div className={styles.maincontainer}>

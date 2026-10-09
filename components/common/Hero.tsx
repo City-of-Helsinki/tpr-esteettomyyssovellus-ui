@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import { Box, Card, CardContent, CardMedia, Container, Hidden, Typography } from "@mui/material";
+import { Box, Card, CardContent, CardMedia, Container, Typography } from "@mui/material";
 import { styled, Theme, makeStyles } from "mui-styles";
 import dynamic from "next/dynamic";
 import { Koros } from "hds-react";
@@ -161,7 +161,7 @@ interface HeroProps {
   imageUrl: string;
 }
 
-export function Hero(props: HeroProps): JSX.Element {
+export function Hero(props: HeroProps) {
   const classes = useStyles();
   const { title, text, imageUrl } = props;
 
@@ -229,7 +229,7 @@ interface HeroShallowProps {
   imageUrl: string;
 }
 
-export function HeroShallow(props: HeroShallowProps): JSX.Element {
+export function HeroShallow(props: HeroShallowProps) {
   const classes = useStyles();
   const { title, imageUrl } = props;
 

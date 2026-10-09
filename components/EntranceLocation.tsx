@@ -11,7 +11,7 @@ import QuestionButton from "./QuestionButton";
 import styles from "./EntranceLocation.module.scss";
 
 // usage: entrance location photo page location component
-function EntranceLocation({ entranceLocationPhoto }: EntranceLocationProps): JSX.Element {
+function EntranceLocation({ entranceLocationPhoto }: EntranceLocationProps) {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
 

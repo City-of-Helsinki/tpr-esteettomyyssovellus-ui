@@ -11,7 +11,7 @@ import styles from "./SummaryAccessibility.module.scss";
 
 // usage: used in details/landing page to create a summary block of sentences etc
 // this component more like a container -> used with SummarySideNavigation
-function SummaryAccessibility({ entranceKey, sentenceGroupId, accessibilityData, entranceChoiceData }: SummaryAccessibilityProps): JSX.Element {
+function SummaryAccessibility({ entranceKey, sentenceGroupId, accessibilityData, entranceChoiceData }: SummaryAccessibilityProps) {
   const i18n = useI18n();
   const curLocaleId: number = LanguageLocales[i18n.locale() as keyof typeof LanguageLocales];
 

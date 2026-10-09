@@ -30,7 +30,7 @@ import styles from "./EntrancePhoto.module.scss";
 
 // usage: entrance location photo page picture components
 // notes: this component has both "upload" and "link/url" image components for they are such similar
-function EntrancePhoto({ entranceLocationPhoto }: EntrancePhotoProps): JSX.Element {
+function EntrancePhoto({ entranceLocationPhoto }: EntrancePhotoProps) {
   const i18n = useI18n();
   const curLocale: string = i18n.locale();
   const dispatch = useAppDispatch();

@@ -12,7 +12,7 @@ function SummaryAccessibilityPlaceGroup({
   sentenceGroupKey,
   accessibilityPlaces,
   entrancePlaceData,
-}: SummaryAccessibilityPlaceGroupProps): JSX.Element {
+}: SummaryAccessibilityPlaceGroupProps) {
   const i18n = useI18n();
 
   const getEntrancePlaceName = (entrancePlaceId: string) => {

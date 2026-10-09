@@ -23,7 +23,7 @@ function QuestionBlock({
   extraFields,
   accessibilityPlaces,
   copyableEntrances,
-}: QuestionBlockProps): JSX.Element {
+}: QuestionBlockProps) {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
   // const isContinueClicked = useAppSelector((state) => state.formReducer.isContinueClicked);
