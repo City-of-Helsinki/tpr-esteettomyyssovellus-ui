@@ -1,6 +1,6 @@
 module.exports = {
-  // BASE_PATH is defined in .env.development for local development, and .env.production for test and production servers
-  // assetPrefix is not currently needed
+  // Set BASE_PATH in the build environment. Next.js embeds this value in the build,
+  // so test and production need separate builds when their paths differ.
   basePath: process.env.BASE_PATH || "",
   transpilePackages: ["mui-styles"],
   eslint: {

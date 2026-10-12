@@ -13,11 +13,9 @@ export const MAP_INITIAL_ZOOM = 13;
 export const MAP_MIN_ZOOM = 10;
 export const MAP_MAX_ZOOM = 18;
 
-// The server-side calls should use the local backend directly
-// Note: the client-side calls use the full path, which is handled by getOrigin in request.ts
-export const API_URL_BASE = "http://localhost:8000/"; // Development
-// export const API_URL_BASE = "http://localhost:82/"; // Test
-// export const API_URL_BASE = "http://localhost:81/"; // Production
+// Used by server-side requests. Set BACKEND_API_URL in the deployment environment.
+// Keep the local default for `npm run dev`.
+export const API_URL_BASE = process.env.BACKEND_API_URL || "http://localhost:8000/";
 
 export const API_FETCH_QUESTIONBLOCK_URL = "api/ArBackendQuestionBlocks/";
 export const API_FETCH_QUESTION_URL = "api/ArBackendQuestions/";

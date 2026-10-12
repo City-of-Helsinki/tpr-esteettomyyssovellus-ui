@@ -19,6 +19,19 @@ TPR Esteettömyyssovellus UI
     npm run build
     npm run start
 
+`.env.development` contains shared, non-sensitive local defaults. Test and production
+values should come from the deployment environment or a host-local `.env.production`
+based on `.env.production.example`. Set `BASE_PATH` and `BACKEND_API_URL` for the
+target environment. `BASE_PATH` is embedded by Next.js at build time, so build
+separately for test and production if their paths differ. `BACKEND_API_URL` is used by
+server-side API requests and should point at that environment's backend (for example,
+port 82 on test and port 81 on production).
+
+For IIS deployments, select the matching config as part of deployment and install it
+as `web.config`: use `web.config.test` on test and `web.config.production` on
+production. These files are both tracked so a test-to-production merge keeps both
+environment configurations available; the deployment target chooses which one to use.
+
 ## Project structure
 
 - .<foldername> automatically generated | should be gitignored
