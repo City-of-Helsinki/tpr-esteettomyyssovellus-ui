@@ -11,7 +11,7 @@ function GuideLink({ guideTitle, guideUrl }: GuideLinkProps): JSX.Element {
       href={guideUrl}
       size={LinkSize.Medium}
       openInNewTab
-      openInNewTabAriaLabel={i18n.t("common.opensInANewTab")}
+      openInNewTabLabel={i18n.t("common.opensInANewTab")}
       external
       openInExternalDomainAriaLabel={i18n.t("common.opensExternal")}
       disableVisitedStyles

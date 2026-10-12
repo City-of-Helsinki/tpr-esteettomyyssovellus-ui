@@ -1,11 +1,11 @@
-@import "~hds-design-tokens/lib/all.scss";
-@import "../../../../../styles/mixins.scss";
+@use "~hds-design-tokens/lib/all.scss";
+@use "../../../../../styles/mixins.scss";
 
 .maincontainer {
-  margin-top: $spacing-m;
+  margin-top: all.$spacing-m;
 
   .infocontainer {
-    margin: $spacing-m 0;
+    margin: all.$spacing-m 0;
   }
 
   .headingcontainer {
@@ -15,41 +15,41 @@
     }
 
     .subHeader {
-      font-size: $fontsize-heading-m;
+      font-size: all.$fontsize-heading-m;
       font-weight: 700;
-      margin-bottom: $spacing-l;
+      margin-bottom: all.$spacing-l;
 
-      @include media(xs) {
-        font-size: $fontsize-heading-s;
+      @include mixins.media(xs) {
+        font-size: all.$fontsize-heading-s;
       }
     }
 
     .mainbuttons {
-      margin-bottom: $spacing-s;
+      margin-bottom: all.$spacing-s;
     }
 
     .infoHeader {
-      font-size: $fontsize-heading-m;
+      font-size: all.$fontsize-heading-m;
       font-weight: 700;
-      color: $color-white;
-      background-color: $color-bus;
-      padding: $spacing-s $spacing-m;
+      color: all.$color-white;
+      background-color: all.$color-bus;
+      padding: all.$spacing-s all.$spacing-m;
 
-      @include media(xs) {
-        font-size: $fontsize-heading-s;
+      @include mixins.media(xs) {
+        font-size: all.$fontsize-heading-s;
       }
     }
 
     .infoText {
-      padding: $spacing-s;
+      padding: all.$spacing-s;
     }
   }
 
   .footercontainer {
-    margin-top: $spacing-5-xl;
+    margin-top: all.$spacing-5-xl;
 
     .footerbutton {
-      margin-top: $spacing-l;
+      margin-top: all.$spacing-l;
     }
   }
 }

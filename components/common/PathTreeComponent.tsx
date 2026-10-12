@@ -17,11 +17,9 @@ function PathTreeComponent({ treeItems }: PathTreeProps): JSX.Element {
 
       return (
         <li key={key} className={styles.pathTreeItem}>
-          <Link href={itemUrl}>
-            <HdsLink href="#" size={LinkSize.Medium} disableVisitedStyles aria-current={isLastItem ? "page" : undefined}>
-              {itemText}
-            </HdsLink>
-          </Link>
+          <HdsLink href={itemUrl} size={LinkSize.Medium} disableVisitedStyles aria-current={isLastItem ? "page" : undefined}>
+            {itemText}
+          </HdsLink>
         </li>
       );
     });

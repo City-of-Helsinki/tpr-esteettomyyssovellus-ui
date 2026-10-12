@@ -39,7 +39,7 @@ function Footer({ isSummary }: FooterProps): ReactElement {
         logo={<Logo src={logoFi} size={LogoSize.Medium} alt={i18n.t("common.header.titleAlt")} />}
         backToTopLabel={i18n.t("common.footer.backToTop")}
       >
-        <HdsFooter.Link as="a" className={styles.helsinkiLogoItem} href={MAIN_URL}>
+        <HdsFooter.Link as="div" className={styles.helsinkiLogoItem}>
           <div className={styles.helsinkiLogoContainer}>
             <Logo src={logoFi} size={LogoSize.Medium} aria-hidden />
             <span className={styles.helsinkiLogoText}>{i18n.t("common.footer.logotext")}</span>

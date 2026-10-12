@@ -1,16 +1,16 @@
-@import "~hds-design-tokens/lib/all.scss";
-@import "../styles/mixins.scss";
+@use "~hds-design-tokens/lib/all.scss";
+@use "../styles/mixins.scss";
 
 .maincontainer {
-  margin-top: $spacing-xs;
+  margin-top: all.$spacing-xs;
 
   .header {
-    color: $color-bus;
-    font-size: $fontsize-heading-m !important;
+    color: all.$color-bus;
+    font-size: all.$fontsize-heading-m !important;
   }
 
   .container {
-    background-color: $color-bus-light;
-    padding: 0 $spacing-s;
+    background-color: all.$color-bus-light;
+    padding: 0 all.$spacing-s;
   }
 }

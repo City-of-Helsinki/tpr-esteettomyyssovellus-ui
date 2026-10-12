@@ -1,5 +1,5 @@
-@import "~hds-design-tokens/lib/all.scss";
-@import "../../styles/mixins";
+@use "~hds-design-tokens/lib/all.scss";
+@use "../../styles/mixins";
 
 .hds-header {
   border-bottom: 0.15rem solid black;
@@ -18,7 +18,7 @@
     display: flex !important;
     flex-direction: row;
     align-items: center;
-    margin-left: $spacing-s;
+    margin-left: all.$spacing-s;
     opacity: 1 !important;
     transform: none !important;
 

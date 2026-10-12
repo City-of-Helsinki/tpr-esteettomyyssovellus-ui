@@ -1,5 +1,5 @@
-@import "~hds-design-tokens/lib/all.scss";
-@import "../../styles/mixins.scss";
+@use "~hds-design-tokens/lib/all.scss";
+@use "../../styles/mixins.scss";
 
 .helpcontainer {
   .pagehelp {
@@ -8,7 +8,7 @@
     flex-grow: 1;
     justify-content: space-between;
 
-    @include media(xs) {
+    @include mixins.media(xs) {
       flex-direction: column;
     }
 

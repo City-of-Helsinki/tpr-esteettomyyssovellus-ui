@@ -4,7 +4,7 @@ import { useI18n } from "next-localization";
 import { useRouter } from "next/router";
 import GuideLink from "./common/GuideLink";
 import TextWithLinks from "./common/TextWithLinks";
-import { QuestionContainerProps } from "../types/general";
+import type { EntrancePlaceBox, QuestionContainerProps } from "../types/general";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { setEntrancePlaceBoxes } from "../state/reducers/additionalInfoSlice";
 import { isLocationValid } from "../utils/utilFunctions";
@@ -82,7 +82,7 @@ function QuestionContainer({ question, accessibilityPlaces, children }: Question
     // Update the existing data in case the user returns without saving
     dispatch(
       setEntrancePlaceBoxes(
-        curEntrancePlaceBoxes.map((placeBox) => ({
+        curEntrancePlaceBoxes.map((placeBox: EntrancePlaceBox) => ({
           ...placeBox,
           existingBox: placeBox.modifiedBox,
           existingPhotoBase64: placeBox.modifiedPhotoBase64,
@@ -100,11 +100,12 @@ function QuestionContainer({ question, accessibilityPlaces, children }: Question
   const getAccessibilityPlaceText = (placeId: number) => {
     if (curEntrancePlaceBoxes) {
       const pictures = curEntrancePlaceBoxes.filter(
-        (placeBox) => placeBox.place_id === placeId && !placeBox.isDeleted && (placeBox.modifiedBox.photo_url || placeBox.modifiedPhotoBase64)
+        (placeBox: EntrancePlaceBox) =>
+          placeBox.place_id === placeId && !placeBox.isDeleted && (placeBox.modifiedBox.photo_url || placeBox.modifiedPhotoBase64)
       );
       const picturesText = pictures.length > 0 ? `${i18n.t("accessibilityForm.pictures")} (${pictures.length})` : "";
 
-      const locations = curEntrancePlaceBoxes.filter((placeBox) => {
+      const locations = curEntrancePlaceBoxes.filter((placeBox: EntrancePlaceBox) => {
         const coordinatesEuref = [placeBox.modifiedBox.loc_easting ?? 0, placeBox.modifiedBox.loc_northing ?? 0] as [number, number];
         return placeBox.place_id === placeId && !placeBox.isDeleted && isLocationValid(coordinatesEuref);
       });

@@ -1,15 +1,15 @@
-@import "~hds-design-tokens/lib/all.scss";
-@import "../styles/mixins.scss";
+@use "~hds-design-tokens/lib/all.scss";
+@use "../styles/mixins.scss";
 
 .maincontainer {
-  margin-top: $spacing-s;
-  border-left: 5px solid $color-bus;
-  background-color: $color-white !important;
+  margin-top: all.$spacing-s;
+  border-left: 5px solid all.$color-bus;
+  background-color: all.$color-white !important;
 
   .questionwrapper {
-    border: 2px solid $color-bus-medium-light;
+    border: 2px solid all.$color-bus-medium-light;
     border-left: 0;
-    padding: $spacing-m $spacing-s;
+    padding: all.$spacing-m all.$spacing-s;
   }
 
   .questioncontainer {
@@ -17,9 +17,9 @@
     flex-direction: row;
     flex-grow: 1;
     align-items: center;
-    color: $color-bus;
+    color: all.$color-bus;
 
-    @include media(xs, s) {
+    @include mixins.media(xs, s) {
       flex-direction: column;
     }
 
@@ -29,7 +29,7 @@
       flex-grow: 1;
       flex-basis: 0;
       align-items: center;
-      margin: $spacing-s 0;
+      margin: all.$spacing-s 0;
     }
 
     .commenticon {
@@ -37,25 +37,25 @@
       flex-direction: row;
       align-items: center;
       justify-content: center;
-      width: $spacing-xl;
-      height: $spacing-xl;
-      background-color: $color-bus;
-      color: $color-white;
+      width: all.$spacing-xl;
+      height: all.$spacing-xl;
+      background-color: all.$color-bus;
+      color: all.$color-white;
       cursor: pointer;
     }
 
     .maintext {
-      padding-left: $spacing-2-xs;
+      padding-left: all.$spacing-2-xs;
     }
   }
 
   .commentcontainer {
-    padding: 0 $spacing-s;
+    padding: 0 all.$spacing-s;
     display: flex;
     flex-direction: row;
     align-items: flex-start;
 
-    @include media(xs, s) {
+    @include mixins.media(xs, s) {
       flex-direction: column;
     }
 
@@ -70,12 +70,12 @@
     }
 
     .label {
-      @include media(m, l, xl) {
-        margin-top: $spacing-m;
+      @include mixins.media(m, l, xl) {
+        margin-top: all.$spacing-m;
       }
 
       div {
-        margin-bottom: $spacing-m;
+        margin-bottom: all.$spacing-m;
       }
     }
   }
@@ -91,10 +91,10 @@
     // align-items: center;
     width: 100%;
 
-    @include media(m, l, xl) {
+    @include mixins.media(m, l, xl) {
       display: flex;
       justify-content: flex-end;
-      margin-left: $spacing-l;
+      margin-left: all.$spacing-l;
     }
   }
 }

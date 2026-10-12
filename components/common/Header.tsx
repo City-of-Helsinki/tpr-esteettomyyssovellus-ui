@@ -42,6 +42,10 @@ function Header({ isSummary, children, homePagePath }: HeaderProps): ReactElemen
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.generalSlice.user);
 
+  const defaultProps = {
+    children: [],
+  }
+
   //const currentUser = useSelector((state: RootState) => state.general.user);
 
   const logoSrcFromLanguage = () => {
@@ -76,7 +80,6 @@ function Header({ isSummary, children, homePagePath }: HeaderProps): ReactElemen
       // @ts-ignore: The HDS Navigation component comes from a dynamic import, see above for details
       title={i18n.t("common.header.title")}
       // titleUrl={`${router.basePath}${router.asPath}`}
-      theme={{}}
       className={styles.header}
     >
       <HdsHeader.ActionBar
@@ -85,7 +88,6 @@ function Header({ isSummary, children, homePagePath }: HeaderProps): ReactElemen
         title={i18n.t("common.header.title")}
         titleAriaLabel={i18n.t("common.header.titleAlt")}
         titleHref={`${MAIN_URL}/${router.locale}`}
-        aria-label={i18n.t("common.header.openMenu")}
         frontPageLabel=""
       >
         {/*
@@ -167,9 +169,5 @@ function Header({ isSummary, children, homePagePath }: HeaderProps): ReactElemen
     </DynamicHeader>
   );
 }
-
-Header.defaultProps = {
-  children: [],
-};
 
 export default Header;

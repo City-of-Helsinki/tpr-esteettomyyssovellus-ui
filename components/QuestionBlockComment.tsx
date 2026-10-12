@@ -4,7 +4,7 @@ import { useI18n } from "next-localization";
 import { IconPenLine, Link as HdsLink, LinkSize } from "hds-react";
 import { setQuestionBlockComment } from "../state/reducers/additionalInfoSlice";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
-import { QuestionBlockCommentProps } from "../types/general";
+import type { QuestionBlockComment as QuestionBlockCommentType, QuestionBlockCommentProps } from "../types/general";
 import styles from "./QuestionBlockComment.module.scss";
 
 function QuestionBlockComment({ block }: QuestionBlockCommentProps): JSX.Element {
@@ -20,7 +20,9 @@ function QuestionBlockComment({ block }: QuestionBlockCommentProps): JSX.Element
   const { question_block_id, text } = block;
 
   // Show the comments for this question block
-  const filteredQuestionBlockComment = curQuestionBlockComments.find((blockComment) => blockComment.question_block_id === question_block_id);
+  const filteredQuestionBlockComment = curQuestionBlockComments.find(
+    (blockComment: QuestionBlockCommentType) => blockComment.question_block_id === question_block_id
+  );
   const { modifiedComment } = filteredQuestionBlockComment || {};
   const { comment_text_fi, comment_text_sv, comment_text_en } = modifiedComment || {};
 

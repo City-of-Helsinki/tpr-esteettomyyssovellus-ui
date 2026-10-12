@@ -1,8 +1,8 @@
-@import "~hds-design-tokens/lib/all.scss";
-@import "../styles/mixins.scss";
+@use "~hds-design-tokens/lib/all.scss";
+@use "../styles/mixins.scss";
 
 .maincontainer {
-  margin-top: $spacing-l;
+  margin-top: all.$spacing-l;
 
   .headercontainer {
     display: flex;
@@ -11,7 +11,7 @@
     justify-content: space-between;
 
     h3 {
-      color: $color-bus;
+      color: all.$color-bus;
       margin-bottom: 0;
     }
   }
@@ -22,10 +22,10 @@
     flex-wrap: wrap;
 
     .infocontainer {
-      margin-right: $spacing-xl;
+      margin-right: all.$spacing-xl;
 
       h4 {
-        margin-top: $spacing-s;
+        margin-top: all.$spacing-s;
       }
     }
   }
@@ -37,7 +37,7 @@
       align-items: center;
 
       svg {
-        margin-right: $spacing-s;
+        margin-right: all.$spacing-s;
       }
     }
   }

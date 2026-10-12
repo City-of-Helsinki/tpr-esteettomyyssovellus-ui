@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useCallback, useEffect, useMemo, useState } from "react";
-import { ButtonVariant, IconCross, IconLocation, IconMinus, IconPlus, TextArea } from "hds-react";
+import { ButtonVariant, IconCross, IconLocation, IconMinus, IconPlus, TextArea, Tooltip } from "hds-react";
 import { useI18n } from "next-localization";
 import { useAppDispatch, useAppSelector } from "../state/hooks";
 import { editEntrancePlaceBoxLocation, editEntrancePlaceBoxLocationText } from "../state/reducers/additionalInfoSlice";
@@ -138,9 +138,11 @@ function AccessibilityPlaceLocation({ entrancePlaceBox }: AccessibilityPlaceLoca
               id={`location-text-fin-${currentId}`}
               label={i18n.t("additionalInfo.locationLabel")}
               helperText={i18n.t("additionalInfo.locationHelperText")}
-              tooltipButtonLabel={i18n.t("additionalInfo.generalTooltipButtonLabel")}
-              tooltipLabel={i18n.t("additionalInfo.generalTooltipLabel")}
-              tooltipText={i18n.t("additionalInfo.locationToolTipContent")}
+              tooltip={
+                <Tooltip tooltipLabel={i18n.t("additionalInfo.generalTooltipLabel")} buttonLabel={i18n.t("additionalInfo.generalTooltipButtonLabel")}>
+                  {i18n.t("additionalInfo.locationToolTipContent")}
+                </Tooltip>
+              }
               onChange={(evt: ChangeEvent<HTMLTextAreaElement>) => handleAddLocationText(evt, "fi")}
               value={location_text_fi ?? ""}
             />

@@ -1,11 +1,11 @@
-@import "~hds-design-tokens/lib/all.scss";
-@import "../styles/mixins.scss";
+@use "~hds-design-tokens/lib/all.scss";
+@use "../styles/mixins.scss";
 
 .maincontainer {
   display: flex;
   flex-direction: row;
-  margin-top: $spacing-l;
-  @include media(xs, s, m) {
+  margin-top: all.$spacing-l;
+  @include mixins.media(xs, s, m) {
     flex-direction: column;
   }
 }

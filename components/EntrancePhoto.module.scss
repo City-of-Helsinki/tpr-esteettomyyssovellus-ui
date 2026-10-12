@@ -1,9 +1,9 @@
-@import "~hds-design-tokens/lib/all.scss";
-@import "../styles/mixins.scss";
+@use "~hds-design-tokens/lib/all.scss";
+@use "../styles/mixins.scss";
 
 .maincontainer {
-  @include media(l, xl) {
-    margin-right: $spacing-l;
+  @include mixins.media(l, xl) {
+    margin-right: all.$spacing-l;
   }
 
   .picture {
@@ -14,14 +14,14 @@
   }
 
   .pictureurl {
-    margin-top: $spacing-s;
+    margin-top: all.$spacing-s;
   }
 
   .inputcontainer {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    margin-top: $spacing-s;
+    margin-top: all.$spacing-s;
 
     .inputfield {
       display: flex;
@@ -41,18 +41,18 @@
       .fileinput {
         width: 50%;
 
-        @include media(xs) {
+        @include mixins.media(xs) {
           width: 100%;
         }
 
         button {
-          margin-left: $spacing-2-xs;
+          margin-left: all.$spacing-2-xs;
         }
       }
 
       .linkinput {
-        margin-top: $spacing-3-xs;
-        margin-bottom: $spacing-m;
+        margin-top: all.$spacing-3-xs;
+        margin-bottom: all.$spacing-m;
       }
     }
 
@@ -62,24 +62,24 @@
   }
 
   .lowercontentcontainer {
-    margin: $spacing-xl 0;
+    margin: all.$spacing-xl 0;
 
     .altcontainer {
       label {
-        margin: $spacing-s 0;
+        margin: all.$spacing-s 0;
       }
 
       button {
-        color: $color-black;
-        background-color: $color-white;
+        color: all.$color-black;
+        background-color: all.$color-white;
       }
 
       textArea {
-        height: $spacing-xl * 3;
+        height: all.$spacing-xl * 3;
       }
 
       .altLabel {
-        margin: $spacing-s 0;
+        margin: all.$spacing-s 0;
       }
     }
 
@@ -87,24 +87,24 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin: $spacing-xl 0;
+      margin: all.$spacing-xl 0;
 
       button {
-        color: $color-black;
-        background-color: $color-white;
+        color: all.$color-black;
+        background-color: all.$color-white;
       }
     }
 
     .picturesourcecontainer {
-      margin: $spacing-xl 0;
+      margin: all.$spacing-xl 0;
 
       input {
-        margin: $spacing-s 0;
+        margin: all.$spacing-s 0;
       }
 
       button {
-        color: $color-black;
-        background-color: $color-white;
+        color: all.$color-black;
+        background-color: all.$color-white;
       }
     }
   }

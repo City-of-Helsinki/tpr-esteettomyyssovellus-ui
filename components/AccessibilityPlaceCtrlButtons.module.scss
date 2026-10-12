@@ -1,10 +1,10 @@
-@import "~hds-design-tokens/lib/all.scss";
+@use "~hds-design-tokens/lib/all.scss";
 
 .maincontainer {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  color: $color-bus;
+  color: all.$color-bus;
 
   .noborderbutton button {
     border: 0;

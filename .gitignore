@@ -1,5 +1,9 @@
 node_modules
 .next
 
+# Environment-specific configuration belongs in the local environment or deployment settings.
+.env*
+!.env.production.example
+
 \checksumSecret.ts
 \checksumSecret.tsx
