@@ -12,7 +12,7 @@ import QuestionInfo from "./QuestionInfo";
 import styles from "./AccessibilityPlaceLocation.module.scss";
 
 // usage: accessibility place page location component
-function AccessibilityPlaceLocation({ entrancePlaceBox }: AccessibilityPlaceLocationProps): JSX.Element {
+function AccessibilityPlaceLocation({ entrancePlaceBox }: AccessibilityPlaceLocationProps) {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
 

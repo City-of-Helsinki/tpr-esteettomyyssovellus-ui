@@ -9,7 +9,7 @@ import { SummaryRemoveButtonProps } from "../types/general";
 import { deleteEntrance } from "../utils/utilFunctions";
 
 // usage: remove button for ServicepointLandingSummary
-function SummaryRemoveButton({ entranceData }: SummaryRemoveButtonProps): JSX.Element {
+function SummaryRemoveButton({ entranceData }: SummaryRemoveButtonProps) {
   const i18n = useI18n();
   // const curLocale = i18n.locale();
   const router = useRouter();

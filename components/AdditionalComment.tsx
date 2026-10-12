@@ -12,7 +12,7 @@ import { AdditionalCommentProps } from "../types/general";
 import styles from "./AdditionalComment.module.scss";
 
 // usage: additional info page comment component
-function AdditionalComment({ questionBlockId, questionBlockComment }: AdditionalCommentProps): JSX.Element {
+function AdditionalComment({ questionBlockId, questionBlockComment }: AdditionalCommentProps) {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
 

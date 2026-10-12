@@ -15,7 +15,7 @@ import { getTokenHash, isLocationValid } from "../utils/utilFunctions";
 import styles from "./QuestionBlockImportExistingData.module.scss";
 
 // usage: button for copying data from existing servicepoint
-function QuestionBlockImportExistingData({ block, copyableEntrances }: QuestionBlockImportProps): JSX.Element {
+function QuestionBlockImportExistingData({ block, copyableEntrances }: QuestionBlockImportProps) {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
   const router = useRouter();

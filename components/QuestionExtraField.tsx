@@ -7,7 +7,7 @@ import QuestionInfo from "./QuestionInfo";
 import styles from "./QuestionExtraField.module.scss";
 
 // usage: container for single extra field row e.g. header/text, text input
-function QuestionExtraField({ fieldNumber, questionText, questionInfo, isMandatory, isTextInvalid, children }: QuestionExtraFieldProps): JSX.Element {
+function QuestionExtraField({ fieldNumber, questionText, questionInfo, isMandatory, isTextInvalid, children }: QuestionExtraFieldProps) {
   const i18n = useI18n();
 
   const questionInfos = questionInfo?.split("<BR>");

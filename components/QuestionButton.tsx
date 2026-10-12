@@ -3,7 +3,7 @@ import styles from "./QuestionButton.module.scss";
 import { QuestionButtonProps } from "../types/general";
 
 // usage: general customized button from HDS
-function QuestionButton({ children, variant, iconStart, iconEnd, disabled = false, onClickHandler, onChange }: QuestionButtonProps): JSX.Element {
+function QuestionButton({ children, variant, iconStart, iconEnd, disabled = false, onClickHandler, onChange }: QuestionButtonProps) {
   return (
     <div className={styles.buttonContainer}>
       <Button

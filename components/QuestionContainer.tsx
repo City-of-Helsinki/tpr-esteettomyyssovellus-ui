@@ -13,7 +13,7 @@ import styles from "./QuestionContainer.module.scss";
 
 // usage: container for single question row e.g. header/text, additional infos and dropdown/radiobutton
 // and possible addinfo previews if question has addinfos
-function QuestionContainer({ question, accessibilityPlaces, children }: QuestionContainerProps): JSX.Element {
+function QuestionContainer({ question, accessibilityPlaces, children }: QuestionContainerProps) {
   const i18n = useI18n();
   const router = useRouter();
   const dispatch = useAppDispatch();
