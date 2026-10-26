@@ -5,6 +5,7 @@ export const MAIN_URL = "https://www.hel.fi";
 export const TERMS_URL = ""; // coming later
 export const ACCESSIBILITY_URL = "https://kaupunkialustana.hel.fi/tpr-perhe/esteettomyysohje/esteettomyyssovelluksen-saavutettavuusseloste/";
 export const CREATIVECOMMONS_URL = "creativecommons.org/licences/by/4.0";
+export const PROFILE_URL = "https://profiili.hel.fi/login";
 
 export const HKI_GEOCODING_URL = "https://api.hel.fi/servicemap/v2/search/?format=json&type=address&input=";
 export const GEOCODING_PARAMS = "&language=fi&only=location";

@@ -9,7 +9,8 @@
       "homepage": "Etusivu",
       "servicepoints": "Toimipisteet",
       "information": "Tietoa palvelusta",
-      "maintenance": "Ylläpito"
+      "maintenance": "Ylläpito",
+      "profile": "Helsinki-profiili"
     },
     "footer": {
       "logotext": "Esteettömyystietopalvelua ylläpitää Helsingin kaupunki",
