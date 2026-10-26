@@ -24,7 +24,7 @@ import { setChecksum, setUser } from "../../state/reducers/generalSlice";
 import { defaultLocale } from "../../utils/i18n";
 import styles from "./Header.module.scss";
 import { RootState } from "../../state/store";
-import { MAIN_URL } from "../../types/constants";
+import { MAIN_URL, PROFILE_URL } from "../../types/constants";
 
 interface HeaderProps {
   isSummary?: boolean;
@@ -121,6 +121,7 @@ function Header({ isSummary, children, homePagePath }: HeaderProps): ReactElemen
           !isSummary && (
             <HdsHeader.ActionBarItem id="user" fixedRightPosition aria-label={user} icon={<IconUser />} label={user} className="user">
               <HdsHeader.ActionBarSubItem href="#" iconEnd={<IconSignout aria-hidden />} label={i18n.t("common.header.logout")} onClick={signOut} />
+              <HdsHeader.ActionBarSubItem href={PROFILE_URL} label={i18n.t("common.header.profile")} />
             </HdsHeader.ActionBarItem>
           )
           /*
@@ -142,7 +143,7 @@ function Header({ isSummary, children, homePagePath }: HeaderProps): ReactElemen
             lang="fi"
             label="Suomeksi"
             tabIndex={0}
-            onKeyPress={(e: KeyboardEvent<HTMLAnchorElement>) => handleKeyPress(e, "fi")}
+            onKeyUp={(e: KeyboardEvent<HTMLAnchorElement>) => handleKeyPress(e, "fi")}
             onClick={() => changeLanguage("fi")}
           />
           <HdsHeader.ActionBarSubItem
@@ -151,7 +152,7 @@ function Header({ isSummary, children, homePagePath }: HeaderProps): ReactElemen
             lang="sv"
             label="På svenska"
             tabIndex={0}
-            onKeyPress={(e: KeyboardEvent<HTMLAnchorElement>) => handleKeyPress(e, "sv")}
+            onKeyUp={(e: KeyboardEvent<HTMLAnchorElement>) => handleKeyPress(e, "sv")}
             onClick={() => changeLanguage("sv")}
           />
           <HdsHeader.ActionBarSubItem
@@ -160,7 +161,7 @@ function Header({ isSummary, children, homePagePath }: HeaderProps): ReactElemen
             lang="en"
             label="In English"
             tabIndex={0}
-            onKeyPress={(e: KeyboardEvent<HTMLAnchorElement>) => handleKeyPress(e, "en")}
+            onKeyUp={(e: KeyboardEvent<HTMLAnchorElement>) => handleKeyPress(e, "en")}
             onClick={() => changeLanguage("en")}
           />
         </HdsHeader.LanguageSelector>
