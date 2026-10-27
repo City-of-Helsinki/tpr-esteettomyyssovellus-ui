@@ -23,7 +23,7 @@ function AccessibilityPlaceCtrlButtons({
   placeId,
   entrancePlaceBoxes,
   deletedEntrancePlaceBoxes,
-}: AccessibilityPlaceCtrlButtonsProps): JSX.Element {
+}: AccessibilityPlaceCtrlButtonsProps) {
   const i18n = useI18n();
   const router = useRouter();
   const dispatch = useAppDispatch();

@@ -26,7 +26,7 @@ function QuestionFormCtrlButtons({
   visibleQuestions,
   questionChoicesData,
   formId,
-}: QuestionFormCtrlButtonsProps): JSX.Element {
+}: QuestionFormCtrlButtonsProps) {
   const i18n = useI18n();
   const dispatch = useAppDispatch();
   const router = useRouter();

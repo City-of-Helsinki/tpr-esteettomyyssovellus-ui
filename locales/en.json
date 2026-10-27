@@ -9,7 +9,8 @@
       "homepage": "Homepage",
       "servicepoints": "Servicepoints",
       "information": "Information about the service",
-      "maintenance": "Maintenance"
+      "maintenance": "Maintenance",
+      "profile": "Helsinki Profile"
     },
     "footer": {
       "logotext": "The accessibility information service is maintained by Helsinki City",

@@ -6,7 +6,7 @@ import { BackendQuestionBlockField } from "../types/backendModels";
 import { QuestionBlockExtraFieldListProps } from "../types/general";
 
 // usage: extra fields list component, should be called once per question block
-function QuestionBlockExtraFieldList({ extraFields }: QuestionBlockExtraFieldListProps): JSX.Element {
+function QuestionBlockExtraFieldList({ extraFields }: QuestionBlockExtraFieldListProps) {
   const invalidBlocks = useAppSelector((state) => state.formReducer.invalidBlocks);
   const curExtraAnswers = useAppSelector((state) => state.formReducer.extraAnswers);
 

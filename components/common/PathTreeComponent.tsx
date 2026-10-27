@@ -6,7 +6,7 @@ import { PathTreeProps } from "../../types/general";
 import styles from "./PathTreeComponent.module.scss";
 
 // usage: general breadcrumb component
-function PathTreeComponent({ treeItems }: PathTreeProps): JSX.Element {
+function PathTreeComponent({ treeItems }: PathTreeProps) {
   const i18n = useI18n();
 
   const getPathTree = () =>

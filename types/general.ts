@@ -1,6 +1,6 @@
 // place for custom typescript interfaces/"models"
 
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, JSX } from "react";
 import { ButtonVariant } from "hds-react";
 import {
   BackendCopyableEntrance,

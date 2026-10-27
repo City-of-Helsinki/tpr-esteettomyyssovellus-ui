@@ -17,7 +17,7 @@ function SummarySideNavigation({
   accessibilityData,
   accessibilityPlaces,
   entranceChoiceData,
-}: SummarySideNavigationProps): JSX.Element {
+}: SummarySideNavigationProps) {
   const i18n = useI18n();
 
   const locationPictureLevelId = `sideNavigationLocationPicture_${entranceKey}`;
